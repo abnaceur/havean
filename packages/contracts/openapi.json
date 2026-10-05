@@ -4576,10 +4576,18 @@
                           "type": "string"
                         },
                         "transaction": {
-                          "type": "string"
+                          "type": "string",
+                          "enum": [
+                            "sale",
+                            "rent"
+                          ]
                         },
                         "segment": {
-                          "type": "string"
+                          "type": "string",
+                          "enum": [
+                            "residential",
+                            "commercial"
+                          ]
                         },
                         "price": {
                           "nullable": true,
@@ -4925,6 +4933,15 @@
               "default": "bj",
               "type": "string",
               "pattern": "^[a-z0-9-]{1,50}$"
+            }
+          },
+          {
+            "name": "bounds",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100
             }
           },
           {
@@ -5342,10 +5359,18 @@
                             "type": "string"
                           },
                           "transaction": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                              "sale",
+                              "rent"
+                            ]
                           },
                           "segment": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                              "residential",
+                              "commercial"
+                            ]
                           },
                           "price": {
                             "nullable": true,
@@ -5520,6 +5545,853 @@
                           "ownership",
                           "holdingPeriod",
                           "tourAvailable"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/map/config": {
+      "get": {
+        "operationId": "DiscoveryController_mapConfiguration",
+        "tags": [
+          "Discovery"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "style": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "attribution": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "style",
+                        "attribution"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/listings/map": {
+      "get": {
+        "operationId": "DiscoveryController_mapListings",
+        "tags": [
+          "Discovery"
+        ],
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "bj",
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,50}$"
+            }
+          },
+          {
+            "name": "bounds",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "district",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "districtId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 740
+            }
+          },
+          {
+            "name": "communityId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 740
+            }
+          },
+          {
+            "name": "neighborhoodId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 740
+            }
+          },
+          {
+            "name": "lineId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 740
+            }
+          },
+          {
+            "name": "stationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 740
+            }
+          },
+          {
+            "name": "transaction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "sale",
+                "rent"
+              ]
+            }
+          },
+          {
+            "name": "segment",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "residential",
+                "commercial"
+              ]
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 120
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            }
+          },
+          {
+            "name": "rentPeriod",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "day",
+                "month",
+                "year"
+              ]
+            }
+          },
+          {
+            "name": "minPrice",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d+(\\.\\d{1,2})?$"
+            }
+          },
+          {
+            "name": "maxPrice",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d+(\\.\\d{1,2})?$"
+            }
+          },
+          {
+            "name": "beds",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20
+                },
+                {
+                  "type": "string",
+                  "pattern": "^\\d{1,2}(,\\d{1,2}){1,19}$"
+                }
+              ]
+            }
+          },
+          {
+            "name": "livingRooms",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20
+                },
+                {
+                  "type": "string",
+                  "pattern": "^\\d{1,2}(,\\d{1,2}){1,19}$"
+                }
+              ]
+            }
+          },
+          {
+            "name": "minArea",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000
+            }
+          },
+          {
+            "name": "maxArea",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000000
+            }
+          },
+          {
+            "name": "orientation",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "furnishing",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "features",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "floorCategory",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "buildingType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "finishing",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "heating",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "ownership",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "holdingPeriod",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "tourAvailable",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "recentDays",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3650
+            }
+          },
+          {
+            "name": "minAge",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 250
+            }
+          },
+          {
+            "name": "maxAge",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 250
+            }
+          },
+          {
+            "name": "elevator",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "recommended",
+              "type": "string",
+              "enum": [
+                "recommended",
+                "price_asc",
+                "price_desc",
+                "newest",
+                "area_desc"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "slug": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "transaction": {
+                            "type": "string",
+                            "enum": [
+                              "sale",
+                              "rent"
+                            ]
+                          },
+                          "segment": {
+                            "type": "string",
+                            "enum": [
+                              "residential",
+                              "commercial"
+                            ]
+                          },
+                          "price": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "currency": {
+                            "type": "string"
+                          },
+                          "rentPeriod": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "area": {
+                            "type": "string"
+                          },
+                          "beds": {
+                            "type": "number"
+                          },
+                          "livingRooms": {
+                            "type": "number"
+                          },
+                          "community": {
+                            "type": "string"
+                          },
+                          "district": {
+                            "type": "string"
+                          },
+                          "city": {
+                            "type": "string"
+                          },
+                          "latitude": {
+                            "type": "number"
+                          },
+                          "longitude": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "slug",
+                          "title",
+                          "transaction",
+                          "segment",
+                          "price",
+                          "currency",
+                          "rentPeriod",
+                          "area",
+                          "beds",
+                          "livingRooms",
+                          "community",
+                          "district",
+                          "city",
+                          "latitude",
+                          "longitude"
                         ],
                         "additionalProperties": false
                       }
@@ -6444,10 +7316,18 @@
                             "type": "string"
                           },
                           "transaction": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                              "sale",
+                              "rent"
+                            ]
                           },
                           "segment": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                              "residential",
+                              "commercial"
+                            ]
                           },
                           "price": {
                             "nullable": true,
@@ -10389,10 +11269,18 @@
                             "type": "string"
                           },
                           "transaction": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                              "sale",
+                              "rent"
+                            ]
                           },
                           "segment": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                              "residential",
+                              "commercial"
+                            ]
                           },
                           "price": {
                             "nullable": true,
@@ -17254,10 +18142,18 @@
                             "type": "string"
                           },
                           "transaction": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                              "sale",
+                              "rent"
+                            ]
                           },
                           "segment": {
-                            "type": "string"
+                            "type": "string",
+                            "enum": [
+                              "residential",
+                              "commercial"
+                            ]
                           },
                           "price": {
                             "nullable": true,

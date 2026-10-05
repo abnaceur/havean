@@ -56,7 +56,7 @@ export const models={
 "tenants":z.object({"id":z.string().uuid(),"organization_id":z.string().uuid(),"user_id":z.string().uuid(),"name":z.string(),"email":z.string()}),
 "transit_lines":z.object({"id":z.string().uuid(),"city_id":z.string().uuid(),"slug":z.string(),"name":z.string(),"aliases":z.array(z.string()),"version":z.number(),"status":z.string()}),
 "transit_stations":z.object({"id":z.string().uuid(),"city_id":z.string().uuid(),"line_id":z.string().uuid(),"district_id":z.string().uuid(),"slug":z.string(),"name":z.string(),"aliases":z.array(z.string()),"latitude":z.string().regex(/^-?\d+(\.\d+)?$/),"longitude":z.string().regex(/^-?\d+(\.\d+)?$/),"version":z.number(),"status":z.string()}),
-"unit_private_details":z.object({"unit_id":z.string().uuid(),"organization_id":z.string().uuid(),"private_address":z.string(),"version":z.number()}),
+"unit_private_details":z.object({"unit_id":z.string().uuid(),"organization_id":z.string().uuid(),"private_address":z.string(),"version":z.number(),"private_latitude":z.string().regex(/^-?\d+(\.\d+)?$/).nullable(),"private_longitude":z.string().regex(/^-?\d+(\.\d+)?$/).nullable()}),
 "units":z.object({"id":z.string().uuid(),"community_id":z.string().uuid(),"organization_id":z.string().uuid(),"area":z.string().regex(/^-?\d+(\.\d+)?$/),"beds":z.number(),"living_rooms":z.number(),"baths":z.number(),"orientation":z.string(),"floor":z.number(),"elevator":z.boolean(),"building_id":z.string().uuid().nullable()}),
 "viewings":z.object({"id":z.string().uuid(),"listing_id":z.string().uuid(),"user_id":z.string().uuid(),"agent_id":z.string().uuid(),"start_at":z.string(),"end_at":z.string(),"status":z.string(),"version":z.number()})
 };

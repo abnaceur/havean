@@ -5,6 +5,7 @@ import {floorLayout,propertyMediaMetadata} from './property-media';
 import {ownerSchema} from './domain';
 const s=z.string(),uuid=s.uuid(),n=z.number(),bool=z.boolean(),decimal=s.regex(/^-?\d+(\.\d+)?$/),status=z.object({id:uuid,status:s}),versioned=status.extend({version:n});
 const owner=m.owner_submissions.extend({data:ownerSchema.extend({photos:z.array(uuid).optional(),documents:z.array(uuid).optional(),reviewReason:s.optional()})});
+const publicListing=m.public_listings.extend({transaction:z.enum(['sale','rent']),segment:z.enum(['residential','commercial'])});
 const community=z.object({id:uuid,slug:s,name:s,address:s,builtYear:n.nullable(),amenities:z.array(s),photos:z.array(s),district:s,districtId:uuid,city:s,latitude:n.nullable(),longitude:n.nullable()});
 const agent=z.object({id:uuid,name:s,slug:s,biography:s,languages:z.array(s),districts:z.array(s),verifiedUntil:s.nullable(),photo:s.nullable(),publicEmail:s.nullable()});
 const development=m.developments.omit({organization_id:true}).extend({community:s,district:s});
@@ -27,7 +28,7 @@ const draft=m.listings.pick({id:true,unit_id:true,organization_id:true,owner_id:
 export const responses={
  SearchHistoryController_read:z.array(z.object({id:uuid,city:s,query:s,version:n,updated_at:s})),SearchHistoryController_record:z.object({id:uuid,city:s,query:s,version:n,updated_at:s}),SearchHistoryController_clear:z.object({cleared:bool}),
  DraftInventoryController_units:z.array(z.object({id:uuid,area:decimal,beds:n,floor:n,community:s})),DraftInventoryController_owned:z.array(draft),DraftInventoryController_read:draft,DraftInventoryController_create:draft,DraftInventoryController_update:draft,
- GeographyController_statistics:z.object({sale:inventoryStatistic,rent:inventoryStatistic,asOf:s,definition:s}),GeographyController_listings:z.array(m.public_listings),
+ GeographyController_statistics:z.object({sale:inventoryStatistic,rent:inventoryStatistic,asOf:s,definition:s}),GeographyController_listings:z.array(publicListing),
  GeographyController_geography:z.object({city:m.cities,districts:z.array(m.districts),neighborhoods:z.array(m.neighborhoods),lines:z.array(m.transit_lines),stations:z.array(m.transit_stations)}),
  GeographyController_records:z.array(geographyRecord),GeographyController_create:geographyRecord,GeographyController_update:geographyRecord,GeographyController_archive:geographyRecord,GeographyController_market:z.object({data:market,version:n}),GeographyController_buildings:z.array(m.buildings.pick({id:true,slug:true,name:true,floors:true,completed_year:true})),
  HealthController_live:z.object({status:s}),HealthController_ready:z.object({status:s,database:s,migrations:s}),
@@ -35,13 +36,14 @@ export const responses={
  IdentityController_login:s,IdentityController_callback:s,IdentityController_logout:z.object({signedOut:bool}),
  IdentityController_me:z.object({id:uuid,displayName:s,email:s,locale:s,roles:z.array(s),organizationId:uuid.nullable()}),
  DiscoveryController_cities:z.array(m.cities),DiscoveryController_districts:z.array(m.districts),DiscoveryController_market:z.object({data:market,version:n}),
- DiscoveryController_facets:z.object({finishing:z.array(s),heating:z.array(s),furnishing:z.array(s),buildingType:z.array(s),features:z.array(s),ownership:z.array(s),holdingPeriod:z.array(s)}),DiscoveryController_listings:z.array(m.public_listings),DiscoveryController_listing:m.public_listings,DiscoveryController_similar:z.array(m.public_listings),
+ DiscoveryController_mapConfiguration:z.object({style:s.url().nullable(),attribution:s}),DiscoveryController_mapListings:z.array(publicListing.pick({id:true,slug:true,title:true,transaction:true,segment:true,price:true,currency:true,rentPeriod:true,area:true,beds:true,livingRooms:true,community:true,district:true,city:true,latitude:true,longitude:true}).extend({latitude:n,longitude:n})),
+ DiscoveryController_facets:z.object({finishing:z.array(s),heating:z.array(s),furnishing:z.array(s),buildingType:z.array(s),features:z.array(s),ownership:z.array(s),holdingPeriod:z.array(s)}),DiscoveryController_listings:z.array(publicListing),DiscoveryController_listing:publicListing,DiscoveryController_similar:z.array(publicListing),
  DiscoveryController_suggestions:z.array(z.object({id:uuid,name:s,slug:s,kind:z.enum(['community','district','neighborhood']),city:s})),DiscoveryController_communities:z.array(community),DiscoveryController_community:community,
  DiscoveryController_agents:z.array(agent),DiscoveryController_agent:agent,DiscoveryController_developments:z.array(development),
  DiscoveryController_development:development.omit({community_id:true,version:true}).extend({floorPlans:z.array(m.floor_plans)}),
  DiscoveryController_providers:z.array(provider),DiscoveryController_provider:provider,
  DiscoveryController_estimate:z.object({principal:decimal,monthlyPayment:decimal,totalInterest:decimal,totalRepaid:decimal,schedule:z.array(z.object({month:n,principal:decimal,interest:decimal,payment:decimal,balance:decimal})),assumptions:s}),
- EngagementController_favorites:z.array(m.public_listings),EngagementController_favorite:z.object({saved:bool}),EngagementController_unfavorite:z.object({saved:bool}),
+ EngagementController_favorites:z.array(publicListing),EngagementController_favorite:z.object({saved:bool}),EngagementController_unfavorite:z.object({saved:bool}),
  EngagementController_searches:z.array(m.saved_searches.extend({filters:z.record(s,s)})),EngagementController_saveSearch:m.saved_searches.extend({filters:z.record(s,s)}),EngagementController_deleteSearch:z.object({deleted:bool}),
  EngagementController_inquiry:status.extend({created_at:s,conversationId:uuid}),EngagementController_inquiries:z.array(m.leads.pick({id:true,resource_id:true,status:true,created_at:true,message:true})),
  EngagementController_leads:z.array(m.leads),EngagementController_lead:m.leads,

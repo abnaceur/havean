@@ -2,7 +2,7 @@ import type {Metadata} from 'next';
 import {cookies} from 'next/headers';
 import {notFound,redirect} from 'next/navigation';
 import ConsumerApp from '../../consumer';
-const names:Record<string,string>={buy:'Homes for sale',rent:'Homes to rent','new-homes':'New homes',commercial:'Commercial spaces',communities:'Communities',agents:'Local agents',renovation:'Renovation & design','list-property':'List your property',search:'Find your next home',tools:'Mortgage calculator',account:'Your account',tenant:'Tenant portal',support:'Help & support'};
+const names:Record<string,string>={map:'Property map',buy:'Homes for sale',rent:'Homes to rent','new-homes':'New homes',commercial:'Commercial spaces',communities:'Communities',agents:'Local agents',renovation:'Renovation & design','list-property':'List your property',search:'Find your next home',tools:'Mortgage calculator',account:'Your account',tenant:'Tenant portal',support:'Help & support'};
 export async function generateMetadata({params}:{params:Promise<{path?:string[]}>}):Promise<Metadata>{const {path=[]}=await params;return {title:names[path[1]]||names[path[0]]||'Find a place to call yours',robots:path.some(p=>['account','tenant','ops'].includes(p))?{index:false,follow:false}:undefined};}
 export default async function Page({params}:{params:Promise<{path?:string[]}>}){
  const {path=[]}=await params,jar=await cookies(),preferred=jar.get('haven_city')?.value||'bj';

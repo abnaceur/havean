@@ -31,6 +31,8 @@ export const operations={
 "DiscoveryController_facets":{method:"GET",path:"/api/v1/listings/facets",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj')}),body:z.undefined(),response:responses["DiscoveryController_facets"]},
 "DiscoveryController_listing":{method:"GET",path:"/api/v1/listings/:id",params:z.object({"id":z.string().min(1)}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_listing"]},
 "DiscoveryController_listings":{method:"GET",path:"/api/v1/listings",params:z.object({}),query:listingFilters,body:z.undefined(),response:responses["DiscoveryController_listings"]},
+"DiscoveryController_mapConfiguration":{method:"GET",path:"/api/v1/map/config",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_mapConfiguration"]},
+"DiscoveryController_mapListings":{method:"GET",path:"/api/v1/listings/map",params:z.object({}),query:listingFilters,body:z.undefined(),response:responses["DiscoveryController_mapListings"]},
 "DiscoveryController_market":{method:"GET",path:"/api/v1/config",params:z.object({}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_market"]},
 "DiscoveryController_provider":{method:"GET",path:"/api/v1/renovation/providers/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_provider"]},
 "DiscoveryController_providers":{method:"GET",path:"/api/v1/renovation/providers",params:z.object({}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_providers"]},

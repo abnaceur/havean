@@ -1,0 +1,2 @@
+-- Exact unit positions stay in the already protected private read/write table.
+ALTER TABLE unit_private_details ADD COLUMN private_latitude numeric(9,6),ADD COLUMN private_longitude numeric(9,6),ADD CONSTRAINT private_coordinate_pair CHECK ((private_latitude IS NULL AND private_longitude IS NULL) OR (private_latitude IS NOT NULL AND private_longitude IS NOT NULL AND private_latitude BETWEEN -90 AND 90 AND private_longitude BETWEEN -180 AND 180));

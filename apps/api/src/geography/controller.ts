@@ -1,15 +1,17 @@
 import {z} from 'zod';
 import {Controller,Get,Param,Query,Post,Body} from '@nestjs/common';
 import {listingFilters,geographyFilters} from '@haven/contracts';
-import {searchListings} from './search.js';
+import {searchListings,mapListings} from './search.js';
 import {mortgage} from '@haven/contracts/mortgage';
-import {pool,data,fail,transaction} from '../platform/core.js';
+import {pool,data,fail,transaction,env} from '../platform/core.js';
 @Controller('api/v1')
 export class DiscoveryController{
  @Get('cities') async cities(){return data((await pool.query('SELECT * FROM cities ORDER BY name')).rows);}
  @Get('cities/:id/districts') async districts(@Param('id') id:string){return data((await pool.query('SELECT d.* FROM districts d JOIN cities c ON c.id=d.city_id WHERE c.slug=$1 OR c.id::text=$1 ORDER BY d.name',[id])).rows);}
  @Get('config') async market(@Query('city') selected='bj'){const result=(await pool.query('SELECT m.data,m.version FROM market_config m JOIN cities c ON c.slug=m.id WHERE c.slug=$1',[selected])).rows[0];if(!result)fail(404,'Market settings are not available','NOT_FOUND');return data(result);}
  @Get('listings') async listings(@Query() input:unknown){const q=listingFilters.parse(input);return searchListings(q);}
+ @Get('listings/map') async mapListings(@Query() input:unknown){return mapListings(listingFilters.parse(input));}
+ @Get('map/config') mapConfiguration(){return data({style:env.MAP_STYLE_URL||null,attribution:env.MAP_ATTRIBUTION||(env.MAP_STYLE_URL?'Community positions rounded to 3 decimal places':'Local synthetic map · Community positions rounded to 3 decimal places')});}
  @Get('listings/facets') async facets(@Query() input:unknown){const x=z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj')}).parse(input);return transaction(null,async c=>{const result:Record<string,string[]>={};for(const field of ['finishing','heating','furnishing','buildingType','features','ownership','holdingPeriod']){const column=['features','ownership','holdingPeriod'].includes(field)?'unnest("'+field+'")':'"'+field+'"';result[field]=(await c.query(`SELECT DISTINCT value FROM(SELECT ${column} AS value FROM public_listings WHERE city=$1) choices WHERE value IS NOT NULL ORDER BY value LIMIT 100`,[x.city])).rows.map(row=>row.value);}return data(result);});}
  @Get('listings/:id') async listing(@Param('id') id:string,@Query('city') selected?:string){return transaction(null,async c=>{const r=await c.query('SELECT * FROM public_listings WHERE (id::text=$1 OR slug=$1) AND ($2::text IS NULL OR city=$2)',[id,selected||null]);if(!r.rowCount)fail(404,'This property is no longer available','NOT_FOUND');return data(r.rows[0]);});}
  @Get('listings/:id/similar') async similar(@Param('id') id:string){return transaction(null,async c=>data((await c.query('SELECT * FROM public_listings WHERE id::text<>$1 AND transaction=(SELECT transaction FROM public_listings WHERE id::text=$1) ORDER BY "publishedAt" DESC LIMIT 4',[id])).rows));}
