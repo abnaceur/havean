@@ -59,8 +59,8 @@
 - [x] **N03 Build development discovery** — done; dependencies: N02, D10, F07
 - [x] **N04 Build development detail** — done; dependencies: N03, D10, F07
 - [x] **N05 Build developer inventory workspace** — done; dependencies: N04, D10, F07
-- [ ] **C01 Add commercial attributes and price bases** — in_progress; dependencies: D10, I08
-- [ ] **C02 Build commercial discovery** — todo; dependencies: C01, D10, I08
+- [x] **C01 Add commercial attributes and price bases** — done; dependencies: D10, I08
+- [ ] **C02 Build commercial discovery** — in_progress; dependencies: C01, D10, I08
 - [ ] **C03 Build commercial detail and inquiry** — todo; dependencies: C02, D10, I08
 - [ ] **O01 Create owner grants and submissions** — todo; dependencies: I08, A06, R04
 - [ ] **O02 Build step-by-step owner form** — todo; dependencies: O01, I08, A06, R04
