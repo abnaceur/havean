@@ -145,6 +145,8 @@ export const sdk={
 "RankingsController_developments":call(operations["RankingsController_developments"]),
 "RankingsController_rankings":call(operations["RankingsController_rankings"]),
 "RankingsController_recommendations":call(operations["RankingsController_recommendations"]),
+"RentalTermsController_read":call(operations["RentalTermsController_read"]),
+"RentalTermsController_update":call(operations["RentalTermsController_update"]),
 "RichMediaController_attach":call(operations["RichMediaController_attach"]),
 "RichMediaController_owned":call(operations["RichMediaController_owned"]),
 "RichMediaController_publicMedia":call(operations["RichMediaController_publicMedia"]),

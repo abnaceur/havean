@@ -1,0 +1,13 @@
+# Rental terms and child-room units
+
+P: The inventory API owns rental authoring. Billing period is separate from the listing's decimal rent amount; the decimal deposit is separately nullable and uses the listing currency. Minimum months, utilities included, move-in date and room attributes are explicit. Empty deposit/minimum tenancy represent unavailable information, not zero or a fabricated fee. Date and money inputs are canonical strings.
+
+P: Canonical units now distinguish a property from a room. A room has a property parent, a bounded positive room area and a case-insensitive unique label within that parent. Parent/child community and organization must match; rooms cannot parent other rooms or form cycles. Whole-property facts remain on the parent. Addresses remain in their original private unit record and are not copied into each room. A room listing has its own unit ID and records room area, one room bedroom, no private living room/bathroom count; shared facilities are stated in room attributes.
+
+P: A shared rental requires a residential rental listing pointing to an explicit child room. It cannot silently turn into an entire-property listing. Database deferred constraints validate the final listing/unit/terms relationship and billing/currency consistency. A new listing on an existing room inherits shared scope; sale/commercial listings cannot use that room.
+
+P: The assigned author chooses terms only in draft/rejected states. Actor/organization/assignment, listing version, unit version and state are checked under locks. Creating a room increments the parent unit version; editing it increments its own version. Idempotency prevents duplicate creation/events on request replay. Foreign-organization room creation requires ownership review, and consumer owner authors cannot bypass new-unit review. Each term change records audit/outbox and increments the listing/terms version. Draft date/period edits synchronize the rental terms date/period.
+
+P: The shared property draft workbench exposes a separate rental terms form after initial draft creation. Rent/furnishing stay in the property form. Terms persist and reload with the selected room scope. Review-state edits are denied; public terms/detail/filter delivery follows R02/R03. Atomic root/room occupancy protection follows R04/P04 rather than being claimed by this authoring task.
+
+O: prior public rental navigation only; no original private rental authoring screen observed. R: the supplied canonical inventory and explicit amount/period specification. P: child-room model, authoring interface and synthetic tests. V: original-site room authoring parity and actual property room measurements/rights. No scan-derived geometry or real imported room data is claimed.

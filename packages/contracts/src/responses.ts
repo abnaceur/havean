@@ -1,3 +1,4 @@
+import {rentalTermsRecord} from './rental-terms';
 import {privacyPolicy,personalExport,deletionReceipt} from './account-privacy';
 import {notificationPreferences,notificationRecord,alertSummary} from './notifications';
 import {savedSearchRecord} from './saved-searches';
@@ -35,6 +36,7 @@ const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nul
 const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});
 const draft=m.listings.pick({id:true,unit_id:true,organization_id:true,owner_id:true,agent_id:true,title:true,description:true,transaction:true,segment:true,currency:true,price:true,rent_period:true,furnishing:true,available_from:true,features:true,status:true,version:true,slug:true});
 export const responses={
+ RentalTermsController_read:rentalTermsRecord,RentalTermsController_update:rentalTermsRecord,
  PrivacyController_policy:privacyPolicy,PrivacyController_export:personalExport,PrivacyController_requestDeletion:deletionReceipt,
  NotificationsController_preferences:notificationPreferences,NotificationsController_update:notificationPreferences,NotificationsController_read:z.array(notificationRecord),NotificationsController_markRead:z.object({read:bool}),NotificationsController_deliveries:z.array(alertSummary),NotificationsController_retry:alertSummary,NotificationWorkerController_transactional:z.object({accepted:bool}),NotificationWorkerController_plan:z.object({planned:n.int(),replayed:bool}),NotificationWorkerController_due:z.array(alertSummary),NotificationWorkerController_read:alertSummary,NotificationWorkerController_deliver:alertSummary,
  SavedSearchController_read:z.array(savedSearchRecord),SavedSearchController_create:savedSearchRecord,SavedSearchController_update:savedSearchRecord,SavedSearchController_remove:z.object({deleted:bool,version:n.int().positive()}),SavedSearchController_matches:z.object({eligible:bool,reason:s.nullable(),listings:z.array(z.object({id:uuid,slug:s,title:s,city:s,currency:s,price:decimal.nullable(),version:n.int().positive()}))}),
@@ -44,7 +46,7 @@ export const responses={
  RankingsController_rankings:z.array(publicListing),RankingsController_recommendations:z.array(publicListing),RankingsController_developments:z.array(recommendedDevelopment),
  HomeDiscoveryController_home:z.object({resale:z.array(publicListing),rentals:z.array(publicListing),developments:z.array(recommendedDevelopment.extend({city:s})),curatedResale:z.array(publicListing),curatedDevelopments:z.array(recommendedDevelopment.extend({city:s}))}),
  SearchHistoryController_read:z.array(z.object({id:uuid,city:s,query:s,version:n,updated_at:s})),SearchHistoryController_record:z.object({id:uuid,city:s,query:s,version:n,updated_at:s}),SearchHistoryController_clear:z.object({cleared:bool}),
- DraftInventoryController_units:z.array(z.object({id:uuid,area:decimal,beds:n,floor:n,community:s})),DraftInventoryController_owned:z.array(draft),DraftInventoryController_read:draft,DraftInventoryController_create:draft,DraftInventoryController_update:draft,
+ DraftInventoryController_units:z.array(z.object({id:uuid,area:decimal,beds:n,floor:n,community:s,unit_kind:z.enum(['property','room']),parent_unit_id:uuid.nullable(),room_label:s.nullable(),version:n.int().positive()})),DraftInventoryController_owned:z.array(draft),DraftInventoryController_read:draft,DraftInventoryController_create:draft,DraftInventoryController_update:draft,
  GeographyController_statistics:z.object({sale:inventoryStatistic,rent:inventoryStatistic,asOf:s,definition:s}),GeographyController_listings:z.array(publicListing),
  GeographyController_geography:z.object({city:m.cities,districts:z.array(m.districts),neighborhoods:z.array(m.neighborhoods),lines:z.array(m.transit_lines),stations:z.array(m.transit_stations)}),
  GeographyController_records:z.array(geographyRecord),GeographyController_create:geographyRecord,GeographyController_update:geographyRecord,GeographyController_archive:geographyRecord,GeographyController_market:z.object({data:market,version:n}),GeographyController_buildings:z.array(m.buildings.pick({id:true,slug:true,name:true,floors:true,completed_year:true})),

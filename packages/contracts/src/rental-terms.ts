@@ -1,0 +1,8 @@
+import {z} from 'zod';
+import {money} from './domain';
+const labels=z.array(z.string().trim().min(1).max(80)).max(20);
+export const roomFacts=z.object({label:z.string().trim().min(1).max(80),area:z.string().regex(/^\d+(\.\d{1,2})?$/).refine(value=>Number(value)>0&&Number(value)<100000)}).strict();
+export const rentalTermsUpdate=z.object({version:z.number().int().positive(),unitVersion:z.number().int().positive(),mode:z.enum(['entire','shared']),billingPeriod:z.enum(['day','month','year']),depositAmount:money.nullable(),minimumMonths:z.number().int().positive().max(120).nullable(),utilities:labels,moveInDate:z.string().date().nullable(),roomAttributes:labels,room:roomFacts.optional()}).strict().superRefine((row,ctx)=>{if(row.mode==='shared'&&!row.room)ctx.addIssue({code:'custom',path:['room'],message:'A shared-room listing requires an explicit room label and area'});if(row.mode==='entire'&&row.room)ctx.addIssue({code:'custom',path:['room'],message:'Entire-unit listings cannot carry a room scope'});});
+export const rentalTermsRecord=z.object({id:z.uuid(),version:z.number().int().positive(),status:z.string(),currency:z.string(),unitId:z.uuid(),unitVersion:z.number().int().positive(),unitKind:z.enum(['property','room']),parentUnitId:z.uuid().nullable(),roomLabel:z.string().nullable(),area:z.string(),mode:z.enum(['entire','shared']).nullable(),billingPeriod:z.enum(['day','month','year']).nullable(),depositAmount:z.string().nullable(),minimumMonths:z.number().int().nullable(),utilities:z.array(z.string()),moveInDate:z.string().nullable(),roomAttributes:z.array(z.string())});
+
+export type RentalTermsRecord=z.infer<typeof rentalTermsRecord>;

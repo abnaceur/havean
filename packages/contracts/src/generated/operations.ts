@@ -6,6 +6,7 @@ import {notificationPreferenceUpdate,notificationVersion,notificationEventInput,
 import {savedSearchCreate,savedSearchUpdate,savedSearchDelete} from '../saved-searches';
 import {historyVersion,historyPreference,historyView} from '../browsing-history';
 import {favoriteMutation} from '../favorites';
+import {rentalTermsUpdate} from '../rental-terms';
 import {deletionRequest} from '../account-privacy';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
@@ -160,6 +161,8 @@ export const operations={
 "RankingsController_developments":{method:"GET",path:"/api/v1/recommendations/developments",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj'),limit:z.coerce.number().int().min(1).max(20).default(6)}),body:z.undefined(),response:responses["RankingsController_developments"]},
 "RankingsController_rankings":{method:"GET",path:"/api/v1/rankings",params:z.object({}),query:rankingFilters,body:z.undefined(),response:responses["RankingsController_rankings"]},
 "RankingsController_recommendations":{method:"GET",path:"/api/v1/recommendations/listings",params:z.object({}),query:listingFilters,body:z.undefined(),response:responses["RankingsController_recommendations"]},
+"RentalTermsController_read":{method:"GET",path:"/api/v1/ops/listings/:id/rental-terms",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["RentalTermsController_read"]},
+"RentalTermsController_update":{method:"PATCH",path:"/api/v1/ops/listings/:id/rental-terms",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:rentalTermsUpdate,response:responses["RentalTermsController_update"]},
 "RichMediaController_attach":{method:"POST",path:"/api/v1/ops/:resource/:id/media",params:z.object({"resource":z.enum(['listings','developments']),"id":z.string().min(1)}),query:z.object({}),body:z.object({assetId:z.string().uuid(),kind,title:z.string().min(2).max(120),floorPlanId:z.string().uuid().optional(),position:z.number().int().min(0).max(1000).default(0),version:z.number().int(),metadata:metadata.default({hotspots:[],caption:''})}),response:responses["RichMediaController_attach"]},
 "RichMediaController_owned":{method:"GET",path:"/api/v1/me/properties",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["RichMediaController_owned"]},
 "RichMediaController_publicMedia":{method:"GET",path:"/api/v1/:resource/:id/media",params:z.object({"resource":z.enum(['listings','developments']),"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["RichMediaController_publicMedia"]},

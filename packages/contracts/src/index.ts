@@ -25,3 +25,5 @@ export * from './notifications';
 export {notificationEventInput} from './notifications';
 
 export * from './account-privacy';
+
+export * from './rental-terms';

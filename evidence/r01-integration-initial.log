@@ -1,0 +1,38 @@
+ Container haven-integration-tests-run-1e180c165431 Creating 
+ Container haven-integration-tests-run-1e180c165431 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/rental-terms.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 62[2mms[22m[39m
+[31m   [31m×[31m R01 monthly shared-room authoring creates a distinct canonical child, decimal deposit and explicit period; replay, stale edits, wrong actors and review-state edits are protected[39m[32m 47[2mms[22m[39m
+[31m   [31m×[31m R01 missing rent period, invalid/non-string deposits, excessive room area and inconsistent SQL scope are rejected[39m[32m 13[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/rental-terms.test.ts[2m > [22mR01 monthly shared-room authoring creates a distinct canonical child, decimal deposit and explicit period; replay, stale edits, wrong actors and review-state edits are protected
+[31m[1merror[22m: record "new" has no field "listing_id"[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1178[22m[39m
+
+[90m [2m❯[22m draft tests/integration/rental-terms.test.ts:[2m12:31[22m[39m
+[90m [2m❯[22m tests/integration/rental-terms.test.ts:[2m15:16[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/rental-terms.test.ts[2m > [22mR01 missing rent period, invalid/non-string deposits, excessive room area and inconsistent SQL scope are rejected
+[31m[1merror[22m: record "new" has no field "listing_id"[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1178[22m[39m
+
+[90m [2m❯[22m draft tests/integration/rental-terms.test.ts:[2m12:31[22m[39m
+[90m [2m❯[22m tests/integration/rental-terms.test.ts:[2m20:175[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m   Start at [22m 21:26:17
+[2m   Duration [22m 1.27s[2m (import 76%, transform 18%, tests 5%)[22m
+
+
