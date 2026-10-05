@@ -44,8 +44,8 @@
 - [x] **D08 Build resale detail and gallery** — done; dependencies: D07, I08, G05, U07
 - [x] **D09 Add approved virtual tours** — done; dependencies: D08, I08, G05, U07
 - [x] **D10 Implement search rebuild and recovery** — done; dependencies: D09, I08, G05, U07
-- [ ] **A01 Build account profile** — in_progress; dependencies: F14, I08, U07
-- [ ] **A02 Implement persistent favorites** — todo; dependencies: A01, F14, I08, U07
+- [x] **A01 Build account profile** — done; dependencies: F14, I08, U07
+- [ ] **A02 Implement persistent favorites** — in_progress; dependencies: A01, F14, I08, U07
 - [ ] **A03 Build favorite lists and history** — todo; dependencies: A02, F14, I08, U07
 - [ ] **A04 Implement saved searches** — todo; dependencies: A03, F14, I08, U07
 - [ ] **A05 Deliver notifications and alerts** — todo; dependencies: A04, F14, I08, U07
