@@ -17866,6 +17866,86 @@
                         },
                         "slug": {
                           "type": "string"
+                        },
+                        "commercial": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "propertyType": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "office",
+                                "retail",
+                                "warehouse"
+                              ]
+                            },
+                            "grossArea": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "usableArea": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "areaBasis": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "gross",
+                                "usable"
+                              ]
+                            },
+                            "priceBasis": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "total",
+                                "per_area"
+                              ]
+                            },
+                            "fitOut": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "floor": {
+                              "nullable": true,
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "parkingSpaces": {
+                              "nullable": true,
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "permittedUses": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "version": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "required": [
+                            "propertyType",
+                            "grossArea",
+                            "usableArea",
+                            "areaBasis",
+                            "priceBasis",
+                            "fitOut",
+                            "floor",
+                            "parkingSpaces",
+                            "permittedUses",
+                            "version"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -17886,7 +17966,8 @@
                         "features",
                         "status",
                         "version",
-                        "slug"
+                        "slug",
+                        "commercial"
                       ],
                       "additionalProperties": false
                     },
@@ -18110,6 +18191,80 @@
                       "minLength": 1,
                       "maxLength": 80
                     }
+                  },
+                  "commercial": {
+                    "type": "object",
+                    "properties": {
+                      "propertyType": {
+                        "type": "string",
+                        "enum": [
+                          "office",
+                          "retail",
+                          "warehouse"
+                        ]
+                      },
+                      "grossArea": {
+                        "type": "string",
+                        "pattern": "^\\d+(\\.\\d{1,2})?$"
+                      },
+                      "usableArea": {
+                        "type": "string",
+                        "pattern": "^\\d+(\\.\\d{1,2})?$"
+                      },
+                      "areaBasis": {
+                        "type": "string",
+                        "enum": [
+                          "gross",
+                          "usable"
+                        ]
+                      },
+                      "priceBasis": {
+                        "type": "string",
+                        "enum": [
+                          "total",
+                          "per_area"
+                        ]
+                      },
+                      "fitOut": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "floor": {
+                        "nullable": true,
+                        "type": "integer",
+                        "minimum": -20,
+                        "maximum": 300
+                      },
+                      "parkingSpaces": {
+                        "nullable": true,
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000
+                      },
+                      "permittedUses": {
+                        "minItems": 1,
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80
+                        }
+                      }
+                    },
+                    "required": [
+                      "propertyType",
+                      "grossArea",
+                      "usableArea",
+                      "areaBasis",
+                      "priceBasis",
+                      "fitOut",
+                      "floor",
+                      "parkingSpaces",
+                      "permittedUses"
+                    ],
+                    "additionalProperties": false
                   },
                   "unitId": {
                     "type": "string",
@@ -18880,6 +19035,86 @@
                         },
                         "slug": {
                           "type": "string"
+                        },
+                        "commercial": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "propertyType": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "office",
+                                "retail",
+                                "warehouse"
+                              ]
+                            },
+                            "grossArea": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "usableArea": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "areaBasis": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "gross",
+                                "usable"
+                              ]
+                            },
+                            "priceBasis": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "total",
+                                "per_area"
+                              ]
+                            },
+                            "fitOut": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "floor": {
+                              "nullable": true,
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "parkingSpaces": {
+                              "nullable": true,
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "permittedUses": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "version": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "required": [
+                            "propertyType",
+                            "grossArea",
+                            "usableArea",
+                            "areaBasis",
+                            "priceBasis",
+                            "fitOut",
+                            "floor",
+                            "parkingSpaces",
+                            "permittedUses",
+                            "version"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -18900,7 +19135,8 @@
                         "features",
                         "status",
                         "version",
-                        "slug"
+                        "slug",
+                        "commercial"
                       ],
                       "additionalProperties": false
                     },
@@ -19159,6 +19395,86 @@
                         },
                         "slug": {
                           "type": "string"
+                        },
+                        "commercial": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "propertyType": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "office",
+                                "retail",
+                                "warehouse"
+                              ]
+                            },
+                            "grossArea": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "usableArea": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "areaBasis": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "gross",
+                                "usable"
+                              ]
+                            },
+                            "priceBasis": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "total",
+                                "per_area"
+                              ]
+                            },
+                            "fitOut": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "floor": {
+                              "nullable": true,
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "parkingSpaces": {
+                              "nullable": true,
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "permittedUses": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "version": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "required": [
+                            "propertyType",
+                            "grossArea",
+                            "usableArea",
+                            "areaBasis",
+                            "priceBasis",
+                            "fitOut",
+                            "floor",
+                            "parkingSpaces",
+                            "permittedUses",
+                            "version"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -19179,7 +19495,8 @@
                         "features",
                         "status",
                         "version",
-                        "slug"
+                        "slug",
+                        "commercial"
                       ],
                       "additionalProperties": false
                     },
@@ -19403,6 +19720,80 @@
                       "minLength": 1,
                       "maxLength": 80
                     }
+                  },
+                  "commercial": {
+                    "type": "object",
+                    "properties": {
+                      "propertyType": {
+                        "type": "string",
+                        "enum": [
+                          "office",
+                          "retail",
+                          "warehouse"
+                        ]
+                      },
+                      "grossArea": {
+                        "type": "string",
+                        "pattern": "^\\d+(\\.\\d{1,2})?$"
+                      },
+                      "usableArea": {
+                        "type": "string",
+                        "pattern": "^\\d+(\\.\\d{1,2})?$"
+                      },
+                      "areaBasis": {
+                        "type": "string",
+                        "enum": [
+                          "gross",
+                          "usable"
+                        ]
+                      },
+                      "priceBasis": {
+                        "type": "string",
+                        "enum": [
+                          "total",
+                          "per_area"
+                        ]
+                      },
+                      "fitOut": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "floor": {
+                        "nullable": true,
+                        "type": "integer",
+                        "minimum": -20,
+                        "maximum": 300
+                      },
+                      "parkingSpaces": {
+                        "nullable": true,
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 100000
+                      },
+                      "permittedUses": {
+                        "minItems": 1,
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80
+                        }
+                      }
+                    },
+                    "required": [
+                      "propertyType",
+                      "grossArea",
+                      "usableArea",
+                      "areaBasis",
+                      "priceBasis",
+                      "fitOut",
+                      "floor",
+                      "parkingSpaces",
+                      "permittedUses"
+                    ],
+                    "additionalProperties": false
                   },
                   "version": {
                     "type": "integer",

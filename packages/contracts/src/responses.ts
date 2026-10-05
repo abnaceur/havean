@@ -1,3 +1,4 @@
+import {commercialRecord} from './commercial';
 import {rentalTermsRecord} from './rental-terms';
 import {privacyPolicy,personalExport,deletionReceipt} from './account-privacy';
 import {notificationPreferences,notificationRecord,alertSummary} from './notifications';
@@ -52,7 +53,7 @@ export const responses={
  RankingsController_rankings:z.array(publicListing),RankingsController_recommendations:z.array(publicListing),RankingsController_developments:z.array(recommendedDevelopment),
  HomeDiscoveryController_home:z.object({resale:z.array(publicListing),rentals:z.array(publicListing),developments:z.array(recommendedDevelopment.extend({city:s})),curatedResale:z.array(publicListing),curatedDevelopments:z.array(recommendedDevelopment.extend({city:s}))}),
  SearchHistoryController_read:z.array(z.object({id:uuid,city:s,query:s,version:n,updated_at:s})),SearchHistoryController_record:z.object({id:uuid,city:s,query:s,version:n,updated_at:s}),SearchHistoryController_clear:z.object({cleared:bool}),
- DraftInventoryController_units:z.array(z.object({id:uuid,area:decimal,beds:n,floor:n,community:s,unit_kind:z.enum(['property','room']),parent_unit_id:uuid.nullable(),room_label:s.nullable(),version:n.int().positive()})),DraftInventoryController_owned:z.array(draft),DraftInventoryController_read:draft,DraftInventoryController_create:draft,DraftInventoryController_update:draft,
+ DraftInventoryController_units:z.array(z.object({id:uuid,area:decimal,beds:n,floor:n,community:s,unit_kind:z.enum(['property','room']),parent_unit_id:uuid.nullable(),room_label:s.nullable(),version:n.int().positive()})),DraftInventoryController_owned:z.array(draft),DraftInventoryController_read:draft.extend({commercial:commercialRecord.nullable()}),DraftInventoryController_create:draft.extend({commercial:commercialRecord.nullable()}),DraftInventoryController_update:draft.extend({commercial:commercialRecord.nullable()}),
  GeographyController_statistics:z.object({sale:inventoryStatistic,rent:inventoryStatistic,asOf:s,definition:s}),GeographyController_listings:z.array(publicListing),
  GeographyController_geography:z.object({city:m.cities,districts:z.array(m.districts),neighborhoods:z.array(m.neighborhoods),lines:z.array(m.transit_lines),stations:z.array(m.transit_stations)}),
  GeographyController_records:z.array(geographyRecord),GeographyController_create:geographyRecord,GeographyController_update:geographyRecord,GeographyController_archive:geographyRecord,GeographyController_market:z.object({data:market,version:n}),GeographyController_buildings:z.array(m.buildings.pick({id:true,slug:true,name:true,floors:true,completed_year:true})),

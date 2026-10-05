@@ -1,0 +1,7 @@
+import {z} from 'zod';
+import Decimal from 'decimal.js';
+const area=z.string().regex(/^\d+(\.\d{1,2})?$/,'Use a decimal area with at most two places').refine(value=>new Decimal(value).gt(0)&&new Decimal(value).lte('9999999999.99'),'Area must be positive');
+export const commercialFacts=z.object({propertyType:z.enum(['office','retail','warehouse']),grossArea:area,usableArea:area,areaBasis:z.enum(['gross','usable']),priceBasis:z.enum(['total','per_area']),fitOut:z.string().trim().min(1).max(80),floor:z.number().int().min(-20).max(300).nullable(),parkingSpaces:z.number().int().min(0).max(100000).nullable(),permittedUses:z.array(z.string().trim().min(1).max(80)).min(1).max(20)}).strict().superRefine((x,ctx)=>{if(new Decimal(x.usableArea).gt(x.grossArea))ctx.addIssue({code:'custom',path:['usableArea'],message:'Usable area must not exceed gross area'});});
+export const commercialRecord=z.object({propertyType:z.enum(['office','retail','warehouse']).nullable(),grossArea:z.string().nullable(),usableArea:z.string().nullable(),areaBasis:z.enum(['gross','usable']).nullable(),priceBasis:z.enum(['total','per_area']).nullable(),fitOut:z.string().nullable(),floor:z.number().int().nullable(),parkingSpaces:z.number().int().nullable(),permittedUses:z.array(z.string()),version:z.number().int().positive()});
+export type CommercialFacts=z.infer<typeof commercialFacts>;
+export type CommercialRecord=z.infer<typeof commercialRecord>;

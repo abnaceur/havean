@@ -1,3 +1,4 @@
+import {requireCommercialFacts} from './commercial-facts.js';
 import {lockRentalAvailability,requireRentalAvailability} from './availability.js';
 import type pg from 'pg';
 import {transition,listingTransitions} from '@haven/contracts';
@@ -24,6 +25,7 @@ export async function changeListingState(c:pg.PoolClient,a:Actor,id:string,input
   const photos=[...new Set([...fixturePhotos,...approved])];
   if(listing.title.trim().length<8||listing.description.trim().length<20||!listing.price||Number(listing.price)<=0||!unit||!listing.agent_id||!photos.length)fail(400,'Publication requires complete facts, a positive price, an agent and approved photos');
   if(!(await c.query('SELECT 1 FROM agents WHERE id=$1 AND organization_id=$2 AND verified_until>=current_date',[listing.agent_id,listing.organization_id])).rowCount)fail(400,'Publication requires an eligible agent in the property organization');
+  if(listing.segment==='commercial')await requireCommercialFacts(c,id);
   if(listing.transaction==='rent')await requireRentalAvailability(c,listing.unit_id,id);
   await c.query('UPDATE listings SET photos=$2,reviewed_by=$3,reviewed_at=now(),expires_at=NULL WHERE id=$1',[id,photos,a.id]);
  }
