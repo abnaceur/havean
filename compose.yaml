@@ -51,6 +51,7 @@ services:
       install: {condition: service_completed_successfully}
   identity:
     image: quay.io/keycloak/keycloak:26.4.7@sha256:9409c59bdfb65dbffa20b11e6f18b8abb9281d480c7ca402f51ed3d5977e6007
+    group_add: ['1000']
     command: start-dev --import-realm
     environment:
       KC_DB: postgres

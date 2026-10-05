@@ -31,8 +31,6 @@ jobs:
             evidence/latest-fixture-fingerprint.json
             evidence/visual/layout-shift-pixel-result.json
             test-results/**/*.png
-            evidence/*-desktop.png
-            evidence/*-mobile.png
       - name: Dispose isolated test stack
         if: always()
         run: docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests down --volumes --remove-orphans
