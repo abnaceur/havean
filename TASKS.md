@@ -47,8 +47,8 @@
 - [x] **A01 Build account profile** — done; dependencies: F14, I08, U07
 - [x] **A02 Implement persistent favorites** — done; dependencies: A01, F14, I08, U07
 - [x] **A03 Build favorite lists and history** — done; dependencies: A02, F14, I08, U07
-- [ ] **A04 Implement saved searches** — in_progress; dependencies: A03, F14, I08, U07
-- [ ] **A05 Deliver notifications and alerts** — todo; dependencies: A04, F14, I08, U07
+- [x] **A04 Implement saved searches** — done; dependencies: A03, F14, I08, U07
+- [ ] **A05 Deliver notifications and alerts** — in_progress; dependencies: A04, F14, I08, U07
 - [ ] **A06 Add account export and deletion workflow** — todo; dependencies: A05, F14, I08, U07
 - [ ] **R01 Implement rental terms** — todo; dependencies: D10, A06
 - [ ] **R02 Build rental filters and cards** — todo; dependencies: R01, D10, A06
