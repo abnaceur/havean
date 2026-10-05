@@ -1,3 +1,4 @@
+import {savedSearchRecord} from './saved-searches';
 import {favoriteState} from './favorites';
 import {accountProfile} from './account-profile';
 import {z} from 'zod';
@@ -32,6 +33,7 @@ const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nul
 const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});
 const draft=m.listings.pick({id:true,unit_id:true,organization_id:true,owner_id:true,agent_id:true,title:true,description:true,transaction:true,segment:true,currency:true,price:true,rent_period:true,furnishing:true,available_from:true,features:true,status:true,version:true,slug:true});
 export const responses={
+ SavedSearchController_read:z.array(savedSearchRecord),SavedSearchController_create:savedSearchRecord,SavedSearchController_update:savedSearchRecord,SavedSearchController_remove:z.object({deleted:bool,version:n.int().positive()}),SavedSearchController_matches:z.object({eligible:bool,reason:s.nullable(),listings:z.array(z.object({id:uuid,slug:s,title:s,city:s,currency:s,price:decimal.nullable(),version:n.int().positive()}))}),
  BrowsingHistoryController_read:historyCollection,BrowsingHistoryController_preferences:historyCollection,BrowsingHistoryController_record:historyCollection,BrowsingHistoryController_remove:historyCollection,BrowsingHistoryController_clear:historyCollection,
  DiscoveryEventsController_view:z.object({recorded:bool,counted:bool}),
  RankingBoostsController_read:z.array(m.curated_boosts),RankingBoostsController_create:m.curated_boosts,RankingBoostsController_update:m.curated_boosts,
@@ -55,7 +57,6 @@ export const responses={
  DiscoveryController_providers:z.array(provider),DiscoveryController_provider:provider,
  DiscoveryController_estimate:z.object({principal:decimal,monthlyPayment:decimal,totalInterest:decimal,totalRepaid:decimal,schedule:z.array(z.object({month:n,principal:decimal,interest:decimal,payment:decimal,balance:decimal})),assumptions:s}),
  EngagementController_favorites:z.array(savedProperty),EngagementController_favoriteState:favoriteState,EngagementController_favorite:favoriteState,EngagementController_unfavorite:favoriteState,
- EngagementController_searches:z.array(m.saved_searches.extend({filters:z.record(s,s)})),EngagementController_saveSearch:m.saved_searches.extend({filters:z.record(s,s)}),EngagementController_deleteSearch:z.object({deleted:bool}),
  EngagementController_inquiry:status.extend({created_at:s,conversationId:uuid}),EngagementController_inquiries:z.array(m.leads.pick({id:true,resource_id:true,status:true,created_at:true,message:true})),
  EngagementController_leads:z.array(m.leads),EngagementController_lead:m.leads,
  EngagementController_viewings:z.array(m.viewings.extend({title:s})),EngagementController_opsViewings:z.array(m.viewings.extend({title:s})),EngagementController_book:m.viewings,EngagementController_cancel:m.viewings,EngagementController_confirm:m.viewings,

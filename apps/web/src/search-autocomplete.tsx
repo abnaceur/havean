@@ -22,9 +22,9 @@ export function SearchAutocomplete({city,cityName,accountId,hero=false,initialTe
  async function submit(value:string,suggestion?:Suggestion){
   const query=value.trim();if(!query)return;
   try{if(accountId)await sdk.SearchHistoryController_record({body:{city,query}});else localStorage.setItem(key,JSON.stringify([query,...history.filter(x=>x!==query)].slice(0,10)));}catch{/* Browsing remains available when optional history storage fails. */}
-  const params=new URLSearchParams();
+  const current=new URLSearchParams(window.location.search),editing=current.has('editSearch'),params=editing?current:new URLSearchParams();for(const key of ['page','cursor','text','districtId','communityId','neighborhoodId'])params.delete(key);
   if(suggestion&&!communities){if(suggestion.kind==='community')params.set('communityId',suggestion.id);else if(suggestion.kind==='district')params.set('districtId',suggestion.id);else params.set('neighborhoodId',suggestion.id);}else params.set('text',query);
-  window.location.assign('/'+city+(communities?'/communities':'/search')+'?'+params);
+  const section=editing?window.location.pathname.split('/')[2]||'search':'search';window.location.assign('/'+city+(communities?'/communities':'/'+section)+'?'+params);
  }
  async function clear(){
   try{if(accountId)await sdk.SearchHistoryController_clear({query:{city}});else localStorage.removeItem(key);setHistory([]);setSelected(-1);setNotice('Recent searches cleared.');}catch{setNotice('Could not clear recent searches. Try again.');}

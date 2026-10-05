@@ -2,6 +2,7 @@
 import {z} from 'zod';
 import {money,listingFilters,inquirySchema,ownerSchema} from '../domain';
 import {rankingFilters,viewSignal,boostCreate,boostUpdate} from '../discovery-ranking';
+import {savedSearchCreate,savedSearchUpdate,savedSearchDelete} from '../saved-searches';
 import {historyVersion,historyPreference,historyView} from '../browsing-history';
 import {favoriteMutation} from '../favorites';
 import {profileUpdate} from '../account-profile';
@@ -58,7 +59,6 @@ export const operations={
 "EngagementController_cancel":{method:"POST",path:"/api/v1/viewings/:id/cancel",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_cancel"]},
 "EngagementController_confirm":{method:"POST",path:"/api/v1/ops/viewings/:id/confirm",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_confirm"]},
 "EngagementController_conversations":{method:"GET",path:"/api/v1/conversations",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_conversations"]},
-"EngagementController_deleteSearch":{method:"DELETE",path:"/api/v1/me/saved-searches/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_deleteSearch"]},
 "EngagementController_favorite":{method:"PUT",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:favoriteMutation,response:responses["EngagementController_favorite"]},
 "EngagementController_favorites":{method:"GET",path:"/api/v1/me/favorites",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_favorites"]},
 "EngagementController_favoriteState":{method:"GET",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_favoriteState"]},
@@ -70,8 +70,6 @@ export const operations={
 "EngagementController_messages":{method:"GET",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_messages"]},
 "EngagementController_notifications":{method:"GET",path:"/api/v1/me/notifications",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_notifications"]},
 "EngagementController_opsViewings":{method:"GET",path:"/api/v1/ops/viewings",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_opsViewings"]},
-"EngagementController_saveSearch":{method:"POST",path:"/api/v1/me/saved-searches",params:z.object({}),query:z.object({}),body:z.object({name:z.string().min(2).max(80),filters:z.record(z.string(),z.string()),cadence:z.enum(['daily','weekly']).default('weekly')}),response:responses["EngagementController_saveSearch"]},
-"EngagementController_searches":{method:"GET",path:"/api/v1/me/saved-searches",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_searches"]},
 "EngagementController_unfavorite":{method:"DELETE",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:favoriteMutation,response:responses["EngagementController_unfavorite"]},
 "EngagementController_viewings":{method:"GET",path:"/api/v1/me/viewings",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_viewings"]},
 "GeographyController_archive":{method:"DELETE",path:"/api/v1/ops/geography/:kind/:id",params:z.object({"kind":geographyKind,"id":z.string().min(1)}),query:z.object({}),body:z.object({version:z.number().int().positive()}),response:responses["GeographyController_archive"]},
@@ -155,6 +153,11 @@ export const operations={
 "RichMediaController_reviews":{method:"GET",path:"/api/v1/ops/property-media/reviews",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["RichMediaController_reviews"]},
 "RichMediaController_revise":{method:"PATCH",path:"/api/v1/ops/property-media/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({title:z.string().min(2).max(120),position:z.number().int().min(0).max(1000),metadata,version:z.number().int()}),response:responses["RichMediaController_revise"]},
 "RichMediaController_workbench":{method:"GET",path:"/api/v1/ops/:resource/:id/media",params:z.object({"resource":z.enum(['listings','developments']),"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["RichMediaController_workbench"]},
+"SavedSearchController_create":{method:"POST",path:"/api/v1/me/saved-searches",params:z.object({}),query:z.object({}),body:savedSearchCreate,response:responses["SavedSearchController_create"]},
+"SavedSearchController_matches":{method:"GET",path:"/api/v1/me/saved-searches/:id/matches",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["SavedSearchController_matches"]},
+"SavedSearchController_read":{method:"GET",path:"/api/v1/me/saved-searches",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["SavedSearchController_read"]},
+"SavedSearchController_remove":{method:"DELETE",path:"/api/v1/me/saved-searches/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:savedSearchDelete,response:responses["SavedSearchController_remove"]},
+"SavedSearchController_update":{method:"PATCH",path:"/api/v1/me/saved-searches/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:savedSearchUpdate,response:responses["SavedSearchController_update"]},
 "SearchHistoryController_clear":{method:"DELETE",path:"/api/v1/me/recent-searches",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/)}),body:z.undefined(),response:responses["SearchHistoryController_clear"]},
 "SearchHistoryController_read":{method:"GET",path:"/api/v1/me/recent-searches",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/)}),body:z.undefined(),response:responses["SearchHistoryController_read"]},
 "SearchHistoryController_record":{method:"POST",path:"/api/v1/me/recent-searches",params:z.object({}),query:z.object({}),body:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/),query:z.string().trim().min(1).max(120)}),response:responses["SearchHistoryController_record"]},

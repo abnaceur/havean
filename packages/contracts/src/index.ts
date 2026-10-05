@@ -17,3 +17,5 @@ export * from './account-profile';
 export * from './favorites';
 
 export * from './browsing-history';
+
+export * from './saved-searches';

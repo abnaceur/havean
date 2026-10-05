@@ -50,10 +50,10 @@ test('F06 session rotation, expired-session denial and provider logout',async({p
 });
 
 test('F09 idempotency replays once and rejects a changed payload',async({page})=>{
- await signIn(page);const key=crypto.randomUUID(),body={name:'Retry fixture '+crypto.randomUUID(),filters:{transaction:'sale'},cadence:'weekly'},headers={Origin:'http://localhost:8088','Idempotency-Key':key};
+ await signIn(page);const key=crypto.randomUUID(),body={name:'Retry fixture '+crypto.randomUUID(),filters:{city:'bj',currency:'CNY',transaction:'sale'},cadence:'weekly',version:0},headers={Origin:'http://localhost:8088','Idempotency-Key':key};
  const first=await page.request.post('/api/v1/me/saved-searches',{headers,data:body});expect(first.ok()).toBe(true);const saved=(await first.json()).data;
- const reordered={cadence:body.cadence,filters:body.filters,name:body.name};const replay=await page.request.post('/api/v1/me/saved-searches',{headers,data:reordered});expect(replay.ok()).toBe(true);expect((await replay.json()).data.id).toBe(saved.id);
+ const reordered={version:body.version,cadence:body.cadence,filters:body.filters,name:body.name};const replay=await page.request.post('/api/v1/me/saved-searches',{headers,data:reordered});expect(replay.ok()).toBe(true);expect((await replay.json()).data.id).toBe(saved.id);
  const conflict=await page.request.post('/api/v1/me/saved-searches',{headers,data:{...body,name:'Changed payload'}});expect(conflict.status()).toBe(409);expect((await conflict.json()).error.code).toBe('IDEMPOTENCY_CONFLICT');
  const searches=(await (await page.request.get('/api/v1/me/saved-searches')).json()).data;expect(searches.filter((row:any)=>row.id===saved.id)).toHaveLength(1);
- await page.request.delete('/api/v1/me/saved-searches/'+saved.id,{headers:{Origin:'http://localhost:8088'}});
+ expect((await page.request.delete('/api/v1/me/saved-searches/'+saved.id,{headers:{Origin:'http://localhost:8088','Idempotency-Key':crypto.randomUUID()},data:{version:saved.version}})).ok()).toBe(true);
 });
