@@ -55,8 +55,8 @@
 - [x] **R03 Build rental detail** — done; dependencies: R02, D10, A06
 - [x] **R04 Protect rental availability** — done; dependencies: R03, D10, A06
 - [x] **N01 Create developer organization and projects** — done; dependencies: D10, F07
-- [ ] **N02 Create floor-plan types and inventory** — in_progress; dependencies: N01, D10, F07
-- [ ] **N03 Build development discovery** — todo; dependencies: N02, D10, F07
+- [x] **N02 Create floor-plan types and inventory** — done; dependencies: N01, D10, F07
+- [ ] **N03 Build development discovery** — in_progress; dependencies: N02, D10, F07
 - [ ] **N04 Build development detail** — todo; dependencies: N03, D10, F07
 - [ ] **N05 Build developer inventory workspace** — todo; dependencies: N04, D10, F07
 - [ ] **C01 Add commercial attributes and price bases** — todo; dependencies: D10, I08
