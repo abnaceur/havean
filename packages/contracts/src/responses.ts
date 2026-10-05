@@ -21,6 +21,7 @@ const geographyRecord=z.union([m.transit_stations,m.communities.extend({latitude
 const market=z.object({name:s,currency:s,timezone:s,areaUnit:s,annualRate:decimal,rentPeriod:s,supportEmail:s,demo:bool});
 const support=m.support_cases.omit({user_id:true,internal_note:true});
 const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nullable(),currency:s});
+const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});
 const draft=m.listings.pick({id:true,unit_id:true,organization_id:true,owner_id:true,agent_id:true,title:true,description:true,transaction:true,segment:true,currency:true,price:true,rent_period:true,furnishing:true,available_from:true,features:true,status:true,version:true,slug:true});
 export const responses={
  DraftInventoryController_units:z.array(z.object({id:uuid,area:decimal,beds:n,floor:n,community:s})),DraftInventoryController_owned:z.array(draft),DraftInventoryController_read:draft,DraftInventoryController_create:draft,DraftInventoryController_update:draft,
@@ -46,7 +47,7 @@ export const responses={
  EngagementController_conversations:z.array(m.conversations.pick({id:true,resource_id:true,created_at:true})),EngagementController_messages:z.array(message),EngagementController_message:message,
  EngagementController_notifications:z.array(m.notifications.pick({id:true,title:true,body:true,read_at:true,created_at:true})),
  InventoryController_submissions:z.array(owner),InventoryController_submit:owner,InventoryController_sendDraft:status,
- InventoryController_listings:z.array(m.listings.pick({id:true,title:true,slug:true,status:true,transaction:true,price:true,currency:true,version:true})),InventoryController_updateStatus:versioned,
+ InventoryController_listings:z.array(m.listings.pick({id:true,title:true,slug:true,status:true,transaction:true,segment:true,price:true,currency:true,rent_period:true,version:true}).extend({community:s,city:s,...inventoryActions.shape})),InventoryController_workbench:m.listings.extend({area:decimal,beds:n,living_rooms:n,baths:n,floor:n,community:s,city:s,...inventoryActions.shape}),InventoryController_updateStatus:versioned,
  InventoryController_revise:z.union([status,versioned.extend({title:s,price:decimal.nullable()})]),
  InventoryController_reviews:z.object({listings:z.array(m.listings.pick({id:true,title:true,description:true,status:true,price:true,currency:true,version:true,photos:true}).extend({area:decimal,beds:n,community:s})),submissions:z.array(owner.pick({id:true,user_id:true,data:true,status:true,version:true})),revisions:z.array(m.listing_revisions.pick({id:true,listing_id:true,changes:true,status:true,version:true,base_version:true}).extend({title:s}))}),
  InventoryController_approveRevision:z.object({approved:bool}),InventoryController_rejectRevision:z.object({approved:bool}),InventoryController_publicHistory:z.object({prices:z.array(z.object({id:uuid,previous_price:decimal.nullable(),next_price:decimal,currency:s,created_at:s,reason:s})),statuses:z.array(z.object({id:uuid,status:s,created_at:s}))}),InventoryController_review:z.union([z.object({status:s,listingId:uuid,slug:s}),z.object({status:s})]),

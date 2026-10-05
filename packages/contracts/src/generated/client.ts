@@ -83,6 +83,7 @@ export const sdk={
 "InventoryController_submissions":call(operations["InventoryController_submissions"]),
 "InventoryController_submit":call(operations["InventoryController_submit"]),
 "InventoryController_updateStatus":call(operations["InventoryController_updateStatus"]),
+"InventoryController_workbench":call(operations["InventoryController_workbench"]),
 "ManagementController_activate":call(operations["ManagementController_activate"]),
 "ManagementController_allocate":call(operations["ManagementController_allocate"]),
 "ManagementController_charges":call(operations["ManagementController_charges"]),
