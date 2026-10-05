@@ -2200,6 +2200,10 @@
                                           "type": "string"
                                         }
                                       },
+                                      "commercialFloor": {
+                                        "nullable": true,
+                                        "type": "number"
+                                      },
                                       "rankingScore": {
                                         "type": "number"
                                       },
@@ -2269,6 +2273,7 @@
                                       "fitOut",
                                       "parkingSpaces",
                                       "permittedUses",
+                                      "commercialFloor",
                                       "available"
                                     ],
                                     "additionalProperties": false
@@ -2746,6 +2751,10 @@
                                           "type": "string"
                                         }
                                       },
+                                      "commercialFloor": {
+                                        "nullable": true,
+                                        "type": "number"
+                                      },
                                       "rankingScore": {
                                         "type": "number"
                                       },
@@ -2815,6 +2824,7 @@
                                       "fitOut",
                                       "parkingSpaces",
                                       "permittedUses",
+                                      "commercialFloor",
                                       "available"
                                     ],
                                     "additionalProperties": false
@@ -3273,6 +3283,10 @@
                                           "type": "string"
                                         }
                                       },
+                                      "commercialFloor": {
+                                        "nullable": true,
+                                        "type": "number"
+                                      },
                                       "rankingScore": {
                                         "type": "number"
                                       },
@@ -3342,6 +3356,7 @@
                                       "fitOut",
                                       "parkingSpaces",
                                       "permittedUses",
+                                      "commercialFloor",
                                       "available"
                                     ],
                                     "additionalProperties": false
@@ -3835,6 +3850,10 @@
                                           "type": "string"
                                         }
                                       },
+                                      "commercialFloor": {
+                                        "nullable": true,
+                                        "type": "number"
+                                      },
                                       "rankingScore": {
                                         "type": "number"
                                       },
@@ -3904,6 +3923,7 @@
                                       "fitOut",
                                       "parkingSpaces",
                                       "permittedUses",
+                                      "commercialFloor",
                                       "available"
                                     ],
                                     "additionalProperties": false
@@ -4398,6 +4418,10 @@
                                           "type": "string"
                                         }
                                       },
+                                      "commercialFloor": {
+                                        "nullable": true,
+                                        "type": "number"
+                                      },
                                       "rankingScore": {
                                         "type": "number"
                                       },
@@ -4467,6 +4491,7 @@
                                       "fitOut",
                                       "parkingSpaces",
                                       "permittedUses",
+                                      "commercialFloor",
                                       "available"
                                     ],
                                     "additionalProperties": false
@@ -9953,6 +9978,14 @@
                             "nullable": true,
                             "type": "number"
                           },
+                          "commercial_context": {
+                            "nullable": true,
+                            "allOf": [
+                              {
+                                "$ref": "#/definitions/__schema0"
+                              }
+                            ]
+                          },
                           "type_name": {
                             "nullable": true,
                             "type": "string"
@@ -9979,6 +10012,7 @@
                           "inquiry_intent",
                           "resource_version",
                           "floor_plan_version",
+                          "commercial_context",
                           "type_name",
                           "project_name"
                         ],
@@ -9988,7 +10022,7 @@
                     "meta": {
                       "type": "object",
                       "additionalProperties": {
-                        "$ref": "#/definitions/__schema0"
+                        "$ref": "#/definitions/__schema1"
                       }
                     }
                   },
@@ -10025,6 +10059,38 @@
                           "type": "object",
                           "additionalProperties": {
                             "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    },
+                    "__schema1": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema1"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema1"
                           }
                         }
                       ]
@@ -14270,6 +14336,10 @@
                             "type": "string"
                           }
                         },
+                        "commercialFloor": {
+                          "nullable": true,
+                          "type": "number"
+                        },
                         "rankingScore": {
                           "type": "number"
                         },
@@ -14411,6 +14481,7 @@
                         "fitOut",
                         "parkingSpaces",
                         "permittedUses",
+                        "commercialFloor",
                         "rentalTerms"
                       ],
                       "additionalProperties": false
@@ -15536,6 +15607,10 @@
                               "type": "string"
                             }
                           },
+                          "commercialFloor": {
+                            "nullable": true,
+                            "type": "number"
+                          },
                           "rankingScore": {
                             "type": "number"
                           },
@@ -15598,7 +15673,8 @@
                           "priceBasis",
                           "fitOut",
                           "parkingSpaces",
-                          "permittedUses"
+                          "permittedUses",
+                          "commercialFloor"
                         ],
                         "additionalProperties": false
                       }
@@ -17658,6 +17734,10 @@
                               "type": "string"
                             }
                           },
+                          "commercialFloor": {
+                            "nullable": true,
+                            "type": "number"
+                          },
                           "rankingScore": {
                             "type": "number"
                           },
@@ -17720,7 +17800,8 @@
                           "priceBasis",
                           "fitOut",
                           "parkingSpaces",
-                          "permittedUses"
+                          "permittedUses",
+                          "commercialFloor"
                         ],
                         "additionalProperties": false
                       }
@@ -22435,6 +22516,10 @@
                                   "type": "string"
                                 }
                               },
+                              "commercialFloor": {
+                                "nullable": true,
+                                "type": "number"
+                              },
                               "rankingScore": {
                                 "type": "number"
                               },
@@ -22504,6 +22589,7 @@
                               "fitOut",
                               "parkingSpaces",
                               "permittedUses",
+                              "commercialFloor",
                               "available"
                             ],
                             "additionalProperties": false
@@ -23282,6 +23368,14 @@
                         "floor_plan_version": {
                           "nullable": true,
                           "type": "number"
+                        },
+                        "commercial_context": {
+                          "nullable": true,
+                          "allOf": [
+                            {
+                              "$ref": "#/definitions/__schema0"
+                            }
+                          ]
                         }
                       },
                       "required": [
@@ -23301,14 +23395,15 @@
                         "floor_plan_id",
                         "inquiry_intent",
                         "resource_version",
-                        "floor_plan_version"
+                        "floor_plan_version",
+                        "commercial_context"
                       ],
                       "additionalProperties": false
                     },
                     "meta": {
                       "type": "object",
                       "additionalProperties": {
-                        "$ref": "#/definitions/__schema0"
+                        "$ref": "#/definitions/__schema1"
                       }
                     }
                   },
@@ -23345,6 +23440,38 @@
                           "type": "object",
                           "additionalProperties": {
                             "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    },
+                    "__schema1": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema1"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema1"
                           }
                         }
                       ]
@@ -23574,6 +23701,14 @@
                           "floor_plan_version": {
                             "nullable": true,
                             "type": "number"
+                          },
+                          "commercial_context": {
+                            "nullable": true,
+                            "allOf": [
+                              {
+                                "$ref": "#/definitions/__schema0"
+                              }
+                            ]
                           }
                         },
                         "required": [
@@ -23593,7 +23728,8 @@
                           "floor_plan_id",
                           "inquiry_intent",
                           "resource_version",
-                          "floor_plan_version"
+                          "floor_plan_version",
+                          "commercial_context"
                         ],
                         "additionalProperties": false
                       }
@@ -23601,7 +23737,7 @@
                     "meta": {
                       "type": "object",
                       "additionalProperties": {
-                        "$ref": "#/definitions/__schema0"
+                        "$ref": "#/definitions/__schema1"
                       }
                     }
                   },
@@ -23638,6 +23774,38 @@
                           "type": "object",
                           "additionalProperties": {
                             "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    },
+                    "__schema1": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema1"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema1"
                           }
                         }
                       ]
@@ -28878,6 +29046,10 @@
                               "type": "string"
                             }
                           },
+                          "commercialFloor": {
+                            "nullable": true,
+                            "type": "number"
+                          },
                           "rankingScore": {
                             "type": "number"
                           },
@@ -28940,7 +29112,8 @@
                           "priceBasis",
                           "fitOut",
                           "parkingSpaces",
-                          "permittedUses"
+                          "permittedUses",
+                          "commercialFloor"
                         ],
                         "additionalProperties": false
                       }
@@ -30600,6 +30773,10 @@
                                   "type": "string"
                                 }
                               },
+                              "commercialFloor": {
+                                "nullable": true,
+                                "type": "number"
+                              },
                               "rankingScore": {
                                 "type": "number"
                               },
@@ -30662,7 +30839,8 @@
                               "priceBasis",
                               "fitOut",
                               "parkingSpaces",
-                              "permittedUses"
+                              "permittedUses",
+                              "commercialFloor"
                             ],
                             "additionalProperties": false
                           }
@@ -30887,6 +31065,10 @@
                                   "type": "string"
                                 }
                               },
+                              "commercialFloor": {
+                                "nullable": true,
+                                "type": "number"
+                              },
                               "rankingScore": {
                                 "type": "number"
                               },
@@ -30949,7 +31131,8 @@
                               "priceBasis",
                               "fitOut",
                               "parkingSpaces",
-                              "permittedUses"
+                              "permittedUses",
+                              "commercialFloor"
                             ],
                             "additionalProperties": false
                           }
@@ -31275,6 +31458,10 @@
                                   "type": "string"
                                 }
                               },
+                              "commercialFloor": {
+                                "nullable": true,
+                                "type": "number"
+                              },
                               "rankingScore": {
                                 "type": "number"
                               },
@@ -31337,7 +31524,8 @@
                               "priceBasis",
                               "fitOut",
                               "parkingSpaces",
-                              "permittedUses"
+                              "permittedUses",
+                              "commercialFloor"
                             ],
                             "additionalProperties": false
                           }
@@ -49551,6 +49739,10 @@
                               "type": "string"
                             }
                           },
+                          "commercialFloor": {
+                            "nullable": true,
+                            "type": "number"
+                          },
                           "rankingScore": {
                             "type": "number"
                           },
@@ -49613,7 +49805,8 @@
                           "priceBasis",
                           "fitOut",
                           "parkingSpaces",
-                          "permittedUses"
+                          "permittedUses",
+                          "commercialFloor"
                         ],
                         "additionalProperties": false
                       }
@@ -50497,6 +50690,10 @@
                               "type": "string"
                             }
                           },
+                          "commercialFloor": {
+                            "nullable": true,
+                            "type": "number"
+                          },
                           "rankingScore": {
                             "type": "number"
                           },
@@ -50559,7 +50756,8 @@
                           "priceBasis",
                           "fitOut",
                           "parkingSpaces",
-                          "permittedUses"
+                          "permittedUses",
+                          "commercialFloor"
                         ],
                         "additionalProperties": false
                       }

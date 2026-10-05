@@ -1,0 +1,9 @@
+# Commercial detail and inquiry
+
+Search schema 5 adds the whitelisted commercial floor while retaining nullable residential fields. Public business detail reuses independently approved galleries/tours/plans and the community-level map. It shows commercial property type, declared gross/usable areas and pricing definitions, exact decimal amount and period, fit-out, floor, parking and supplied uses. Residential room counts/rental-mode/deposit assumptions do not appear. Unknown facts are explicit. The existing public assigned-agent eligibility port supplies the responsible contact; private unit addresses and other agency identities remain excluded.
+
+A business inquiry submits the current root offer version. API destination locking rechecks published/expiry/occupancy eligibility and version before inserting a scoped lead and conversation. A database guard repeats eligibility/version checks and derives an immutable commercial-context snapshot from public facts. It preserves the submitted transaction/type/currency/decimal-price/basis/period/areas/fit-out/uses/floor/parking/version when an offer later changes. Callers cannot supply a false context. Lead updates preserve the snapshot and resource/version. Existing organization and assignment RLS limits reading/mutation to the consumer and responsible agency/agent.
+
+The snapshot contains listing facts only; it is not a reservation, lease or independent permitted-use verification. Inquiry idempotency preserves the original submission; it does not create a new inquiry against a changed resource. The existing lead workspace exposes the stored snapshot. Original private CRM parity remains unverified.
+
+O: commercial entry and property rich-media entry. R: C03 context/availability/isolation contract. P: English business fact table/form and synthetic offers. V: exact original business screens, real permitted uses and production agent credentials.
