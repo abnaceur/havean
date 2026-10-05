@@ -1,0 +1,7 @@
+ALTER TABLE listings ADD COLUMN created_by uuid REFERENCES profiles, ADD COLUMN reviewed_by uuid REFERENCES profiles, ADD COLUMN reviewed_at timestamptz, ADD COLUMN expires_at timestamptz;
+UPDATE listings l SET created_by=coalesce((SELECT actor_id FROM audit_events a WHERE a.resource_id=l.id AND a.action='listing.drafted' ORDER BY a.created_at,a.id LIMIT 1),owner_id);
+CREATE TABLE listing_status_history(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),listing_id uuid NOT NULL REFERENCES listings,previous_status text NOT NULL,next_status text NOT NULL,actor_id uuid REFERENCES profiles,reason text,listing_version int NOT NULL,created_at timestamptz NOT NULL DEFAULT now(),UNIQUE(listing_id,listing_version));
+ALTER TABLE listing_status_history ENABLE ROW LEVEL SECURITY;
+CREATE POLICY history_scope ON listing_status_history USING(listing_id IN(SELECT id FROM listings WHERE owner_id=actor_id() OR organization_id=org_id() OR staff_scope() OR review_scope())) WITH CHECK(listing_id IN(SELECT id FROM listings WHERE owner_id=actor_id() OR organization_id=org_id() OR staff_scope() OR review_scope()));
+CREATE FUNCTION immutable_listing_history() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'Listing history is immutable' USING ERRCODE='23514'; END $$;
+CREATE TRIGGER immutable_status_history BEFORE UPDATE OR DELETE ON listing_status_history FOR EACH ROW EXECUTE FUNCTION immutable_listing_history();

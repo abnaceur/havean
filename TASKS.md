@@ -21,8 +21,8 @@
 - [x] **G05 Build community detail** — done; dependencies: G04, F14
 - [x] **I01 Create canonical unit and listing schema** — done; dependencies: F14, G02
 - [x] **I02 Implement draft listing editing** — done; dependencies: I01, F14, G02
-- [ ] **I03 Implement listing workflow service** — in_progress; dependencies: I02, F14, G02
-- [ ] **I04 Create moderation queue and decisions** — todo; dependencies: I03, F14, G02
+- [x] **I03 Implement listing workflow service** — done; dependencies: I02, F14, G02
+- [ ] **I04 Create moderation queue and decisions** — in_progress; dependencies: I03, F14, G02
 - [ ] **I05 Protect published revisions** — todo; dependencies: I04, F14, G02
 - [ ] **I06 Create price and status history** — todo; dependencies: I05, F14, G02
 - [ ] **I07 Create inventory workbench** — todo; dependencies: I06, F14, G02

@@ -21844,12 +21844,32 @@
                 "type": "object",
                 "properties": {
                   "status": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                      "submitted",
+                      "under_review",
+                      "published",
+                      "rejected",
+                      "paused",
+                      "sold",
+                      "leased",
+                      "expired",
+                      "archived"
+                    ]
                   },
                   "version": {
                     "type": "integer",
-                    "minimum": -9007199254740991,
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
                     "maximum": 9007199254740991
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 1000
+                  },
+                  "verified": {
+                    "type": "boolean"
                   }
                 },
                 "required": [
