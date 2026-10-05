@@ -4637,7 +4637,8 @@
             "required": false,
             "schema": {
               "default": "bj",
-              "type": "string"
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,50}$"
             }
           },
           {
@@ -4645,7 +4646,28 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N} _'.,-]+$"
+            }
+          },
+          {
+            "name": "districtId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 740
+            }
+          },
+          {
+            "name": "communityId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 740
             }
           },
           {
@@ -4682,6 +4704,28 @@
             }
           },
           {
+            "name": "currency",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            }
+          },
+          {
+            "name": "rentPeriod",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "day",
+                "month",
+                "year"
+              ]
+            }
+          },
+          {
             "name": "minPrice",
             "in": "query",
             "required": false,
@@ -4710,12 +4754,23 @@
             }
           },
           {
+            "name": "livingRooms",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            }
+          },
+          {
             "name": "minArea",
             "in": "query",
             "required": false,
             "schema": {
               "type": "number",
-              "minimum": 0
+              "minimum": 0,
+              "maximum": 1000000
             }
           },
           {
@@ -4724,7 +4779,8 @@
             "required": false,
             "schema": {
               "type": "number",
-              "minimum": 0
+              "minimum": 0,
+              "maximum": 1000000
             }
           },
           {
@@ -4732,7 +4788,10 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N} _'.,-]+$"
             }
           },
           {
@@ -4740,7 +4799,21 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N} _'.,-]+$"
+            }
+          },
+          {
+            "name": "features",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N} _'.,-]+$"
             }
           },
           {
@@ -4791,6 +4864,16 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 500
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
             }
           }
         ],
