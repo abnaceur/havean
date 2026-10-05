@@ -37,7 +37,7 @@ export const responses={
  GeographyController_geography:z.object({city:m.cities,districts:z.array(m.districts),neighborhoods:z.array(m.neighborhoods),lines:z.array(m.transit_lines),stations:z.array(m.transit_stations)}),
  GeographyController_records:z.array(geographyRecord),GeographyController_create:geographyRecord,GeographyController_update:geographyRecord,GeographyController_archive:geographyRecord,GeographyController_market:z.object({data:market,version:n}),GeographyController_buildings:z.array(m.buildings.pick({id:true,slug:true,name:true,floors:true,completed_year:true})),
  HealthController_live:z.object({status:s}),HealthController_ready:z.object({status:s,database:s,migrations:s}),
- HealthController_metrics:z.object({requests:z.array(z.object({route:s,count:n,failures:n,averageDurationMs:n})),outbox:z.object({pending:n,processed:n,oldestPendingSeconds:n,dispatchAttempts:n}),queue:z.record(s,n).nullable()}),
+ HealthController_metrics:z.object({requests:z.array(z.object({route:s,count:n,failures:n,averageDurationMs:n})),outbox:z.object({pending:n,processed:n,oldestPendingSeconds:n,dispatchAttempts:n}),queue:z.record(s,n).nullable(),search:z.object({staleListings:n,oldestStaleSeconds:n,pendingEvents:n,oldestPendingSeconds:n,providerAvailable:bool,indexedDocuments:n.nullable(),schemaVersion:n})}),
  IdentityController_login:s,IdentityController_callback:s,IdentityController_logout:z.object({signedOut:bool}),
  IdentityController_me:z.object({id:uuid,displayName:s,email:s,locale:s,roles:z.array(s),organizationId:uuid.nullable()}),
  DiscoveryController_cities:z.array(m.cities),DiscoveryController_districts:z.array(m.districts),DiscoveryController_market:z.object({data:market,version:n}),

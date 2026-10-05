@@ -33,6 +33,7 @@ export function createProcessor(options:ProcessorOptions={}){
   await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['aggregate:'+row.aggregate_id]);
   let version:number|undefined;
   if(row.kind.startsWith('listing.')||row.kind.startsWith('property.')){
+   await c.query("SELECT pg_advisory_xact_lock_shared(hashtextextended('listings-search-rebuild',0))");
    const current=(await c.query('SELECT version,status FROM listings WHERE id=$1',[row.aggregate_id])).rows[0];
    if(current){
     version=current.version;

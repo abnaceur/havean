@@ -19907,12 +19907,50 @@
                           "additionalProperties": {
                             "type": "number"
                           }
+                        },
+                        "search": {
+                          "type": "object",
+                          "properties": {
+                            "staleListings": {
+                              "type": "number"
+                            },
+                            "oldestStaleSeconds": {
+                              "type": "number"
+                            },
+                            "pendingEvents": {
+                              "type": "number"
+                            },
+                            "oldestPendingSeconds": {
+                              "type": "number"
+                            },
+                            "providerAvailable": {
+                              "type": "boolean"
+                            },
+                            "indexedDocuments": {
+                              "nullable": true,
+                              "type": "number"
+                            },
+                            "schemaVersion": {
+                              "type": "number"
+                            }
+                          },
+                          "required": [
+                            "staleListings",
+                            "oldestStaleSeconds",
+                            "pendingEvents",
+                            "oldestPendingSeconds",
+                            "providerAvailable",
+                            "indexedDocuments",
+                            "schemaVersion"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
                         "requests",
                         "outbox",
-                        "queue"
+                        "queue",
+                        "search"
                       ],
                       "additionalProperties": false
                     },
