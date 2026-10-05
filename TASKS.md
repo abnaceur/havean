@@ -26,7 +26,7 @@
 - [x] **I05 Protect published revisions** — done; dependencies: I04, F14, G02
 - [x] **I06 Create price and status history** — done; dependencies: I05, F14, G02
 - [x] **I07 Create inventory workbench** — done; dependencies: I06, F14, G02
-- [ ] **I08 Implement expiration and withdrawal** — in_progress; dependencies: I07, F14, G02
+- [x] **I08 Implement expiration and withdrawal** — done; dependencies: I07, F14, G02
 - [x] **U01 Create reference screen manifest** — done; dependencies: F14
 - [x] **U02 Implement measured design tokens** — done; dependencies: U01, F14
 - [x] **U03 Implement shared mobile shell** — done; dependencies: U02, F14
@@ -34,7 +34,7 @@
 - [x] **U05 Implement standard UI states** — done; dependencies: U04, F14
 - [x] **U06 Establish visual regression fixtures** — done; dependencies: U05, F14
 - [x] **U07 Build accessibility interaction harness** — done; dependencies: U06, F14
-- [ ] **D01 Index approved public inventory** — todo; dependencies: I08, G05, U07
+- [ ] **D01 Index approved public inventory** — in_progress; dependencies: I08, G05, U07
 - [ ] **D02 Implement typed search API** — todo; dependencies: D01, I08, G05, U07
 - [ ] **D03 Build autocomplete and recent searches** — todo; dependencies: D02, I08, G05, U07
 - [ ] **D04 Build resale list and filter sheets** — todo; dependencies: D03, I08, G05, U07
