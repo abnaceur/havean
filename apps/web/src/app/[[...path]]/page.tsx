@@ -15,7 +15,7 @@ export default async function Page({params}:{params:Promise<{path?:string[]}>}){
  if(!privatePage&&(cities&&!cities.some(row=>row.slug===selected)||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(selected)))notFound();
  const section=privatePage?path[0]:path[1]||'home',detail=privatePage?path[1]:path[2];
  if(!privatePage&&section!=='home'&&!names[section])notFound();
- const endpoints:Record<string,string>={home:'/listings?city='+selected+'&transaction=sale&segment=residential&limit=6',buy:'/listings?city='+selected+'&transaction=sale&segment=residential',rent:'/listings?city='+selected+'&transaction=rent&segment=residential',commercial:'/listings?city='+selected+'&segment=commercial','new-homes':'/developments?city='+selected,communities:'/communities?city='+selected,agents:'/agents?city='+selected,renovation:'/renovation/providers?city='+selected,search:'/listings?city='+selected};
+ const endpoints:Record<string,string>={home:'/discovery/home?city='+selected,buy:'/listings?city='+selected+'&transaction=sale&segment=residential',rent:'/listings?city='+selected+'&transaction=rent&segment=residential',commercial:'/listings?city='+selected+'&segment=commercial','new-homes':'/developments?city='+selected,communities:'/communities?city='+selected,agents:'/agents?city='+selected,renovation:'/renovation/providers?city='+selected,search:'/listings?city='+selected};
  const details:Record<string,string>={buy:'/listings/',rent:'/listings/',commercial:'/listings/','new-homes':'/developments/',communities:'/communities/',agents:'/agents/',renovation:'/renovation/providers/'};
  let initial=null,error=null;
  const endpoint=detail&&details[section]?details[section]+encodeURIComponent(detail)+'?city='+selected:endpoints[section];

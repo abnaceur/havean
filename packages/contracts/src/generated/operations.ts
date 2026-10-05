@@ -76,6 +76,7 @@ export const operations={
 "HealthController_live":{method:"GET",path:"/api/v1/health/live",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["HealthController_live"]},
 "HealthController_metrics":{method:"GET",path:"/api/v1/health/metrics",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["HealthController_metrics"]},
 "HealthController_ready":{method:"GET",path:"/api/v1/health/ready",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["HealthController_ready"]},
+"HomeDiscoveryController_home":{method:"GET",path:"/api/v1/discovery/home",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj')}),body:z.undefined(),response:responses["HomeDiscoveryController_home"]},
 "IdentityController_callback":{method:"GET",path:"/api/v1/auth/callback",params:z.object({}),query:z.object({code:z.string(),state:z.string()}),body:z.undefined(),response:responses["IdentityController_callback"]},
 "IdentityController_login":{method:"GET",path:"/api/v1/auth/login",params:z.object({}),query:z.object({returnTo:z.string().optional(),prompt:z.literal('login').optional()}),body:z.undefined(),response:responses["IdentityController_login"]},
 "IdentityController_logout":{method:"POST",path:"/api/v1/auth/logout",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["IdentityController_logout"]},

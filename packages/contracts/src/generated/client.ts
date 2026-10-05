@@ -67,6 +67,7 @@ export const sdk={
 "HealthController_live":call(operations["HealthController_live"]),
 "HealthController_metrics":call(operations["HealthController_metrics"]),
 "HealthController_ready":call(operations["HealthController_ready"]),
+"HomeDiscoveryController_home":call(operations["HomeDiscoveryController_home"]),
 "IdentityController_callback":call(operations["IdentityController_callback"]),
 "IdentityController_login":call(operations["IdentityController_login"]),
 "IdentityController_logout":call(operations["IdentityController_logout"]),

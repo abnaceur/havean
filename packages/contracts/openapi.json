@@ -3286,6 +3286,13 @@
                         "district": {
                           "type": "string"
                         },
+                        "sponsored": {
+                          "type": "boolean"
+                        },
+                        "curationLabel": {
+                          "nullable": true,
+                          "type": "string"
+                        },
                         "floorPlans": {
                           "type": "array",
                           "items": {
@@ -3605,6 +3612,13 @@
                             "type": "string"
                           },
                           "district": {
+                            "type": "string"
+                          },
+                          "sponsored": {
+                            "type": "boolean"
+                          },
+                          "curationLabel": {
+                            "nullable": true,
                             "type": "string"
                           }
                         },
@@ -20001,6 +20015,1073 @@
         "security": []
       }
     },
+    "/api/v1/discovery/home": {
+      "get": {
+        "operationId": "HomeDiscoveryController_home",
+        "tags": [
+          "HomeDiscovery"
+        ],
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "bj",
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,50}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "resale": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "transaction": {
+                                "type": "string",
+                                "enum": [
+                                  "sale",
+                                  "rent"
+                                ]
+                              },
+                              "segment": {
+                                "type": "string",
+                                "enum": [
+                                  "residential",
+                                  "commercial"
+                                ]
+                              },
+                              "price": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "currency": {
+                                "type": "string"
+                              },
+                              "rentPeriod": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "features": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "photos": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "furnishing": {
+                                "type": "string"
+                              },
+                              "availableFrom": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "number"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "publishedAt": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "area": {
+                                "type": "string"
+                              },
+                              "beds": {
+                                "type": "number"
+                              },
+                              "livingRooms": {
+                                "type": "number"
+                              },
+                              "baths": {
+                                "type": "number"
+                              },
+                              "orientation": {
+                                "type": "string"
+                              },
+                              "elevator": {
+                                "type": "boolean"
+                              },
+                              "communityId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "community": {
+                                "type": "string"
+                              },
+                              "district": {
+                                "type": "string"
+                              },
+                              "districtId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "city": {
+                                "type": "string"
+                              },
+                              "agentId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "latitude": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "longitude": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "neighborhoodId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "builtYear": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "floorCategory": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "buildingType": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "finishing": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "heating": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "ownership": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "holdingPeriod": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "tourAvailable": {
+                                "type": "boolean"
+                              },
+                              "rankingScore": {
+                                "type": "number"
+                              },
+                              "viewCount": {
+                                "type": "number"
+                              },
+                              "sponsored": {
+                                "type": "boolean"
+                              },
+                              "curationLabel": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "slug",
+                              "title",
+                              "description",
+                              "transaction",
+                              "segment",
+                              "price",
+                              "currency",
+                              "rentPeriod",
+                              "features",
+                              "photos",
+                              "furnishing",
+                              "availableFrom",
+                              "version",
+                              "status",
+                              "publishedAt",
+                              "area",
+                              "beds",
+                              "livingRooms",
+                              "baths",
+                              "orientation",
+                              "elevator",
+                              "communityId",
+                              "community",
+                              "district",
+                              "districtId",
+                              "city",
+                              "agentId",
+                              "latitude",
+                              "longitude",
+                              "neighborhoodId",
+                              "builtYear",
+                              "floorCategory",
+                              "buildingType",
+                              "finishing",
+                              "heating",
+                              "ownership",
+                              "holdingPeriod",
+                              "tourAvailable"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "rentals": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "transaction": {
+                                "type": "string",
+                                "enum": [
+                                  "sale",
+                                  "rent"
+                                ]
+                              },
+                              "segment": {
+                                "type": "string",
+                                "enum": [
+                                  "residential",
+                                  "commercial"
+                                ]
+                              },
+                              "price": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "currency": {
+                                "type": "string"
+                              },
+                              "rentPeriod": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "features": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "photos": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "furnishing": {
+                                "type": "string"
+                              },
+                              "availableFrom": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "number"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "publishedAt": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "area": {
+                                "type": "string"
+                              },
+                              "beds": {
+                                "type": "number"
+                              },
+                              "livingRooms": {
+                                "type": "number"
+                              },
+                              "baths": {
+                                "type": "number"
+                              },
+                              "orientation": {
+                                "type": "string"
+                              },
+                              "elevator": {
+                                "type": "boolean"
+                              },
+                              "communityId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "community": {
+                                "type": "string"
+                              },
+                              "district": {
+                                "type": "string"
+                              },
+                              "districtId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "city": {
+                                "type": "string"
+                              },
+                              "agentId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "latitude": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "longitude": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "neighborhoodId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "builtYear": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "floorCategory": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "buildingType": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "finishing": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "heating": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "ownership": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "holdingPeriod": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "tourAvailable": {
+                                "type": "boolean"
+                              },
+                              "rankingScore": {
+                                "type": "number"
+                              },
+                              "viewCount": {
+                                "type": "number"
+                              },
+                              "sponsored": {
+                                "type": "boolean"
+                              },
+                              "curationLabel": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "slug",
+                              "title",
+                              "description",
+                              "transaction",
+                              "segment",
+                              "price",
+                              "currency",
+                              "rentPeriod",
+                              "features",
+                              "photos",
+                              "furnishing",
+                              "availableFrom",
+                              "version",
+                              "status",
+                              "publishedAt",
+                              "area",
+                              "beds",
+                              "livingRooms",
+                              "baths",
+                              "orientation",
+                              "elevator",
+                              "communityId",
+                              "community",
+                              "district",
+                              "districtId",
+                              "city",
+                              "agentId",
+                              "latitude",
+                              "longitude",
+                              "neighborhoodId",
+                              "builtYear",
+                              "floorCategory",
+                              "buildingType",
+                              "finishing",
+                              "heating",
+                              "ownership",
+                              "holdingPeriod",
+                              "tourAvailable"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "developments": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "price_min": {
+                                "nullable": true,
+                                "type": "string",
+                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                              },
+                              "price_max": {
+                                "nullable": true,
+                                "type": "string",
+                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                              },
+                              "currency": {
+                                "type": "string"
+                              },
+                              "price_basis": {
+                                "type": "string"
+                              },
+                              "completion_date": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "photos": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "features": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "inventory_at": {
+                                "type": "string"
+                              },
+                              "community": {
+                                "type": "string"
+                              },
+                              "district": {
+                                "type": "string"
+                              },
+                              "sponsored": {
+                                "type": "boolean"
+                              },
+                              "curationLabel": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "rankingScore": {
+                                "type": "number"
+                              },
+                              "city": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "slug",
+                              "name",
+                              "description",
+                              "status",
+                              "price_min",
+                              "price_max",
+                              "currency",
+                              "price_basis",
+                              "completion_date",
+                              "photos",
+                              "features",
+                              "inventory_at",
+                              "community",
+                              "district",
+                              "sponsored",
+                              "curationLabel",
+                              "rankingScore",
+                              "city"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "curatedResale": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "transaction": {
+                                "type": "string",
+                                "enum": [
+                                  "sale",
+                                  "rent"
+                                ]
+                              },
+                              "segment": {
+                                "type": "string",
+                                "enum": [
+                                  "residential",
+                                  "commercial"
+                                ]
+                              },
+                              "price": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "currency": {
+                                "type": "string"
+                              },
+                              "rentPeriod": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "features": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "photos": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "furnishing": {
+                                "type": "string"
+                              },
+                              "availableFrom": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "number"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "publishedAt": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "area": {
+                                "type": "string"
+                              },
+                              "beds": {
+                                "type": "number"
+                              },
+                              "livingRooms": {
+                                "type": "number"
+                              },
+                              "baths": {
+                                "type": "number"
+                              },
+                              "orientation": {
+                                "type": "string"
+                              },
+                              "elevator": {
+                                "type": "boolean"
+                              },
+                              "communityId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "community": {
+                                "type": "string"
+                              },
+                              "district": {
+                                "type": "string"
+                              },
+                              "districtId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "city": {
+                                "type": "string"
+                              },
+                              "agentId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "latitude": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "longitude": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "neighborhoodId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "builtYear": {
+                                "nullable": true,
+                                "type": "number"
+                              },
+                              "floorCategory": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "buildingType": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "finishing": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "heating": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "ownership": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "holdingPeriod": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "tourAvailable": {
+                                "type": "boolean"
+                              },
+                              "rankingScore": {
+                                "type": "number"
+                              },
+                              "viewCount": {
+                                "type": "number"
+                              },
+                              "sponsored": {
+                                "type": "boolean"
+                              },
+                              "curationLabel": {
+                                "nullable": true,
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "slug",
+                              "title",
+                              "description",
+                              "transaction",
+                              "segment",
+                              "price",
+                              "currency",
+                              "rentPeriod",
+                              "features",
+                              "photos",
+                              "furnishing",
+                              "availableFrom",
+                              "version",
+                              "status",
+                              "publishedAt",
+                              "area",
+                              "beds",
+                              "livingRooms",
+                              "baths",
+                              "orientation",
+                              "elevator",
+                              "communityId",
+                              "community",
+                              "district",
+                              "districtId",
+                              "city",
+                              "agentId",
+                              "latitude",
+                              "longitude",
+                              "neighborhoodId",
+                              "builtYear",
+                              "floorCategory",
+                              "buildingType",
+                              "finishing",
+                              "heating",
+                              "ownership",
+                              "holdingPeriod",
+                              "tourAvailable"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "curatedDevelopments": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "slug": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "price_min": {
+                                "nullable": true,
+                                "type": "string",
+                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                              },
+                              "price_max": {
+                                "nullable": true,
+                                "type": "string",
+                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                              },
+                              "currency": {
+                                "type": "string"
+                              },
+                              "price_basis": {
+                                "type": "string"
+                              },
+                              "completion_date": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "photos": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "features": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "inventory_at": {
+                                "type": "string"
+                              },
+                              "community": {
+                                "type": "string"
+                              },
+                              "district": {
+                                "type": "string"
+                              },
+                              "sponsored": {
+                                "type": "boolean"
+                              },
+                              "curationLabel": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "rankingScore": {
+                                "type": "number"
+                              },
+                              "city": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "slug",
+                              "name",
+                              "description",
+                              "status",
+                              "price_min",
+                              "price_max",
+                              "currency",
+                              "price_basis",
+                              "completion_date",
+                              "photos",
+                              "features",
+                              "inventory_at",
+                              "community",
+                              "district",
+                              "sponsored",
+                              "curationLabel",
+                              "rankingScore",
+                              "city"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "resale",
+                        "rentals",
+                        "developments",
+                        "curatedResale",
+                        "curatedDevelopments"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
     "/api/v1/auth/callback": {
       "get": {
         "operationId": "IdentityController_callback",
@@ -33613,15 +34694,15 @@
                           "district": {
                             "type": "string"
                           },
-                          "rankingScore": {
-                            "type": "number"
-                          },
                           "sponsored": {
                             "type": "boolean"
                           },
                           "curationLabel": {
                             "nullable": true,
                             "type": "string"
+                          },
+                          "rankingScore": {
+                            "type": "number"
                           }
                         },
                         "required": [
@@ -33640,9 +34721,9 @@
                           "inventory_at",
                           "community",
                           "district",
-                          "rankingScore",
                           "sponsored",
-                          "curationLabel"
+                          "curationLabel",
+                          "rankingScore"
                         ],
                         "additionalProperties": false
                       }
