@@ -21,6 +21,7 @@ export const sdk={
 "DevelopmentInventoryController_units":call(operations["DevelopmentInventoryController_units"]),
 "DevelopmentInventoryController_updateType":call(operations["DevelopmentInventoryController_updateType"]),
 "DevelopmentInventoryController_updateUnit":call(operations["DevelopmentInventoryController_updateUnit"]),
+"DevelopmentPricingController_update":call(operations["DevelopmentPricingController_update"]),
 "DevelopmentProjectsController_create":call(operations["DevelopmentProjectsController_create"]),
 "DevelopmentProjectsController_createBuilding":call(operations["DevelopmentProjectsController_createBuilding"]),
 "DevelopmentProjectsController_createPhase":call(operations["DevelopmentProjectsController_createPhase"]),

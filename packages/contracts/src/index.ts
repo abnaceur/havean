@@ -33,3 +33,5 @@ export type {PublicRentalTerms} from './responses';
 export * from './development-projects';
 
 export * from './development-inventory';
+
+export * from './development-discovery';

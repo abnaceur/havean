@@ -9,6 +9,7 @@ import {favoriteMutation} from '../favorites';
 import {rentalTermsUpdate} from '../rental-terms';
 import {projectCreate,projectUpdate,phaseCreate,phaseUpdate,projectBuildingCreate,projectBuildingUpdate} from '../development-projects';
 import {floorTypeCreate,floorTypeUpdate,offeredUnitCreate,offeredUnitUpdate} from '../development-inventory';
+import {developmentFilters,developmentPricing} from '../development-discovery';
 import {deletionRequest} from '../account-privacy';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
@@ -39,6 +40,7 @@ export const operations={
 "DevelopmentInventoryController_units":{method:"GET",path:"/api/v1/ops/developments/:id/offered-units",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DevelopmentInventoryController_units"]},
 "DevelopmentInventoryController_updateType":{method:"PATCH",path:"/api/v1/ops/developments/:id/floor-types/:typeId",params:z.object({"id":z.string().min(1),"typeId":z.string().min(1)}),query:z.object({}),body:floorTypeUpdate,response:responses["DevelopmentInventoryController_updateType"]},
 "DevelopmentInventoryController_updateUnit":{method:"PATCH",path:"/api/v1/ops/developments/:id/offered-units/:unitId",params:z.object({"id":z.string().min(1),"unitId":z.string().min(1)}),query:z.object({}),body:offeredUnitUpdate,response:responses["DevelopmentInventoryController_updateUnit"]},
+"DevelopmentPricingController_update":{method:"PATCH",path:"/api/v1/ops/developments/:id/pricing",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:developmentPricing,response:responses["DevelopmentPricingController_update"]},
 "DevelopmentProjectsController_create":{method:"POST",path:"/api/v1/ops/developments",params:z.object({}),query:z.object({}),body:projectCreate,response:responses["DevelopmentProjectsController_create"]},
 "DevelopmentProjectsController_createBuilding":{method:"POST",path:"/api/v1/ops/developments/:id/buildings",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:projectBuildingCreate,response:responses["DevelopmentProjectsController_createBuilding"]},
 "DevelopmentProjectsController_createPhase":{method:"POST",path:"/api/v1/ops/developments/:id/phases",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:phaseCreate,response:responses["DevelopmentProjectsController_createPhase"]},
@@ -52,7 +54,7 @@ export const operations={
 "DiscoveryController_communities":{method:"GET",path:"/api/v1/communities",params:z.object({}),query:geographyFilters,body:z.undefined(),response:responses["DiscoveryController_communities"]},
 "DiscoveryController_community":{method:"GET",path:"/api/v1/communities/:id",params:z.object({"id":z.string().min(1)}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_community"]},
 "DiscoveryController_development":{method:"GET",path:"/api/v1/developments/:id",params:z.object({"id":z.string().min(1)}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_development"]},
-"DiscoveryController_developments":{method:"GET",path:"/api/v1/developments",params:z.object({}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_developments"]},
+"DiscoveryController_developments":{method:"GET",path:"/api/v1/developments",params:z.object({}),query:developmentFilters,body:z.undefined(),response:responses["DiscoveryController_developments"]},
 "DiscoveryController_districts":{method:"GET",path:"/api/v1/cities/:id/districts",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_districts"]},
 "DiscoveryController_estimate":{method:"POST",path:"/api/v1/tools/mortgage-estimate",params:z.object({}),query:z.object({}),body:mortgageSchema,response:responses["DiscoveryController_estimate"]},
 "DiscoveryController_facets":{method:"GET",path:"/api/v1/listings/facets",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj')}),body:z.undefined(),response:responses["DiscoveryController_facets"]},
