@@ -1,3 +1,4 @@
+import {publishDevelopmentFixture} from '../support/development-review';
 import '../support/env';
 import {it,expect,afterAll} from 'vitest';
 import type {FastifyRequest} from 'fastify';
@@ -14,8 +15,9 @@ it('D07 city-scoped bounded home feeds show only active eligible curation and di
  const listings:string[]=[],developments:string[]=[];
  await transaction(workerActor,async c=>{
   for(const tx of ['sale','rent'])listings.push((await c.query(`INSERT INTO listings(unit_id,organization_id,owner_id,agent_id,slug,title,description,transaction,segment,currency,price,rent_period,photos,status,published_at) SELECT unit_id,organization_id,owner_id,agent_id,$1,'Homepage '||$2::text,'Synthetic home feed fixture',$2,'residential','CNY','1234567.89',CASE WHEN $2='rent' THEN 'month' ELSE NULL END,photos,'published',now() FROM listings WHERE id='10000000-0000-4000-8000-000000002000' RETURNING id`,['home-feed-'+crypto.randomUUID(),tx])).rows[0].id);
-  developments.push((await c.query(`INSERT INTO developments(id,organization_id,community_id,slug,name,description,status,price_min,price_max,currency,price_basis,completion_date,photos,features,inventory_at) SELECT gen_random_uuid(),organization_id,community_id,$1,'Homepage project','Synthetic homepage project','on_sale',price_min,price_max,currency,price_basis,completion_date,photos,features,now() FROM developments WHERE status='on_sale' ORDER BY id LIMIT 1 RETURNING id`,['home-project-'+crypto.randomUUID()])).rows[0].id);
+  developments.push((await c.query(`INSERT INTO developments(id,organization_id,community_id,slug,name,description,status,price_min,price_max,currency,price_basis,completion_date,photos,features,inventory_at) SELECT gen_random_uuid(),organization_id,community_id,$1,'Homepage project','Synthetic homepage project','draft',price_min,price_max,currency,price_basis,completion_date,photos,features,now() FROM developments WHERE status='on_sale' ORDER BY id LIMIT 1 RETURNING id`,['home-project-'+crypto.randomUUID()])).rows[0].id);
  });
+ await publishDevelopmentFixture({...workerActor,orgId:'10000000-0000-4000-8000-000000000003'},developments[0],1,'coming_soon');
  try{
   const base={resourceType:'listing',resourceId:listings[0],city:'bj',points:100,sponsored:true,publicLabel:'Homepage synthetic sponsor',startsAt:new Date(Date.now()-3600000).toISOString(),endsAt:new Date(Date.now()+86400000).toISOString(),status:'active'};
   const placement=(await boosts.create(request(),base)).data;await boosts.create(request(),{...base,resourceType:'development',resourceId:developments[0],sponsored:false});

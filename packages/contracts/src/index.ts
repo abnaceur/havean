@@ -35,3 +35,5 @@ export * from './development-projects';
 export * from './development-inventory';
 
 export * from './development-discovery';
+
+export * from './development-review';

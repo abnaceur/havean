@@ -10,6 +10,7 @@ import {rentalTermsUpdate} from '../rental-terms';
 import {projectCreate,projectUpdate,phaseCreate,phaseUpdate,projectBuildingCreate,projectBuildingUpdate} from '../development-projects';
 import {floorTypeCreate,floorTypeUpdate,offeredUnitCreate,offeredUnitUpdate} from '../development-inventory';
 import {developmentFilters,developmentPricing} from '../development-discovery';
+import {developmentReviewSubmit,developmentReviewDecision,developmentReviewQuery} from '../development-review';
 import {deletionRequest} from '../account-privacy';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
@@ -48,6 +49,12 @@ export const operations={
 "DevelopmentProjectsController_update":{method:"PATCH",path:"/api/v1/ops/developments/:id/project",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:projectUpdate,response:responses["DevelopmentProjectsController_update"]},
 "DevelopmentProjectsController_updateBuilding":{method:"PATCH",path:"/api/v1/ops/developments/:id/buildings/:buildingId",params:z.object({"id":z.string().min(1),"buildingId":z.string().min(1)}),query:z.object({}),body:projectBuildingUpdate,response:responses["DevelopmentProjectsController_updateBuilding"]},
 "DevelopmentProjectsController_updatePhase":{method:"PATCH",path:"/api/v1/ops/developments/:id/phases/:phaseId",params:z.object({"id":z.string().min(1),"phaseId":z.string().min(1)}),query:z.object({}),body:phaseUpdate,response:responses["DevelopmentProjectsController_updatePhase"]},
+"DevelopmentReviewController_decision":{method:"POST",path:"/api/v1/ops/development-reviews/:id/decision",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:developmentReviewDecision,response:responses["DevelopmentReviewController_decision"]},
+"DevelopmentReviewController_detail":{method:"GET",path:"/api/v1/ops/development-reviews/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DevelopmentReviewController_detail"]},
+"DevelopmentReviewController_leads":{method:"GET",path:"/api/v1/ops/developments/:id/leads",params:z.object({"id":z.string().min(1)}),query:developmentReviewQuery,body:z.undefined(),response:responses["DevelopmentReviewController_leads"]},
+"DevelopmentReviewController_queue":{method:"GET",path:"/api/v1/ops/development-reviews",params:z.object({}),query:developmentReviewQuery,body:z.undefined(),response:responses["DevelopmentReviewController_queue"]},
+"DevelopmentReviewController_read":{method:"GET",path:"/api/v1/ops/developments/:id/publication",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DevelopmentReviewController_read"]},
+"DevelopmentReviewController_submit":{method:"POST",path:"/api/v1/ops/developments/:id/submit",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:developmentReviewSubmit,response:responses["DevelopmentReviewController_submit"]},
 "DiscoveryController_agent":{method:"GET",path:"/api/v1/agents/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_agent"]},
 "DiscoveryController_agents":{method:"GET",path:"/api/v1/agents",params:z.object({}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_agents"]},
 "DiscoveryController_cities":{method:"GET",path:"/api/v1/cities",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_cities"]},
