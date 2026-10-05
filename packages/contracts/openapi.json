@@ -4287,6 +4287,242 @@
         "security": []
       }
     },
+    "/api/v1/listings/facets": {
+      "get": {
+        "operationId": "DiscoveryController_facets",
+        "tags": [
+          "Discovery"
+        ],
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "bj",
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,50}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "finishing": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "heating": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "furnishing": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "buildingType": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "features": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "ownership": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "holdingPeriod": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "finishing",
+                        "heating",
+                        "furnishing",
+                        "buildingType",
+                        "features",
+                        "ownership",
+                        "holdingPeriod"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
     "/api/v1/listings/{id}": {
       "get": {
         "operationId": "DiscoveryController_listing",
@@ -4435,6 +4671,47 @@
                         "longitude": {
                           "nullable": true,
                           "type": "number"
+                        },
+                        "neighborhoodId": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "builtYear": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "floorCategory": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "buildingType": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "finishing": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "heating": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "ownership": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "holdingPeriod": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "tourAvailable": {
+                          "type": "boolean"
                         }
                       },
                       "required": [
@@ -4467,7 +4744,16 @@
                         "city",
                         "agentId",
                         "latitude",
-                        "longitude"
+                        "longitude",
+                        "neighborhoodId",
+                        "builtYear",
+                        "floorCategory",
+                        "buildingType",
+                        "finishing",
+                        "heating",
+                        "ownership",
+                        "holdingPeriod",
+                        "tourAvailable"
                       ],
                       "additionalProperties": false
                     },
@@ -4649,7 +4935,7 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 240,
-              "pattern": "^[\\p{L}\\p{N} _'.,-]+$"
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
             }
           },
           {
@@ -4672,6 +4958,24 @@
           },
           {
             "name": "neighborhoodId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 740
+            }
+          },
+          {
+            "name": "lineId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 740
+            }
+          },
+          {
+            "name": "stationId",
             "in": "query",
             "required": false,
             "schema": {
@@ -4757,9 +5061,17 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 20
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20
+                },
+                {
+                  "type": "string",
+                  "pattern": "^\\d{1,2}(,\\d{1,2}){1,19}$"
+                }
+              ]
             }
           },
           {
@@ -4767,9 +5079,17 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 20
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 20
+                },
+                {
+                  "type": "string",
+                  "pattern": "^\\d{1,2}(,\\d{1,2}){1,19}$"
+                }
+              ]
             }
           },
           {
@@ -4800,7 +5120,7 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 240,
-              "pattern": "^[\\p{L}\\p{N} _'.,-]+$"
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
             }
           },
           {
@@ -4811,7 +5131,7 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 240,
-              "pattern": "^[\\p{L}\\p{N} _'.,-]+$"
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
             }
           },
           {
@@ -4822,7 +5142,115 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 240,
-              "pattern": "^[\\p{L}\\p{N} _'.,-]+$"
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "floorCategory",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "buildingType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "finishing",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "heating",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "ownership",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "holdingPeriod",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[\\p{L}\\p{N}\\p{Pd} _'.,-]+$"
+            }
+          },
+          {
+            "name": "tourAvailable",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "recentDays",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3650
+            }
+          },
+          {
+            "name": "minAge",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 250
+            }
+          },
+          {
+            "name": "maxAge",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 250
             }
           },
           {
@@ -5009,6 +5437,47 @@
                           "longitude": {
                             "nullable": true,
                             "type": "number"
+                          },
+                          "neighborhoodId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "builtYear": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "floorCategory": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "buildingType": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "finishing": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "heating": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "ownership": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "holdingPeriod": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "tourAvailable": {
+                            "type": "boolean"
                           }
                         },
                         "required": [
@@ -5041,7 +5510,16 @@
                           "city",
                           "agentId",
                           "latitude",
-                          "longitude"
+                          "longitude",
+                          "neighborhoodId",
+                          "builtYear",
+                          "floorCategory",
+                          "buildingType",
+                          "finishing",
+                          "heating",
+                          "ownership",
+                          "holdingPeriod",
+                          "tourAvailable"
                         ],
                         "additionalProperties": false
                       }
@@ -5255,6 +5733,40 @@
                             },
                             "demo": {
                               "type": "boolean"
+                            },
+                            "pricePresets": {
+                              "default": [],
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 80
+                                  },
+                                  "transaction": {
+                                    "type": "string",
+                                    "enum": [
+                                      "sale",
+                                      "rent"
+                                    ]
+                                  },
+                                  "min": {
+                                    "type": "string",
+                                    "pattern": "^\\d+(\\.\\d{1,2})?$"
+                                  },
+                                  "max": {
+                                    "type": "string",
+                                    "pattern": "^\\d+(\\.\\d{1,2})?$"
+                                  }
+                                },
+                                "required": [
+                                  "label",
+                                  "transaction"
+                                ],
+                                "additionalProperties": false
+                              }
                             }
                           },
                           "required": [
@@ -5265,7 +5777,8 @@
                             "annualRate",
                             "rentPeriod",
                             "supportEmail",
-                            "demo"
+                            "demo",
+                            "pricePresets"
                           ],
                           "additionalProperties": false
                         },
@@ -6026,6 +6539,47 @@
                           "longitude": {
                             "nullable": true,
                             "type": "number"
+                          },
+                          "neighborhoodId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "builtYear": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "floorCategory": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "buildingType": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "finishing": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "heating": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "ownership": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "holdingPeriod": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "tourAvailable": {
+                            "type": "boolean"
                           }
                         },
                         "required": [
@@ -6058,7 +6612,16 @@
                           "city",
                           "agentId",
                           "latitude",
-                          "longitude"
+                          "longitude",
+                          "neighborhoodId",
+                          "builtYear",
+                          "floorCategory",
+                          "buildingType",
+                          "finishing",
+                          "heating",
+                          "ownership",
+                          "holdingPeriod",
+                          "tourAvailable"
                         ],
                         "additionalProperties": false
                       }
@@ -9921,6 +10484,47 @@
                           "longitude": {
                             "nullable": true,
                             "type": "number"
+                          },
+                          "neighborhoodId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "builtYear": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "floorCategory": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "buildingType": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "finishing": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "heating": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "ownership": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "holdingPeriod": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "tourAvailable": {
+                            "type": "boolean"
                           }
                         },
                         "required": [
@@ -9953,7 +10557,16 @@
                           "city",
                           "agentId",
                           "latitude",
-                          "longitude"
+                          "longitude",
+                          "neighborhoodId",
+                          "builtYear",
+                          "floorCategory",
+                          "buildingType",
+                          "finishing",
+                          "heating",
+                          "ownership",
+                          "holdingPeriod",
+                          "tourAvailable"
                         ],
                         "additionalProperties": false
                       }
@@ -12913,6 +13526,10 @@
                             },
                             "status": {
                               "type": "string"
+                            },
+                            "building_type": {
+                              "nullable": true,
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -12924,7 +13541,8 @@
                             "floors",
                             "completed_year",
                             "version",
-                            "status"
+                            "status",
+                            "building_type"
                           ],
                           "additionalProperties": false
                         },
@@ -13514,6 +14132,10 @@
                             },
                             "status": {
                               "type": "string"
+                            },
+                            "building_type": {
+                              "nullable": true,
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -13525,7 +14147,8 @@
                             "floors",
                             "completed_year",
                             "version",
-                            "status"
+                            "status",
+                            "building_type"
                           ],
                           "additionalProperties": false
                         },
@@ -14282,6 +14905,17 @@
                         "minimum": 1800,
                         "maximum": 2200
                       },
+                      "buildingType": {
+                        "default": null,
+                        "nullable": true,
+                        "type": "string",
+                        "enum": [
+                          "Tower",
+                          "Slab",
+                          "Combined",
+                          "Bungalow"
+                        ]
+                      },
                       "version": {
                         "type": "integer",
                         "minimum": 0,
@@ -14743,6 +15377,10 @@
                             },
                             "status": {
                               "type": "string"
+                            },
+                            "building_type": {
+                              "nullable": true,
+                              "type": "string"
                             }
                           },
                           "required": [
@@ -14754,7 +15392,8 @@
                             "floors",
                             "completed_year",
                             "version",
-                            "status"
+                            "status",
+                            "building_type"
                           ],
                           "additionalProperties": false
                         },
@@ -15468,6 +16107,17 @@
                         "type": "integer",
                         "minimum": 1800,
                         "maximum": 2200
+                      },
+                      "buildingType": {
+                        "default": null,
+                        "nullable": true,
+                        "type": "string",
+                        "enum": [
+                          "Tower",
+                          "Slab",
+                          "Combined",
+                          "Bungalow"
+                        ]
                       }
                     },
                     "required": [
@@ -15720,6 +16370,10 @@
                               },
                               "status": {
                                 "type": "string"
+                              },
+                              "building_type": {
+                                "nullable": true,
+                                "type": "string"
                               }
                             },
                             "required": [
@@ -15731,7 +16385,8 @@
                               "floors",
                               "completed_year",
                               "version",
-                              "status"
+                              "status",
+                              "building_type"
                             ],
                             "additionalProperties": false
                           },
@@ -16694,6 +17349,47 @@
                           "longitude": {
                             "nullable": true,
                             "type": "number"
+                          },
+                          "neighborhoodId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "builtYear": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "floorCategory": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "buildingType": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "finishing": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "heating": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "ownership": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "holdingPeriod": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "tourAvailable": {
+                            "type": "boolean"
                           }
                         },
                         "required": [
@@ -16726,7 +17422,16 @@
                           "city",
                           "agentId",
                           "latitude",
-                          "longitude"
+                          "longitude",
+                          "neighborhoodId",
+                          "builtYear",
+                          "floorCategory",
+                          "buildingType",
+                          "finishing",
+                          "heating",
+                          "ownership",
+                          "holdingPeriod",
+                          "tourAvailable"
                         ],
                         "additionalProperties": false
                       }
@@ -16939,6 +17644,40 @@
                             },
                             "demo": {
                               "type": "boolean"
+                            },
+                            "pricePresets": {
+                              "default": [],
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 80
+                                  },
+                                  "transaction": {
+                                    "type": "string",
+                                    "enum": [
+                                      "sale",
+                                      "rent"
+                                    ]
+                                  },
+                                  "min": {
+                                    "type": "string",
+                                    "pattern": "^\\d+(\\.\\d{1,2})?$"
+                                  },
+                                  "max": {
+                                    "type": "string",
+                                    "pattern": "^\\d+(\\.\\d{1,2})?$"
+                                  }
+                                },
+                                "required": [
+                                  "label",
+                                  "transaction"
+                                ],
+                                "additionalProperties": false
+                              }
                             }
                           },
                           "required": [
@@ -16949,7 +17688,8 @@
                             "annualRate",
                             "rentPeriod",
                             "supportEmail",
-                            "demo"
+                            "demo",
+                            "pricePresets"
                           ],
                           "additionalProperties": false
                         },
@@ -17152,6 +17892,40 @@
                   },
                   "demo": {
                     "type": "boolean"
+                  },
+                  "pricePresets": {
+                    "default": [],
+                    "maxItems": 12,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 80
+                        },
+                        "transaction": {
+                          "type": "string",
+                          "enum": [
+                            "sale",
+                            "rent"
+                          ]
+                        },
+                        "min": {
+                          "type": "string",
+                          "pattern": "^\\d+(\\.\\d{1,2})?$"
+                        },
+                        "max": {
+                          "type": "string",
+                          "pattern": "^\\d+(\\.\\d{1,2})?$"
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "transaction"
+                      ]
+                    }
                   }
                 },
                 "required": [

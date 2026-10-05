@@ -1,0 +1,40 @@
+ Container haven-integration-tests-run-defbb5271156 Creating
+ Container haven-integration-tests-run-defbb5271156 Created
+
+> haven-real-estate@0.1.0 test:integration /workspace
+> vitest run tests/integration
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/database.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 129[2mms[22m[39m
+ [32m✓[39m tests/integration/listing-revisions.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 113[2mms[22m[39m
+ [32m✓[39m tests/integration/resale-filters.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2161[2mms[22m[39m
+   [33m[2m✓[22m[39m D04 combined resale facets use OR within groups and AND between them, including actual public tour eligibility and bounded transit proximity[33m 2034[2mms[22m[39m
+ [32m✓[39m tests/integration/listing-expiration.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1656[2mms[22m[39m
+   [33m[2m✓[22m[39m I08 real queue expiration and late duplicate jobs create one atomic transition and remove public destinations/search[33m 887[2mms[22m[39m
+ [32m✓[39m tests/integration/listing-workflow.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 205[2mms[22m[39m
+ [32m✓[39m tests/integration/outbox.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2050[2mms[22m[39m
+   [32m✓[39m F09 real queue replay and crash recovery [2m(2)[22m
+     [33m[2m✓[22m[39m crash after SMTP delivery retries without duplicating mail or notifications[33m 1321[2mms[22m[39m
+     [33m[2m✓[22m[39m an old publish event cannot resurrect withdrawn inventory[33m 722[2mms[22m[39m
+ [32m✓[39m tests/integration/typed-search.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 3298[2mms[22m[39m
+   [33m[2m✓[22m[39m D02 exact city/decimal filters, UUID ties and opaque bounded cursors return the expected IDs without duplicates[33m 3159[2mms[22m[39m
+ [32m✓[39m tests/integration/inventory-schema.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+ [32m✓[39m tests/integration/moderation-evidence.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m tests/integration/search-projection.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1269[2mms[22m[39m
+   [33m[2m✓[22m[39m D01 approved public projection is searchable with exact decimal price and no private fields; old publication cannot resurrect withdrawal[33m 1265[2mms[22m[39m
+ [32m✓[39m tests/integration/contracts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 295[2mms[22m[39m
+ [32m✓[39m tests/integration/geography.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m tests/integration/search-history.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 177[2mms[22m[39m
+ [32m✓[39m tests/integration/readiness.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m14 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m [1m[32m62 passed[39m[22m[90m (62)[39m
+[2m   Start at [22m 17:02:48
+[2m   Duration [22m 19.94s[2m (tests 63%, import 36%, transform 1%)[22m
+
+[2m     Import [22m [33m45 modules were evaluated 63 times[39m[2m · 6.60s total, 36% of tracked time[22m
+[2m            [22m [2m~1.89s faster with [22m[33misolate: false[39m[2m — shared modules are evaluated once per worker instead of once per file[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-isolation[22m
+

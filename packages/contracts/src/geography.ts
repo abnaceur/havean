@@ -1,4 +1,6 @@
 import {z} from 'zod';
+import {money} from './domain';
+import Decimal from 'decimal.js';
 export const geographyKind=z.enum(['cities','districts','neighborhoods','lines','stations','communities','buildings']);
 const slug=z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(100);
 const base=z.object({name:z.string().trim().min(2).max(120),slug,aliases:z.array(z.string().trim().min(1).max(100)).max(12).default([])});
@@ -10,8 +12,9 @@ const neighborhood=base.extend({kind:z.literal('neighborhoods'),districtId:ident
 const line=base.extend({kind:z.literal('lines'),cityId:identifier});
 const station=base.extend({kind:z.literal('stations'),cityId:identifier,lineId:identifier,districtId:identifier,latitude:z.number().min(-90).max(90),longitude:z.number().min(-180).max(180)});
 const community=base.extend({kind:z.literal('communities'),districtId:identifier,neighborhoodId:identifier.nullable().default(null),address:z.string().trim().min(5).max(200),builtYear:z.number().int().min(1800).max(2200).nullable().default(null),amenities:z.array(z.string().trim().min(1).max(80)).max(30).default([]),latitude:z.number().min(-90).max(90),longitude:z.number().min(-180).max(180)});
-const building=base.extend({kind:z.literal('buildings'),communityId:identifier,floors:z.number().int().min(1).max(200).nullable().default(null),completedYear:z.number().int().min(1800).max(2200).nullable().default(null)});
+const building=base.extend({kind:z.literal('buildings'),communityId:identifier,floors:z.number().int().min(1).max(200).nullable().default(null),completedYear:z.number().int().min(1800).max(2200).nullable().default(null),buildingType:z.enum(['Tower','Slab','Combined','Bungalow']).nullable().default(null)});
 export const geographyCreate=z.discriminatedUnion('kind',[city,district,neighborhood,line,station,community,building]);
 export const geographyUpdate=z.discriminatedUnion('kind',[city.extend({version:z.number().int().positive()}),district.extend({version:z.number().int().positive()}),neighborhood.extend({version:z.number().int().positive()}),line.extend({version:z.number().int().positive()}),station.extend({version:z.number().int().positive()}),community.extend({version:z.number().int().positive()}),building.extend({version:z.number().int().positive()})]);
 export const geographyFilters=z.object({city:z.string().min(1).max(100).default('bj'),districtId:identifier.optional(),text:z.string().max(120).default(''),page:z.coerce.number().int().min(1).max(500).default(1),limit:z.coerce.number().int().min(1).max(50).default(20)});
-export const marketSettings=z.object({version:z.number().int().positive(),areaUnit:z.enum(['m²','sq ft']),annualRate:z.string().regex(/^\d{1,2}(\.\d{1,4})?$/).refine(value=>Number(value)<=30),rentPeriod:z.enum(['month','year','day']),supportEmail:z.string().email(),demo:z.boolean()});
+export const pricePreset=z.object({label:z.string().min(1).max(80),transaction:z.enum(['sale','rent']),min:money.optional(),max:money.optional()}).refine(x=>x.min===undefined||x.max===undefined||new Decimal(x.min).lte(x.max),'Invalid price preset range');
+export const marketSettings=z.object({version:z.number().int().positive(),areaUnit:z.enum(['m²','sq ft']),annualRate:z.string().regex(/^\d{1,2}(\.\d{1,4})?$/).refine(value=>Number(value)<=30),rentPeriod:z.enum(['month','year','day']),supportEmail:z.string().email(),demo:z.boolean(),pricePresets:z.array(pricePreset).max(12).default([])});

@@ -1,10 +1,10 @@
 import {models} from './generated/models';
 
 /** Increment when the public document or its numeric comparison encoding changes. */
-export const listingSearchSchemaVersion=1;
+export const listingSearchSchemaVersion=2;
 export const listingSearchSettings={
  searchableAttributes:['title','description','community','district','features'],
- filterableAttributes:['city','district','districtId','communityId','transaction','segment','status','beds','livingRooms','orientation','elevator','furnishing','features','currency','rentPeriod','priceMinor','pricePrecisionSafe','areaNumber','projectionSchemaVersion'],
+ filterableAttributes:['city','district','districtId','communityId','transaction','segment','status','beds','livingRooms','orientation','elevator','furnishing','features','currency','rentPeriod','priceMinor','pricePrecisionSafe','areaNumber','publishedOrder','projectionSchemaVersion','neighborhoodId','builtYear','floorCategory','buildingType','finishing','heating','ownership','holdingPeriod','tourAvailable'],
  sortableAttributes:['publishedAt','publishedOrder','priceMinor','priceMissing','areaNumber','id'],
 };
 

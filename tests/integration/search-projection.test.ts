@@ -2,7 +2,7 @@ import '../support/env';
 import {it,expect,afterAll} from 'vitest';
 import {pool,transaction} from '../../packages/database/src/index';
 import {createProcessor,workerActor,initializeSearch} from '../../apps/worker/src/processor';
-import {exactPriceMinor,publicListingSearchDocument} from '../../packages/contracts/src/search-projection';
+import {exactPriceMinor,publicListingSearchDocument,listingSearchSchemaVersion} from '../../packages/contracts/src/search-projection';
 afterAll(()=>pool.end());
 const headers={Authorization:'Bearer '+process.env.SEARCH_KEY,'Content-Type':'application/json'};
 async function project(id:string,kind:string){
@@ -18,8 +18,8 @@ it('D01 approved public projection is searchable with exact decimal price and no
   const serialized=publicListingSearchDocument({...source,private_address:sentinel,owner_id:sentinel,internal_note:sentinel});
   expect(JSON.stringify(serialized)).not.toContain(sentinel);expect(serialized.price).toBe('900001.37');expect(serialized.priceMinor).toBe(90000137);
   await project(id,'listing.published');
-  const search=await fetch(process.env.SEARCH_URL+'/indexes/listings/search',{method:'POST',headers,body:JSON.stringify({q:marker,filter:'city = "bj" AND priceMinor = 90000137 AND projectionSchemaVersion = 1'})}).then(r=>r.json());
-  expect(search.hits.map((d:any)=>d.id)).toEqual([id]);expect(search.hits[0]).toMatchObject({price:'900001.37',sourceVersion:1,projectionSchemaVersion:1});
+  const search=await fetch(process.env.SEARCH_URL+'/indexes/listings/search',{method:'POST',headers,body:JSON.stringify({q:marker,filter:'city = "bj" AND priceMinor = 90000137 AND projectionSchemaVersion = '+listingSearchSchemaVersion})}).then(r=>r.json());
+  expect(search.hits.map((d:any)=>d.id)).toEqual([id]);expect(search.hits[0]).toMatchObject({price:'900001.37',sourceVersion:1,projectionSchemaVersion:listingSearchSchemaVersion});
   for(const field of ['owner_id','organization_id','private_address','internal_note','created_by'])expect(search.hits[0]).not.toHaveProperty(field);
   await transaction(workerActor,c=>c.query("UPDATE listings SET status='paused',version=version+1 WHERE id=$1",[id]));
   await project(id,'listing.paused');await project(id,'listing.published');

@@ -14,11 +14,11 @@ test('G03 city selection preserves category, clears incompatible filters and sur
  await page.getByRole('link',{name:'Explore available homes',exact:true}).click();await expect(page).toHaveURL(/\/bj\/buy$/);expect(page.url()).not.toContain('district=');
 });
 test('G04 community search, city/district filtering and empty reset',async({page})=>{
- await page.goto('/bj/communities');await page.getByRole('textbox',{name:'Search properties',exact:true}).fill('Willow');await page.getByRole('button',{name:'Search',exact:true}).click();await expect(page).toHaveURL(/\/bj\/communities\?text=Willow/);
+ await page.goto('/bj/communities');await page.getByRole('combobox',{name:'Search properties',exact:true}).fill('Willow');await page.getByRole('button',{name:'Search',exact:true}).click();await expect(page).toHaveURL(/\/bj\/communities\?text=Willow/);
  await expect(page.getByRole('link',{name:'Willow Park',exact:true})).toBeVisible();await page.getByRole('link',{name:'Willow Park',exact:true}).click();await expect(page.getByRole('heading',{name:'Willow Park',exact:true})).toBeVisible();await page.goBack();await expect(page).toHaveURL(/text=Willow/);
  const response=await page.request.get('/api/v1/communities?city=sh&text=Willow');expect(response.status()).toBe(200);expect((await response.json()).data).toHaveLength(0);
  const scoped=await page.request.get('/api/v1/communities?city=bj&districtId=10000000-0000-4000-8000-000000000020&limit=1');const body=await scoped.json();expect(body.meta.total).toBeGreaterThanOrEqual(1);expect(body.data.every((row:any)=>row.districtId==='10000000-0000-4000-8000-000000000020')).toBe(true);
- await page.getByRole('textbox',{name:'Search properties',exact:true}).fill('No matching community fixture');await page.getByRole('button',{name:'Search',exact:true}).click();await expect(page.getByRole('heading',{name:'No matches just yet',exact:true})).toBeVisible();await page.getByRole('link',{name:'Clear filters',exact:true}).click();await expect(page.getByRole('link',{name:'Willow Park',exact:true})).toBeVisible();
+ await page.getByRole('combobox',{name:'Search properties',exact:true}).fill('No matching community fixture');await page.getByRole('button',{name:'Search',exact:true}).click();await expect(page.getByRole('heading',{name:'No matches just yet',exact:true})).toBeVisible();await page.getByRole('link',{name:'Clear filters',exact:true}).click();await expect(page.getByRole('link',{name:'Willow Park',exact:true})).toBeVisible();
 });
 
 test('G05 community tabs and dated statistics reconcile to eligible public records',async({page},info)=>{

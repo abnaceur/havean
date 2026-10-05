@@ -30,5 +30,5 @@ it('D02 rejects raw expressions, invalid ordering, ranges, mixed currencies and 
 });
 it('D02 canonical facets combine OR within each facet with AND between facets using parameters and quoted search values',()=>{
  const query=listingFilters.parse({district:'Chaoyang,Haidian,Chaoyang',features:'Elevator,Garden',minPrice:'0.01',maxArea:'0'}),compiled=compileListingSearch(query);
- expect(query.district).toBe('Chaoyang,Haidian');expect(compiled.values).toContainEqual(['Chaoyang','Haidian']);expect(compiled.filter).toContain('(district = "Chaoyang" OR district = "Haidian")');expect(compiled.filter).toContain('priceMinor >= 1');expect(compiled.where).toContain('features &&');expect(compiled.where).not.toContain('Chaoyang');
+ expect(query.district).toBe('Chaoyang,Haidian');expect(compiled.values).toContainEqual(['Chaoyang','Haidian']);expect(compiled.filter).toContain('(district = "Chaoyang" OR district = "Haidian")');expect(compiled.filter).toContain('priceMinor >= 1');expect(compiled.where).toMatch(/"?features"? &&/);expect(compiled.where).not.toContain('Chaoyang');
 });

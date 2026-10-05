@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import {pricePreset} from './geography';
 import {models as m} from './generated/models';
 import {floorLayout,propertyMediaMetadata} from './property-media';
 import {ownerSchema} from './domain';
@@ -18,7 +19,7 @@ const mediaMetadata=propertyMediaMetadata;
 const studioMedia=m.listing_media.extend({metadata:mediaMetadata,pending_metadata:mediaMetadata.nullable(),purpose:s,width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),rights:s,scan_at:s.nullable()});
 const publicMedia=z.object({id:uuid,kind:z.enum(['photo','floor_plan','panorama','video']),title:s,position:n,floorPlanId:uuid.nullable(),url:s,poster:s.nullable(),width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),caption:s,spatial:floorLayout.safeExtend({rooms:z.array(floorLayout.shape.rooms.element)}).nullable(),hotspots:mediaMetadata.shape.hotspots});
 const geographyRecord=z.union([m.transit_stations,m.communities.extend({latitude:n.nullable(),longitude:n.nullable()}),m.buildings,m.neighborhoods,m.cities,m.districts,m.transit_lines]);
-const market=z.object({name:s,currency:s,timezone:s,areaUnit:s,annualRate:decimal,rentPeriod:s,supportEmail:s,demo:bool});
+const market=z.object({name:s,currency:s,timezone:s,areaUnit:s,annualRate:decimal,rentPeriod:s,supportEmail:s,demo:bool,pricePresets:z.array(pricePreset).default([])});
 const support=m.support_cases.omit({user_id:true,internal_note:true});
 const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nullable(),currency:s});
 const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});
@@ -34,7 +35,7 @@ export const responses={
  IdentityController_login:s,IdentityController_callback:s,IdentityController_logout:z.object({signedOut:bool}),
  IdentityController_me:z.object({id:uuid,displayName:s,email:s,locale:s,roles:z.array(s),organizationId:uuid.nullable()}),
  DiscoveryController_cities:z.array(m.cities),DiscoveryController_districts:z.array(m.districts),DiscoveryController_market:z.object({data:market,version:n}),
- DiscoveryController_listings:z.array(m.public_listings),DiscoveryController_listing:m.public_listings,DiscoveryController_similar:z.array(m.public_listings),
+ DiscoveryController_facets:z.object({finishing:z.array(s),heating:z.array(s),furnishing:z.array(s),buildingType:z.array(s),features:z.array(s),ownership:z.array(s),holdingPeriod:z.array(s)}),DiscoveryController_listings:z.array(m.public_listings),DiscoveryController_listing:m.public_listings,DiscoveryController_similar:z.array(m.public_listings),
  DiscoveryController_suggestions:z.array(z.object({id:uuid,name:s,slug:s,kind:z.enum(['community','district','neighborhood']),city:s})),DiscoveryController_communities:z.array(community),DiscoveryController_community:community,
  DiscoveryController_agents:z.array(agent),DiscoveryController_agent:agent,DiscoveryController_developments:z.array(development),
  DiscoveryController_development:development.omit({community_id:true,version:true}).extend({floorPlans:z.array(m.floor_plans)}),

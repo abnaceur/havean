@@ -45,5 +45,6 @@ try{
  for(const b of fixtures.buildings)await c.query('INSERT INTO buildings(id,community_id,slug,name,floors,completed_year) VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT DO NOTHING',[b.id,b.communityId,b.slug,b.name,b.floors,b.completedYear]);
  for(const co of fixtures.communities)await c.query('UPDATE communities SET neighborhood_id=$2 WHERE id=$1 AND neighborhood_id IS NULL',[co.id,fixtures.neighborhoods.find(n=>n.districtId===co.districtId)!.id]);
  await c.query("UPDATE units SET building_id=b.id FROM buildings b WHERE units.community_id=b.community_id AND b.slug='building-a' AND units.id=ANY($1::uuid[]) AND units.building_id IS NULL",[fixtures.listings.map(l=>l.unitId)]);
+ await c.query("UPDATE market_config SET data=data||$1::jsonb WHERE id='bj' AND NOT data ? 'pricePresets'",[JSON.stringify({pricePresets:[{label:'Up to 4 million',transaction:'sale',min:'0',max:'4000000'},{label:'4–6 million',transaction:'sale',min:'4000000',max:'6000000'},{label:'Above 6 million',transaction:'sale',min:'6000000'},{label:'Up to 5,000/month',transaction:'rent',min:'0',max:'5000'}]})]);
  await c.query('COMMIT');console.log('Geography and building fixtures present; existing edits preserved');
 }catch(error){await c.query('ROLLBACK');throw error;}finally{c.release();await pool.end();}

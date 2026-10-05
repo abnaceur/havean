@@ -20,6 +20,7 @@ export const sdk={
 "DiscoveryController_developments":call(operations["DiscoveryController_developments"]),
 "DiscoveryController_districts":call(operations["DiscoveryController_districts"]),
 "DiscoveryController_estimate":call(operations["DiscoveryController_estimate"]),
+"DiscoveryController_facets":call(operations["DiscoveryController_facets"]),
 "DiscoveryController_listing":call(operations["DiscoveryController_listing"]),
 "DiscoveryController_listings":call(operations["DiscoveryController_listings"]),
 "DiscoveryController_market":call(operations["DiscoveryController_market"]),
