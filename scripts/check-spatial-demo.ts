@@ -19,7 +19,7 @@ try{
   await expect(dialog.getByRole('group',{name:'Tour position and direction'})).toBeVisible();
   await page.screenshot({path:'evidence/spatial-demo-tour-'+name+'.png'});
   await dialog.getByRole('button',{name:'3D model',exact:true}).click();
-  await expect(dialog.getByRole('status').filter({hasText:'3D model ready'})).toBeVisible();
+  await expect(dialog.getByRole('status').filter({hasText:'3D model ready'})).toHaveText(/3D model ready/);
   if(otherFloor){await dialog.getByLabel('Tour floor',{exact:true}).selectOption(otherFloor.id);await dialog.getByLabel('Tour floor',{exact:true}).selectOption('all');await expect(dialog.locator('.model-room')).toHaveCount(plan.spatial.rooms.length+otherFloor.spatial.rooms.length);}
   await page.screenshot({path:'evidence/spatial-demo-model-'+name+'.png'});
   await page.goto(planUrl);

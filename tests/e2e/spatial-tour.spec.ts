@@ -76,11 +76,11 @@ test('mapped rooms, multiple floors and real 3D geometry publish only after mode
  await dialog.getByRole('button',{name:'Enter Ground living',exact:true}).press('Enter');
  await expect(dialog.getByRole('img',{name:'360 degree view: '+living.title,exact:true})).toBeVisible();
  const direction=dialog.locator('.plan-camera');const heading=await direction.getAttribute('data-heading');
- await dialog.getByRole('button',{name:'Turn right',exact:true}).click();await expect(direction).not.toHaveAttribute('data-heading',heading!);
+ await dialog.getByRole('button',{name:'Tour controls',exact:true}).click();await dialog.getByRole('button',{name:'Turn right',exact:true}).click();await expect(direction).not.toHaveAttribute('data-heading',heading!);
  await dialog.getByLabel('Tour floor',{exact:true}).selectOption(upper.id);
  await expect(dialog.getByRole('img',{name:'360 degree view: '+bedroom.title,exact:true})).toBeVisible();
  await dialog.getByRole('button',{name:'3D model',exact:true}).click();
- await expect(dialog.getByRole('status').filter({hasText:'3D model ready'})).toBeVisible();
+ await expect(dialog.getByRole('status').filter({hasText:'3D model ready'})).toHaveText(/3D model ready/);
  await dialog.getByRole('button',{name:'Orbit right',exact:true}).click();await expect(dialog.getByText('Orbit -15° · Tilt 50°',{exact:true})).toBeVisible();
  await dialog.getByLabel('Tour floor',{exact:true}).selectOption('all');
  await expect(dialog.locator('.model-room')).toHaveCount(2);

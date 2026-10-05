@@ -1,0 +1,3 @@
+export type TourView={yaw:number;pitch:number;fov:number};
+export function pinchFieldOfView(initialFov:number,initialDistance:number,distance:number){return Math.max(30,Math.min(100,initialFov*initialDistance/Math.max(distance,1)));}
+export function projectTourHotspot(hotspot:{yaw:number;pitch:number},view:TourView,aspect:number){const r=Math.PI/180,yaw=(hotspot.yaw-view.yaw)*r,pitch=hotspot.pitch*r,tilt=view.pitch*r,x=Math.sin(yaw)*Math.cos(pitch),y=Math.sin(pitch),z=Math.cos(yaw)*Math.cos(pitch),cy=y*Math.cos(tilt)-z*Math.sin(tilt),cz=z*Math.cos(tilt)+y*Math.sin(tilt);if(cz<=0)return null;const scale=Math.tan(view.fov*r/2),left=(x/(cz*scale*aspect)+1)*50,top=(1-cy/(cz*scale))*50;return left<0||left>100||top<0||top>100?null:{left,top};}

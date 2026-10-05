@@ -71,9 +71,9 @@ test('D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish t
  await expect.poll(()=>player.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThan(0);await player.evaluate((v:HTMLVideoElement)=>v.pause());
  await page.getByRole('button',{name:/^Floor plans/}).click();if(await page.getByLabel('Property floor plan',{exact:true}).count())await page.getByLabel('Property floor plan',{exact:true}).selectOption(plan.id);await page.getByRole('button',{name:'Open '+plan.title,exact:true}).click();
  await page.getByRole('button',{name:'Zoom in',exact:true}).click();await expect(page.getByText('125%',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Close dialog',exact:true}).click();
- await page.getByRole('button',{name:/^360° tour/}).click();await page.getByLabel('Tour viewpoint',{exact:true}).selectOption(living.id);
+ await page.getByRole('button',{name:/^360° tour/}).click();await page.getByRole('button',{name:'Tour controls',exact:true}).click();await page.getByLabel('Tour viewpoint',{exact:true}).selectOption(living.id);
  const canvas=page.getByRole('img',{name:'360 degree view: '+living.title,exact:true});await expect(canvas).toBeVisible();
- await page.getByRole('button',{name:'Turn right',exact:true}).click();await expect(page.getByText(/View 15° \/ 0°/)).toBeVisible();
+ await page.getByRole('button',{name:'Tour controls',exact:true}).click();await page.getByRole('button',{name:'Turn right',exact:true}).click();await expect(page.getByText(/View 15° \/ 0°/)).toBeVisible();
  await page.getByRole('button',{name:'Go to Bedroom',exact:true}).click();await expect(page.getByRole('button',{name:bedroom.title,exact:true})).toHaveAttribute('aria-pressed','true');
  expect(await page.evaluate(width=>document.documentElement.scrollWidth<=width,page.viewportSize()!.width)).toBe(true);
  await page.screenshot({path:`evidence/rich-media-${info.project.name}.png`,fullPage:true});
