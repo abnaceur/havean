@@ -7,3 +7,5 @@ export * from './geography';
 export * from './inventory-drafts';
 
 export * from './property-media';
+
+export * from './search-projection';

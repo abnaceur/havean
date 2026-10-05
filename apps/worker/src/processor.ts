@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import {pool,transaction} from '@haven/database';
 import {config} from '@haven/config';
+import {listingSearchSettings,publicListingSearchDocument} from '@haven/contracts';
 export const workerActor={id:'00000000-0000-4000-8000-000000000010',orgId:null,roles:['admin']};
 export type FaultPoint='after-search'|'after-mail'|'before-commit';
 export type ProcessorOptions={afterEffect?:(point:FaultPoint)=>Promise<void>;searchUrl?:string;mailApiUrl?:string;mailHost?:string;mailPort?:number};
@@ -19,7 +20,7 @@ export async function searchTask(path:string,method:string,body?:unknown,searchU
 export async function initializeSearch(){
  const env=config(),index=await fetch(env.SEARCH_URL+'/indexes/listings',{headers:{Authorization:'Bearer '+env.SEARCH_KEY},signal:AbortSignal.timeout(5000)});
  await searchTask(index.ok?'/indexes/listings':'/indexes',index.ok?'PATCH':'POST',index.ok?{primaryKey:'id'}:{uid:'listings',primaryKey:'id'});
- await searchTask('/indexes/listings/settings','PATCH',{filterableAttributes:['city','district','transaction','segment','status','beds','furnishing'],sortableAttributes:['publishedAt','price','area']});
+ await searchTask('/indexes/listings/settings','PATCH',listingSearchSettings);
 }
 export function createProcessor(options:ProcessorOptions={}){
  const env=config(),mailApi=options.mailApiUrl||process.env.MAIL_API_URL||'http://mail:8025';
@@ -38,7 +39,7 @@ export function createProcessor(options:ProcessorOptions={}){
     const prior=(await c.query("SELECT source_version FROM projection_versions WHERE aggregate_id=$1 AND projection='listings'",[row.aggregate_id])).rows[0];
     if(!prior||prior.source_version<=version!){
      const publicDoc=(await c.query('SELECT * FROM public_listings WHERE id=$1',[row.aggregate_id])).rows[0];
-     await searchTask('/indexes/listings/documents'+(publicDoc?'':'/'+row.aggregate_id),publicDoc?'POST':'DELETE',publicDoc?[publicDoc]:undefined,options.searchUrl||env.SEARCH_URL);
+     await searchTask('/indexes/listings/documents'+(publicDoc?'':'/'+row.aggregate_id),publicDoc?'PUT':'DELETE',publicDoc?[publicListingSearchDocument(publicDoc)]:undefined,options.searchUrl||env.SEARCH_URL);
      await options.afterEffect?.('after-search');
      await c.query("INSERT INTO projection_versions(aggregate_id,projection,source_version,tombstone) VALUES($1,'listings',$2,$3) ON CONFLICT(aggregate_id,projection) DO UPDATE SET source_version=EXCLUDED.source_version,tombstone=EXCLUDED.tombstone,updated_at=now()",[row.aggregate_id,version,!publicDoc]);
     }
