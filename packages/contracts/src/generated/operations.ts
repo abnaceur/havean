@@ -77,6 +77,7 @@ export const operations={
 "DiscoveryController_suggestions":{method:"GET",path:"/api/v1/search/suggest",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj'),q:z.string().trim().max(120).default('')}),body:z.undefined(),response:responses["DiscoveryController_suggestions"]},
 "DiscoveryEventsController_view":{method:"POST",path:"/api/v1/listings/:id/view",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewSignal,response:responses["DiscoveryEventsController_view"]},
 "DraftInventoryController_create":{method:"POST",path:"/api/v1/ops/listings",params:z.object({}),query:z.object({}),body:draftCreate,response:responses["DraftInventoryController_create"]},
+"DraftInventoryController_grants":{method:"GET",path:"/api/v1/me/owner-grants",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DraftInventoryController_grants"]},
 "DraftInventoryController_owned":{method:"GET",path:"/api/v1/me/listing-drafts",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DraftInventoryController_owned"]},
 "DraftInventoryController_read":{method:"GET",path:"/api/v1/ops/listings/:id/draft",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DraftInventoryController_read"]},
 "DraftInventoryController_units":{method:"GET",path:"/api/v1/ops/listing-units",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DraftInventoryController_units"]},

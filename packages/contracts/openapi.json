@@ -18585,6 +18585,27 @@
                             "version"
                           ],
                           "additionalProperties": false
+                        },
+                        "ownerContact": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "contact": {
+                              "type": "string"
+                            },
+                            "audience": {
+                              "type": "string",
+                              "enum": [
+                                "reviewers_only",
+                                "assigned_team"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "contact",
+                            "audience"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -18606,7 +18627,8 @@
                         "status",
                         "version",
                         "slug",
-                        "commercial"
+                        "commercial",
+                        "ownerContact"
                       ],
                       "additionalProperties": false
                     },
@@ -18831,6 +18853,27 @@
                       "maxLength": 80
                     }
                   },
+                  "ownerContact": {
+                    "type": "object",
+                    "properties": {
+                      "contact": {
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "audience": {
+                        "type": "string",
+                        "enum": [
+                          "reviewers_only",
+                          "assigned_team"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "contact",
+                      "audience"
+                    ],
+                    "additionalProperties": false
+                  },
                   "commercial": {
                     "type": "object",
                     "properties": {
@@ -18904,6 +18947,12 @@
                       "permittedUses"
                     ],
                     "additionalProperties": false
+                  },
+                  "ownerGrantVersion": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
                   },
                   "unitId": {
                     "type": "string",
@@ -19139,6 +19188,233 @@
                           "can_edit",
                           "can_media",
                           "allowed_transitions"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/me/owner-grants": {
+      "get": {
+        "operationId": "DraftInventoryController_grants",
+        "tags": [
+          "DraftInventory"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "unit_id": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "active",
+                              "revoked"
+                            ]
+                          },
+                          "version": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "exclusiveMinimum": true,
+                            "maximum": 9007199254740991
+                          },
+                          "source": {
+                            "type": "string",
+                            "enum": [
+                              "recorded_listing",
+                              "reviewed_submission"
+                            ]
+                          },
+                          "expires_at": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "unit_id",
+                          "status",
+                          "version",
+                          "source",
+                          "expires_at",
+                          "created_at"
                         ],
                         "additionalProperties": false
                       }
@@ -19754,6 +20030,27 @@
                             "version"
                           ],
                           "additionalProperties": false
+                        },
+                        "ownerContact": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "contact": {
+                              "type": "string"
+                            },
+                            "audience": {
+                              "type": "string",
+                              "enum": [
+                                "reviewers_only",
+                                "assigned_team"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "contact",
+                            "audience"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -19775,7 +20072,8 @@
                         "status",
                         "version",
                         "slug",
-                        "commercial"
+                        "commercial",
+                        "ownerContact"
                       ],
                       "additionalProperties": false
                     },
@@ -20114,6 +20412,27 @@
                             "version"
                           ],
                           "additionalProperties": false
+                        },
+                        "ownerContact": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "contact": {
+                              "type": "string"
+                            },
+                            "audience": {
+                              "type": "string",
+                              "enum": [
+                                "reviewers_only",
+                                "assigned_team"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "contact",
+                            "audience"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -20135,7 +20454,8 @@
                         "status",
                         "version",
                         "slug",
-                        "commercial"
+                        "commercial",
+                        "ownerContact"
                       ],
                       "additionalProperties": false
                     },
@@ -20360,6 +20680,27 @@
                       "maxLength": 80
                     }
                   },
+                  "ownerContact": {
+                    "type": "object",
+                    "properties": {
+                      "contact": {
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "audience": {
+                        "type": "string",
+                        "enum": [
+                          "reviewers_only",
+                          "assigned_team"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "contact",
+                      "audience"
+                    ],
+                    "additionalProperties": false
+                  },
                   "commercial": {
                     "type": "object",
                     "properties": {
@@ -20522,6 +20863,13 @@
                             "minimum": 0,
                             "exclusiveMinimum": true,
                             "maximum": 9007199254740991
+                          },
+                          "ownerGrantVersion": {
+                            "nullable": true,
+                            "type": "integer",
+                            "minimum": 0,
+                            "exclusiveMinimum": true,
+                            "maximum": 9007199254740991
                           }
                         },
                         "required": [
@@ -20533,7 +20881,8 @@
                           "unit_kind",
                           "parent_unit_id",
                           "room_label",
-                          "version"
+                          "version",
+                          "ownerGrantVersion"
                         ],
                         "additionalProperties": false
                       }

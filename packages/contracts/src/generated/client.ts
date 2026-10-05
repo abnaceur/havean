@@ -57,6 +57,7 @@ export const sdk={
 "DiscoveryController_suggestions":call(operations["DiscoveryController_suggestions"]),
 "DiscoveryEventsController_view":call(operations["DiscoveryEventsController_view"]),
 "DraftInventoryController_create":call(operations["DraftInventoryController_create"]),
+"DraftInventoryController_grants":call(operations["DraftInventoryController_grants"]),
 "DraftInventoryController_owned":call(operations["DraftInventoryController_owned"]),
 "DraftInventoryController_read":call(operations["DraftInventoryController_read"]),
 "DraftInventoryController_units":call(operations["DraftInventoryController_units"]),
