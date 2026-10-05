@@ -52,8 +52,8 @@
 - [x] **A06 Add account export and deletion workflow** — done; dependencies: A05, F14, I08, U07
 - [x] **R01 Implement rental terms** — done; dependencies: D10, A06
 - [x] **R02 Build rental filters and cards** — done; dependencies: R01, D10, A06
-- [ ] **R03 Build rental detail** — in_progress; dependencies: R02, D10, A06
-- [ ] **R04 Protect rental availability** — todo; dependencies: R03, D10, A06
+- [x] **R03 Build rental detail** — done; dependencies: R02, D10, A06
+- [ ] **R04 Protect rental availability** — in_progress; dependencies: R03, D10, A06
 - [ ] **N01 Create developer organization and projects** — todo; dependencies: D10, F07
 - [ ] **N02 Create floor-plan types and inventory** — todo; dependencies: N01, D10, F07
 - [ ] **N03 Build development discovery** — todo; dependencies: N02, D10, F07
