@@ -2,6 +2,7 @@
 import {z} from 'zod';
 import {money,listingFilters,inquirySchema,ownerSchema} from '../domain';
 import {rankingFilters,viewSignal,boostCreate,boostUpdate} from '../discovery-ranking';
+import {historyVersion,historyPreference,historyView} from '../browsing-history';
 import {favoriteMutation} from '../favorites';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
@@ -22,6 +23,11 @@ export const operations={
 "AdministrationController_suspend":{method:"POST",path:"/api/v1/ops/users/:id/suspend",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_suspend"]},
 "AdministrationController_updateSupport":{method:"PATCH",path:"/api/v1/ops/support-cases/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.enum(['triaged','escalated','resolved']),publicReply:z.string().min(5).max(2000),internalNote:z.string().max(2000).optional(),version:z.number().int()}),response:responses["AdministrationController_updateSupport"]},
 "AdministrationController_users":{method:"GET",path:"/api/v1/ops/users",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_users"]},
+"BrowsingHistoryController_clear":{method:"DELETE",path:"/api/v1/me/history",params:z.object({}),query:z.object({}),body:historyVersion,response:responses["BrowsingHistoryController_clear"]},
+"BrowsingHistoryController_preferences":{method:"PATCH",path:"/api/v1/me/history/preferences",params:z.object({}),query:z.object({}),body:historyPreference,response:responses["BrowsingHistoryController_preferences"]},
+"BrowsingHistoryController_read":{method:"GET",path:"/api/v1/me/history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["BrowsingHistoryController_read"]},
+"BrowsingHistoryController_record":{method:"POST",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyView,response:responses["BrowsingHistoryController_record"]},
+"BrowsingHistoryController_remove":{method:"DELETE",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyVersion,response:responses["BrowsingHistoryController_remove"]},
 "DiscoveryController_agent":{method:"GET",path:"/api/v1/agents/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_agent"]},
 "DiscoveryController_agents":{method:"GET",path:"/api/v1/agents",params:z.object({}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_agents"]},
 "DiscoveryController_cities":{method:"GET",path:"/api/v1/cities",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_cities"]},

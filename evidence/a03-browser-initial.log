@@ -1,0 +1,106 @@
+ Container haven-integration-tests-run-654566fb0136 Creating 
+ Container haven-integration-tests-run-654566fb0136 Created 
+
+Running 10 tests using 1 worker
+
+  ✘   1 [desktop] › tests/e2e/browsing-history.spec.ts:15:1 › A03 opt-in visits persist, turning history off stops collection, remove/clear work and clearing preserves another user history (10.7s)
+  ✓   2 [desktop] › tests/e2e/browsing-history.spec.ts:25:1 › A03 saved eligible home opens detail; actual archive keeps unavailable saved/history entries without private fields and supports removal (17.2s)
+  ✓   3 [desktop] › tests/e2e/favorites.spec.ts:11:1 › A02 guest save returns to the intended property once after login; persistence and another user isolation (11.1s)
+  ✓   4 [desktop] › tests/e2e/favorites.spec.ts:20:1 › A02 failed add/remove rolls back optimistic hearts; duplicate clicks write once and refresh persists (10.5s)
+  ✓   5 [desktop] › tests/e2e/favorites.spec.ts:31:1 › A02 expired save resumes once through standard sign-in and clears stale private state (8.0s)
+  ✘   6 [mobile] › tests/e2e/browsing-history.spec.ts:15:1 › A03 opt-in visits persist, turning history off stops collection, remove/clear work and clearing preserves another user history (8.4s)
+  ✓   7 [mobile] › tests/e2e/browsing-history.spec.ts:25:1 › A03 saved eligible home opens detail; actual archive keeps unavailable saved/history entries without private fields and supports removal (11.2s)
+  ✓   8 [mobile] › tests/e2e/favorites.spec.ts:11:1 › A02 guest save returns to the intended property once after login; persistence and another user isolation (8.0s)
+  ✓   9 [mobile] › tests/e2e/favorites.spec.ts:20:1 › A02 failed add/remove rolls back optimistic hearts; duplicate clicks write once and refresh persists (9.6s)
+  ✓  10 [mobile] › tests/e2e/favorites.spec.ts:31:1 › A02 expired save resumes once through standard sign-in and clears stale private state (5.6s)
+
+
+  1) [desktop] › tests/e2e/browsing-history.spec.ts:15:1 › A03 opt-in visits persist, turning history off stops collection, remove/clear work and clearing preserves another user history 
+
+    Error: locator.check: Clicking the checkbox did not change its state
+    Call log:
+      - waiting for getByRole('checkbox', { name: 'Keep my browsing history', exact: true })
+        - locator resolved to <input type="checkbox"/>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - performing click action
+        - click action done
+        - waiting for scheduled navigations to finish
+        - navigations have finished
+
+
+      17 |   await login(page,'owner');await reset(page);let current=await history(page);await mutate(page,'/me/history/preferences',{version:current.version,enabled:true});await page.goto('/bj/buy/home-2');await expect(page.getByText('This visit is in your browsing history.',{exact:true})).toBeVisible();
+      18 |   await login(page,'buyer');await reset(page);await page.goto('/bj/buy/home-1');await expect(page.getByRole('checkbox',{name:'Keep my browsing history',exact:true})).not.toBeChecked();expect((await history(page)).entries).toHaveLength(0);
+    > 19 |   await page.getByRole('checkbox',{name:'Keep my browsing history',exact:true}).check();await expect(page.getByText('This visit is in your browsing history.',{exact:true})).toBeVisible();await page.goto('/account/history');await expect(page.locator('[data-history-id="10000000-0000-4000-8000-000000002000"]')).toBeVisible();await page.reload();await expect(page.getByRole('link',{name:'Light-filled home beside the gardens',exact:true})).toBeVisible();await accessible(page);await page.screenshot({path:`evidence/a03-history-${info.project.name}.png`,scale:'css'});
+         |                                                                                 ^
+      20 |   await page.getByRole('checkbox',{name:'Keep my browsing history',exact:true}).uncheck();await expect(page.getByRole('status').filter({hasText:'Browsing history disabled.'})).toBeVisible();await page.goto('/bj/buy/home-2');await expect(page.getByRole('checkbox',{name:'Keep my browsing history',exact:true})).not.toBeChecked();expect((await history(page)).entries).toHaveLength(1);await page.goto('/account/history');await page.getByRole('button',{name:'Remove visit',exact:true}).click();await expect(page.getByRole('heading',{name:'No browsing history',exact:true})).toBeVisible();
+      21 |   await page.getByRole('checkbox',{name:'Keep my browsing history',exact:true}).check();await expect(page.getByRole('status').filter({hasText:'Browsing history enabled.'})).toBeVisible();await page.goto('/bj/buy/home-1');await expect(page.getByText('This visit is in your browsing history.',{exact:true})).toBeVisible();await page.goto('/account/history');await page.getByRole('button',{name:'Clear browsing history',exact:true}).click();await expect(page.getByRole('heading',{name:'No browsing history',exact:true})).toBeVisible();expect((await history(page)).entries).toHaveLength(0);
+      22 |   await login(page,'owner',origin,'/account/history');await expect(page.locator('[data-history-id]')).toHaveCount(1);await expect(page.getByRole('button',{name:'Remove visit',exact:true})).toBeVisible();
+        at /workspace/tests/e2e/browsing-history.spec.ts:19:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browsing-history-A03-opt-i-bed10-serves-another-user-history-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browsing-history-A03-opt-i-bed10-serves-another-user-history-desktop/error-context.md
+
+    Error Context: test-results/browsing-history-A03-opt-i-bed10-serves-another-user-history-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browsing-history-A03-opt-i-bed10-serves-another-user-history-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browsing-history-A03-opt-i-bed10-serves-another-user-history-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/browsing-history.spec.ts:15:1 › A03 opt-in visits persist, turning history off stops collection, remove/clear work and clearing preserves another user history 
+
+    Error: locator.check: Clicking the checkbox did not change its state
+    Call log:
+      - waiting for getByRole('checkbox', { name: 'Keep my browsing history', exact: true })
+        - locator resolved to <input type="checkbox"/>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - performing click action
+        - click action done
+        - waiting for scheduled navigations to finish
+        - navigations have finished
+
+
+      17 |   await login(page,'owner');await reset(page);let current=await history(page);await mutate(page,'/me/history/preferences',{version:current.version,enabled:true});await page.goto('/bj/buy/home-2');await expect(page.getByText('This visit is in your browsing history.',{exact:true})).toBeVisible();
+      18 |   await login(page,'buyer');await reset(page);await page.goto('/bj/buy/home-1');await expect(page.getByRole('checkbox',{name:'Keep my browsing history',exact:true})).not.toBeChecked();expect((await history(page)).entries).toHaveLength(0);
+    > 19 |   await page.getByRole('checkbox',{name:'Keep my browsing history',exact:true}).check();await expect(page.getByText('This visit is in your browsing history.',{exact:true})).toBeVisible();await page.goto('/account/history');await expect(page.locator('[data-history-id="10000000-0000-4000-8000-000000002000"]')).toBeVisible();await page.reload();await expect(page.getByRole('link',{name:'Light-filled home beside the gardens',exact:true})).toBeVisible();await accessible(page);await page.screenshot({path:`evidence/a03-history-${info.project.name}.png`,scale:'css'});
+         |                                                                                 ^
+      20 |   await page.getByRole('checkbox',{name:'Keep my browsing history',exact:true}).uncheck();await expect(page.getByRole('status').filter({hasText:'Browsing history disabled.'})).toBeVisible();await page.goto('/bj/buy/home-2');await expect(page.getByRole('checkbox',{name:'Keep my browsing history',exact:true})).not.toBeChecked();expect((await history(page)).entries).toHaveLength(1);await page.goto('/account/history');await page.getByRole('button',{name:'Remove visit',exact:true}).click();await expect(page.getByRole('heading',{name:'No browsing history',exact:true})).toBeVisible();
+      21 |   await page.getByRole('checkbox',{name:'Keep my browsing history',exact:true}).check();await expect(page.getByRole('status').filter({hasText:'Browsing history enabled.'})).toBeVisible();await page.goto('/bj/buy/home-1');await expect(page.getByText('This visit is in your browsing history.',{exact:true})).toBeVisible();await page.goto('/account/history');await page.getByRole('button',{name:'Clear browsing history',exact:true}).click();await expect(page.getByRole('heading',{name:'No browsing history',exact:true})).toBeVisible();expect((await history(page)).entries).toHaveLength(0);
+      22 |   await login(page,'owner',origin,'/account/history');await expect(page.locator('[data-history-id]')).toHaveCount(1);await expect(page.getByRole('button',{name:'Remove visit',exact:true})).toBeVisible();
+        at /workspace/tests/e2e/browsing-history.spec.ts:19:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/browsing-history-A03-opt-i-bed10-serves-another-user-history-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/browsing-history-A03-opt-i-bed10-serves-another-user-history-mobile/error-context.md
+
+    Error Context: test-results/browsing-history-A03-opt-i-bed10-serves-another-user-history-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/browsing-history-A03-opt-i-bed10-serves-another-user-history-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/browsing-history-A03-opt-i-bed10-serves-another-user-history-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/browsing-history.spec.ts:15:1 › A03 opt-in visits persist, turning history off stops collection, remove/clear work and clearing preserves another user history 
+    [mobile] › tests/e2e/browsing-history.spec.ts:15:1 › A03 opt-in visits persist, turning history off stops collection, remove/clear work and clearing preserves another user history 
+  8 passed (1.8m)
+
