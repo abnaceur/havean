@@ -12,6 +12,8 @@ import {ownerSchema} from './domain';
 const s=z.string(),uuid=s.uuid(),n=z.number(),bool=z.boolean(),decimal=s.regex(/^-?\d+(\.\d+)?$/),status=z.object({id:uuid,status:s}),versioned=status.extend({version:n});
 const owner=m.owner_submissions.extend({data:ownerSchema.extend({photos:z.array(uuid).optional(),documents:z.array(uuid).optional(),reviewReason:s.optional()})});
 export const publicListing=m.public_listings.extend({rentalMode:z.enum(['entire','shared']).nullable(),transaction:z.enum(['sale','rent']),segment:z.enum(['residential','commercial']),rankingScore:n.optional(),viewCount:n.optional(),sponsored:bool.optional(),curationLabel:s.nullable().optional()});
+export const publicRentalTerms=z.object({mode:z.enum(['entire','shared']).nullable(),billingPeriod:z.enum(['day','month','year']).nullable(),depositAmount:decimal.nullable(),currency:s.nullable(),minimumMonths:n.int().nullable(),utilities:z.array(s),moveInDate:s.nullable(),roomAttributes:z.array(s),unitKind:z.enum(['property','room']),roomLabel:s.nullable()});
+export type PublicRentalTerms=z.infer<typeof publicRentalTerms>;
 const unavailableProperty=z.object({id:uuid,available:z.literal(false),title:s});
 export const savedProperty=z.union([publicListing.extend({available:z.literal(true)}),unavailableProperty]);
 export const historyCollection=z.object({enabled:bool,version:n.int().nonnegative(),entries:z.array(z.object({listing:savedProperty,viewedAt:s}))});
@@ -56,7 +58,7 @@ export const responses={
  IdentityController_me:accountProfile,ProfileController_update:accountProfile,
  DiscoveryController_cities:z.array(m.cities),DiscoveryController_districts:z.array(m.districts),DiscoveryController_market:z.object({data:market,version:n}),
  DiscoveryController_mapConfiguration:z.object({style:s.url().nullable(),attribution:s}),DiscoveryController_mapListings:z.array(publicListing.pick({id:true,slug:true,title:true,transaction:true,segment:true,price:true,currency:true,rentPeriod:true,area:true,beds:true,livingRooms:true,community:true,district:true,city:true,latitude:true,longitude:true,sponsored:true,curationLabel:true}).extend({latitude:n,longitude:n})),
- DiscoveryController_facets:z.object({finishing:z.array(s),heating:z.array(s),furnishing:z.array(s),buildingType:z.array(s),features:z.array(s),ownership:z.array(s),holdingPeriod:z.array(s)}),DiscoveryController_listings:z.array(publicListing),DiscoveryController_listing:publicListing,DiscoveryController_similar:z.array(publicListing),
+ DiscoveryController_facets:z.object({finishing:z.array(s),heating:z.array(s),furnishing:z.array(s),buildingType:z.array(s),features:z.array(s),ownership:z.array(s),holdingPeriod:z.array(s)}),DiscoveryController_listings:z.array(publicListing),DiscoveryController_listing:publicListing.extend({rentalTerms:publicRentalTerms.nullable()}),DiscoveryController_similar:z.array(publicListing),
  DiscoveryController_suggestions:z.array(z.object({id:uuid,name:s,slug:s,kind:z.enum(['community','district','neighborhood']),city:s})),DiscoveryController_communities:z.array(community),DiscoveryController_community:community,
  DiscoveryController_listingAgents:z.array(agent),DiscoveryController_agents:z.array(agent),DiscoveryController_agent:agent,DiscoveryController_developments:z.array(development),
  DiscoveryController_development:development.omit({community_id:true,version:true}).extend({floorPlans:z.array(m.floor_plans)}),

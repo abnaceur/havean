@@ -7226,6 +7226,84 @@
                         "curationLabel": {
                           "nullable": true,
                           "type": "string"
+                        },
+                        "rentalTerms": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "mode": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "entire",
+                                "shared"
+                              ]
+                            },
+                            "billingPeriod": {
+                              "nullable": true,
+                              "type": "string",
+                              "enum": [
+                                "day",
+                                "month",
+                                "year"
+                              ]
+                            },
+                            "depositAmount": {
+                              "nullable": true,
+                              "type": "string",
+                              "pattern": "^-?\\d+(\\.\\d+)?$"
+                            },
+                            "currency": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "minimumMonths": {
+                              "nullable": true,
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            },
+                            "utilities": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "moveInDate": {
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "roomAttributes": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "unitKind": {
+                              "type": "string",
+                              "enum": [
+                                "property",
+                                "room"
+                              ]
+                            },
+                            "roomLabel": {
+                              "nullable": true,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "mode",
+                            "billingPeriod",
+                            "depositAmount",
+                            "currency",
+                            "minimumMonths",
+                            "utilities",
+                            "moveInDate",
+                            "roomAttributes",
+                            "unitKind",
+                            "roomLabel"
+                          ],
+                          "additionalProperties": false
                         }
                       },
                       "required": [
@@ -7268,7 +7346,8 @@
                         "ownership",
                         "holdingPeriod",
                         "tourAvailable",
-                        "rentalMode"
+                        "rentalMode",
+                        "rentalTerms"
                       ],
                       "additionalProperties": false
                     },

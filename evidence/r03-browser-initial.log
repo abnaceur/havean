@@ -1,0 +1,89 @@
+ Container haven-integration-tests-run-7d39fcead471 Creating 
+ Container haven-integration-tests-run-7d39fcead471 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/rental-detail.spec.ts:7:1 › R03 rental detail shows exact amounts and recorded utility terms; missing terms are explicit and leased property has no booking action (19.9s)
+  ✘  2 [mobile] › tests/e2e/rental-detail.spec.ts:7:1 › R03 rental detail shows exact amounts and recorded utility terms; missing terms are explicit and leased property has no booking action (20.8s)
+
+
+  1) [desktop] › tests/e2e/rental-detail.spec.ts:7:1 › R03 rental detail shows exact amounts and recorded utility terms; missing terms are explicit and leased property has no booking action 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('This property is no longer available', { exact: true })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('This property is no longer available', { exact: true }) with timeout 15000ms
+      - waiting for getByText('This property is no longer available', { exact: true })
+
+
+       7 | test('R03 rental detail shows exact amounts and recorded utility terms; missing terms are explicit and leased property has no booking action',async({page},info)=>{
+       8 |  const rows=await transaction(workerActor,async c=>{const rows=[];for(const missing of [false,true]){const row=(await c.query("INSERT INTO listings(unit_id,organization_id,owner_id,agent_id,slug,title,description,transaction,segment,currency,price,rent_period,photos,status,published_at) SELECT unit_id,organization_id,owner_id,agent_id,$1,'R03 browser fixture',description,'rent','residential','CNY','4500.25','month',photos,'published',now() FROM listings WHERE id='10000000-0000-4000-8000-000000002000' RETURNING id,slug",['r03-browser-'+crypto.randomUUID()])).rows[0];if(!missing)await c.query("INSERT INTO rental_terms(listing_id,rental_mode,billing_period,deposit_amount,currency,minimum_months,utilities,move_in_date) VALUES($1,'entire','month','9000.50','CNY',12,ARRAY['Water included','Electricity billed separately'],'2026-11-01')",[row.id]);rows.push(row);}return rows;});
+    >  9 |  try{await page.goto('/bj/rent/'+rows[0].slug);let section=page.locator('.rental-detail-terms');await expect(section.getByText('CNY 4,500.25 per month',{exact:true})).toBeVisible();await expect(section.getByText('CNY 9,000.50',{exact:true})).toBeVisible();await expect(section.getByText('Water included · Electricity billed separately',{exact:true})).toBeVisible();await expect(section.getByText('12 months',{exact:true})).toBeVisible();await expect(section.getByText('2026-11-01',{exact:true})).toBeVisible();await section.scrollIntoViewIfNeeded();const axe=await new AxeBuilder({page}).include('.rental-detail-terms').analyze();expect(axe.violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:`evidence/r03-terms-${info.project.name}.png`,scale:'css'});await page.goto('/bj/rent/'+rows[1].slug);section=page.locator('.rental-detail-terms');await expect(section.getByRole('status')).toContainText('Rental terms are unavailable');await expect(section.getByText('Not provided',{exact:true})).toHaveCount(5);await expect(section).not.toContainText('CNY 0.00');await section.scrollIntoViewIfNeeded();await page.screenshot({path:`evidence/r03-missing-${info.project.name}.png`,scale:'css'});await transaction(workerActor,c=>c.query("UPDATE listings SET status='leased',version=version+1 WHERE id=$1",[rows[0].id]));await page.goto('/bj/rent/'+rows[0].slug);await expect(page.getByRole('button',{name:'Request a viewing',exact:true})).toHaveCount(0);await expect(page.getByText('This property is no longer available',{exact:true})).toBeVisible();}finally{await transaction(workerActor,c=>c.query("UPDATE listings SET status='archived',version=version+1 WHERE id=ANY($1::uuid[])",[rows.map(row=>row.id)]));}
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      10 | });
+      11 |
+        at /workspace/tests/e2e/rental-detail.spec.ts:9:1681
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rental-detail-R03-rental-d-ceaee-perty-has-no-booking-action-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rental-detail-R03-rental-d-ceaee-perty-has-no-booking-action-desktop/error-context.md
+
+    Error Context: test-results/rental-detail-R03-rental-d-ceaee-perty-has-no-booking-action-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rental-detail-R03-rental-d-ceaee-perty-has-no-booking-action-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/rental-detail-R03-rental-d-ceaee-perty-has-no-booking-action-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/rental-detail.spec.ts:7:1 › R03 rental detail shows exact amounts and recorded utility terms; missing terms are explicit and leased property has no booking action 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('This property is no longer available', { exact: true })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('This property is no longer available', { exact: true }) with timeout 15000ms
+      - waiting for getByText('This property is no longer available', { exact: true })
+
+
+       7 | test('R03 rental detail shows exact amounts and recorded utility terms; missing terms are explicit and leased property has no booking action',async({page},info)=>{
+       8 |  const rows=await transaction(workerActor,async c=>{const rows=[];for(const missing of [false,true]){const row=(await c.query("INSERT INTO listings(unit_id,organization_id,owner_id,agent_id,slug,title,description,transaction,segment,currency,price,rent_period,photos,status,published_at) SELECT unit_id,organization_id,owner_id,agent_id,$1,'R03 browser fixture',description,'rent','residential','CNY','4500.25','month',photos,'published',now() FROM listings WHERE id='10000000-0000-4000-8000-000000002000' RETURNING id,slug",['r03-browser-'+crypto.randomUUID()])).rows[0];if(!missing)await c.query("INSERT INTO rental_terms(listing_id,rental_mode,billing_period,deposit_amount,currency,minimum_months,utilities,move_in_date) VALUES($1,'entire','month','9000.50','CNY',12,ARRAY['Water included','Electricity billed separately'],'2026-11-01')",[row.id]);rows.push(row);}return rows;});
+    >  9 |  try{await page.goto('/bj/rent/'+rows[0].slug);let section=page.locator('.rental-detail-terms');await expect(section.getByText('CNY 4,500.25 per month',{exact:true})).toBeVisible();await expect(section.getByText('CNY 9,000.50',{exact:true})).toBeVisible();await expect(section.getByText('Water included · Electricity billed separately',{exact:true})).toBeVisible();await expect(section.getByText('12 months',{exact:true})).toBeVisible();await expect(section.getByText('2026-11-01',{exact:true})).toBeVisible();await section.scrollIntoViewIfNeeded();const axe=await new AxeBuilder({page}).include('.rental-detail-terms').analyze();expect(axe.violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:`evidence/r03-terms-${info.project.name}.png`,scale:'css'});await page.goto('/bj/rent/'+rows[1].slug);section=page.locator('.rental-detail-terms');await expect(section.getByRole('status')).toContainText('Rental terms are unavailable');await expect(section.getByText('Not provided',{exact:true})).toHaveCount(5);await expect(section).not.toContainText('CNY 0.00');await section.scrollIntoViewIfNeeded();await page.screenshot({path:`evidence/r03-missing-${info.project.name}.png`,scale:'css'});await transaction(workerActor,c=>c.query("UPDATE listings SET status='leased',version=version+1 WHERE id=$1",[rows[0].id]));await page.goto('/bj/rent/'+rows[0].slug);await expect(page.getByRole('button',{name:'Request a viewing',exact:true})).toHaveCount(0);await expect(page.getByText('This property is no longer available',{exact:true})).toBeVisible();}finally{await transaction(workerActor,c=>c.query("UPDATE listings SET status='archived',version=version+1 WHERE id=ANY($1::uuid[])",[rows.map(row=>row.id)]));}
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      10 | });
+      11 |
+        at /workspace/tests/e2e/rental-detail.spec.ts:9:1681
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rental-detail-R03-rental-d-ceaee-perty-has-no-booking-action-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rental-detail-R03-rental-d-ceaee-perty-has-no-booking-action-mobile/error-context.md
+
+    Error Context: test-results/rental-detail-R03-rental-d-ceaee-perty-has-no-booking-action-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rental-detail-R03-rental-d-ceaee-perty-has-no-booking-action-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/rental-detail-R03-rental-d-ceaee-perty-has-no-booking-action-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/rental-detail.spec.ts:7:1 › R03 rental detail shows exact amounts and recorded utility terms; missing terms are explicit and leased property has no booking action 
+    [mobile] › tests/e2e/rental-detail.spec.ts:7:1 › R03 rental detail shows exact amounts and recorded utility terms; missing terms are explicit and leased property has no booking action 
+
