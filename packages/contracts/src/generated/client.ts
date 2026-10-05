@@ -74,6 +74,8 @@ export const sdk={
 "InventoryController_editPlan":call(operations["InventoryController_editPlan"]),
 "InventoryController_listings":call(operations["InventoryController_listings"]),
 "InventoryController_plans":call(operations["InventoryController_plans"]),
+"InventoryController_publicHistory":call(operations["InventoryController_publicHistory"]),
+"InventoryController_rejectRevision":call(operations["InventoryController_rejectRevision"]),
 "InventoryController_review":call(operations["InventoryController_review"]),
 "InventoryController_reviews":call(operations["InventoryController_reviews"]),
 "InventoryController_revise":call(operations["InventoryController_revise"]),
