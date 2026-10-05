@@ -2,6 +2,7 @@
 import {z} from 'zod';
 import {money,listingFilters,inquirySchema,ownerSchema} from '../domain';
 import {rankingFilters,viewSignal,boostCreate,boostUpdate} from '../discovery-ranking';
+import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
 import {draftCreate,draftUpdate} from '../inventory-drafts';
 import {responses} from '../responses';
@@ -131,6 +132,7 @@ export const operations={
 "MediaController_status":{method:"GET",path:"/api/v1/media/:id/status",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MediaController_status"]},
 "MediaController_video":{method:"GET",path:"/api/v1/media/:id/video",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MediaController_video"]},
 "MediaController_view":{method:"GET",path:"/api/v1/media/:id/view",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MediaController_view"]},
+"ProfileController_update":{method:"PATCH",path:"/api/v1/profiles/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:profileUpdate,response:responses["ProfileController_update"]},
 "RankingBoostsController_create":{method:"POST",path:"/api/v1/ops/ranking-boosts",params:z.object({}),query:z.object({}),body:boostCreate,response:responses["RankingBoostsController_create"]},
 "RankingBoostsController_read":{method:"GET",path:"/api/v1/ops/ranking-boosts",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj')}),body:z.undefined(),response:responses["RankingBoostsController_read"]},
 "RankingBoostsController_update":{method:"PATCH",path:"/api/v1/ops/ranking-boosts/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:boostUpdate,response:responses["RankingBoostsController_update"]},

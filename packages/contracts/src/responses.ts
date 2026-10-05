@@ -1,3 +1,4 @@
+import {accountProfile} from './account-profile';
 import {z} from 'zod';
 import {pricePreset} from './geography';
 import {models as m} from './generated/models';
@@ -39,7 +40,7 @@ export const responses={
  HealthController_live:z.object({status:s}),HealthController_ready:z.object({status:s,database:s,migrations:s}),
  HealthController_metrics:z.object({requests:z.array(z.object({route:s,count:n,failures:n,averageDurationMs:n})),outbox:z.object({pending:n,processed:n,oldestPendingSeconds:n,dispatchAttempts:n}),queue:z.record(s,n).nullable(),search:z.object({staleListings:n,oldestStaleSeconds:n,pendingEvents:n,oldestPendingSeconds:n,providerAvailable:bool,indexedDocuments:n.nullable(),schemaVersion:n})}),
  IdentityController_login:s,IdentityController_callback:s,IdentityController_logout:z.object({signedOut:bool}),
- IdentityController_me:z.object({id:uuid,displayName:s,email:s,locale:s,roles:z.array(s),organizationId:uuid.nullable()}),
+ IdentityController_me:accountProfile,ProfileController_update:accountProfile,
  DiscoveryController_cities:z.array(m.cities),DiscoveryController_districts:z.array(m.districts),DiscoveryController_market:z.object({data:market,version:n}),
  DiscoveryController_mapConfiguration:z.object({style:s.url().nullable(),attribution:s}),DiscoveryController_mapListings:z.array(publicListing.pick({id:true,slug:true,title:true,transaction:true,segment:true,price:true,currency:true,rentPeriod:true,area:true,beds:true,livingRooms:true,community:true,district:true,city:true,latitude:true,longitude:true,sponsored:true,curationLabel:true}).extend({latitude:n,longitude:n})),
  DiscoveryController_facets:z.object({finishing:z.array(s),heating:z.array(s),furnishing:z.array(s),buildingType:z.array(s),features:z.array(s),ownership:z.array(s),holdingPeriod:z.array(s)}),DiscoveryController_listings:z.array(publicListing),DiscoveryController_listing:publicListing,DiscoveryController_similar:z.array(publicListing),

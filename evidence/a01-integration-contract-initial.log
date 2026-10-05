@@ -1,0 +1,46 @@
+ Container haven-integration-tests-run-7a57e0e88826 Creating 
+ Container haven-integration-tests-run-7a57e0e88826 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/contracts.test.ts [2m([22m[2m5 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 714[2mms[22m[39m
+   [31m❯[39m F08 generated API contract [2m(5)[22m
+[31m     [31m×[31m published OpenAPI matches generated operations exactly[39m[33m 475[2mms[22m[39m
+     [32m✓[39m canonical generated client reads real public decimal-string inventory[32m 72[2mms[22m[39m
+     [32m✓[39m invalid range has a field error and stable request ID without private data[32m 35[2mms[22m[39m
+     [32m✓[39m canonical transport preserves typed server errors[32m 20[2mms[22m[39m
+     [32m✓[39m malformed JSON returns a sanitized client error[32m 14[2mms[22m[39m
+ [32m✓[39m tests/integration/account-profile.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 80[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/contracts.test.ts[2m > [22mF08 generated API contract[2m > [22mpublished OpenAPI matches generated operations exactly
+[31m[1mAssertionError[22m: expected { openapi: '3.0.3', …(4) } to deeply equal { openapi: '3.0.3', …(4) }[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[33m@@ -30153,5 +30153,5 @@[39m
+[2m      "/api/v1/viewings/{id}/cancel": [Object],[22m
+[2m      "/api/v1/{resource}/{id}/media": [Object],[22m
+[2m    },[22m
+[2m    "servers": [Array],[22m
+[2m  }[22m
+
+[36m [2m❯[22m tests/integration/contracts.test.ts:[2m13:16[22m[39m
+    [90m 11|[39m   const response=await realFetch(origin+'/api/v1/openapi.json');expect…
+    [90m 12|[39m   const live=await response.json(),stored=JSON.parse(fs.readFileSync('…
+    [90m 13|[39m   expect(live).toEqual(stored);
+    [90m   |[39m                [31m^[39m
+    [90m 14|[39m   const ids=Object.values(live.paths).flatMap((path:any)=>Object.value…
+    [90m 15|[39m   expect(ids.sort()).toEqual(Object.keys(operations).sort());
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m5 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 19:47:17
+[2m   Duration [22m 2.01s[2m (import 46%, tests 44%, transform 10%)[22m
+
+

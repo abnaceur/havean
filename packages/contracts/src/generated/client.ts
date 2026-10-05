@@ -122,6 +122,7 @@ export const sdk={
 "MediaController_status":call(operations["MediaController_status"]),
 "MediaController_video":call(operations["MediaController_video"]),
 "MediaController_view":call(operations["MediaController_view"]),
+"ProfileController_update":call(operations["ProfileController_update"]),
 "RankingBoostsController_create":call(operations["RankingBoostsController_create"]),
 "RankingBoostsController_read":call(operations["RankingBoostsController_read"]),
 "RankingBoostsController_update":call(operations["RankingBoostsController_update"]),

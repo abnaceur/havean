@@ -11,3 +11,5 @@ export * from './property-media';
 export * from './search-projection';
 
 export * from './discovery-ranking';
+
+export * from './account-profile';
