@@ -1,6 +1,7 @@
 // Generated from controller validation schemas; do not edit.
 import {z} from 'zod';
 import {money,listingFilters,inquirySchema,ownerSchema} from '../domain';
+import {rankingFilters,viewSignal,boostCreate,boostUpdate} from '../discovery-ranking';
 import {mortgageSchema} from '../mortgage';
 import {draftCreate,draftUpdate} from '../inventory-drafts';
 import {responses} from '../responses';
@@ -38,6 +39,7 @@ export const operations={
 "DiscoveryController_providers":{method:"GET",path:"/api/v1/renovation/providers",params:z.object({}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_providers"]},
 "DiscoveryController_similar":{method:"GET",path:"/api/v1/listings/:id/similar",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_similar"]},
 "DiscoveryController_suggestions":{method:"GET",path:"/api/v1/search/suggest",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj'),q:z.string().trim().max(120).default('')}),body:z.undefined(),response:responses["DiscoveryController_suggestions"]},
+"DiscoveryEventsController_view":{method:"POST",path:"/api/v1/listings/:id/view",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewSignal,response:responses["DiscoveryEventsController_view"]},
 "DraftInventoryController_create":{method:"POST",path:"/api/v1/ops/listings",params:z.object({}),query:z.object({}),body:draftCreate,response:responses["DraftInventoryController_create"]},
 "DraftInventoryController_owned":{method:"GET",path:"/api/v1/me/listing-drafts",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DraftInventoryController_owned"]},
 "DraftInventoryController_read":{method:"GET",path:"/api/v1/ops/listings/:id/draft",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DraftInventoryController_read"]},
@@ -127,6 +129,12 @@ export const operations={
 "MediaController_status":{method:"GET",path:"/api/v1/media/:id/status",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MediaController_status"]},
 "MediaController_video":{method:"GET",path:"/api/v1/media/:id/video",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MediaController_video"]},
 "MediaController_view":{method:"GET",path:"/api/v1/media/:id/view",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MediaController_view"]},
+"RankingBoostsController_create":{method:"POST",path:"/api/v1/ops/ranking-boosts",params:z.object({}),query:z.object({}),body:boostCreate,response:responses["RankingBoostsController_create"]},
+"RankingBoostsController_read":{method:"GET",path:"/api/v1/ops/ranking-boosts",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj')}),body:z.undefined(),response:responses["RankingBoostsController_read"]},
+"RankingBoostsController_update":{method:"PATCH",path:"/api/v1/ops/ranking-boosts/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:boostUpdate,response:responses["RankingBoostsController_update"]},
+"RankingsController_developments":{method:"GET",path:"/api/v1/recommendations/developments",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj'),limit:z.coerce.number().int().min(1).max(20).default(6)}),body:z.undefined(),response:responses["RankingsController_developments"]},
+"RankingsController_rankings":{method:"GET",path:"/api/v1/rankings",params:z.object({}),query:rankingFilters,body:z.undefined(),response:responses["RankingsController_rankings"]},
+"RankingsController_recommendations":{method:"GET",path:"/api/v1/recommendations/listings",params:z.object({}),query:listingFilters,body:z.undefined(),response:responses["RankingsController_recommendations"]},
 "RichMediaController_attach":{method:"POST",path:"/api/v1/ops/:resource/:id/media",params:z.object({"resource":z.enum(['listings','developments']),"id":z.string().min(1)}),query:z.object({}),body:z.object({assetId:z.string().uuid(),kind,title:z.string().min(2).max(120),floorPlanId:z.string().uuid().optional(),position:z.number().int().min(0).max(1000).default(0),version:z.number().int(),metadata:metadata.default({hotspots:[],caption:''})}),response:responses["RichMediaController_attach"]},
 "RichMediaController_owned":{method:"GET",path:"/api/v1/me/properties",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["RichMediaController_owned"]},
 "RichMediaController_publicMedia":{method:"GET",path:"/api/v1/:resource/:id/media",params:z.object({"resource":z.enum(['listings','developments']),"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["RichMediaController_publicMedia"]},

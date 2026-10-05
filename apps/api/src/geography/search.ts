@@ -2,8 +2,9 @@ import {createHash} from 'node:crypto';
 import type {z} from 'zod';
 import {listingFilters,exactPriceMinor,listingSearchSchemaVersion} from '@haven/contracts';
 import {data,env,transaction,fail,encrypt,decrypt} from '../platform/core.js';
+import {rankingExpressions,rankingMetadata} from './ranking-policy.js';
 type Filters=z.output<typeof listingFilters>;
-const orders={recommended:'"publishedAt" DESC NULLS LAST',newest:'"publishedAt" DESC NULLS LAST',price_asc:'price::numeric ASC NULLS LAST',price_desc:'price::numeric DESC NULLS LAST',area_desc:'area::numeric DESC'};
+const orders={recommended:rankingExpressions().score+' DESC,"publishedAt" DESC NULLS LAST',newest:'"publishedAt" DESC NULLS LAST',price_asc:'price::numeric ASC NULLS LAST',price_desc:'price::numeric DESC NULLS LAST',area_desc:'area::numeric DESC'};
 const indexOrders={recommended:['publishedOrder:desc','id:asc'],newest:['publishedOrder:desc','id:asc'],price_asc:['priceMissing:asc','priceMinor:asc','id:asc'],price_desc:['priceMissing:asc','priceMinor:desc','id:asc'],area_desc:['areaNumber:desc','id:asc']};
 export function compileListingSearch(q:Filters){
  const values:unknown[]=[],sql:string[]=[],search:string[]=[];
@@ -44,10 +45,12 @@ export async function searchListings(q:Filters,searchUrl=env.SEARCH_URL){
   q={...q,currency:q.currency||market?.currency||'CNY'};
   const compiled=compileListingSearch(q),{page,fingerprint}=pageFor(q),offset=(page-1)*q.limit;
   const total=Number((await c.query(`SELECT count(*) FROM public_listings WHERE ${compiled.where}`,compiled.values)).rows[0].count);
-  const rows=(await c.query(`SELECT * FROM public_listings WHERE ${compiled.where} ORDER BY ${compiled.order} LIMIT $${compiled.values.length+1} OFFSET $${compiled.values.length+2}`,[...compiled.values,q.limit,offset])).rows;
+  const ranking=q.sort==='recommended'?rankingExpressions():null;const rankingAsOf=ranking?(await c.query('SELECT now() AS instant')).rows[0].instant:undefined;
+  const rows=(await c.query(`SELECT *${ranking?','+ranking.score+' AS "rankingScore",'+ranking.columns:','+rankingExpressions().disclosure} FROM public_listings WHERE ${compiled.where} ORDER BY ${compiled.order} LIMIT $${compiled.values.length+1} OFFSET $${compiled.values.length+2}`,[...compiled.values,q.limit,offset])).rows;
   let searchMode='sql',degradedReason:string|undefined;
   if(q.bounds||q.lineId||q.stationId)degradedReason='spatial-sql-contract';
   else if(q.text)degradedReason='literal-text-contract';
+  else if(q.sort==='recommended'){/* Version-1 aggregate ranking is an intentional authoritative SQL plan. */}
   else try{
    const r=await fetch(searchUrl+'/indexes/listings/search',{method:'POST',headers:{Authorization:'Bearer '+env.SEARCH_KEY,'Content-Type':'application/json'},body:JSON.stringify({q:'',filter:compiled.filter,sort:compiled.indexOrder,offset,limit:q.limit,attributesToRetrieve:['id','sourceVersion','pricePrecisionSafe']}),signal:AbortSignal.timeout(1200)});
    if(!r.ok)throw Error('SEARCH_UNAVAILABLE');
@@ -57,7 +60,7 @@ export async function searchListings(q:Filters,searchUrl=env.SEARCH_URL){
   }catch{degradedReason='search-unavailable';}
   // Hydrate from current public SQL eligibility: queued withdrawal can never leak a document.
   const next=offset+rows.length<total&&page<500&&page*q.limit<=10000?encrypt({page:page+1,fingerprint,expires:Date.now()+3600000}):null;
-  return data(rows,{total,page,limit:q.limit,searchMode,degraded:!!degradedReason,...(degradedReason?{degradedReason}:{}),pagination:'bounded-offset',maxOffset:10000,nextCursor:next});
+  return data(rows,{total,page,limit:q.limit,searchMode,degraded:!!degradedReason,...(degradedReason?{degradedReason}:{}),pagination:'bounded-offset',maxOffset:10000,nextCursor:next,...(ranking?{ranking:rankingMetadata('30d',rankingAsOf),queryPlan:'ranking-v1'}:{})});
  });
 }
 
@@ -66,7 +69,7 @@ export async function mapListings(q:Filters){
   const market=(await c.query('SELECT currency FROM cities WHERE slug=$1',[q.city])).rows[0];
   const compiled=compileListingSearch({...q,currency:q.currency||market?.currency||'CNY'});
   const totals=(await c.query(`SELECT count(*)::int AS total,count(*) FILTER(WHERE latitude IS NOT NULL AND longitude IS NOT NULL)::int AS located FROM public_listings WHERE ${compiled.where}`,compiled.values)).rows[0];
-  const rows=(await c.query(`SELECT id,slug,title,transaction,segment,price,currency,"rentPeriod",area,beds,"livingRooms",community,district,city,latitude,longitude FROM public_listings WHERE ${compiled.where} AND latitude IS NOT NULL AND longitude IS NOT NULL ORDER BY ${compiled.order} LIMIT 500`,compiled.values)).rows;
+  const rows=(await c.query(`SELECT id,slug,title,transaction,segment,price,currency,"rentPeriod",area,beds,"livingRooms",community,district,city,latitude,longitude,${rankingExpressions().disclosure} FROM public_listings WHERE ${compiled.where} AND latitude IS NOT NULL AND longitude IS NOT NULL ORDER BY ${compiled.order} LIMIT 500`,compiled.values)).rows;
   return data(rows,{...totals,limit:500,truncated:totals.located>500,coordinatePrecision:'community-rounded-3-decimals',searchMode:'sql'});
  });
 }

@@ -9,3 +9,5 @@ export * from './inventory-drafts';
 export * from './property-media';
 
 export * from './search-projection';
+
+export * from './discovery-ranking';

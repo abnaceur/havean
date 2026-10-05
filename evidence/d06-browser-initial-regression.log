@@ -1,0 +1,232 @@
+ Container haven-integration-tests-run-dd0794f062db Creating 
+ Container haven-integration-tests-run-dd0794f062db Created 
+
+Running 12 tests using 1 worker
+
+  ✓   1 [desktop] › tests/e2e/discovery-ranking.spec.ts:12:1 › D06 authorized curation appears with a sponsorship label and public period; version and role boundaries reject invalid changes (20.3s)
+  ✓   2 [desktop] › tests/e2e/discovery-ranking.spec.ts:21:1 › D06 activity is opt-in and account/day/event dedupe prevents repeated visits from inflating ranking signals (9.7s)
+  ✘   3 [desktop] › tests/e2e/map-search.spec.ts:9:1 › D05 real MapLibre clusters, selected cards and URL bounds synchronize with the same public list criteria (15.3s)
+  ✘   4 [desktop] › tests/e2e/map-search.spec.ts:20:1 › D05 a genuine tile failure and unavailable WebGL retain the matching property list and attribution (15.7s)
+  ✓   5 [desktop] › tests/e2e/resale-filters.spec.ts:10:1 › D04 combined filters return independent SQL fixture IDs; Cancel, Reset, validation, Refresh and Back preserve applied criteria (14.2s)
+  ✓   6 [desktop] › tests/e2e/resale-filters.spec.ts:24:1 › D04 administrators author decimal price ranges that consumers can apply; bad ranges are rejected (8.7s)
+  ✓   7 [mobile] › tests/e2e/discovery-ranking.spec.ts:12:1 › D06 authorized curation appears with a sponsorship label and public period; version and role boundaries reject invalid changes (24.4s)
+  ✓   8 [mobile] › tests/e2e/discovery-ranking.spec.ts:21:1 › D06 activity is opt-in and account/day/event dedupe prevents repeated visits from inflating ranking signals (6.1s)
+  ✘   9 [mobile] › tests/e2e/map-search.spec.ts:9:1 › D05 real MapLibre clusters, selected cards and URL bounds synchronize with the same public list criteria (15.4s)
+  ✘  10 [mobile] › tests/e2e/map-search.spec.ts:20:1 › D05 a genuine tile failure and unavailable WebGL retain the matching property list and attribution (16.0s)
+  ✓  11 [mobile] › tests/e2e/resale-filters.spec.ts:10:1 › D04 combined filters return independent SQL fixture IDs; Cancel, Reset, validation, Refresh and Back preserve applied criteria (8.0s)
+  ✓  12 [mobile] › tests/e2e/resale-filters.spec.ts:24:1 › D04 administrators author decimal price ranges that consumers can apply; bad ranges are rejected (4.4s)
+
+
+  1) [desktop] › tests/e2e/map-search.spec.ts:9:1 › D05 real MapLibre clusters, selected cards and URL bounds synchronize with the same public list criteria 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    +   "7e68c871-b6ab-4306-9a91-751932ef1783",
+        "10000000-0000-4000-8000-000000002000",
+        "10000000-0000-4000-8000-000000002006",
+        "10000000-0000-4000-8000-000000002012",
+        "10000000-0000-4000-8000-000000002018",
+        "10000000-0000-4000-8000-000000002024",
+        "10000000-0000-4000-8000-000000002030",
+        "10000000-0000-4000-8000-000000002036",
+        "10000000-0000-4000-8000-000000002042",
+        "10000000-0000-4000-8000-000000002048",
+        "10000000-0000-4000-8000-000000002054",
+    -   "7e68c871-b6ab-4306-9a91-751932ef1783",
+        "dbc0ff5d-1164-461d-a030-bd6370c7eee2",
+      ]
+
+    Call Log:
+    - Timeout 15000ms exceeded while waiting on the predicate
+
+      10 |  const group=(await fixtures.query(`SELECT "communityId",count(*) FROM public_listings WHERE city='bj' AND transaction='sale' AND segment='residential' AND latitude IS NOT NULL GROUP BY "communityId" HAVING count(*)>1 ORDER BY count(*) DESC,"communityId" LIMIT 1`)).rows[0];expect(group).toBeTruthy();
+      11 |  const expected=(await fixtures.query(`SELECT id,title FROM public_listings WHERE city='bj' AND transaction='sale' AND segment='residential' AND "communityId"=$1 ORDER BY "publishedAt" DESC NULLS LAST,id LIMIT 20`,[group.communityId])).rows;
+    > 12 |  await page.goto('/bj/map?'+new URLSearchParams({communityId:group.communityId,transaction:'sale',segment:'residential'}));await expect.poll(()=>cards(page)).toEqual(expected.map(x=>x.id));await expect(page.locator('.map-canvas')).toHaveAttribute('data-map-ready','true');
+         |                                                                                                                                                               ^
+      13 |  await expect(page.locator('.map-cluster-count').first()).toBeVisible();const canvas=page.locator('.maplibregl-canvas');await canvas.click({position:{x:(await canvas.boundingBox())!.width/2,y:(await canvas.boundingBox())!.height/2}});await expect(page.locator('.map-cluster-list')).toBeVisible();await expect(page.locator('.map-cluster-list')).toContainText('properties in this area');
+      14 |  await page.getByRole('button',{name:'Close area properties',exact:true}).click();await page.getByLabel('Select a property on the map').selectOption(expected[0].id);await expect(page.getByRole('region',{name:'Selected property',exact:true})).toContainText(expected[0].title);await expect(page.locator('.map-property.selected')).toHaveCount(1);
+      15 |  await expect(page.getByRole('button',{name:'Search this area',exact:true})).toBeEnabled();await page.getByRole('button',{name:'Search this area',exact:true}).click();await expect(page).toHaveURL(/bounds=/);const applied=page.url();const bounds=new URL(applied).searchParams.get('bounds')!.split(',').map(Number);
+        at /workspace/tests/e2e/map-search.spec.ts:12:159
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/map-search-D05-real-MapLib-0589f-e-same-public-list-criteria-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/map-search-D05-real-MapLib-0589f-e-same-public-list-criteria-desktop/error-context.md
+
+    Error Context: test-results/map-search-D05-real-MapLib-0589f-e-same-public-list-criteria-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/map-search-D05-real-MapLib-0589f-e-same-public-list-criteria-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/map-search-D05-real-MapLib-0589f-e-same-public-list-criteria-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › tests/e2e/map-search.spec.ts:20:1 › D05 a genuine tile failure and unavailable WebGL retain the matching property list and attribution 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,6 +1,7 @@
+      Array [
+    +   "7e68c871-b6ab-4306-9a91-751932ef1783",
+        "10000000-0000-4000-8000-000000002000",
+        "10000000-0000-4000-8000-000000002001",
+        "10000000-0000-4000-8000-000000002002",
+        "10000000-0000-4000-8000-000000002003",
+        "10000000-0000-4000-8000-000000002004",
+    @@ -16,7 +17,6 @@
+        "10000000-0000-4000-8000-000000002014",
+        "10000000-0000-4000-8000-000000002015",
+        "10000000-0000-4000-8000-000000002016",
+        "10000000-0000-4000-8000-000000002017",
+        "10000000-0000-4000-8000-000000002018",
+    -   "10000000-0000-4000-8000-000000002019",
+      ]
+
+    Call Log:
+    - Timeout 15000ms exceeded while waiting on the predicate
+
+      22 |  await page.route('**/api/v1/map/config',async route=>{const response=await route.fetch(),body=await response.json();body.data.style='http://localhost:8088/d05-map-style.json';body.data.attribution='D05 controlled tile fixture';await route.fulfill({response,json:body});});
+      23 |  await page.route('**/d05-map-style.json',route=>route.fulfill({json:{version:8,sources:{fixture:{type:'raster',tiles:['http://localhost:8088/d05-failed-tile/{z}/{x}/{y}.png'],tileSize:256,attribution:'D05 tile attribution'}},layers:[{id:'tiles',type:'raster',source:'fixture'}]}}));await page.route('**/d05-failed-tile/**',route=>route.fulfill({status:503,body:'Tile provider unavailable'}));
+    > 24 |  await page.goto('/bj/map?transaction=sale&segment=residential');await expect.poll(()=>cards(page)).toEqual(expected);await expect(page.locator('.map-failure')).toContainText('Map tiles are unavailable');await expect(page.locator('.map-attribution')).toContainText('D05 controlled tile fixture');await page.screenshot({path:`evidence/d05-tile-failure-${info.project.name}.png`});
+         |                                                                                                     ^
+      25 |  await page.unroute('**/api/v1/map/config');await page.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(context:any,...args:any[]){if(String(context).includes('webgl'))return null;return (original as any).call(this,context,...args);} as any;});await page.reload();await expect.poll(()=>cards(page)).toEqual(expected);await expect(page.locator('.map-failure')).toContainText('cannot display the map');
+      26 | });
+      27 |
+        at /workspace/tests/e2e/map-search.spec.ts:24:101
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/map-search-D05-a-genuine-t-07d97-operty-list-and-attribution-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/map-search-D05-a-genuine-t-07d97-operty-list-and-attribution-desktop/error-context.md
+
+    Error Context: test-results/map-search-D05-a-genuine-t-07d97-operty-list-and-attribution-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/map-search-D05-a-genuine-t-07d97-operty-list-and-attribution-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/map-search-D05-a-genuine-t-07d97-operty-list-and-attribution-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › tests/e2e/map-search.spec.ts:9:1 › D05 real MapLibre clusters, selected cards and URL bounds synchronize with the same public list criteria 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    +   "7e68c871-b6ab-4306-9a91-751932ef1783",
+        "10000000-0000-4000-8000-000000002000",
+        "10000000-0000-4000-8000-000000002006",
+        "10000000-0000-4000-8000-000000002012",
+        "10000000-0000-4000-8000-000000002018",
+        "10000000-0000-4000-8000-000000002024",
+        "10000000-0000-4000-8000-000000002030",
+        "10000000-0000-4000-8000-000000002036",
+        "10000000-0000-4000-8000-000000002042",
+        "10000000-0000-4000-8000-000000002048",
+        "10000000-0000-4000-8000-000000002054",
+    -   "7e68c871-b6ab-4306-9a91-751932ef1783",
+        "dbc0ff5d-1164-461d-a030-bd6370c7eee2",
+      ]
+
+    Call Log:
+    - Timeout 15000ms exceeded while waiting on the predicate
+
+      10 |  const group=(await fixtures.query(`SELECT "communityId",count(*) FROM public_listings WHERE city='bj' AND transaction='sale' AND segment='residential' AND latitude IS NOT NULL GROUP BY "communityId" HAVING count(*)>1 ORDER BY count(*) DESC,"communityId" LIMIT 1`)).rows[0];expect(group).toBeTruthy();
+      11 |  const expected=(await fixtures.query(`SELECT id,title FROM public_listings WHERE city='bj' AND transaction='sale' AND segment='residential' AND "communityId"=$1 ORDER BY "publishedAt" DESC NULLS LAST,id LIMIT 20`,[group.communityId])).rows;
+    > 12 |  await page.goto('/bj/map?'+new URLSearchParams({communityId:group.communityId,transaction:'sale',segment:'residential'}));await expect.poll(()=>cards(page)).toEqual(expected.map(x=>x.id));await expect(page.locator('.map-canvas')).toHaveAttribute('data-map-ready','true');
+         |                                                                                                                                                               ^
+      13 |  await expect(page.locator('.map-cluster-count').first()).toBeVisible();const canvas=page.locator('.maplibregl-canvas');await canvas.click({position:{x:(await canvas.boundingBox())!.width/2,y:(await canvas.boundingBox())!.height/2}});await expect(page.locator('.map-cluster-list')).toBeVisible();await expect(page.locator('.map-cluster-list')).toContainText('properties in this area');
+      14 |  await page.getByRole('button',{name:'Close area properties',exact:true}).click();await page.getByLabel('Select a property on the map').selectOption(expected[0].id);await expect(page.getByRole('region',{name:'Selected property',exact:true})).toContainText(expected[0].title);await expect(page.locator('.map-property.selected')).toHaveCount(1);
+      15 |  await expect(page.getByRole('button',{name:'Search this area',exact:true})).toBeEnabled();await page.getByRole('button',{name:'Search this area',exact:true}).click();await expect(page).toHaveURL(/bounds=/);const applied=page.url();const bounds=new URL(applied).searchParams.get('bounds')!.split(',').map(Number);
+        at /workspace/tests/e2e/map-search.spec.ts:12:159
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/map-search-D05-real-MapLib-0589f-e-same-public-list-criteria-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/map-search-D05-real-MapLib-0589f-e-same-public-list-criteria-mobile/error-context.md
+
+    Error Context: test-results/map-search-D05-real-MapLib-0589f-e-same-public-list-criteria-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/map-search-D05-real-MapLib-0589f-e-same-public-list-criteria-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/map-search-D05-real-MapLib-0589f-e-same-public-list-criteria-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › tests/e2e/map-search.spec.ts:20:1 › D05 a genuine tile failure and unavailable WebGL retain the matching property list and attribution 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,6 +1,7 @@
+      Array [
+    +   "7e68c871-b6ab-4306-9a91-751932ef1783",
+        "10000000-0000-4000-8000-000000002000",
+        "10000000-0000-4000-8000-000000002001",
+        "10000000-0000-4000-8000-000000002002",
+        "10000000-0000-4000-8000-000000002003",
+        "10000000-0000-4000-8000-000000002004",
+    @@ -16,7 +17,6 @@
+        "10000000-0000-4000-8000-000000002014",
+        "10000000-0000-4000-8000-000000002015",
+        "10000000-0000-4000-8000-000000002016",
+        "10000000-0000-4000-8000-000000002017",
+        "10000000-0000-4000-8000-000000002018",
+    -   "10000000-0000-4000-8000-000000002019",
+      ]
+
+    Call Log:
+    - Timeout 15000ms exceeded while waiting on the predicate
+
+      22 |  await page.route('**/api/v1/map/config',async route=>{const response=await route.fetch(),body=await response.json();body.data.style='http://localhost:8088/d05-map-style.json';body.data.attribution='D05 controlled tile fixture';await route.fulfill({response,json:body});});
+      23 |  await page.route('**/d05-map-style.json',route=>route.fulfill({json:{version:8,sources:{fixture:{type:'raster',tiles:['http://localhost:8088/d05-failed-tile/{z}/{x}/{y}.png'],tileSize:256,attribution:'D05 tile attribution'}},layers:[{id:'tiles',type:'raster',source:'fixture'}]}}));await page.route('**/d05-failed-tile/**',route=>route.fulfill({status:503,body:'Tile provider unavailable'}));
+    > 24 |  await page.goto('/bj/map?transaction=sale&segment=residential');await expect.poll(()=>cards(page)).toEqual(expected);await expect(page.locator('.map-failure')).toContainText('Map tiles are unavailable');await expect(page.locator('.map-attribution')).toContainText('D05 controlled tile fixture');await page.screenshot({path:`evidence/d05-tile-failure-${info.project.name}.png`});
+         |                                                                                                     ^
+      25 |  await page.unroute('**/api/v1/map/config');await page.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(context:any,...args:any[]){if(String(context).includes('webgl'))return null;return (original as any).call(this,context,...args);} as any;});await page.reload();await expect.poll(()=>cards(page)).toEqual(expected);await expect(page.locator('.map-failure')).toContainText('cannot display the map');
+      26 | });
+      27 |
+        at /workspace/tests/e2e/map-search.spec.ts:24:101
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/map-search-D05-a-genuine-t-07d97-operty-list-and-attribution-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/map-search-D05-a-genuine-t-07d97-operty-list-and-attribution-mobile/error-context.md
+
+    Error Context: test-results/map-search-D05-a-genuine-t-07d97-operty-list-and-attribution-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/map-search-D05-a-genuine-t-07d97-operty-list-and-attribution-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/map-search-D05-a-genuine-t-07d97-operty-list-and-attribution-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › tests/e2e/map-search.spec.ts:9:1 › D05 real MapLibre clusters, selected cards and URL bounds synchronize with the same public list criteria 
+    [desktop] › tests/e2e/map-search.spec.ts:20:1 › D05 a genuine tile failure and unavailable WebGL retain the matching property list and attribution 
+    [mobile] › tests/e2e/map-search.spec.ts:9:1 › D05 real MapLibre clusters, selected cards and URL bounds synchronize with the same public list criteria 
+    [mobile] › tests/e2e/map-search.spec.ts:20:1 › D05 a genuine tile failure and unavailable WebGL retain the matching property list and attribution 
+  8 passed (2.7m)
+
