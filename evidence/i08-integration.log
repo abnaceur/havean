@@ -1,0 +1,22 @@
+ Container haven-integration-tests-run-d13ff607af9c Creating
+ Container haven-integration-tests-run-d13ff607af9c Created
+
+ RUN  v5.0.3 /workspace
+
+ ✓ tests/integration/outbox.test.ts (2 tests) 2102ms
+   ✓ F09 real queue replay and crash recovery (2)
+     ✓ crash after SMTP delivery retries without duplicating mail or notifications 1547ms
+     ✓ an old publish event cannot resurrect withdrawn inventory 552ms
+ ✓ tests/integration/listing-expiration.test.ts (5 tests) 1050ms
+   ✓ I08 real queue expiration and late duplicate jobs create one atomic transition and remove public destinations/search 978ms
+ ✓ tests/integration/contracts.test.ts (5 tests) 378ms
+ ✓ tests/integration/listing-workflow.test.ts (6 tests) 170ms
+
+ Test Files  4 passed (4)
+      Tests  18 passed (18)
+   Start at  15:57:07
+   Duration  7.35s (tests 55%, import 39%, transform 6%)
+
+     Import  30 modules were evaluated 41 times · 2.61s total, 39% of tracked time
+             ~700ms faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

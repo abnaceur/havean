@@ -79,6 +79,7 @@ export const sdk={
 "InventoryController_review":call(operations["InventoryController_review"]),
 "InventoryController_reviews":call(operations["InventoryController_reviews"]),
 "InventoryController_revise":call(operations["InventoryController_revise"]),
+"InventoryController_scheduleExpiration":call(operations["InventoryController_scheduleExpiration"]),
 "InventoryController_sendDraft":call(operations["InventoryController_sendDraft"]),
 "InventoryController_submissions":call(operations["InventoryController_submissions"]),
 "InventoryController_submit":call(operations["InventoryController_submit"]),

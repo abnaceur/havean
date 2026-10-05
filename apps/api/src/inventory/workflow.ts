@@ -11,6 +11,7 @@ export async function changeListingState(c:pg.PoolClient,a:Actor,id:string,input
  if(['under_review','published','rejected'].includes(input.status)&&!reviewer)fail(403,'A moderator must review publication decisions');
  if(input.status==='rejected'&&(!input.reason||input.reason.trim().length<5))fail(400,'Give a reason for rejecting this property');
  if(['published','rejected'].includes(input.status)&&(listing.created_by===a.id||listing.owner_id===a.id||assigned))fail(403,'You cannot approve or reject your own property');
+ if(input.status==='sold'&&listing.transaction!=='sale'||input.status==='leased'&&listing.transaction!=='rent')fail(409,'Choose the completion state for this transaction type');
  transition(listingTransitions,listing.status,input.status);
  if(input.status==='published'){
   if(!input.verified)fail(400,'Confirm verified property facts and authority to list');
@@ -21,7 +22,7 @@ export async function changeListingState(c:pg.PoolClient,a:Actor,id:string,input
   if(listing.title.trim().length<8||listing.description.trim().length<20||!listing.price||Number(listing.price)<=0||!unit||!listing.agent_id||!photos.length)fail(400,'Publication requires complete facts, a positive price, an agent and approved photos');
   if(!(await c.query('SELECT 1 FROM agents WHERE id=$1 AND organization_id=$2 AND verified_until>=current_date',[listing.agent_id,listing.organization_id])).rowCount)fail(400,'Publication requires an eligible agent in the property organization');
   if((await c.query('SELECT unit_occupied($1) AS occupied',[listing.unit_id])).rows[0].occupied&&listing.transaction==='rent')fail(409,'An active lease prevents rental publication');
-  await c.query('UPDATE listings SET photos=$2,reviewed_by=$3,reviewed_at=now() WHERE id=$1',[id,photos,a.id]);
+  await c.query('UPDATE listings SET photos=$2,reviewed_by=$3,reviewed_at=now(),expires_at=NULL WHERE id=$1',[id,photos,a.id]);
  }
  const result=(await c.query("UPDATE listings SET status=$2,version=version+1,updated_at=now(),published_at=CASE WHEN $2='published' THEN now() ELSE published_at END WHERE id=$1 RETURNING id,status,version",[id,input.status])).rows[0];
  await c.query('INSERT INTO listing_status_history(listing_id,previous_status,next_status,actor_id,reason,listing_version) VALUES($1,$2,$3,$4,$5,$6)',[id,listing.status,input.status,a.id,input.reason?.trim()||null,result.version]);
