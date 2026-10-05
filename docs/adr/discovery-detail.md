@@ -1,0 +1,9 @@
+# Public property detail read ports
+
+Detail facts come from the current published listing projection, not a pending revision. Related listings recheck current source eligibility and share city, transaction and segment. Unknown publication dates/public coordinates are unavailable rather than converted into epoch dates or undefined URLs. The map preview renders only rounded public community coordinates using the configured provider; private unit points remain isolated.
+
+`public_listing_agents(uuid)` is a bounded public read port for the one assigned agent. It validates current public listing eligibility, the agent's matching agency, active profile/membership, and credentials through the end of the property's local calendar day. It exposes only existing public agent fields. The security-definer function has a fixed search path and does not expose private profile, membership, organization or credential-document records. Anonymous callers cannot turn it into a private identity lookup.
+
+The API viewing preflight reports an explicit conflict when no eligible assigned agent remains. A restrictive insert policy repeats the same authority in the write statement, preserving the original actor policies and preventing invalid direct insertion. Existing requests and their cancellation/history are not deleted when credentials expire. The date rule is proposed product policy (P), not a claim about the original website's agency systems.
+
+A shared photo gallery is used for both original published photos and approved additional photo media. Dialog keyboard events bubble from controls so arrow navigation does not depend on moving focus away from Close. Empty/broken images remain visible fallbacks; lightbox Escape restores trigger focus. Existing media moderation, signed assets, range video and approved panorama/plan permissions are retained.

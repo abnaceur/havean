@@ -31,6 +31,7 @@ export const operations={
 "DiscoveryController_estimate":{method:"POST",path:"/api/v1/tools/mortgage-estimate",params:z.object({}),query:z.object({}),body:mortgageSchema,response:responses["DiscoveryController_estimate"]},
 "DiscoveryController_facets":{method:"GET",path:"/api/v1/listings/facets",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj')}),body:z.undefined(),response:responses["DiscoveryController_facets"]},
 "DiscoveryController_listing":{method:"GET",path:"/api/v1/listings/:id",params:z.object({"id":z.string().min(1)}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_listing"]},
+"DiscoveryController_listingAgents":{method:"GET",path:"/api/v1/listings/:id/agents",params:z.object({"id":z.string().min(1)}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_listingAgents"]},
 "DiscoveryController_listings":{method:"GET",path:"/api/v1/listings",params:z.object({}),query:listingFilters,body:z.undefined(),response:responses["DiscoveryController_listings"]},
 "DiscoveryController_mapConfiguration":{method:"GET",path:"/api/v1/map/config",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_mapConfiguration"]},
 "DiscoveryController_mapListings":{method:"GET",path:"/api/v1/listings/map",params:z.object({}),query:listingFilters,body:z.undefined(),response:responses["DiscoveryController_mapListings"]},

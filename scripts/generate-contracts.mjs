@@ -22,7 +22,7 @@ for(const file of files){
     ts.forEachChild(n,read);
    }read(member.body);
    if(['DiscoveryController_market','GeographyController_records'].includes(id))query="z.object({city:z.string().min(1).max(100).optional()})";
-   if(['DiscoveryController_community','DiscoveryController_listing','DiscoveryController_development','DiscoveryController_developments','DiscoveryController_agents','DiscoveryController_providers'].includes(id))query="z.object({city:z.string().min(1).max(100).optional()})";
+   if(['DiscoveryController_community','DiscoveryController_listing','DiscoveryController_listingAgents','DiscoveryController_development','DiscoveryController_developments','DiscoveryController_agents','DiscoveryController_providers'].includes(id))query="z.object({city:z.string().min(1).max(100).optional()})";
    if(id==='DiscoveryController_estimate')body='mortgageSchema';
    if(id==='MediaController_content')body='z.instanceof(Blob)';
    if(id==='IdentityController_login')query="z.object({returnTo:z.string().optional(),prompt:z.literal('login').optional()})";

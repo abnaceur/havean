@@ -22,6 +22,7 @@ export const sdk={
 "DiscoveryController_estimate":call(operations["DiscoveryController_estimate"]),
 "DiscoveryController_facets":call(operations["DiscoveryController_facets"]),
 "DiscoveryController_listing":call(operations["DiscoveryController_listing"]),
+"DiscoveryController_listingAgents":call(operations["DiscoveryController_listingAgents"]),
 "DiscoveryController_listings":call(operations["DiscoveryController_listings"]),
 "DiscoveryController_mapConfiguration":call(operations["DiscoveryController_mapConfiguration"]),
 "DiscoveryController_mapListings":call(operations["DiscoveryController_mapListings"]),

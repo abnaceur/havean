@@ -1,0 +1,88 @@
+ Container haven-integration-tests-run-a36367d90a7d Creating 
+ Container haven-integration-tests-run-a36367d90a7d Created 
+
+Running 6 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation (41.6s)
+  ✓  2 [desktop] › tests/e2e/rich-media.spec.ts:82:1 › F12 scan rejection, spoofed video MIME and oversized upload intents (3.1s)
+  ✓  3 [desktop] › tests/e2e/rich-media.spec.ts:92:1 › development floor-plan drawings are uploaded, reviewed and displayed with plan inventory (14.6s)
+  ✘  4 [mobile] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation (19.5s)
+  ✓  5 [mobile] › tests/e2e/rich-media.spec.ts:82:1 › F12 scan rejection, spoofed video MIME and oversized upload intents (2.0s)
+  ✓  6 [mobile] › tests/e2e/rich-media.spec.ts:92:1 › development floor-plan drawings are uploaded, reviewed and displayed with plan inventory (7.7s)
+
+
+  1) [desktop] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation 
+
+    Error: locator.click: Error: strict mode violation: getByRole('button', { name: 'Zoom in', exact: true }) resolved to 2 elements:
+        1) <button aria-label="Zoom in">+</button> aka getByText('+')
+        2) <button type="button" title="Zoom in" aria-label="Zoom in" aria-disabled="false" class="maplibregl-ctrl-zoom-in">…</button> aka getByRole('button', { name: 'Zoom in', description: 'Zoom in' })
+
+    Call log:
+      - waiting for getByRole('button', { name: 'Zoom in', exact: true })
+
+
+      71 |  await expect.poll(()=>player.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThan(0);await player.evaluate((v:HTMLVideoElement)=>v.pause());
+      72 |  await page.getByRole('button',{name:/^Floor plans/}).click();if(await page.getByLabel('Property floor plan',{exact:true}).count())await page.getByLabel('Property floor plan',{exact:true}).selectOption(plan.id);await page.getByRole('button',{name:'Open '+plan.title,exact:true}).click();
+    > 73 |  await page.getByRole('button',{name:'Zoom in',exact:true}).click();await expect(page.getByText('125%',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Close dialog',exact:true}).click();
+         |                                                             ^
+      74 |  await page.getByRole('button',{name:/^360° tour/}).click();await page.getByRole('button',{name:'Tour controls',exact:true}).click();await page.getByLabel('Tour viewpoint',{exact:true}).selectOption(living.id);
+      75 |  const canvas=page.getByRole('img',{name:'360 degree view: '+living.title,exact:true});await expect(canvas).toBeVisible();
+      76 |  await page.getByRole('button',{name:'Tour controls',exact:true}).click();await page.getByRole('button',{name:'Turn right',exact:true}).click();await expect(page.getByText(/View 15° \/ 0°/)).toBeVisible();
+        at /workspace/tests/e2e/rich-media.spec.ts:73:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation 
+
+    Error: locator.click: Error: strict mode violation: getByRole('button', { name: 'Zoom in', exact: true }) resolved to 2 elements:
+        1) <button aria-label="Zoom in">+</button> aka getByText('+')
+        2) <button type="button" title="Zoom in" aria-label="Zoom in" aria-disabled="false" class="maplibregl-ctrl-zoom-in">…</button> aka getByRole('button', { name: 'Zoom in', description: 'Zoom in' })
+
+    Call log:
+      - waiting for getByRole('button', { name: 'Zoom in', exact: true })
+
+
+      71 |  await expect.poll(()=>player.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThan(0);await player.evaluate((v:HTMLVideoElement)=>v.pause());
+      72 |  await page.getByRole('button',{name:/^Floor plans/}).click();if(await page.getByLabel('Property floor plan',{exact:true}).count())await page.getByLabel('Property floor plan',{exact:true}).selectOption(plan.id);await page.getByRole('button',{name:'Open '+plan.title,exact:true}).click();
+    > 73 |  await page.getByRole('button',{name:'Zoom in',exact:true}).click();await expect(page.getByText('125%',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Close dialog',exact:true}).click();
+         |                                                             ^
+      74 |  await page.getByRole('button',{name:/^360° tour/}).click();await page.getByRole('button',{name:'Tour controls',exact:true}).click();await page.getByLabel('Tour viewpoint',{exact:true}).selectOption(living.id);
+      75 |  const canvas=page.getByRole('img',{name:'360 degree view: '+living.title,exact:true});await expect(canvas).toBeVisible();
+      76 |  await page.getByRole('button',{name:'Tour controls',exact:true}).click();await page.getByRole('button',{name:'Turn right',exact:true}).click();await expect(page.getByText(/View 15° \/ 0°/)).toBeVisible();
+        at /workspace/tests/e2e/rich-media.spec.ts:73:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-mobile/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation 
+    [mobile] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation 
+  4 passed (1.5m)
+
