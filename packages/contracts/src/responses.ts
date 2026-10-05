@@ -24,6 +24,7 @@ const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nul
 const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});
 const draft=m.listings.pick({id:true,unit_id:true,organization_id:true,owner_id:true,agent_id:true,title:true,description:true,transaction:true,segment:true,currency:true,price:true,rent_period:true,furnishing:true,available_from:true,features:true,status:true,version:true,slug:true});
 export const responses={
+ SearchHistoryController_read:z.array(z.object({id:uuid,city:s,query:s,version:n,updated_at:s})),SearchHistoryController_record:z.object({id:uuid,city:s,query:s,version:n,updated_at:s}),SearchHistoryController_clear:z.object({cleared:bool}),
  DraftInventoryController_units:z.array(z.object({id:uuid,area:decimal,beds:n,floor:n,community:s})),DraftInventoryController_owned:z.array(draft),DraftInventoryController_read:draft,DraftInventoryController_create:draft,DraftInventoryController_update:draft,
  GeographyController_statistics:z.object({sale:inventoryStatistic,rent:inventoryStatistic,asOf:s,definition:s}),GeographyController_listings:z.array(m.public_listings),
  GeographyController_geography:z.object({city:m.cities,districts:z.array(m.districts),neighborhoods:z.array(m.neighborhoods),lines:z.array(m.transit_lines),stations:z.array(m.transit_stations)}),
@@ -34,7 +35,7 @@ export const responses={
  IdentityController_me:z.object({id:uuid,displayName:s,email:s,locale:s,roles:z.array(s),organizationId:uuid.nullable()}),
  DiscoveryController_cities:z.array(m.cities),DiscoveryController_districts:z.array(m.districts),DiscoveryController_market:z.object({data:market,version:n}),
  DiscoveryController_listings:z.array(m.public_listings),DiscoveryController_listing:m.public_listings,DiscoveryController_similar:z.array(m.public_listings),
- DiscoveryController_suggestions:z.array(m.communities.pick({id:true,name:true,slug:true})),DiscoveryController_communities:z.array(community),DiscoveryController_community:community,
+ DiscoveryController_suggestions:z.array(z.object({id:uuid,name:s,slug:s,kind:z.enum(['community','district','neighborhood']),city:s})),DiscoveryController_communities:z.array(community),DiscoveryController_community:community,
  DiscoveryController_agents:z.array(agent),DiscoveryController_agent:agent,DiscoveryController_developments:z.array(development),
  DiscoveryController_development:development.omit({community_id:true,version:true}).extend({floorPlans:z.array(m.floor_plans)}),
  DiscoveryController_providers:z.array(provider),DiscoveryController_provider:provider,

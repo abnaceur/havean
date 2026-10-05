@@ -124,6 +124,9 @@ export const sdk={
 "RichMediaController_reviews":call(operations["RichMediaController_reviews"]),
 "RichMediaController_revise":call(operations["RichMediaController_revise"]),
 "RichMediaController_workbench":call(operations["RichMediaController_workbench"]),
+"SearchHistoryController_clear":call(operations["SearchHistoryController_clear"]),
+"SearchHistoryController_read":call(operations["SearchHistoryController_read"]),
+"SearchHistoryController_record":call(operations["SearchHistoryController_record"]),
 "ServicesController_changeQuote":call(operations["ServicesController_changeQuote"]),
 "ServicesController_quote":call(operations["ServicesController_quote"]),
 "ServicesController_quotes":call(operations["ServicesController_quotes"])

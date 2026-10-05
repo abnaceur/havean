@@ -27,7 +27,6 @@ for(const file of files){
    if(id==='MediaController_content')body='z.instanceof(Blob)';
    if(id==='IdentityController_login')query="z.object({returnTo:z.string().optional(),prompt:z.literal('login').optional()})";
    if(id==='IdentityController_callback')query="z.object({code:z.string(),state:z.string()})";
-   if(id==='DiscoveryController_suggestions')query="z.object({q:z.string().max(120).optional()})";
    if(id==='MediaController_content')query="z.object({signature:z.string()})";
    if(id==='MediaController_download')query="z.object({signature:z.string().optional()})";
    operations.push({id,method,path:'/api/v1/'+(node.name.text==='HealthController'?'health/':'')+route,body,query});

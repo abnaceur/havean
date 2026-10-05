@@ -11,6 +11,7 @@ export function compileListingSearch(q:Filters){
  add('city','=',q.city);add('currency','=',q.currency||'CNY');
  for(const key of ['transaction','segment','rentPeriod','beds','livingRooms'] as const)if(q[key]!==undefined)add('"'+key+'"','=',q[key],key);
  for(const key of ['district','districtId','communityId','orientation','furnishing'] as const)if(q[key]){const list=q[key]!.split(',');values.push(list);sql.push(`"${key}"=ANY($${values.length}::text[])` .replace('"districtId"','"districtId"::text').replace('"communityId"','"communityId"::text'));search.push('('+list.map(v=>`${key} = ${JSON.stringify(v)}`).join(' OR ')+')');}
+ if(q.neighborhoodId){values.push(q.neighborhoodId.split(','));sql.push(`"communityId" IN(SELECT id FROM communities WHERE neighborhood_id::text=ANY($${values.length}::text[]))`);}
  if(q.features){const list=q.features.split(',');values.push(list);sql.push(`features && $${values.length}::text[]`);search.push('('+list.map(v=>`features = ${JSON.stringify(v)}`).join(' OR ')+')');}
  if(q.elevator)add('elevator','=',q.elevator==='true');
  if(q.minPrice!==undefined)add('price::numeric','>=',q.minPrice,'priceMinor',exactPriceMinor(q.minPrice));
@@ -36,7 +37,8 @@ export async function searchListings(q:Filters,searchUrl=env.SEARCH_URL){
   const total=Number((await c.query(`SELECT count(*) FROM public_listings WHERE ${compiled.where}`,compiled.values)).rows[0].count);
   const rows=(await c.query(`SELECT * FROM public_listings WHERE ${compiled.where} ORDER BY ${compiled.order} LIMIT $${compiled.values.length+1} OFFSET $${compiled.values.length+2}`,[...compiled.values,q.limit,offset])).rows;
   let searchMode='sql',degradedReason:string|undefined;
-  if(q.text)degradedReason='literal-text-contract';
+  if(q.neighborhoodId)degradedReason='facet-not-indexed';
+  else if(q.text)degradedReason='literal-text-contract';
   else try{
    const r=await fetch(searchUrl+'/indexes/listings/search',{method:'POST',headers:{Authorization:'Bearer '+env.SEARCH_KEY,'Content-Type':'application/json'},body:JSON.stringify({q:'',filter:compiled.filter,sort:compiled.indexOrder,offset,limit:q.limit,attributesToRetrieve:['id','sourceVersion','pricePrecisionSafe']}),signal:AbortSignal.timeout(1200)});
    if(!r.ok)throw Error('SEARCH_UNAVAILABLE');
