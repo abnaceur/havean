@@ -25,8 +25,8 @@
 - [x] **I04 Create moderation queue and decisions** — done; dependencies: I03, F14, G02
 - [x] **I05 Protect published revisions** — done; dependencies: I04, F14, G02
 - [x] **I06 Create price and status history** — done; dependencies: I05, F14, G02
-- [ ] **I07 Create inventory workbench** — in_progress; dependencies: I06, F14, G02
-- [ ] **I08 Implement expiration and withdrawal** — todo; dependencies: I07, F14, G02
+- [x] **I07 Create inventory workbench** — done; dependencies: I06, F14, G02
+- [ ] **I08 Implement expiration and withdrawal** — in_progress; dependencies: I07, F14, G02
 - [x] **U01 Create reference screen manifest** — done; dependencies: F14
 - [x] **U02 Implement measured design tokens** — done; dependencies: U01, F14
 - [x] **U03 Implement shared mobile shell** — done; dependencies: U02, F14
