@@ -6,6 +6,7 @@ import {notificationPreferenceUpdate,notificationVersion,notificationEventInput,
 import {savedSearchCreate,savedSearchUpdate,savedSearchDelete} from '../saved-searches';
 import {historyVersion,historyPreference,historyView} from '../browsing-history';
 import {favoriteMutation} from '../favorites';
+import {deletionRequest} from '../account-privacy';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
 import {draftCreate,draftUpdate} from '../inventory-drafts';
@@ -149,6 +150,9 @@ export const operations={
 "NotificationWorkerController_plan":{method:"POST",path:"/api/v1/internal/alerts/plan/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationPlanInput,response:responses["NotificationWorkerController_plan"]},
 "NotificationWorkerController_read":{method:"GET",path:"/api/v1/internal/alerts/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["NotificationWorkerController_read"]},
 "NotificationWorkerController_transactional":{method:"POST",path:"/api/v1/internal/alerts/transactional/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationEventInput,response:responses["NotificationWorkerController_transactional"]},
+"PrivacyController_export":{method:"GET",path:"/api/v1/me/export",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["PrivacyController_export"]},
+"PrivacyController_policy":{method:"GET",path:"/api/v1/me/privacy",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["PrivacyController_policy"]},
+"PrivacyController_requestDeletion":{method:"POST",path:"/api/v1/me/deletion-requests",params:z.object({}),query:z.object({}),body:deletionRequest,response:responses["PrivacyController_requestDeletion"]},
 "ProfileController_update":{method:"PATCH",path:"/api/v1/profiles/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:profileUpdate,response:responses["ProfileController_update"]},
 "RankingBoostsController_create":{method:"POST",path:"/api/v1/ops/ranking-boosts",params:z.object({}),query:z.object({}),body:boostCreate,response:responses["RankingBoostsController_create"]},
 "RankingBoostsController_read":{method:"GET",path:"/api/v1/ops/ranking-boosts",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj')}),body:z.undefined(),response:responses["RankingBoostsController_read"]},

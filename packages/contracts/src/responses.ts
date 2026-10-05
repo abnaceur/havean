@@ -1,3 +1,4 @@
+import {privacyPolicy,personalExport,deletionReceipt} from './account-privacy';
 import {notificationPreferences,notificationRecord,alertSummary} from './notifications';
 import {savedSearchRecord} from './saved-searches';
 import {favoriteState} from './favorites';
@@ -34,6 +35,7 @@ const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nul
 const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});
 const draft=m.listings.pick({id:true,unit_id:true,organization_id:true,owner_id:true,agent_id:true,title:true,description:true,transaction:true,segment:true,currency:true,price:true,rent_period:true,furnishing:true,available_from:true,features:true,status:true,version:true,slug:true});
 export const responses={
+ PrivacyController_policy:privacyPolicy,PrivacyController_export:personalExport,PrivacyController_requestDeletion:deletionReceipt,
  NotificationsController_preferences:notificationPreferences,NotificationsController_update:notificationPreferences,NotificationsController_read:z.array(notificationRecord),NotificationsController_markRead:z.object({read:bool}),NotificationsController_deliveries:z.array(alertSummary),NotificationsController_retry:alertSummary,NotificationWorkerController_transactional:z.object({accepted:bool}),NotificationWorkerController_plan:z.object({planned:n.int(),replayed:bool}),NotificationWorkerController_due:z.array(alertSummary),NotificationWorkerController_read:alertSummary,NotificationWorkerController_deliver:alertSummary,
  SavedSearchController_read:z.array(savedSearchRecord),SavedSearchController_create:savedSearchRecord,SavedSearchController_update:savedSearchRecord,SavedSearchController_remove:z.object({deleted:bool,version:n.int().positive()}),SavedSearchController_matches:z.object({eligible:bool,reason:s.nullable(),listings:z.array(z.object({id:uuid,slug:s,title:s,city:s,currency:s,price:decimal.nullable(),version:n.int().positive()}))}),
  BrowsingHistoryController_read:historyCollection,BrowsingHistoryController_preferences:historyCollection,BrowsingHistoryController_record:historyCollection,BrowsingHistoryController_remove:historyCollection,BrowsingHistoryController_clear:historyCollection,

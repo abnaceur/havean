@@ -1,0 +1,74 @@
+ Container haven-integration-tests-run-3a91df14501f Creating 
+ Container haven-integration-tests-run-3a91df14501f Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/account-privacy.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[32m 128[2mms[22m[39m
+[31m   [31m×[31m A06 one-snapshot personal export excludes another persona even for an administrator and keeps money as decimal strings[39m[32m 58[2mms[22m[39m
+[31m   [31m×[31m A06 strict confirmed versioned deletion revokes every own session/optional channel and preserves posted finance plus reversal history[39m[32m 61[2mms[22m[39m
+[31m   [31m×[31m A06 online export refuses over-limit data rather than silently omitting records[39m[32m 6[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/account-privacy.test.ts[2m > [22mA06 one-snapshot personal export excludes another persona even for an administrator and keeps money as decimal strings
+[31m[1merror[22m: new row violates row-level security policy for table "recent_searches"[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m tests/integration/account-privacy.test.ts:[2m13:172[22m[39m
+
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1159[22m[39m
+[90m [2m❯[22m tests/integration/account-privacy.test.ts:[2m13:97[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/account-privacy.test.ts[2m > [22mA06 strict confirmed versioned deletion revokes every own session/optional channel and preserves posted finance plus reversal history
+[31m[1mAssertionError[22m: expected error: column u.private_address does not … { …(15) } to match object { status: 401 }
+(18 matching properties omitted from actual)[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- {[39m
+[32m-   "status": 401,[39m
+[31m+ error {[39m
+[31m+   "message": "column u.private_address does not exist",[39m
+[31m+   "length": 117,[39m
+[31m+   "name": "error",[39m
+[31m+   "severity": "ERROR",[39m
+[31m+   "code": "42703",[39m
+[31m+   "detail": undefined,[39m
+[31m+   "hint": undefined,[39m
+[31m+   "position": "1154",[39m
+[31m+   "internalPosition": undefined,[39m
+[31m+   "internalQuery": undefined,[39m
+[31m+   "where": undefined,[39m
+[31m+   "schema": undefined,[39m
+[31m+   "table": undefined,[39m
+[31m+   "column": undefined,[39m
+[31m+   "dataType": undefined,[39m
+[31m+   "constraint": undefined,[39m
+[31m+   "file": "parse_relation.c",[39m
+[31m+   "line": "3716",[39m
+[31m+   "routine": "errorMissingColumn",[39m
+[2m  }[22m
+
+[36m [2m❯[22m tests/integration/account-privacy.test.ts:[2m19:1151[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/account-privacy.test.ts[2m > [22mA06 online export refuses over-limit data rather than silently omitting records
+[31m[1merror[22m: new row violates row-level security policy for table "recent_searches"[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1159[22m[39m
+
+[90m [2m❯[22m tests/integration/account-privacy.test.ts:[2m22:26[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[90m (3)[39m
+[2m   Start at [22m 21:14:22
+[2m   Duration [22m 1.13s[2m (import 67%, transform 20%, tests 13%)[22m
+
+
