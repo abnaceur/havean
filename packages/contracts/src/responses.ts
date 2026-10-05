@@ -12,7 +12,7 @@ import {floorLayout,propertyMediaMetadata} from './property-media';
 import {ownerSchema} from './domain';
 const s=z.string(),uuid=s.uuid(),n=z.number(),bool=z.boolean(),decimal=s.regex(/^-?\d+(\.\d+)?$/),status=z.object({id:uuid,status:s}),versioned=status.extend({version:n});
 const owner=m.owner_submissions.extend({data:ownerSchema.extend({photos:z.array(uuid).optional(),documents:z.array(uuid).optional(),reviewReason:s.optional()})});
-export const publicListing=m.public_listings.extend({rentalMode:z.enum(['entire','shared']).nullable(),transaction:z.enum(['sale','rent']),segment:z.enum(['residential','commercial']),rankingScore:n.optional(),viewCount:n.optional(),sponsored:bool.optional(),curationLabel:s.nullable().optional()});
+export const publicListing=m.public_listings.extend({propertyType:z.enum(['office','retail','warehouse']).nullable(),areaBasis:z.enum(['gross','usable']).nullable(),priceBasis:z.enum(['total','per_area']).nullable(),rentalMode:z.enum(['entire','shared']).nullable(),transaction:z.enum(['sale','rent']),segment:z.enum(['residential','commercial']),rankingScore:n.optional(),viewCount:n.optional(),sponsored:bool.optional(),curationLabel:s.nullable().optional()});
 export const publicRentalTerms=z.object({mode:z.enum(['entire','shared']).nullable(),billingPeriod:z.enum(['day','month','year']).nullable(),depositAmount:decimal.nullable(),currency:s.nullable(),minimumMonths:n.int().nullable(),utilities:z.array(s),moveInDate:s.nullable(),roomAttributes:z.array(s),unitKind:z.enum(['property','room']),roomLabel:s.nullable()});
 export type PublicRentalTerms=z.infer<typeof publicRentalTerms>;
 const unavailableProperty=z.object({id:uuid,available:z.literal(false),title:s});

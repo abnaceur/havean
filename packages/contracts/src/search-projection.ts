@@ -1,11 +1,11 @@
 import {models} from './generated/models';
 
 /** Increment when the public document or its numeric comparison encoding changes. */
-export const listingSearchSchemaVersion=3;
+export const listingSearchSchemaVersion=4;
 export const listingSearchSettings={
  searchableAttributes:['title','description','community','district','features'],
- filterableAttributes:['city','district','districtId','communityId','transaction','segment','status','beds','livingRooms','orientation','elevator','furnishing','features','currency','rentPeriod','rentalMode','availableOrder','availableKnown','priceMinor','pricePrecisionSafe','areaNumber','publishedOrder','projectionSchemaVersion','neighborhoodId','builtYear','floorCategory','buildingType','finishing','heating','ownership','holdingPeriod','tourAvailable'],
- sortableAttributes:['publishedAt','publishedOrder','priceMinor','priceMissing','areaNumber','id'],
+ filterableAttributes:['city','district','districtId','communityId','transaction','segment','status','beds','livingRooms','orientation','elevator','furnishing','features','currency','rentPeriod','rentalMode','propertyType','areaBasis','priceBasis','fitOut','permittedUses','grossAreaNumber','usableAreaNumber','availableOrder','availableKnown','priceMinor','pricePrecisionSafe','areaNumber','publishedOrder','projectionSchemaVersion','neighborhoodId','builtYear','floorCategory','buildingType','finishing','heating','ownership','holdingPeriod','tourAvailable'],
+ sortableAttributes:['publishedAt','publishedOrder','priceMinor','priceMissing','areaNumber','grossAreaNumber','usableAreaNumber','id'],
 };
 
 /** Exact minor units only. Unsafe legacy amounts remain strings and require SQL comparison. */
@@ -24,5 +24,5 @@ export function publicListingSearchDocument(input:unknown){
  const priceMinor=exactPriceMinor(doc.price);
  return {...doc,projectionSchemaVersion:listingSearchSchemaVersion,sourceVersion:doc.version,
   priceMinor,priceMissing:doc.price===null,pricePrecisionSafe:doc.price===null||priceMinor!==null,
-  areaNumber:Number(doc.area),availableKnown:doc.availableFrom!==null,availableOrder:doc.availableFrom?Date.parse(doc.availableFrom):0,publishedOrder:doc.publishedAt?Date.parse(doc.publishedAt):0};
+  areaNumber:Number(doc.area),grossAreaNumber:doc.grossArea===null?null:Number(doc.grossArea),usableAreaNumber:doc.usableArea===null?null:Number(doc.usableArea),availableKnown:doc.availableFrom!==null,availableOrder:doc.availableFrom?Date.parse(doc.availableFrom):0,publishedOrder:doc.publishedAt?Date.parse(doc.publishedAt):0};
 }
