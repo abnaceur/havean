@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 import {login,apiRequest} from '../support/browser';
 test('D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation',async({page,browser},info)=>{
  test.setTimeout(240000);
@@ -62,6 +63,9 @@ test('D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish t
  const range=await page.request.get('http://localhost:8089'+publicVideo.url,{headers:{Range:'bytes=0-99'}});
  expect(range.status()).toBe(206);expect((await range.body()).length).toBe(100);expect(range.headers()['content-range']).toMatch(/^bytes 0-99\//);
  const invalidRange=await page.request.get('http://localhost:8089'+publicVideo.url,{headers:{Range:'bytes=999999999999-'}});expect(invalidRange.status()).toBe(416);
+ const published=(await (await page.request.get('http://localhost:8089/api/v1/listings/'+listingId)).json()).data;
+ await page.goto('http://localhost:8088/bj/buy?'+new URLSearchParams({minPrice:published.price,maxPrice:published.price}));
+ await expect(page.locator('[data-listing-id="'+listingId+'"]').getByText('360° tour',{exact:true})).toBeVisible();
  await page.goto('http://localhost:8088/bj/buy/home-1');
  await page.getByRole('button',{name:/^Property videos/}).click();
  if(await page.getByLabel('Property video',{exact:true}).count())await page.getByLabel('Property video',{exact:true}).selectOption(video.id);
@@ -77,6 +81,35 @@ test('D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish t
  await page.getByRole('button',{name:'Go to Bedroom',exact:true}).click();await expect(page.getByRole('button',{name:bedroom.title,exact:true})).toHaveAttribute('aria-pressed','true');
  expect(await page.evaluate(width=>document.documentElement.scrollWidth<=width,page.viewportSize()!.width)).toBe(true);
  await page.screenshot({path:`evidence/rich-media-${info.project.name}.png`,fullPage:true});
+ const dialog=page.getByRole('dialog',{name:'Interactive property tour'});
+ await expect(dialog.getByRole('img',{name:'360 degree view: '+bedroom.title,exact:true})).toHaveAttribute('data-panorama-ready','true');
+ await dialog.getByRole('button',{name:'Close dialog',exact:true}).click();
+ await expect(dialog).toHaveCount(0);await expect(page.getByRole('button',{name:'Request a viewing',exact:true})).toBeVisible();
+ // Controlled HTTP failures exercise the rendering fallback. Real permission
+ // denial and metadata/URL isolation are checked in approved-tours.test.ts.
+ const assetRoute='**/api/v1/media/'+living.asset_id+'/view',privateSentinel='PRIVATE-PROVIDER-DETAIL-'+suffix;
+ await page.route(assetRoute,route=>route.fulfill({status:403,contentType:'application/json',body:JSON.stringify({error:{message:privateSentinel}})}));
+ await page.getByRole('button',{name:/^360° tour/}).click();
+ await dialog.getByRole('button',{name:'Tour controls',exact:true}).click();await dialog.getByLabel('Tour viewpoint',{exact:true}).selectOption(living.id);
+ await expect(dialog.getByRole('status').filter({hasText:'The panorama could not be loaded.'})).toBeVisible();
+ expect(await dialog.innerText()).not.toContain(privateSentinel);
+ await dialog.getByRole('button',{name:bedroom.title,exact:true}).click();
+ await expect(dialog.getByRole('img',{name:'360 degree view: '+bedroom.title,exact:true})).toHaveAttribute('data-panorama-ready','true');
+ await dialog.getByRole('button',{name:living.title,exact:true}).click();
+ await expect(dialog.getByRole('button',{name:'Retry panorama',exact:true})).toBeVisible();
+ await page.unroute(assetRoute);await dialog.getByRole('button',{name:'Retry panorama',exact:true}).click();
+ await expect(dialog.getByRole('img',{name:'360 degree view: '+living.title,exact:true})).toHaveAttribute('data-panorama-ready','true');
+ await dialog.getByRole('button',{name:bedroom.title,exact:true}).click();
+ await page.route(assetRoute,route=>route.fulfill({status:503,body:privateSentinel}));
+ await dialog.getByRole('button',{name:living.title,exact:true}).click();
+ await expect(dialog.getByRole('status').filter({hasText:'The panorama could not be loaded.'})).toBeVisible();
+ expect(await dialog.innerText()).not.toContain(privateSentinel);
+ const fallbackAccessibility=await new AxeBuilder({page}).include('.tour-viewer').analyze();expect(fallbackAccessibility.violations.filter(issue=>issue.impact==='serious'||issue.impact==='critical')).toEqual([]);
+ await page.screenshot({path:`evidence/d09-tour-fallback-${info.project.name}.png`,scale:'css'});
+ await page.unroute(assetRoute);await dialog.getByRole('button',{name:'Retry panorama',exact:true}).click();
+ await expect(dialog.getByRole('img',{name:'360 degree view: '+living.title,exact:true})).toHaveAttribute('data-panorama-ready','true');
+ await dialog.getByRole('button',{name:'Close dialog',exact:true}).click();await expect(dialog).toHaveCount(0);
+
 });
 
 test('F12 scan rejection, spoofed video MIME and oversized upload intents',async({page})=>{

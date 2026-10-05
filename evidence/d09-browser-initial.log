@@ -1,0 +1,98 @@
+ Container haven-integration-tests-run-a65b95809ad5 Creating 
+ Container haven-integration-tests-run-a65b95809ad5 Created 
+
+Running 8 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation (56.5s)
+  ✓  2 [desktop] › tests/e2e/rich-media.spec.ts:112:1 › F12 scan rejection, spoofed video MIME and oversized upload intents (3.3s)
+  ✓  3 [desktop] › tests/e2e/rich-media.spec.ts:122:1 › development floor-plan drawings are uploaded, reviewed and displayed with plan inventory (15.1s)
+  ✓  4 [desktop] › tests/e2e/spatial-tour.spec.ts:4:1 › mapped rooms, multiple floors and real 3D geometry publish only after moderation (59.3s)
+  ✘  5 [mobile] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation (31.4s)
+  ✓  6 [mobile] › tests/e2e/rich-media.spec.ts:112:1 › F12 scan rejection, spoofed video MIME and oversized upload intents (2.2s)
+  ✓  7 [mobile] › tests/e2e/rich-media.spec.ts:122:1 › development floor-plan drawings are uploaded, reviewed and displayed with plan inventory (7.5s)
+  ✓  8 [mobile] › tests/e2e/spatial-tour.spec.ts:4:1 › mapped rooms, multiple floors and real 3D geometry publish only after moderation (30.2s)
+
+
+  1) [desktop] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-listing-id="10000000-0000-4000-8000-000000002000"]').getByText('360° tour', { exact: true })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-listing-id="10000000-0000-4000-8000-000000002000"]').getByText('360° tour', { exact: true }) with timeout 15000ms
+      - waiting for locator('[data-listing-id="10000000-0000-4000-8000-000000002000"]').getByText('360° tour', { exact: true })
+
+
+      64 |  const invalidRange=await page.request.get('http://localhost:8089'+publicVideo.url,{headers:{Range:'bytes=999999999999-'}});expect(invalidRange.status()).toBe(416);
+      65 |  await page.goto('http://localhost:8088/bj/buy?minPrice=2300000&maxPrice=2300000');
+    > 66 |  await expect(page.locator('[data-listing-id="'+listingId+'"]').getByText('360° tour',{exact:true})).toBeVisible();
+         |                                                                                                      ^
+      67 |  await page.goto('http://localhost:8088/bj/buy/home-1');
+      68 |  await page.getByRole('button',{name:/^Property videos/}).click();
+      69 |  if(await page.getByLabel('Property video',{exact:true}).count())await page.getByLabel('Property video',{exact:true}).selectOption(video.id);
+        at /workspace/tests/e2e/rich-media.spec.ts:66:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('[data-listing-id="10000000-0000-4000-8000-000000002000"]').getByText('360° tour', { exact: true })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-listing-id="10000000-0000-4000-8000-000000002000"]').getByText('360° tour', { exact: true }) with timeout 15000ms
+      - waiting for locator('[data-listing-id="10000000-0000-4000-8000-000000002000"]').getByText('360° tour', { exact: true })
+
+
+      64 |  const invalidRange=await page.request.get('http://localhost:8089'+publicVideo.url,{headers:{Range:'bytes=999999999999-'}});expect(invalidRange.status()).toBe(416);
+      65 |  await page.goto('http://localhost:8088/bj/buy?minPrice=2300000&maxPrice=2300000');
+    > 66 |  await expect(page.locator('[data-listing-id="'+listingId+'"]').getByText('360° tour',{exact:true})).toBeVisible();
+         |                                                                                                      ^
+      67 |  await page.goto('http://localhost:8088/bj/buy/home-1');
+      68 |  await page.getByRole('button',{name:/^Property videos/}).click();
+      69 |  if(await page.getByLabel('Property video',{exact:true}).count())await page.getByLabel('Property video',{exact:true}).selectOption(video.id);
+        at /workspace/tests/e2e/rich-media.spec.ts:66:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-mobile/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/rich-media-D08-D09-F12-sho-3aedf--publish-through-moderation-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation 
+    [mobile] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation 
+  6 passed (3.5m)
+
