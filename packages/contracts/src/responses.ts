@@ -1,3 +1,4 @@
+import {favoriteState} from './favorites';
 import {accountProfile} from './account-profile';
 import {z} from 'zod';
 import {pricePreset} from './geography';
@@ -49,7 +50,7 @@ export const responses={
  DiscoveryController_development:development.omit({community_id:true,version:true}).extend({floorPlans:z.array(m.floor_plans)}),
  DiscoveryController_providers:z.array(provider),DiscoveryController_provider:provider,
  DiscoveryController_estimate:z.object({principal:decimal,monthlyPayment:decimal,totalInterest:decimal,totalRepaid:decimal,schedule:z.array(z.object({month:n,principal:decimal,interest:decimal,payment:decimal,balance:decimal})),assumptions:s}),
- EngagementController_favorites:z.array(publicListing),EngagementController_favorite:z.object({saved:bool}),EngagementController_unfavorite:z.object({saved:bool}),
+ EngagementController_favorites:z.array(publicListing),EngagementController_favoriteState:favoriteState,EngagementController_favorite:favoriteState,EngagementController_unfavorite:favoriteState,
  EngagementController_searches:z.array(m.saved_searches.extend({filters:z.record(s,s)})),EngagementController_saveSearch:m.saved_searches.extend({filters:z.record(s,s)}),EngagementController_deleteSearch:z.object({deleted:bool}),
  EngagementController_inquiry:status.extend({created_at:s,conversationId:uuid}),EngagementController_inquiries:z.array(m.leads.pick({id:true,resource_id:true,status:true,created_at:true,message:true})),
  EngagementController_leads:z.array(m.leads),EngagementController_lead:m.leads,

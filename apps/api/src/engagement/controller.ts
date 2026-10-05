@@ -1,15 +1,25 @@
 import {Controller,Get,Post,Put,Delete,Patch,Param,Req,Body,Inject} from '@nestjs/common';
 import type {FastifyRequest} from 'fastify';
 import {z} from 'zod';
-import {inquirySchema,leadTransitions,transition} from '@haven/contracts';
+import {favoriteMutation,inquirySchema,leadTransitions,transition} from '@haven/contracts';
 import {event} from '@haven/database';
 import {Identity,data,fail,transaction,idempotent} from '../platform/core.js';
 @Controller('api/v1')
 export class EngagementController{
  constructor(@Inject(Identity) private readonly identity:Identity){}
- @Get('me/favorites') async favorites(@Req() req:FastifyRequest){const a=await this.identity.actor(req);return transaction(a,async c=>data((await c.query('SELECT p.* FROM favorites f JOIN public_listings p ON p.id=f.listing_id WHERE f.user_id=$1 ORDER BY f.created_at DESC',[a.id])).rows));}
- @Put('me/favorites/:id') async favorite(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);z.string().uuid().parse(id);return transaction(a,async c=>{if(!(await c.query('SELECT 1 FROM public_listings WHERE id=$1',[id])).rowCount)fail(404,'Property is unavailable');await c.query('INSERT INTO favorites(user_id,listing_id) VALUES($1,$2) ON CONFLICT DO NOTHING',[a.id,id]);return data({saved:true});});}
- @Delete('me/favorites/:id') async unfavorite(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);return transaction(a,async c=>{await c.query('DELETE FROM favorites WHERE user_id=$1 AND listing_id=$2',[a.id,id]);return data({saved:false});});}
+ @Get('me/favorites') async favorites(@Req() req:FastifyRequest){const a=await this.identity.actor(req);return transaction(a,async c=>data((await c.query('SELECT p.* FROM favorites f JOIN public_listings p ON p.id=f.listing_id WHERE f.user_id=$1 AND f.saved ORDER BY f.created_at DESC',[a.id])).rows));}
+ @Get('me/favorites/:id') async favoriteState(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);z.string().uuid().parse(id);return transaction(a,async c=>{const current=(await c.query('SELECT saved,version FROM favorites WHERE user_id=$1 AND listing_id=$2',[a.id,id])).rows[0],listing=(await c.query('SELECT version FROM public_listings WHERE id=$1',[id])).rows[0];return data({saved:current?.saved??false,version:current?.version??0,listingVersion:listing?.version??null});});}
+ @Put('me/favorites/:id') async favorite(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req);z.string().uuid().parse(id);const input=favoriteMutation.parse(body);return this.toggleFavorite(a,req,id,input,true);}
+ @Delete('me/favorites/:id') async unfavorite(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req);z.string().uuid().parse(id);const input=favoriteMutation.parse(body);return this.toggleFavorite(a,req,id,input,false);}
+ private async toggleFavorite(a:import('@haven/database').Actor,req:FastifyRequest,id:string,input:import('zod').infer<typeof favoriteMutation>,saved:boolean){return transaction(a,c=>idempotent(c,a,req,input,async()=>{
+  await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['favorite:'+a.id+':'+id]);
+  const current=(await c.query('SELECT saved,version FROM favorites WHERE user_id=$1 AND listing_id=$2 FOR UPDATE',[a.id,id])).rows[0],listing=(await c.query('SELECT version FROM public_listings WHERE id=$1',[id])).rows[0];
+  if((current?.version??0)!==input.version)fail(409,'Saved homes changed. Refresh and try again.','FAVORITE_CHANGED');
+  if(saved&&!listing)fail(404,'Property is unavailable');if(saved&&listing.version!==input.listingVersion)fail(409,'Property changed. Refresh and try again.','LISTING_CHANGED');
+  if((current?.saved??false)===saved)return data({saved,version:current?.version??0,listingVersion:listing?.version??null});
+  const row=(await c.query('INSERT INTO favorites(user_id,listing_id,saved) VALUES($1,$2,$3) ON CONFLICT(user_id,listing_id) DO UPDATE SET saved=EXCLUDED.saved,version=favorites.version+1,created_at=CASE WHEN EXCLUDED.saved THEN now() ELSE favorites.created_at END RETURNING version',[a.id,id,saved])).rows[0];
+  await event(c,a,id,saved?'favorite.saved':'favorite.removed',{userId:a.id,version:row.version});return data({saved,version:row.version,listingVersion:listing?.version??null});
+ }));}
  @Get('me/saved-searches') async searches(@Req() req:FastifyRequest){const a=await this.identity.actor(req);return transaction(a,async c=>data((await c.query('SELECT * FROM saved_searches WHERE user_id=$1 ORDER BY created_at DESC',[a.id])).rows));}
  @Post('me/saved-searches') async saveSearch(@Req() req:FastifyRequest,@Body() body:unknown){const a=await this.identity.actor(req);const x=z.object({name:z.string().min(2).max(80),filters:z.record(z.string(),z.string()),cadence:z.enum(['daily','weekly']).default('weekly')}).parse(body);return transaction(a,async c=>idempotent(c,a,req,x,async()=>data((await c.query('INSERT INTO saved_searches(user_id,name,filters,cadence) VALUES($1,$2,$3,$4) RETURNING *',[a.id,x.name,x.filters,x.cadence])).rows[0])));}
  @Delete('me/saved-searches/:id') async deleteSearch(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);return transaction(a,async c=>{await c.query('DELETE FROM saved_searches WHERE id=$1 AND user_id=$2',[id,a.id]);return data({deleted:true});});}

@@ -2,6 +2,7 @@
 import {z} from 'zod';
 import {money,listingFilters,inquirySchema,ownerSchema} from '../domain';
 import {rankingFilters,viewSignal,boostCreate,boostUpdate} from '../discovery-ranking';
+import {favoriteMutation} from '../favorites';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
 import {draftCreate,draftUpdate} from '../inventory-drafts';
@@ -52,8 +53,9 @@ export const operations={
 "EngagementController_confirm":{method:"POST",path:"/api/v1/ops/viewings/:id/confirm",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_confirm"]},
 "EngagementController_conversations":{method:"GET",path:"/api/v1/conversations",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_conversations"]},
 "EngagementController_deleteSearch":{method:"DELETE",path:"/api/v1/me/saved-searches/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_deleteSearch"]},
-"EngagementController_favorite":{method:"PUT",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_favorite"]},
+"EngagementController_favorite":{method:"PUT",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:favoriteMutation,response:responses["EngagementController_favorite"]},
 "EngagementController_favorites":{method:"GET",path:"/api/v1/me/favorites",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_favorites"]},
+"EngagementController_favoriteState":{method:"GET",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_favoriteState"]},
 "EngagementController_inquiries":{method:"GET",path:"/api/v1/me/inquiries",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_inquiries"]},
 "EngagementController_inquiry":{method:"POST",path:"/api/v1/inquiries",params:z.object({}),query:z.object({}),body:inquirySchema,response:responses["EngagementController_inquiry"]},
 "EngagementController_lead":{method:"PATCH",path:"/api/v1/ops/leads/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.string(),version:z.number().int()}),response:responses["EngagementController_lead"]},
@@ -64,7 +66,7 @@ export const operations={
 "EngagementController_opsViewings":{method:"GET",path:"/api/v1/ops/viewings",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_opsViewings"]},
 "EngagementController_saveSearch":{method:"POST",path:"/api/v1/me/saved-searches",params:z.object({}),query:z.object({}),body:z.object({name:z.string().min(2).max(80),filters:z.record(z.string(),z.string()),cadence:z.enum(['daily','weekly']).default('weekly')}),response:responses["EngagementController_saveSearch"]},
 "EngagementController_searches":{method:"GET",path:"/api/v1/me/saved-searches",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_searches"]},
-"EngagementController_unfavorite":{method:"DELETE",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_unfavorite"]},
+"EngagementController_unfavorite":{method:"DELETE",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:favoriteMutation,response:responses["EngagementController_unfavorite"]},
 "EngagementController_viewings":{method:"GET",path:"/api/v1/me/viewings",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_viewings"]},
 "GeographyController_archive":{method:"DELETE",path:"/api/v1/ops/geography/:kind/:id",params:z.object({"kind":geographyKind,"id":z.string().min(1)}),query:z.object({}),body:z.object({version:z.number().int().positive()}),response:responses["GeographyController_archive"]},
 "GeographyController_buildings":{method:"GET",path:"/api/v1/communities/:id/buildings",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["GeographyController_buildings"]},

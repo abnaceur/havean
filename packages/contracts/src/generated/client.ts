@@ -44,6 +44,7 @@ export const sdk={
 "EngagementController_deleteSearch":call(operations["EngagementController_deleteSearch"]),
 "EngagementController_favorite":call(operations["EngagementController_favorite"]),
 "EngagementController_favorites":call(operations["EngagementController_favorites"]),
+"EngagementController_favoriteState":call(operations["EngagementController_favoriteState"]),
 "EngagementController_inquiries":call(operations["EngagementController_inquiries"]),
 "EngagementController_inquiry":call(operations["EngagementController_inquiry"]),
 "EngagementController_lead":call(operations["EngagementController_lead"]),

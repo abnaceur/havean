@@ -13,3 +13,5 @@ export * from './search-projection';
 export * from './discovery-ranking';
 
 export * from './account-profile';
+
+export * from './favorites';
