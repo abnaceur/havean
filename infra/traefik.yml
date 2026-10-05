@@ -1,0 +1,17 @@
+entryPoints:
+  web:
+    address: ':8088'
+  ops:
+    address: ':8089'
+  auth:
+    address: ':8090'
+  mail:
+    address: ':8091'
+providers:
+  file:
+    filename: /etc/traefik/routes.yml
+    watch: true
+api:
+  dashboard: false
+ping:
+  entryPoint: web

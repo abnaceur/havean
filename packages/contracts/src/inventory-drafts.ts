@@ -1,0 +1,7 @@
+import {z} from 'zod';
+import {money} from './domain';
+const labels=z.array(z.string().trim().min(1).max(80)).max(20);
+export const draftFacts=z.object({title:z.string().trim().min(8).max(160),description:z.string().trim().min(20).max(5000),transaction:z.enum(['sale','rent']),segment:z.enum(['residential','commercial']),currency:z.string().regex(/^[A-Z]{3}$/),price:money.nullable(),rentPeriod:z.enum(['day','month','year']).nullable(),furnishing:z.string().max(80).default('Unfurnished'),availableFrom:z.string().date().nullable().default(null),features:labels.default([])}).superRefine((row,ctx)=>{if(row.transaction==='rent'&&!row.rentPeriod)ctx.addIssue({code:'custom',path:['rentPeriod'],message:'A rental billing period is required'});});
+export const draftUnit=z.object({communityId:z.string().uuid(),area:z.string().regex(/^\d+(\.\d{1,2})?$/).refine(value=>Number(value)>0&&Number(value)<100000),beds:z.number().int().min(0).max(20),livingRooms:z.number().int().min(0).max(10),baths:z.number().int().min(0).max(10),orientation:z.string().min(2).max(40),floor:z.number().int().min(-10).max(200),privateAddress:z.string().trim().min(5).max(500)});
+export const draftCreate=draftFacts.safeExtend({unitId:z.string().uuid().optional(),unit:draftUnit.optional()}).refine(row=>Boolean(row.unitId)!==Boolean(row.unit),{path:['unitId'],message:'Choose an existing unit or enter a new unit'});
+export const draftUpdate=draftFacts.safeExtend({version:z.number().int().positive()});

@@ -1,0 +1,45 @@
+# This project has its own network, volumes, identity and data. It publishes no ports.
+x-test-environment: &test-environment
+  HAVEN_ENV_FILE: .env.integration
+  HAVEN_GENERATED_DIR: infra/generated/integration
+  NEXT_DIST_DIR: .next-integration
+services:
+  install:
+    env_file: !override [.env.integration]
+    environment:
+      <<: *test-environment
+      CI: 'true'
+  migrate:
+    command: sh -c 'pnpm db:migrate && pnpm db:seed && pnpm exec tsx scripts/fixture-fingerprint.ts evidence/latest-fixture-fingerprint.json'
+    env_file: !override [.env.integration]
+    environment: *test-environment
+  api:
+    env_file: !override [.env.integration]
+    environment: *test-environment
+  worker:
+    env_file: !override [.env.integration]
+    environment: *test-environment
+  web:
+    env_file: !override [.env.integration]
+    environment: *test-environment
+  ops:
+    env_file: !override [.env.integration]
+    environment:
+      <<: *test-environment
+      PUBLIC_APP_URL: ${PUBLIC_OPS_URL}
+      NEXT_PUBLIC_OPS_URL: ${PUBLIC_OPS_URL}
+  identity:
+    volumes: !override
+      - ./infra/generated/integration/haven-realm.json:/opt/keycloak/data/import/haven-realm.json:ro
+  storage:
+    volumes: !override
+      - objects:/data
+      - ./infra/generated/integration/s3.json:/etc/seaweedfs/s3.json:ro
+  proxy:
+    ports: !override []
+  tests:
+    env_file: !override [.env.integration]
+    environment:
+      <<: *test-environment
+      HAVEN_CONTAINER_TESTS: 'true'
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright

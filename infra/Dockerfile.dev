@@ -1,0 +1,27 @@
+FROM node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 AS dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg=7:5.1.9-0+deb12u1 && rm -rf /var/lib/apt/lists/*
+RUN npm install --global pnpm@10.32.1
+WORKDIR /workspace
+ENV NEXT_TELEMETRY_DISABLED=1
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/api/package.json ./apps/api/package.json
+COPY apps/web/package.json ./apps/web/package.json
+COPY apps/ops/package.json ./apps/ops/package.json
+COPY apps/worker/package.json ./apps/worker/package.json
+COPY packages/config/package.json ./packages/config/package.json
+COPY packages/contracts/package.json ./packages/contracts/package.json
+COPY packages/database/package.json ./packages/database/package.json
+COPY packages/ui/package.json ./packages/ui/package.json
+COPY packages/test-support/package.json ./packages/test-support/package.json
+RUN --mount=type=cache,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
+
+FROM dependencies AS browser
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+ENV PLAYWRIGHT_DOWNLOAD_CONNECTION_TIMEOUT=120000
+RUN pnpm exec playwright install --with-deps --only-shell chromium
+
+FROM dependencies AS development
+COPY . .
+
+FROM browser AS tests
+COPY . .

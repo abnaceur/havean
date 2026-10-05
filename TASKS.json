@@ -1,0 +1,2693 @@
+{
+  "schemaVersion": 1,
+  "tasks": [
+    {
+      "id": "F01",
+      "title": "Record architecture and boundaries",
+      "dependencies": [],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Create ADRs for modular monolith, BFF sessions, public/private projections, identity and database ownership.",
+      "acceptance": [
+        "Architecture matches specification",
+        "Module ownership and integration ports documented"
+      ],
+      "minimumTests": [
+        "Contract check: every required module has one owner",
+        "Boundary check rejects an undocumented cross-module table mutation"
+      ],
+      "evidence": "evidence/tasks/F01.md"
+    },
+    {
+      "id": "F02",
+      "title": "Pin compatible dependencies and licenses",
+      "dependencies": [
+        "F01"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Inspect official release requirements and licenses; pin Node LTS, package manager, packages and service image digests. Evaluate shortlist; record SBOM input.",
+      "acceptance": [
+        "Lockfile and compatibility matrix committed",
+        "Restricted components excluded or explicitly licensed"
+      ],
+      "minimumTests": [
+        "Frozen install and build succeeds on declared runtime",
+        "License manifest identifies each pinned direct package and service; missing license fails"
+      ],
+      "evidence": "evidence/tasks/F02.md"
+    },
+    {
+      "id": "F03",
+      "title": "Initialize monorepo and check scripts",
+      "dependencies": [
+        "F02"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Create web, ops, api, worker and shared packages with lint, typecheck, build and task validator scripts.",
+      "acceptance": [
+        "All applications build",
+        "No app imports another app internals"
+      ],
+      "minimumTests": [
+        "Build all workspaces",
+        "Architecture import check rejects prohibited dependency"
+      ],
+      "evidence": "evidence/tasks/F03.md"
+    },
+    {
+      "id": "F04",
+      "title": "Start isolated development services",
+      "dependencies": [
+        "F03"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Compose PostgreSQL/PostGIS, identity, search, cache and local object store with persistent volumes and health checks.",
+      "acceptance": [
+        "One documented command boots dependencies",
+        "No admin service binds publicly by default"
+      ],
+      "minimumTests": [
+        "Boot and wait for every dependency readiness",
+        "Missing required environment variable produces a clear failure"
+      ],
+      "evidence": "evidence/tasks/F04.md"
+    },
+    {
+      "id": "F05",
+      "title": "Create database migrations and roles",
+      "dependencies": [
+        "F04"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Create application, migration and read roles; base users/organizations schema, PostGIS and migration journal.",
+      "acceptance": [
+        "Fresh database applies migrations",
+        "Runtime cannot alter schemas"
+      ],
+      "minimumTests": [
+        "Apply migrations to clean PostgreSQL and query tables",
+        "Runtime ALTER TABLE fails"
+      ],
+      "evidence": "evidence/tasks/F05.md"
+    },
+    {
+      "id": "F06",
+      "title": "Implement identity and server sessions",
+      "dependencies": [
+        "F05"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Integrate OIDC PKCE with server session store, callback state/nonce, safe redirects, logout and staff MFA policy.",
+      "acceptance": [
+        "Login returns to permitted route",
+        "Tokens unavailable to browser JavaScript"
+      ],
+      "minimumTests": [
+        "Integrated login/logout flow with test Keycloak",
+        "Invalid state and external redirect rejected; expired session denied"
+      ],
+      "evidence": "evidence/tasks/F06.md"
+    },
+    {
+      "id": "F07",
+      "title": "Implement role and organization authorization",
+      "dependencies": [
+        "F06"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Create memberships, permissions and resource guards; transactional RLS context on private tables.",
+      "acceptance": [
+        "Deny-by-default checks run on every private operation",
+        "Public serialization explicit"
+      ],
+      "minimumTests": [
+        "User A cannot read organization B private row",
+        "Reuse pooled connection across organizations and assert no context leak"
+      ],
+      "evidence": "evidence/tasks/F07.md"
+    },
+    {
+      "id": "F08",
+      "title": "Publish API contracts and generated client",
+      "dependencies": [
+        "F07"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Implement errors, validation, OpenAPI, decimal-string conventions, pagination and SDK generation.",
+      "acceptance": [
+        "One canonical API client",
+        "Request IDs and stable errors"
+      ],
+      "minimumTests": [
+        "Generated client contract matches API",
+        "Invalid range returns field error without stack or private data"
+      ],
+      "evidence": "evidence/tasks/F08.md"
+    },
+    {
+      "id": "F09",
+      "title": "Build outbox and idempotency infrastructure",
+      "dependencies": [
+        "F08"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Commit aggregate event with transaction; dispatcher and workers dedupe by event/version. Verify BullMQ/Valkey behavior.",
+      "acceptance": [
+        "Retry cannot repeat business effect",
+        "Old events do not overwrite new projections"
+      ],
+      "minimumTests": [
+        "Real queue replay and crash/retry leaves one effect",
+        "Same idempotency key with different payload returns conflict"
+      ],
+      "evidence": "evidence/tasks/F09.md"
+    },
+    {
+      "id": "F10",
+      "title": "Create deterministic integrated test harness",
+      "dependencies": [
+        "F09"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Use real PostgreSQL/identity/search/cache fixtures, fixed clocks, two organizations and role personas; seed reset isolation.",
+      "acceptance": [
+        "No integration suite depends on benchmark site",
+        "Services reliably reset per run"
+      ],
+      "minimumTests": [
+        "Run same fixture twice with identical outcomes",
+        "Test intentionally forbidden cross-org request returns expected denial"
+      ],
+      "evidence": "evidence/tasks/F10.md"
+    },
+    {
+      "id": "F11",
+      "title": "Prepare representative English fixture contracts",
+      "dependencies": [
+        "F10"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Create deterministic fixture files/generators for synthetic Beijing geography, 60 resale, 30 rentals, 10 commercial listings, 8 developments, agents, owners and media. Persist each domain only after its schema task exists.",
+      "acceptance": [
+        "No real benchmark people or private data",
+        "Edge fixtures include empty price, sold, missing image and unauthorized organization"
+      ],
+      "minimumTests": [
+        "Generate fixtures twice with identical IDs/content",
+        "All visible fixture text is English except explicit searchable aliases; format/schema validation passes"
+      ],
+      "evidence": "evidence/tasks/F11.md"
+    },
+    {
+      "id": "F12",
+      "title": "Add media quarantine and signed uploads",
+      "dependencies": [
+        "F11"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Implement upload intents/finalization, MIME decoder, scanning interface, EXIF removal, variants, rights and private document download.",
+      "acceptance": [
+        "Public assets pass validation",
+        "Private originals never share a public bucket policy"
+      ],
+      "minimumTests": [
+        "Valid image becomes correct variants",
+        "Spoofed MIME/oversized payload rejected; unauthorized document URL denied"
+      ],
+      "evidence": "evidence/tasks/F12.md"
+    },
+    {
+      "id": "F13",
+      "title": "Add logs readiness and redaction",
+      "dependencies": [
+        "F12"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Request tracing, separate live/ready endpoints, redaction and queue/outbox metrics.",
+      "acceptance": [
+        "Readiness checks required database and migrations",
+        "Logs exclude secrets"
+      ],
+      "minimumTests": [
+        "Healthy stack readiness succeeds",
+        "Database outage fails readiness; token/email fixture is redacted"
+      ],
+      "evidence": "evidence/tasks/F13.md"
+    },
+    {
+      "id": "F14",
+      "title": "Create CI contract",
+      "dependencies": [
+        "F13"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "CI frozen install, lint, typecheck, build, task validation and targeted integrated checks; retain failure artifacts.",
+      "acceptance": [
+        "Failing business test blocks completion",
+        "No automatic baseline updates"
+      ],
+      "minimumTests": [
+        "Intentional failing test blocks CI",
+        "Clean seed and affected tests pass with uploaded report"
+      ],
+      "evidence": "evidence/tasks/F14.md"
+    },
+    {
+      "id": "G01",
+      "title": "Implement geography hierarchy",
+      "dependencies": [
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "CRUD city, district, neighborhood and transit line/station with English aliases and market settings.",
+      "acceptance": [
+        "City selection scopes descendants",
+        "Slugs stable"
+      ],
+      "minimumTests": [
+        "District endpoint returns only selected city",
+        "Cross-city parent mismatch rejected"
+      ],
+      "evidence": "evidence/tasks/G01.md"
+    },
+    {
+      "id": "G02",
+      "title": "Create community and building records",
+      "dependencies": [
+        "G01",
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Create communities, buildings and approximate public positions; retain private unit addresses separately.",
+      "acceptance": [
+        "Community links resolve",
+        "Public DTO omits private fields"
+      ],
+      "minimumTests": [
+        "Read known community/buildings",
+        "Invalid parent rejected and private-address sentinel absent"
+      ],
+      "evidence": "evidence/tasks/G02.md"
+    },
+    {
+      "id": "G03",
+      "title": "Build city selector",
+      "dependencies": [
+        "G02",
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Search cities, select and persist active city; change category route and clear incompatible filters.",
+      "acceptance": [
+        "URL city authoritative",
+        "Previous city district cleared"
+      ],
+      "minimumTests": [
+        "Select city then refresh preserves selection",
+        "Unknown city renders usable 404 and no stale filters"
+      ],
+      "evidence": "evidence/tasks/G03.md"
+    },
+    {
+      "id": "G04",
+      "title": "Build community discovery",
+      "dependencies": [
+        "G03",
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Community text search, district filter, cards, pagination and empty states.",
+      "acceptance": [
+        "Results respect city/district",
+        "Cards navigate to correct community"
+      ],
+      "minimumTests": [
+        "Browser search returns seeded target",
+        "Empty query results show clear reset option"
+      ],
+      "evidence": "evidence/tasks/G04.md"
+    },
+    {
+      "id": "G05",
+      "title": "Build community detail",
+      "dependencies": [
+        "G04",
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Overview, amenities, buildings, sale/rent tabs and dated statistics calculated from permitted records.",
+      "acceptance": [
+        "Counts reconcile to eligible inventory",
+        "Unknown statistics show unavailable"
+      ],
+      "minimumTests": [
+        "Tab switch shows correct transaction listings",
+        "No private unit or tenant data in HTML/network"
+      ],
+      "evidence": "evidence/tasks/G05.md"
+    },
+    {
+      "id": "I01",
+      "title": "Create canonical unit and listing schema",
+      "dependencies": [
+        "F14",
+        "G02"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Implement unit, listing and segment-specific tables with decimal fields, geography and organization grants. Load the corresponding F11 fixtures now that their tables exist; later domain tasks activate their own fixture subsets.",
+      "acceptance": [
+        "Unit reused across sale/rent/management",
+        "Money and area constraints enforced"
+      ],
+      "minimumTests": [
+        "Create/retrieve a valid sale listing and seed twice without duplicates",
+        "Negative area and organization-parent mismatch rejected"
+      ],
+      "evidence": "evidence/tasks/I01.md"
+    },
+    {
+      "id": "I02",
+      "title": "Implement draft listing editing",
+      "dependencies": [
+        "I01",
+        "F14",
+        "G02"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Agent/owner scoped draft creation and edits using version checks.",
+      "acceptance": [
+        "Persist draft after refresh",
+        "Stale concurrent edits cannot overwrite"
+      ],
+      "minimumTests": [
+        "Authorized agent saves and reads draft",
+        "Other agency denied and stale version returns 409"
+      ],
+      "evidence": "evidence/tasks/I02.md"
+    },
+    {
+      "id": "I03",
+      "title": "Implement listing workflow service",
+      "dependencies": [
+        "I02",
+        "F14",
+        "G02"
+      ],
+      "scope": "marketplace",
+      "status": "in_progress",
+      "description": "Central state machine for submit/review/publish/pause/sold/leased/expire with audit and outbox.",
+      "acceptance": [
+        "Incomplete listing cannot publish",
+        "Terminal state cannot be booked"
+      ],
+      "minimumTests": [
+        "Draft-to-published valid transition",
+        "Invalid transition denied and audit/outbox remains atomic"
+      ],
+      "evidence": "evidence/tasks/I03.md"
+    },
+    {
+      "id": "I04",
+      "title": "Create moderation queue and decisions",
+      "dependencies": [
+        "I03",
+        "F14",
+        "G02"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Moderator lists submissions, views redacted/private evidence by grant and records approve/reject reasons.",
+      "acceptance": [
+        "Agent cannot approve own listing",
+        "Decisions audited"
+      ],
+      "minimumTests": [
+        "Moderator approves valid submission",
+        "Agent approval request denied; reject requires reason"
+      ],
+      "evidence": "evidence/tasks/I04.md"
+    },
+    {
+      "id": "I05",
+      "title": "Protect published revisions",
+      "dependencies": [
+        "I04",
+        "F14",
+        "G02"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Pending edits preserve current public revision until approval, then atomically invalidate projections.",
+      "acceptance": [
+        "Unapproved core changes remain private",
+        "Approved version visible consistently"
+      ],
+      "minimumTests": [
+        "Price edit stays pending then publishes after review",
+        "Rejected revision leaves original public price"
+      ],
+      "evidence": "evidence/tasks/I05.md"
+    },
+    {
+      "id": "I06",
+      "title": "Create price and status history",
+      "dependencies": [
+        "I05",
+        "F14",
+        "G02"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Append changes with actor/reason/time, public subset and retention rules.",
+      "acceptance": [
+        "Historic values immutable",
+        "Public history excludes private notes"
+      ],
+      "minimumTests": [
+        "Approved price change creates one history event",
+        "Editing past event denied; public notes sentinel absent"
+      ],
+      "evidence": "evidence/tasks/I06.md"
+    },
+    {
+      "id": "I07",
+      "title": "Create inventory workbench",
+      "dependencies": [
+        "I06",
+        "F14",
+        "G02"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Ops list, filters, create/detail/edit forms, media ordering and status actions.",
+      "acceptance": [
+        "Role-specific actions work end to end",
+        "All form errors visible"
+      ],
+      "minimumTests": [
+        "Agent creates/uploads/submits draft via browser",
+        "Unassigned listing edit link and API both deny access"
+      ],
+      "evidence": "evidence/tasks/I07.md"
+    },
+    {
+      "id": "I08",
+      "title": "Implement expiration and withdrawal",
+      "dependencies": [
+        "I07",
+        "F14",
+        "G02"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Worker expires scheduled listings; pause/sold/leased removes them from eligible search/cache/recommendations.",
+      "acceptance": [
+        "Detail no longer offers inquiry/booking",
+        "Late duplicate jobs safe"
+      ],
+      "minimumTests": [
+        "Expire a fixture and assert public removal",
+        "Retry expiration yields one state transition"
+      ],
+      "evidence": "evidence/tasks/I08.md"
+    },
+    {
+      "id": "U01",
+      "title": "Create reference screen manifest",
+      "dependencies": [
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Inventory benchmark routes/states, O/R/P/V labels and captures when accessible; record blockers per screen.",
+      "acceptance": [
+        "No invented visual metrics",
+        "Every route has parity status"
+      ],
+      "minimumTests": [
+        "Manifest schema and file references valid",
+        "Missing screenshot cannot be marked visually verified"
+      ],
+      "evidence": "evidence/tasks/U01.md"
+    },
+    {
+      "id": "U02",
+      "title": "Implement measured design tokens",
+      "dependencies": [
+        "U01",
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Measure available captures; configure fonts/colors/spacing and English terminology; label unmeasured values provisional.",
+      "acceptance": [
+        "Tokens traceable to evidence or proposal",
+        "English terminology consistent"
+      ],
+      "minimumTests": [
+        "Token validation rejects untraceable verified values",
+        "Long English labels fit at 320px"
+      ],
+      "evidence": "evidence/tasks/U02.md"
+    },
+    {
+      "id": "U03",
+      "title": "Implement shared mobile shell",
+      "dependencies": [
+        "U02",
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Header, city/search slot, navigation, filter sheet/dialog primitives, scroll restoration and footer.",
+      "acceptance": [
+        "Reference composition retained where verified",
+        "Accessible focus and safe areas"
+      ],
+      "minimumTests": [
+        "Keyboard open/close sheet returns focus",
+        "Back restores prior filter/scroll without overflow"
+      ],
+      "evidence": "evidence/tasks/U03.md"
+    },
+    {
+      "id": "U04",
+      "title": "Implement listing and development cards",
+      "dependencies": [
+        "U03",
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Segment variants for sale/rent/commercial/development, image fallback, price bases and features.",
+      "acceptance": [
+        "Correct area/room/price labels",
+        "Separate favorite and navigation targets"
+      ],
+      "minimumTests": [
+        "Card shows fixture sale/rental amounts correctly",
+        "Missing price is not rendered as zero; keyboard favorite avoids navigation"
+      ],
+      "evidence": "evidence/tasks/U04.md"
+    },
+    {
+      "id": "U05",
+      "title": "Implement standard UI states",
+      "dependencies": [
+        "U04",
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Loading, empty, error, unavailable, offline retry and validation components with English copy.",
+      "acceptance": [
+        "No silent blank screen",
+        "Retrying preserves intended context"
+      ],
+      "minimumTests": [
+        "Simulated fetch failure displays retry then results",
+        "Empty state and withdrawn listing display distinct messages"
+      ],
+      "evidence": "evidence/tasks/U05.md"
+    },
+    {
+      "id": "U06",
+      "title": "Establish visual regression fixtures",
+      "dependencies": [
+        "U05",
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "Pinned browser, deterministic English data, approved local baselines and geometry checks per captured screen.",
+      "acceptance": [
+        "Baseline changes reviewed explicitly",
+        "Dynamic data masked narrowly"
+      ],
+      "minimumTests": [
+        "Known layout shift fails comparison",
+        "No script updates its own baseline on failure"
+      ],
+      "evidence": "evidence/tasks/U06.md"
+    },
+    {
+      "id": "U07",
+      "title": "Build accessibility interaction harness",
+      "dependencies": [
+        "U06",
+        "F14"
+      ],
+      "scope": "marketplace",
+      "status": "done",
+      "description": "axe scanning plus keyboard/focus/contrast/target checks for shared navigation and modal controls.",
+      "acceptance": [
+        "No serious/critical automated violations",
+        "Focus order usable"
+      ],
+      "minimumTests": [
+        "Keyboard completes filter selection and dismissal",
+        "Hidden focus trap and missing label fixture detected"
+      ],
+      "evidence": "evidence/tasks/U07.md"
+    },
+    {
+      "id": "D01",
+      "title": "Index approved public inventory",
+      "dependencies": [
+        "I08",
+        "G05",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Versioned search schema, outbox upsert/remove, price decimals and approved facets.",
+      "acceptance": [
+        "Only published fields indexed",
+        "Older events cannot resurrect withdrawal"
+      ],
+      "minimumTests": [
+        "Publish listing and search for it",
+        "Replay old publish after withdrawal keeps it absent; private sentinel not indexed"
+      ],
+      "evidence": "evidence/tasks/D01.md"
+    },
+    {
+      "id": "D02",
+      "title": "Implement typed search API",
+      "dependencies": [
+        "D01",
+        "I08",
+        "G05",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Normalize allowed filter expressions, paginate and sort with stable ties; SQL degradation contract.",
+      "acceptance": [
+        "Invalid filters rejected",
+        "Consistent sort and bounded pages"
+      ],
+      "minimumTests": [
+        "Price+city search returns exact fixture IDs",
+        "Injected expression rejected; equal-price pages have no duplicate IDs"
+      ],
+      "evidence": "evidence/tasks/D02.md"
+    },
+    {
+      "id": "D03",
+      "title": "Build autocomplete and recent searches",
+      "dependencies": [
+        "D02",
+        "I08",
+        "G05",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Debounced text, city-scoped community/area suggestions, cancellation and account/local history.",
+      "acceptance": [
+        "Stale responses do not replace latest query",
+        "Clear history works"
+      ],
+      "minimumTests": [
+        "Typing target yields city-matching suggestions",
+        "Reversed response order cannot show obsolete query"
+      ],
+      "evidence": "evidence/tasks/D03.md"
+    },
+    {
+      "id": "D04",
+      "title": "Build resale list and filter sheets",
+      "dependencies": [
+        "D03",
+        "I08",
+        "G05",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Location/transit, price, layout, area/features and sort; URL-driven applied state with draft reset/cancel.",
+      "acceptance": [
+        "AND across facets and OR within facet",
+        "Refresh/Back preserve filters"
+      ],
+      "minimumTests": [
+        "Browser applies combined filters and checks exact IDs",
+        "Cancel leaves applied state; min>max rejected"
+      ],
+      "evidence": "evidence/tasks/D04.md"
+    },
+    {
+      "id": "D05",
+      "title": "Build map search",
+      "dependencies": [
+        "D04",
+        "I08",
+        "G05",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "MapLibre pins/clusters synchronized with bounds/filters and selected card; coarse positions only.",
+      "acceptance": [
+        "List and map apply same criteria",
+        "Attribution and fallback present"
+      ],
+      "minimumTests": [
+        "Bounds filter shows expected point fixtures",
+        "Private coordinate sentinel absent and tile failure retains list"
+      ],
+      "evidence": "evidence/tasks/D05.md"
+    },
+    {
+      "id": "D06",
+      "title": "Implement rankings and recommendations",
+      "dependencies": [
+        "D05",
+        "I08",
+        "G05",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Versioned deterministic eligibility/ranking rules, periods, curated boosts and deduped aggregate signals.",
+      "acceptance": [
+        "Withdrawn listings excluded",
+        "Sponsored boosts labeled"
+      ],
+      "minimumTests": [
+        "Known fixture score yields expected order",
+        "Duplicate view event cannot increase counted score"
+      ],
+      "evidence": "evidence/tasks/D06.md"
+    },
+    {
+      "id": "D07",
+      "title": "Build homepage sections",
+      "dependencies": [
+        "D06",
+        "I08",
+        "G05",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Observed category order, curated resale/new homes, ranking shortcuts and three recommendation categories.",
+      "acceptance": [
+        "All category routes functional",
+        "Empty section omitted or useful"
+      ],
+      "minimumTests": [
+        "Every home entry opens correct category",
+        "Empty category does not show dead carousel or wrong-city cards"
+      ],
+      "evidence": "evidence/tasks/D07.md"
+    },
+    {
+      "id": "D08",
+      "title": "Build resale detail and gallery",
+      "dependencies": [
+        "D07",
+        "I08",
+        "G05",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Photos/lightbox, facts, floor plan, community, approximate map, eligible agents and related listings.",
+      "acceptance": [
+        "Sticky actions do not hide content",
+        "Facts come from published revision"
+      ],
+      "minimumTests": [
+        "Gallery keyboard/swipe and community navigation succeed",
+        "Withdrawn listing has unavailable screen and no booking"
+      ],
+      "evidence": "evidence/tasks/D08.md"
+    },
+    {
+      "id": "D09",
+      "title": "Add approved virtual tours",
+      "dependencies": [
+        "D08",
+        "I08",
+        "G05",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Linked panorama scenes/hotspots and lazy-load viewer; permissions and provider fallback.",
+      "acceptance": [
+        "Only approved assets load",
+        "Tour badge reflects usable tour"
+      ],
+      "minimumTests": [
+        "Navigate two fixture scenes and return to detail",
+        "Broken/unauthorized asset shows fallback without leaking URL"
+      ],
+      "evidence": "evidence/tasks/D09.md"
+    },
+    {
+      "id": "D10",
+      "title": "Implement search rebuild and recovery",
+      "dependencies": [
+        "D09",
+        "I08",
+        "G05",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Reindex into temporary index, compare eligibility/counts, swap; handle outage and monitor lag.",
+      "acceptance": [
+        "Rebuild preserves availability",
+        "API degradation explicit"
+      ],
+      "minimumTests": [
+        "Rebuild produces expected published count",
+        "Search outage uses declared SQL fallback or retryable error, not false zero"
+      ],
+      "evidence": "evidence/tasks/D10.md"
+    },
+    {
+      "id": "A01",
+      "title": "Build account profile",
+      "dependencies": [
+        "F14",
+        "I08",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "English profile, contact verification references, locale and session-expiry handling.",
+      "acceptance": [
+        "Only own fields editable",
+        "Identity-managed recovery links work"
+      ],
+      "minimumTests": [
+        "User edits own display name and refreshes",
+        "Other profile ID denied and invalid input shows field error"
+      ],
+      "evidence": "evidence/tasks/A01.md"
+    },
+    {
+      "id": "A02",
+      "title": "Implement persistent favorites",
+      "dependencies": [
+        "A01",
+        "F14",
+        "I08",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Unique user/listing favorite, logged-out return intent and optimistic toggle rollback.",
+      "acceptance": [
+        "Favorites survive refresh",
+        "Repeated toggles idempotent"
+      ],
+      "minimumTests": [
+        "Login return adds intended favorite once",
+        "Failed mutation restores visual state and another user cannot read list"
+      ],
+      "evidence": "evidence/tasks/A02.md"
+    },
+    {
+      "id": "A03",
+      "title": "Build favorite lists and history",
+      "dependencies": [
+        "A02",
+        "F14",
+        "I08",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Personal saved listings and consented browsing history with clear/remove actions.",
+      "acceptance": [
+        "Unavailable listing state visible",
+        "History collection clearable"
+      ],
+      "minimumTests": [
+        "Saved list opens eligible detail",
+        "Archived listing shows unavailable; clearing does not delete other user history"
+      ],
+      "evidence": "evidence/tasks/A03.md"
+    },
+    {
+      "id": "A04",
+      "title": "Implement saved searches",
+      "dependencies": [
+        "A03",
+        "F14",
+        "I08",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Versioned normalized criteria, cadence, pause/edit/delete and alert eligibility.",
+      "acceptance": [
+        "Saved filters restore exactly",
+        "No mixed currency alerts"
+      ],
+      "minimumTests": [
+        "Save and reload complex rental search",
+        "Invalid filters rejected; other user cannot update"
+      ],
+      "evidence": "evidence/tasks/A04.md"
+    },
+    {
+      "id": "A05",
+      "title": "Deliver notifications and alerts",
+      "dependencies": [
+        "A04",
+        "F14",
+        "I08",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "English templates, preferences, outbox delivery and retries; digest deduplication.",
+      "acceptance": [
+        "Provider delivery states truthful",
+        "Opt-out honored for optional alerts"
+      ],
+      "minimumTests": [
+        "New matching listing sends one test-provider alert",
+        "Replayed event/opt-out produces no duplicate/optional email"
+      ],
+      "evidence": "evidence/tasks/A05.md"
+    },
+    {
+      "id": "A06",
+      "title": "Add account export and deletion workflow",
+      "dependencies": [
+        "A05",
+        "F14",
+        "I08",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Scoped export, deletion request, retention classification and session revocation; bookkeeping retained under policy.",
+      "acceptance": [
+        "Personal export isolated",
+        "No blind deletion of posted finance records"
+      ],
+      "minimumTests": [
+        "Export contains only requesting persona data",
+        "Deletion request revokes access but preserves required reversal history"
+      ],
+      "evidence": "evidence/tasks/A06.md"
+    },
+    {
+      "id": "R01",
+      "title": "Implement rental terms",
+      "dependencies": [
+        "D10",
+        "A06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Entire/shared modes, explicit rentable child units, deposit, rent period, furnishing/utilities and availability.",
+      "acceptance": [
+        "Rental schema separates period from amount",
+        "Shared room has correct unit scope"
+      ],
+      "minimumTests": [
+        "Create monthly shared-room listing",
+        "Missing rent period and invalid deposit rejected"
+      ],
+      "evidence": "evidence/tasks/R01.md"
+    },
+    {
+      "id": "R02",
+      "title": "Build rental filters and cards",
+      "dependencies": [
+        "R01",
+        "D10",
+        "A06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Rent mode, billing period, budget, district/transit, furnishing, move-in and amenities.",
+      "acceptance": [
+        "Prices display period explicitly",
+        "Filters persist in URL"
+      ],
+      "minimumTests": [
+        "Filter entire furnished monthly rentals",
+        "Yearly listing cannot silently pass monthly price comparison"
+      ],
+      "evidence": "evidence/tasks/R02.md"
+    },
+    {
+      "id": "R03",
+      "title": "Build rental detail",
+      "dependencies": [
+        "R02",
+        "D10",
+        "A06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Gallery, room/unit attributes, deposit/rent terms, utilities, availability and contact actions.",
+      "acceptance": [
+        "All fees/periods explicit",
+        "Unavailable unit cannot book"
+      ],
+      "minimumTests": [
+        "Detail shows fixture deposit/utilities accurately",
+        "Missing terms show unavailable rather than fabricated defaults"
+      ],
+      "evidence": "evidence/tasks/R03.md"
+    },
+    {
+      "id": "R04",
+      "title": "Protect rental availability",
+      "dependencies": [
+        "R03",
+        "D10",
+        "A06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Withdrawal/leased events block incompatible publication/inquiry; expose an availability service used later by P04 for atomic managed lease activation.",
+      "acceptance": [
+        "One authority for availability",
+        "Race-safe validation"
+      ],
+      "minimumTests": [
+        "Mark listing leased and assert search/detail updates",
+        "Inquiry after listing status transition rejected even with stale search document; full lease race tested in P04"
+      ],
+      "evidence": "evidence/tasks/R04.md"
+    },
+    {
+      "id": "N01",
+      "title": "Create developer organization and projects",
+      "dependencies": [
+        "D10",
+        "F07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Developer grants, development/phase/building relationships and sales status.",
+      "acceptance": [
+        "Organization owns its projects",
+        "Phase cannot attach across developers"
+      ],
+      "minimumTests": [
+        "Developer creates valid phase",
+        "Other developer cannot edit or link foreign building"
+      ],
+      "evidence": "evidence/tasks/N01.md"
+    },
+    {
+      "id": "N02",
+      "title": "Create floor-plan types and inventory",
+      "dependencies": [
+        "N01",
+        "D10",
+        "F07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Room counts, decimal area ranges, media, offered inventory and publication timestamp.",
+      "acceptance": [
+        "Type and unit inventory distinct",
+        "Negative availability forbidden"
+      ],
+      "minimumTests": [
+        "Publish fixture floor-plan range",
+        "Invalid range/foreign media rejected"
+      ],
+      "evidence": "evidence/tasks/N02.md"
+    },
+    {
+      "id": "N03",
+      "title": "Build development discovery",
+      "dependencies": [
+        "N02",
+        "D10",
+        "F07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "District, budget/price basis, status, unit type/area filters and cards.",
+      "acceptance": [
+        "Starting total and per-area prices distinguishable",
+        "Sold-out status visible"
+      ],
+      "minimumTests": [
+        "Search returns expected development",
+        "Unknown total price cannot be inferred and displayed"
+      ],
+      "evidence": "evidence/tasks/N03.md"
+    },
+    {
+      "id": "N04",
+      "title": "Build development detail",
+      "dependencies": [
+        "N03",
+        "D10",
+        "F07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Project overview, phase, unit-type tabs, plan gallery, map and sales lead form.",
+      "acceptance": [
+        "Chosen unit type linked to inquiry",
+        "Inventory timestamp shown"
+      ],
+      "minimumTests": [
+        "Buyer selects type and submits lead",
+        "Sold-out type disables available-unit request without fake booking"
+      ],
+      "evidence": "evidence/tasks/N04.md"
+    },
+    {
+      "id": "N05",
+      "title": "Build developer inventory workspace",
+      "dependencies": [
+        "N04",
+        "D10",
+        "F07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Scoped edit, inventory update, review submission and lead queue.",
+      "acceptance": [
+        "Publication obeys moderation",
+        "Concurrent updates version checked"
+      ],
+      "minimumTests": [
+        "Developer updates inventory through browser",
+        "Cross-developer edit denied; stale edit conflicts"
+      ],
+      "evidence": "evidence/tasks/N05.md"
+    },
+    {
+      "id": "C01",
+      "title": "Add commercial attributes and price bases",
+      "dependencies": [
+        "D10",
+        "I08"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Office/retail/warehouse, gross/usable area, fit-out, parking and permitted use; sale/rent basis enums.",
+      "acceptance": [
+        "Schema validates transaction-specific fields",
+        "Area basis explicit"
+      ],
+      "minimumTests": [
+        "Create annual-per-area office offer",
+        "Missing basis or nonpositive usable area rejected"
+      ],
+      "evidence": "evidence/tasks/C01.md"
+    },
+    {
+      "id": "C02",
+      "title": "Build commercial discovery",
+      "dependencies": [
+        "C01",
+        "D10",
+        "I08"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Sale/rent toggle, area, use, fit-out, price period, city and sort.",
+      "acceptance": [
+        "No residential-only filters misapplied",
+        "Results show correct basis"
+      ],
+      "minimumTests": [
+        "Filter furnished office rentals",
+        "Monthly/yearly basis mismatch cannot silently compare"
+      ],
+      "evidence": "evidence/tasks/C02.md"
+    },
+    {
+      "id": "C03",
+      "title": "Build commercial detail and inquiry",
+      "dependencies": [
+        "C02",
+        "D10",
+        "I08"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Business facts/gallery/map, responsible commercial agent and lead context.",
+      "acceptance": [
+        "Submitted inquiry retains commercial context",
+        "Availability rechecked"
+      ],
+      "minimumTests": [
+        "Business inquiry persists for target office",
+        "Withdrawn offer rejected; other agency cannot read lead"
+      ],
+      "evidence": "evidence/tasks/C03.md"
+    },
+    {
+      "id": "O01",
+      "title": "Create owner grants and submissions",
+      "dependencies": [
+        "I08",
+        "A06",
+        "R04"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Owner-to-unit grants, sell/rent submission drafts and contact privacy settings.",
+      "acceptance": [
+        "Ownership not inferred from client IDs",
+        "Draft stays private"
+      ],
+      "minimumTests": [
+        "Owner creates owned-unit draft",
+        "Foreign owner grant rejected and draft absent from public API"
+      ],
+      "evidence": "evidence/tasks/O01.md"
+    },
+    {
+      "id": "O02",
+      "title": "Build step-by-step owner form",
+      "dependencies": [
+        "O01",
+        "I08",
+        "A06",
+        "R04"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Location/facts, terms, media, contact, review; draft autosave and login return.",
+      "acceptance": [
+        "Progress survives refresh",
+        "Invalid step cannot submit"
+      ],
+      "minimumTests": [
+        "Complete valid sale submission in browser",
+        "Invalid area retains inputs with clear validation"
+      ],
+      "evidence": "evidence/tasks/O02.md"
+    },
+    {
+      "id": "O03",
+      "title": "Upload private ownership evidence",
+      "dependencies": [
+        "O02",
+        "I08",
+        "A06",
+        "R04"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Use private media workflow, configured required documents and authorized reviewer access.",
+      "acceptance": [
+        "Public search/HTML omit evidence",
+        "Download audited"
+      ],
+      "minimumTests": [
+        "Owner uploads and reviewer downloads approved document",
+        "Unrelated user denied and expired signed URL rejected"
+      ],
+      "evidence": "evidence/tasks/O03.md"
+    },
+    {
+      "id": "O04",
+      "title": "Assign agent and track submission",
+      "dependencies": [
+        "O03",
+        "I08",
+        "A06",
+        "R04"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Moderation/assignment workflow plus owner timeline and notifications.",
+      "acceptance": [
+        "Only owning agency/authorized moderator assigns",
+        "Owner sees safe status"
+      ],
+      "minimumTests": [
+        "Assign agent and display owner progress",
+        "Cross-agency assignment denied; private review note hidden"
+      ],
+      "evidence": "evidence/tasks/O04.md"
+    },
+    {
+      "id": "O05",
+      "title": "Build owner listing lifecycle controls",
+      "dependencies": [
+        "O04",
+        "I08",
+        "A06",
+        "R04"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Request price revision, pause/renew and mark completion; history and review policies.",
+      "acceptance": [
+        "Pending revision not public",
+        "Actions audit owner identity"
+      ],
+      "minimumTests": [
+        "Owner requests revision then approval updates price",
+        "Owner cannot republish expired verification without review"
+      ],
+      "evidence": "evidence/tasks/O05.md"
+    },
+    {
+      "id": "B01",
+      "title": "Onboard agents and verify credentials",
+      "dependencies": [
+        "I08",
+        "A06",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Separate public profile/private documents; review, expiry, revocation and public badge.",
+      "acceptance": [
+        "Badge requires valid approval",
+        "Agent cannot self-verify"
+      ],
+      "minimumTests": [
+        "Moderator approves valid credential",
+        "Expired/revoked record removes badge; self-approval denied"
+      ],
+      "evidence": "evidence/tasks/B01.md"
+    },
+    {
+      "id": "B02",
+      "title": "Build agent directory and profiles",
+      "dependencies": [
+        "B01",
+        "I08",
+        "A06",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Service-area/name filters, languages, biography, eligible listings and consented contact actions.",
+      "acceptance": [
+        "Statistics derived from declared events",
+        "Private credentials hidden"
+      ],
+      "minimumTests": [
+        "Search seeded agent and open assigned listings",
+        "Profile excludes unapproved stats and credential document key"
+      ],
+      "evidence": "evidence/tasks/B02.md"
+    },
+    {
+      "id": "B03",
+      "title": "Manage agency members and roles",
+      "dependencies": [
+        "B02",
+        "I08",
+        "A06",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Manager invitations, role grants/removal and membership audit.",
+      "acceptance": [
+        "Role changes update access immediately",
+        "Cross-agency invites unavailable"
+      ],
+      "minimumTests": [
+        "Invite agent and grant listing permission",
+        "Removed agent loses access; foreign manager denied"
+      ],
+      "evidence": "evidence/tasks/B03.md"
+    },
+    {
+      "id": "B04",
+      "title": "Assign inventory and leads",
+      "dependencies": [
+        "B03",
+        "I08",
+        "A06",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Manager selects eligible agency agents and assignment policy; atomic audit/notification.",
+      "acceptance": [
+        "Assignment narrows edit/read rights",
+        "Disabled agent cannot be assigned"
+      ],
+      "minimumTests": [
+        "Assign listing then assigned agent can edit",
+        "Unassigned/other-agency agent denied"
+      ],
+      "evidence": "evidence/tasks/B04.md"
+    },
+    {
+      "id": "B05",
+      "title": "Build agent dashboard",
+      "dependencies": [
+        "B04",
+        "I08",
+        "A06",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Assigned inventory, new leads and upcoming appointments; time-stamped aggregate indicators.",
+      "acceptance": [
+        "Counts reflect scoped source records",
+        "No fabricated empty metrics"
+      ],
+      "minimumTests": [
+        "Dashboard counts match fixture assignments",
+        "Other agency records absent in rendered payload"
+      ],
+      "evidence": "evidence/tasks/B05.md"
+    },
+    {
+      "id": "L01",
+      "title": "Persist inquiries and route leads",
+      "dependencies": [
+        "D10",
+        "A06",
+        "B05",
+        "N05",
+        "C03",
+        "O05"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Guest/consumer inquiry validation, consent, idempotency and destination assignment.",
+      "acceptance": [
+        "Each submission produces one lead",
+        "Unpublished resource unavailable"
+      ],
+      "minimumTests": [
+        "Valid inquiry returns persisted lead ID",
+        "Repeated request creates one lead; spam-limit and withdrawn listing rejected"
+      ],
+      "evidence": "evidence/tasks/L01.md"
+    },
+    {
+      "id": "L02",
+      "title": "Build CRM queue and lead timeline",
+      "dependencies": [
+        "L01",
+        "D10",
+        "A06",
+        "B05",
+        "N05",
+        "C03",
+        "O05"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Scope, statuses, safe notes, assignments and filtered queue; stable event history.",
+      "acceptance": [
+        "Status changes validated",
+        "Notes only authorized operations"
+      ],
+      "minimumTests": [
+        "Agent contacts and qualifies assigned lead",
+        "Other agency denied; invalid state change rejected"
+      ],
+      "evidence": "evidence/tasks/L02.md"
+    },
+    {
+      "id": "L03",
+      "title": "Create agent availability slots",
+      "dependencies": [
+        "L02",
+        "D10",
+        "A06",
+        "B05",
+        "N05",
+        "C03",
+        "O05"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Working hours, property timezone, buffers and unavailable intervals.",
+      "acceptance": [
+        "Only valid future slots exposed",
+        "Times render in property zone"
+      ],
+      "minimumTests": [
+        "Fixture slot converts UTC correctly",
+        "Past/blocked/DST-invalid local times excluded"
+      ],
+      "evidence": "evidence/tasks/L03.md"
+    },
+    {
+      "id": "L04",
+      "title": "Reserve viewings transactionally",
+      "dependencies": [
+        "L03",
+        "D10",
+        "A06",
+        "B05",
+        "N05",
+        "C03",
+        "O05"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Request/confirmation with availability check, interval lock/exclusion and idempotency.",
+      "acceptance": [
+        "Exclusive booking cannot double-reserve",
+        "Listing status rechecked"
+      ],
+      "minimumTests": [
+        "Valid slot reserved once",
+        "Two concurrent requests yield one accepted booking and one conflict"
+      ],
+      "evidence": "evidence/tasks/L04.md"
+    },
+    {
+      "id": "L05",
+      "title": "Build booking calendar and actions",
+      "dependencies": [
+        "L04",
+        "D10",
+        "A06",
+        "B05",
+        "N05",
+        "C03",
+        "O05"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Consumer/agent views, cancellation, reschedule, completion and no-show.",
+      "acceptance": [
+        "Reschedule atomic",
+        "Cancellation releases capacity"
+      ],
+      "minimumTests": [
+        "Browser reschedules confirmed viewing",
+        "Unauthorized cancellation denied and failed reschedule preserves original"
+      ],
+      "evidence": "evidence/tasks/L05.md"
+    },
+    {
+      "id": "L06",
+      "title": "Send viewing reminders and reports",
+      "dependencies": [
+        "L05",
+        "D10",
+        "A06",
+        "B05",
+        "N05",
+        "C03",
+        "O05"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Idempotent reminder jobs, cancellation invalidation and permitted scoped CRM exports.",
+      "acceptance": [
+        "Cancelled booking no reminder",
+        "Export respects scope"
+      ],
+      "minimumTests": [
+        "Confirmed booking sends one reminder",
+        "Cancel/retry produces no stale reminder; CSV formula injection neutralized"
+      ],
+      "evidence": "evidence/tasks/L06.md"
+    },
+    {
+      "id": "M01",
+      "title": "Create authorized conversations",
+      "dependencies": [
+        "L06",
+        "F12"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Persist members/resource context and grant checks before messages/subscriptions.",
+      "acceptance": [
+        "Only linked participants can read",
+        "No guessed-ID joins"
+      ],
+      "minimumTests": [
+        "Consumer and assigned agent open conversation",
+        "Unrelated user cannot read or join WebSocket room"
+      ],
+      "evidence": "evidence/tasks/M01.md"
+    },
+    {
+      "id": "M02",
+      "title": "Persist and deduplicate messages",
+      "dependencies": [
+        "M01",
+        "L06",
+        "F12"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Client IDs, sequence ordering, sanitized text and attachment grants; commit before ACK.",
+      "acceptance": [
+        "Retry returns same message",
+        "No executable HTML"
+      ],
+      "minimumTests": [
+        "Send then replay client ID yields one message",
+        "Script markup rendered inert and foreign attachment denied"
+      ],
+      "evidence": "evidence/tasks/M02.md"
+    },
+    {
+      "id": "M03",
+      "title": "Build inbox and chat interface",
+      "dependencies": [
+        "M02",
+        "L06",
+        "F12"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Conversation list, unread count, send state, retry and read cursor.",
+      "acceptance": [
+        "Failure clearly visible",
+        "Correct conversation selected after refresh"
+      ],
+      "minimumTests": [
+        "Browser sends/reads message and unread count updates",
+        "Failed send retains draft and does not show delivered"
+      ],
+      "evidence": "evidence/tasks/M03.md"
+    },
+    {
+      "id": "M04",
+      "title": "Recover realtime sessions",
+      "dependencies": [
+        "M03",
+        "L06",
+        "F12"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Authenticated WebSocket, per-message checks, reconnect replay and revoked grant handling.",
+      "acceptance": [
+        "No loss after reconnect",
+        "Revocation removes subscription access"
+      ],
+      "minimumTests": [
+        "Disconnect/reconnect recovers ordered missing messages",
+        "Expired token/revoked assignment denied on subsequent action"
+      ],
+      "evidence": "evidence/tasks/M04.md"
+    },
+    {
+      "id": "V01",
+      "title": "Create service provider catalog",
+      "dependencies": [
+        "A06",
+        "L06",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Vendor profiles, categories, areas, portfolio rights and approval state.",
+      "acceptance": [
+        "Only approved profiles public",
+        "Vendor owns own records"
+      ],
+      "minimumTests": [
+        "Publish approved vendor in selected area",
+        "Unapproved profile absent; another vendor cannot edit"
+      ],
+      "evidence": "evidence/tasks/V01.md"
+    },
+    {
+      "id": "V02",
+      "title": "Build provider discovery and detail",
+      "dependencies": [
+        "V01",
+        "A06",
+        "L06",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Category/location filters, service cards, portfolio/gallery and inquiry action.",
+      "acceptance": [
+        "English service details complete",
+        "Empty results handled"
+      ],
+      "minimumTests": [
+        "Search provider and navigate portfolio",
+        "Broken media uses fallback without blocking quote form"
+      ],
+      "evidence": "evidence/tasks/V02.md"
+    },
+    {
+      "id": "V03",
+      "title": "Implement renovation quote workflow",
+      "dependencies": [
+        "V02",
+        "A06",
+        "L06",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Request details, validated contact, assigned vendor, timeline and nonbinding status.",
+      "acceptance": [
+        "Persisted quote routed to intended vendor",
+        "No payment/contract implied"
+      ],
+      "minimumTests": [
+        "Consumer submits quote and vendor marks contacted",
+        "Other vendor denied and duplicate submit creates one quote"
+      ],
+      "evidence": "evidence/tasks/V03.md"
+    },
+    {
+      "id": "T01",
+      "title": "Implement mortgage calculation engine",
+      "dependencies": [
+        "F08",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Decimal equal-payment and equal-principal schedules with zero-rate branch and final rounding adjustment.",
+      "acceptance": [
+        "Schedule clears principal exactly",
+        "Method/rate assumptions explicit"
+      ],
+      "minimumTests": [
+        "120000 principal at 0 percent for 120 months yields 1000 and zero interest",
+        "Known nonzero-rate fixture reconciles; zero term/negative rate rejected"
+      ],
+      "evidence": "evidence/tasks/T01.md"
+    },
+    {
+      "id": "T02",
+      "title": "Build mortgage interface",
+      "dependencies": [
+        "T01",
+        "F08",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Price/down payment/rate/years/method, results and loan schedule; English validation.",
+      "acceptance": [
+        "Results update predictably",
+        "Down payment cannot exceed price"
+      ],
+      "minimumTests": [
+        "Browser changes method and verifies expected fixture payment",
+        "Invalid price/down payment shows error without NaN"
+      ],
+      "evidence": "evidence/tasks/T02.md"
+    },
+    {
+      "id": "T03",
+      "title": "Export repayment schedule",
+      "dependencies": [
+        "T02",
+        "F08",
+        "U07"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "CSV schedule, totals and market-configured estimate notes with no personal data by default.",
+      "acceptance": [
+        "Export matches visible totals",
+        "No fake lender approval"
+      ],
+      "minimumTests": [
+        "Export rows reconcile principal and interest",
+        "Unicode/formula-like custom title safely escaped"
+      ],
+      "evidence": "evidence/tasks/T03.md"
+    },
+    {
+      "id": "P01",
+      "title": "Create management grants and portfolios",
+      "dependencies": [
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Managed units, owner links and time-bounded organization grants over canonical inventory.",
+      "acceptance": [
+        "Access tied to valid grant",
+        "Same unit not duplicated"
+      ],
+      "minimumTests": [
+        "Manager lists granted portfolio",
+        "Expired/foreign management grant denied"
+      ],
+      "evidence": "evidence/tasks/P01.md"
+    },
+    {
+      "id": "P02",
+      "title": "Create tenant profiles and account links",
+      "dependencies": [
+        "P01",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Invite/link tenant persona, private details and tenant-scoped serializers.",
+      "acceptance": [
+        "Account linkage verified",
+        "Tenant cannot enumerate other tenants"
+      ],
+      "minimumTests": [
+        "Linked tenant sees own profile",
+        "Guessed tenant ID and cross-org link denied"
+      ],
+      "evidence": "evidence/tasks/P02.md"
+    },
+    {
+      "id": "P03",
+      "title": "Create lease drafts and term validation",
+      "dependencies": [
+        "P02",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Unit, tenant, start/end dates, currency, rent schedule and private documents.",
+      "acceptance": [
+        "Draft uses permitted unit",
+        "End cannot precede start"
+      ],
+      "minimumTests": [
+        "Create valid lease with exact decimals",
+        "Invalid dates/currency and unauthorized document rejected"
+      ],
+      "evidence": "evidence/tasks/P03.md"
+    },
+    {
+      "id": "P04",
+      "title": "Activate lease and enforce availability",
+      "dependencies": [
+        "P03",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Activate atomically, prevent overlapping active occupation and withdraw incompatible rental offer.",
+      "acceptance": [
+        "Lease/public availability consistent",
+        "No overlapping exclusive tenancy"
+      ],
+      "minimumTests": [
+        "Activate lease and assert rental unavailable",
+        "Concurrent overlapping activation yields one success"
+      ],
+      "evidence": "evidence/tasks/P04.md"
+    },
+    {
+      "id": "P05",
+      "title": "Renew and end leases",
+      "dependencies": [
+        "P04",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "New term/revision, ending/termination reasons and availability review; retain history.",
+      "acceptance": [
+        "History retained",
+        "Ending does not silently republish listing"
+      ],
+      "minimumTests": [
+        "Renew lease with valid next term",
+        "Overlapping renewal denied and ended lease remains auditable"
+      ],
+      "evidence": "evidence/tasks/P05.md"
+    },
+    {
+      "id": "P06",
+      "title": "Generate recurring charges",
+      "dependencies": [
+        "P05",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Period-based idempotent rent charges, proration policy from config and due dates; use decimal amounts.",
+      "acceptance": [
+        "One charge per lease/period/type",
+        "Out-of-term charge excluded"
+      ],
+      "minimumTests": [
+        "Run same month twice yields one charge",
+        "Leap-month/proration fixture reconciles and ended lease excluded"
+      ],
+      "evidence": "evidence/tasks/P06.md"
+    },
+    {
+      "id": "P07",
+      "title": "Record payment evidence",
+      "dependencies": [
+        "P06",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Draft/post payment, source/reference, exact amounts/currency and immutable posted data.",
+      "acceptance": [
+        "Record is bookkeeping evidence",
+        "Posted row cannot edit"
+      ],
+      "minimumTests": [
+        "Post valid payment and retrieve audit",
+        "Negative/mismatched currency rejected and posted amount update denied"
+      ],
+      "evidence": "evidence/tasks/P07.md"
+    },
+    {
+      "id": "P08",
+      "title": "Allocate payments and credit balances",
+      "dependencies": [
+        "P07",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Partial allocations, overpayment credit and concurrency checks; per-lease totals.",
+      "acceptance": [
+        "Allocated amount never exceeds available",
+        "No cross-lease allocation without explicit policy"
+      ],
+      "minimumTests": [
+        "Partial payment leaves correct balance",
+        "Concurrent allocations cannot overspend same payment"
+      ],
+      "evidence": "evidence/tasks/P08.md"
+    },
+    {
+      "id": "P09",
+      "title": "Reverse charges and payments",
+      "dependencies": [
+        "P08",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Linked reversal entries and allocation undo within audited transaction.",
+      "acceptance": [
+        "Original remains immutable",
+        "Reversal reconciles outstanding balance"
+      ],
+      "minimumTests": [
+        "Reverse payment and verify balance restored",
+        "Repeat reversal idempotent and foreign finance persona denied"
+      ],
+      "evidence": "evidence/tasks/P09.md"
+    },
+    {
+      "id": "P10",
+      "title": "Track deposits separately",
+      "dependencies": [
+        "P09",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Deposit received/released/adjusted evidence and liability movements; independent balance.",
+      "acceptance": [
+        "Deposit never counted as rent income",
+        "Release cannot exceed held amount"
+      ],
+      "minimumTests": [
+        "Receive and partially release deposit with exact remainder",
+        "Excess release rejected and rent statement excludes deposit revenue"
+      ],
+      "evidence": "evidence/tasks/P10.md"
+    },
+    {
+      "id": "P11",
+      "title": "Build tenant lease and balance portal",
+      "dependencies": [
+        "P10",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Linked lease/documents, charges, payments and clearly labeled recorded balance.",
+      "acceptance": [
+        "Only linked lease data visible",
+        "No real transfer button unless implemented provider"
+      ],
+      "minimumTests": [
+        "Tenant sees reconciled own balance",
+        "Another lease detail/download denied and no private owner notes"
+      ],
+      "evidence": "evidence/tasks/P11.md"
+    },
+    {
+      "id": "P12",
+      "title": "Create maintenance requests",
+      "dependencies": [
+        "P11",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Tenant/manager creation with unit grant, category, urgency, photos and workflow.",
+      "acceptance": [
+        "Requester belongs to authorized unit",
+        "Attachments remain private"
+      ],
+      "minimumTests": [
+        "Tenant creates request and manager assigns",
+        "Foreign unit/media denied and invalid transition rejected"
+      ],
+      "evidence": "evidence/tasks/P12.md"
+    },
+    {
+      "id": "P13",
+      "title": "Build maintenance workbench and timeline",
+      "dependencies": [
+        "P12",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Manager queue, assignee/status updates, tenant-safe comments and reopen.",
+      "acceptance": [
+        "Internal notes stay private",
+        "Tenant sees status progression"
+      ],
+      "minimumTests": [
+        "Manager resolves then tenant reopens allowed case",
+        "Internal note sentinel absent from tenant API/UI"
+      ],
+      "evidence": "evidence/tasks/P13.md"
+    },
+    {
+      "id": "P14",
+      "title": "Generate owner and tenant statements",
+      "dependencies": [
+        "P13",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Source-based reports for period, charges/allocations/payment evidence/deposits/reversals and CSV/PDF or HTML print.",
+      "acceptance": [
+        "Statement totals reconcile",
+        "Grants determine view"
+      ],
+      "minimumTests": [
+        "Golden fixture balances reconcile to posted records",
+        "Other owner denied and different currencies not combined"
+      ],
+      "evidence": "evidence/tasks/P14.md"
+    },
+    {
+      "id": "P15",
+      "title": "Build management dashboards",
+      "dependencies": [
+        "P14",
+        "R04",
+        "O05",
+        "B05",
+        "F12"
+      ],
+      "scope": "management",
+      "status": "todo",
+      "description": "Unit occupancy, arrears aging and maintenance counts from authorized source records with effective dates.",
+      "acceptance": [
+        "Definitions and period displayed",
+        "No global agency leakage"
+      ],
+      "minimumTests": [
+        "Fixture dashboard counts match source records",
+        "Foreign records absent; reversed payments adjust arrears correctly"
+      ],
+      "evidence": "evidence/tasks/P15.md"
+    },
+    {
+      "id": "S01",
+      "title": "Create support cases and complaints",
+      "dependencies": [
+        "L06",
+        "M04",
+        "V03",
+        "I08"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Consumer reporter, listing link, category, attachments and triage assignment.",
+      "acceptance": [
+        "Reporter sees own case",
+        "Complaint does not automatically remove listing"
+      ],
+      "minimumTests": [
+        "Submit and retrieve support case",
+        "Other user denied and invalid attachment rejected"
+      ],
+      "evidence": "evidence/tasks/S01.md"
+    },
+    {
+      "id": "S02",
+      "title": "Build support workbench",
+      "dependencies": [
+        "S01",
+        "L06",
+        "M04",
+        "V03",
+        "I08"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Queues, escalation, public/internal messages, resolution and consumer timeline.",
+      "acceptance": [
+        "Support permission limited",
+        "Internal notes hidden"
+      ],
+      "minimumTests": [
+        "Support resolves case and consumer sees resolution",
+        "Private-note sentinel hidden and unauthorized export denied"
+      ],
+      "evidence": "evidence/tasks/S02.md"
+    },
+    {
+      "id": "S03",
+      "title": "Manage home curation and taxonomy",
+      "dependencies": [
+        "S02",
+        "L06",
+        "M04",
+        "V03",
+        "I08"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Editor section ordering, category eligibility, schedule, English copy and preview/publish.",
+      "acceptance": [
+        "Content changes versioned",
+        "Wrong-city/unpublished items cannot be curated"
+      ],
+      "minimumTests": [
+        "Publish scheduled section with valid listings",
+        "Invalid link/foreign city entry rejected"
+      ],
+      "evidence": "evidence/tasks/S03.md"
+    },
+    {
+      "id": "S04",
+      "title": "Manage platform users and verification",
+      "dependencies": [
+        "S03",
+        "L06",
+        "M04",
+        "V03",
+        "I08"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Staff role grants, credential/listing reviews and suspension actions through audited permissions.",
+      "acceptance": [
+        "Least-privilege administration",
+        "Self privilege escalation impossible"
+      ],
+      "minimumTests": [
+        "Admin suspends abusive agent and access revoked",
+        "Non-admin grant request denied and audit immutable"
+      ],
+      "evidence": "evidence/tasks/S04.md"
+    },
+    {
+      "id": "S05",
+      "title": "Manage market configuration",
+      "dependencies": [
+        "S04",
+        "L06",
+        "M04",
+        "V03",
+        "I08"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Currency/units/rent periods, credential rules, ownership tags, contact links and finance assumptions.",
+      "acceptance": [
+        "Config validated/versioned",
+        "Existing monetary records not reinterpreted"
+      ],
+      "minimumTests": [
+        "Activate new market config with valid fields",
+        "Unknown currency/zone rejected and historic amounts unchanged"
+      ],
+      "evidence": "evidence/tasks/S05.md"
+    },
+    {
+      "id": "S06",
+      "title": "Publish scoped analytics and audit",
+      "dependencies": [
+        "S05",
+        "L06",
+        "M04",
+        "V03",
+        "I08"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Aggregate funnel definitions and filters, deduped events, export and redacted audit search.",
+      "acceptance": [
+        "Counts traceable to declared events",
+        "Private text absent"
+      ],
+      "minimumTests": [
+        "Fixture funnel counts match unique events",
+        "Duplicate event ignored; private message/document not in analytics"
+      ],
+      "evidence": "evidence/tasks/S06.md"
+    },
+    {
+      "id": "Q01",
+      "title": "Complete SEO and routing behavior",
+      "dependencies": [
+        "G05",
+        "D10",
+        "A06",
+        "R04",
+        "N05",
+        "C03",
+        "O05",
+        "B05",
+        "L06",
+        "M04",
+        "V03",
+        "T03",
+        "P15",
+        "S06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "English metadata/canonicals/structured data/sitemap, private noindex and archived redirect semantics.",
+      "acceptance": [
+        "Public eligible routes indexed",
+        "Account/ops/tenant excluded"
+      ],
+      "minimumTests": [
+        "Sitemap includes published fixture only",
+        "Withdrawn listing absent and private route noindexed"
+      ],
+      "evidence": "evidence/tasks/Q01.md"
+    },
+    {
+      "id": "Q02",
+      "title": "Audit full English visual parity",
+      "dependencies": [
+        "Q01",
+        "G05",
+        "D10",
+        "A06",
+        "R04",
+        "N05",
+        "C03",
+        "O05",
+        "B05",
+        "L06",
+        "M04",
+        "V03",
+        "T03",
+        "P15",
+        "S06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Complete available reference captures and approved English geometry/copy; keep inaccessible V states explicitly unresolved.",
+      "acceptance": [
+        "Exact-parity gate cannot pass with V gaps",
+        "Every category screen has evidence"
+      ],
+      "minimumTests": [
+        "All verified geometry/regression checks pass at mobile viewports",
+        "Validator refuses exact-parity signoff when required capture is missing"
+      ],
+      "evidence": "evidence/tasks/Q02.md"
+    },
+    {
+      "id": "Q03",
+      "title": "Audit responsive accessibility",
+      "dependencies": [
+        "Q02",
+        "G05",
+        "D10",
+        "A06",
+        "R04",
+        "N05",
+        "C03",
+        "O05",
+        "B05",
+        "L06",
+        "M04",
+        "V03",
+        "T03",
+        "P15",
+        "S06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Run all category flows at 320/375/390/768/1440 widths, keyboard/focus and axe; fix defects.",
+      "acceptance": [
+        "No horizontal overflow",
+        "Critical controls accessible"
+      ],
+      "minimumTests": [
+        "Complete keyboard inquiry/filter/modal journeys",
+        "Axe serious/critical violations zero; long labels and missing images still usable"
+      ],
+      "evidence": "evidence/tasks/Q03.md"
+    },
+    {
+      "id": "Q04",
+      "title": "Run marketplace critical journeys",
+      "dependencies": [
+        "Q03",
+        "G05",
+        "D10",
+        "A06",
+        "R04",
+        "N05",
+        "C03",
+        "O05",
+        "B05",
+        "L06",
+        "M04",
+        "V03",
+        "T03",
+        "P15",
+        "S06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Integrated browser tests for user, owner review, agent CRM/viewing, new homes, commercial, service quote and tools.",
+      "acceptance": [
+        "All journeys persist data through real services",
+        "Required buttons have no mocks"
+      ],
+      "minimumTests": [
+        "Execute each listed journey with distinct personas",
+        "Unauthorized actions and withdrawal races remain denied"
+      ],
+      "evidence": "evidence/tasks/Q04.md"
+    },
+    {
+      "id": "Q05",
+      "title": "Run management integrity journeys",
+      "dependencies": [
+        "Q04",
+        "G05",
+        "D10",
+        "A06",
+        "R04",
+        "N05",
+        "C03",
+        "O05",
+        "B05",
+        "L06",
+        "M04",
+        "V03",
+        "T03",
+        "P15",
+        "S06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Lease/charge/payment/allocation/reversal/deposit/statement and maintenance paths with real database.",
+      "acceptance": [
+        "Posted-money invariants hold",
+        "Tenant/owner/manager scopes tested"
+      ],
+      "minimumTests": [
+        "Golden financial fixture and tenant maintenance journey pass",
+        "Cross-lease denial, duplicate charges and concurrent allocation verified"
+      ],
+      "evidence": "evidence/tasks/Q05.md"
+    },
+    {
+      "id": "Q06",
+      "title": "Run security and provider readiness checks",
+      "dependencies": [
+        "Q05",
+        "G05",
+        "D10",
+        "A06",
+        "R04",
+        "N05",
+        "C03",
+        "O05",
+        "B05",
+        "L06",
+        "M04",
+        "V03",
+        "T03",
+        "P15",
+        "S06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Dependency/secret scan, session/CSRF checks, upload/private-data probes and real configured provider smoke.",
+      "acceptance": [
+        "No exposed credentials",
+        "Visible integrations work or remain visibly blocked"
+      ],
+      "minimumTests": [
+        "Staging mail/storage/identity/map integration succeeds",
+        "CSRF/private download/credential scan probes pass; missing provider cannot fake success"
+      ],
+      "evidence": "evidence/tasks/Q06.md"
+    },
+    {
+      "id": "Q07",
+      "title": "Measure performance and fix bottlenecks",
+      "dependencies": [
+        "Q06",
+        "G05",
+        "D10",
+        "A06",
+        "R04",
+        "N05",
+        "C03",
+        "O05",
+        "B05",
+        "L06",
+        "M04",
+        "V03",
+        "T03",
+        "P15",
+        "S06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Generate 100000 listing fixture, declare hardware, small smoke then 1000-session load mix, browser lab metrics and query plans.",
+      "acceptance": [
+        "Record actual p95/error results",
+        "No unsupported performance claim"
+      ],
+      "minimumTests": [
+        "Run timed fixture load and compare to targets",
+        "Search outage/queue lag gives declared graceful behavior"
+      ],
+      "evidence": "evidence/tasks/Q07.md"
+    },
+    {
+      "id": "Q08",
+      "title": "Package staging deployment",
+      "dependencies": [
+        "Q07",
+        "G05",
+        "D10",
+        "A06",
+        "R04",
+        "N05",
+        "C03",
+        "O05",
+        "B05",
+        "L06",
+        "M04",
+        "V03",
+        "T03",
+        "P15",
+        "S06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Immutable production Dockerfiles, Compose/proxy/HTTPS, resource limits, environment validation and synthetic staging seed.",
+      "acceptance": [
+        "One documented staging deploy works",
+        "No public database/cache/search admin"
+      ],
+      "minimumTests": [
+        "HTTPS health and end-to-end inquiry smoke succeeds",
+        "Missing secret blocks boot and external port scan finds only approved endpoints"
+      ],
+      "evidence": "evidence/tasks/Q08.md"
+    },
+    {
+      "id": "Q09",
+      "title": "Verify backup and restore",
+      "dependencies": [
+        "Q08",
+        "G05",
+        "D10",
+        "A06",
+        "R04",
+        "N05",
+        "C03",
+        "O05",
+        "B05",
+        "L06",
+        "M04",
+        "V03",
+        "T03",
+        "P15",
+        "S06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Configure encrypted off-host database/PITR/media/identity backups; restore isolated environment and reindex.",
+      "acceptance": [
+        "Recovery report measures RPO/RTO",
+        "Restored app consistent"
+      ],
+      "minimumTests": [
+        "Restore known fixture and reconcile rows/media/identity",
+        "Missing backup segment causes explicit failure rather than successful restore report"
+      ],
+      "evidence": "evidence/tasks/Q09.md"
+    },
+    {
+      "id": "Q10",
+      "title": "Verify migrations and rollback",
+      "dependencies": [
+        "Q09",
+        "G05",
+        "D10",
+        "A06",
+        "R04",
+        "N05",
+        "C03",
+        "O05",
+        "B05",
+        "L06",
+        "M04",
+        "V03",
+        "T03",
+        "P15",
+        "S06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Expand/contract upgrade rehearsal, previous-image compatibility and recovery procedures.",
+      "acceptance": [
+        "Rollback sequence documented with schema limits",
+        "No data-losing automatic reset"
+      ],
+      "minimumTests": [
+        "Upgrade populated staging then run permitted rollback smoke",
+        "Incompatible migration preflight blocks rollback with actionable report"
+      ],
+      "evidence": "evidence/tasks/Q10.md"
+    },
+    {
+      "id": "Q11",
+      "title": "Complete documentation and launch handoff",
+      "dependencies": [
+        "Q10",
+        "G05",
+        "D10",
+        "A06",
+        "R04",
+        "N05",
+        "C03",
+        "O05",
+        "B05",
+        "L06",
+        "M04",
+        "V03",
+        "T03",
+        "P15",
+        "S06"
+      ],
+      "scope": "marketplace",
+      "status": "todo",
+      "description": "Install/provider/import/deploy/runbooks, role guides, acceptance ledger, blocker list and verified release checklist.",
+      "acceptance": [
+        "Marketplace and management completion separate",
+        "Exact parity gaps and production inputs explicit"
+      ],
+      "minimumTests": [
+        "Clean checkout follows documented setup and task validator",
+        "Release check fails any missing mandatory task/evidence/test"
+      ],
+      "evidence": "evidence/tasks/Q11.md"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
+const env=Object.fromEntries(fs.readFileSync(process.env.HAVEN_ENV_FILE||'.env','utf8').trim().split('\n').map(l=>{const i=l.indexOf('=');return[l.slice(0,i),l.slice(i+1)];}));
+for(const [key,value] of Object.entries(env))if(process.env[key]===undefined)process.env[key]=value;
+const ip=(service:string)=>process.env.HAVEN_CONTAINER_TESTS==='true'?service:execFileSync('docker',['inspect','-f','{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}','haven-'+service+'-1'],{encoding:'utf8'}).trim();
+process.env.DATABASE_URL=env.DATABASE_URL.replace('@db:',`@${ip('db')}:`);
+process.env.MIGRATION_DATABASE_URL=env.MIGRATION_DATABASE_URL.replace('@db:',`@${ip('db')}:`);
+process.env.REDIS_URL=`redis://${ip('cache')}:6379`;
+process.env.SEARCH_URL=`http://${ip('search')}:7700`;
+process.env.SEARCH_KEY=env.SEARCH_KEY;
+process.env.DEV_PASSWORD=env.DEV_PASSWORD;

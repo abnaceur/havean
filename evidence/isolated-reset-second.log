@@ -1,0 +1,555 @@
+Local environment and identity fixtures ready. Account credentials: infra/generated/integration/personas.md
+ Container haven-integration-worker-1 Stopping 
+ Container haven-integration-proxy-1 Stopping 
+ Container haven-integration-proxy-1 Stopped 
+ Container haven-integration-proxy-1 Removing 
+ Container haven-integration-worker-1 Stopped 
+ Container haven-integration-worker-1 Removing 
+ Container haven-integration-proxy-1 Removed 
+ Container haven-integration-ops-1 Stopping 
+ Container haven-integration-web-1 Stopping 
+ Container haven-integration-worker-1 Removed 
+ Container haven-integration-cache-1 Stopping 
+ Container haven-integration-search-1 Stopping 
+ Container haven-integration-mail-1 Stopping 
+ Container haven-integration-ops-1 Stopped 
+ Container haven-integration-ops-1 Removing 
+ Container haven-integration-web-1 Stopped 
+ Container haven-integration-web-1 Removing 
+ Container haven-integration-cache-1 Stopped 
+ Container haven-integration-cache-1 Removing 
+ Container haven-integration-ops-1 Removed 
+ Container haven-integration-cache-1 Removed 
+ Container haven-integration-web-1 Removed 
+ Container haven-integration-api-1 Stopping 
+ Container haven-integration-mail-1 Stopped 
+ Container haven-integration-mail-1 Removing 
+ Container haven-integration-search-1 Stopped 
+ Container haven-integration-search-1 Removing 
+ Container haven-integration-mail-1 Removed 
+ Container haven-integration-api-1 Stopped 
+ Container haven-integration-api-1 Removing 
+ Container haven-integration-search-1 Removed 
+ Container haven-integration-api-1 Removed 
+ Container haven-integration-identity-1 Stopping 
+ Container haven-integration-storage-1 Stopping 
+ Container haven-integration-migrate-1 Stopping 
+ Container haven-integration-scanner-1 Stopping 
+ Container haven-integration-migrate-1 Stopped 
+ Container haven-integration-migrate-1 Removing 
+ Container haven-integration-migrate-1 Removed 
+ Container haven-integration-install-1 Stopping 
+ Container haven-integration-install-1 Stopped 
+ Container haven-integration-install-1 Removing 
+ Container haven-integration-scanner-1 Stopped 
+ Container haven-integration-scanner-1 Removing 
+ Container haven-integration-install-1 Removed 
+ Container haven-integration-identity-1 Stopped 
+ Container haven-integration-identity-1 Removing 
+ Container haven-integration-scanner-1 Removed 
+ Container haven-integration-identity-1 Removed 
+ Container haven-integration-db-1 Stopping 
+ Container haven-integration-db-1 Stopped 
+ Container haven-integration-db-1 Removing 
+ Container haven-integration-db-1 Removed 
+ Container haven-integration-storage-1 Stopped 
+ Container haven-integration-storage-1 Removing 
+ Container haven-integration-storage-1 Removed 
+ Volume haven-integration_database Removing 
+ Volume haven-integration_packages-config-dependencies Removing 
+ Volume haven-integration_apps-web-dependencies Removing 
+ Volume haven-integration_packages-database-dependencies Removing 
+ Volume haven-integration_objects Removing 
+ Volume haven-integration_dependencies Removing 
+ Volume haven-integration_apps-worker-dependencies Removing 
+ Volume haven-integration_packages-ui-dependencies Removing 
+ Volume haven-integration_search Removing 
+ Volume haven-integration_cache Removing 
+ Volume haven-integration_packages-test-support-dependencies Removing 
+ Volume haven-integration_mail-data Removing 
+ Volume haven-integration_virus-signatures Removing 
+ Volume haven-integration_apps-api-dependencies Removing 
+ Volume haven-integration_packages-contracts-dependencies Removing 
+ Volume haven-integration_apps-ops-dependencies Removing 
+ Network haven-integration_private Removing 
+ Volume haven-integration_database Removed 
+ Volume haven-integration_packages-config-dependencies Removed 
+ Volume haven-integration_cache Removed 
+ Volume haven-integration_objects Removed 
+ Volume haven-integration_packages-ui-dependencies Removed 
+ Volume haven-integration_packages-database-dependencies Removed 
+ Volume haven-integration_apps-web-dependencies Removed 
+ Volume haven-integration_apps-worker-dependencies Removed 
+ Volume haven-integration_search Removed 
+ Volume haven-integration_mail-data Removed 
+ Volume haven-integration_virus-signatures Removed 
+ Network haven-integration_private Removed 
+ Volume haven-integration_apps-api-dependencies Removed 
+ Volume haven-integration_apps-ops-dependencies Removed 
+ Volume haven-integration_packages-contracts-dependencies Removed 
+ Volume haven-integration_packages-test-support-dependencies Removed 
+ Volume haven-integration_dependencies Removed 
+ Image haven-integration-install Building 
+ Image haven-integration-worker Building 
+ Image haven-integration-migrate Building 
+ Image haven-integration-ops Building 
+ Image haven-integration-api Building 
+ Image haven-integration-web Building 
+ Image haven-integration-tests Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 3.56kB done
+#1 DONE 0.0s
+
+#2 [tests internal] load build definition from Dockerfile.dev
+#2 transferring dockerfile: 1.33kB done
+#2 DONE 0.0s
+
+#3 [migrate internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#3 DONE 0.0s
+
+#4 [install internal] load .dockerignore
+#4 transferring context: 180B done
+#4 DONE 0.0s
+
+#5 [install internal] load build context
+#5 ...
+
+#6 [ops dependencies  1/15] FROM docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#6 resolve docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 0.0s done
+#6 DONE 0.0s
+
+#5 [install internal] load build context
+#5 transferring context: 7.48MB 1.5s done
+#5 DONE 1.6s
+
+#7 [migrate dependencies 14/15] COPY packages/test-support/package.json ./packages/test-support/package.json
+#7 CACHED
+
+#8 [migrate dependencies 11/15] COPY packages/contracts/package.json ./packages/contracts/package.json
+#8 CACHED
+
+#9 [migrate dependencies  2/15] RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg=7:5.1.9-0+deb12u1 && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [migrate dependencies 13/15] COPY packages/ui/package.json ./packages/ui/package.json
+#10 CACHED
+
+#11 [migrate dependencies  6/15] COPY apps/api/package.json ./apps/api/package.json
+#11 CACHED
+
+#12 [migrate dependencies  4/15] WORKDIR /workspace
+#12 CACHED
+
+#13 [migrate dependencies  9/15] COPY apps/worker/package.json ./apps/worker/package.json
+#13 CACHED
+
+#14 [migrate dependencies  3/15] RUN npm install --global pnpm@10.32.1
+#14 CACHED
+
+#15 [migrate dependencies  5/15] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#15 CACHED
+
+#16 [migrate dependencies  8/15] COPY apps/ops/package.json ./apps/ops/package.json
+#16 CACHED
+
+#17 [migrate dependencies 12/15] COPY packages/database/package.json ./packages/database/package.json
+#17 CACHED
+
+#18 [migrate dependencies 10/15] COPY packages/config/package.json ./packages/config/package.json
+#18 CACHED
+
+#19 [migrate dependencies  7/15] COPY apps/web/package.json ./apps/web/package.json
+#19 CACHED
+
+#20 [tests browser 1/1] RUN pnpm exec playwright install --with-deps --only-shell chromium
+#20 CACHED
+
+#21 [install dependencies 15/15] RUN --mount=type=cache,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
+#21 CACHED
+
+#22 [install development 1/1] COPY . .
+#22 DONE 4.7s
+
+#23 [tests tests 1/1] COPY . .
+#23 DONE 4.7s
+
+#24 [tests] exporting to image
+#24 exporting layers
+#24 ...
+
+#25 [migrate] exporting to image
+#25 ...
+
+#26 [ops] exporting to image
+#26 ...
+
+#27 [worker] exporting to image
+#27 ...
+
+#28 [install] exporting to image
+#28 ...
+
+#29 [web] exporting to image
+#29 ...
+
+#30 [api] exporting to image
+#30 ...
+
+#24 [tests] exporting to image
+#24 exporting layers 25.5s done
+#24 exporting manifest sha256:53d3ebc98a5e632ca85b8e5f2dbafa58d8cf345c0234068915f860e22ad13184 0.1s done
+#24 exporting config sha256:7aa991a418856abecc10e2044bec8f9cec05b9ab6bcce77a2437e1a090012703
+#24 exporting config sha256:7aa991a418856abecc10e2044bec8f9cec05b9ab6bcce77a2437e1a090012703 0.2s done
+#24 exporting attestation manifest sha256:ee471087d3d213875f28f67f9dd741d2d27c28763cb35c1e9460da455dd12088
+#24 exporting attestation manifest sha256:ee471087d3d213875f28f67f9dd741d2d27c28763cb35c1e9460da455dd12088 0.5s done
+#24 exporting manifest list sha256:5349ab72c14737b08b8a4b100e91e51b09d94bd32b8599a7a481c54dd049a36d
+#24 exporting manifest list sha256:5349ab72c14737b08b8a4b100e91e51b09d94bd32b8599a7a481c54dd049a36d 0.2s done
+#24 naming to docker.io/library/haven-integration-tests:latest 0.1s done
+#24 unpacking to docker.io/library/haven-integration-tests:latest
+#24 ...
+
+#25 [migrate] exporting to image
+#25 exporting layers 25.6s done
+#25 exporting manifest sha256:d2ca28a9b0ce315804d91a5c6652d12a43a902149857048c42221d1658042d22 0.2s done
+#25 exporting config sha256:de0949f976c872354cce32db5fb494bb4d12ed9979b5546ec0939fd398b10c4d 0.2s done
+#25 exporting attestation manifest sha256:c5980c55c90130cc5b5ec2e84866d3cd477996664a15517bc511d254fcbcde65 0.5s done
+#25 exporting manifest list sha256:31a971b5d2d34ab5b971fabe8f356db09b6d066d08a9552a2d6ee2e610a410d7 0.2s done
+#25 naming to docker.io/library/haven-integration-migrate:latest 0.0s done
+#25 unpacking to docker.io/library/haven-integration-migrate:latest
+#25 ...
+
+#30 [api] exporting to image
+#30 exporting layers 25.6s done
+#30 exporting manifest sha256:834889b4affe431f240df5a95470a0bb5422fba2af3cc5f1c8616f47e9d00d59 0.2s done
+#30 exporting config sha256:1479a77a025c8c616dbc2c2c6b9c1cd097ff00fac5a795b66e72b3404fb78c8f 0.2s done
+#30 exporting attestation manifest sha256:7054dcda00ecd0125143587a38fa054f8519a9e45ac53c218ad8f5d98c30f961 0.5s done
+#30 exporting manifest list sha256:5a0347b543c70031a9dbdd67f092819015aa5193f08f44f7df9d06590f1a517c 0.2s done
+#30 naming to docker.io/library/haven-integration-api:latest 0.0s done
+#30 unpacking to docker.io/library/haven-integration-api:latest
+#30 ...
+
+#29 [web] exporting to image
+#29 exporting layers 25.6s done
+#29 exporting manifest sha256:a5d04f7b6fc8606ff4bfd297fe004f2743551cad5112cdab8ac19b54b662c7d1 0.2s done
+#29 exporting config sha256:59f36b875be8b4392bc62133cc04ea595d906aa3c455fc34570e6483e67140e8 0.2s done
+#29 exporting attestation manifest sha256:47596f97df61dfd62baaab744a2e6f662e7dbba7da121f94ce60057438e9a420 0.5s done
+#29 exporting manifest list sha256:fcd57c9f07c07e75207b9e6257683ddeb8920124a9d2c74549a569e64a2fea68 0.2s done
+#29 naming to docker.io/library/haven-integration-web:latest 0.1s done
+#29 unpacking to docker.io/library/haven-integration-web:latest
+#29 ...
+
+#27 [worker] exporting to image
+#27 exporting layers 25.6s done
+#27 exporting manifest sha256:164e1b8c39a3eacee3654d6bd4ef26d06f153525d6f1fe689b93339ce0cae77d 0.2s done
+#27 exporting config sha256:951e687282fdee442d6da52a0a56885f9c5ef847e5c1ddff67f8344e21f2495d 0.2s done
+#27 exporting attestation manifest sha256:8eaa9ad4de45ce6c0b18345f72d1927f70a5bcaf2f22ba820e31c11e1ba66818 0.5s done
+#27 exporting manifest list sha256:60547702a104f31eb72de86e8eb69c6e461bbc6eb332b730e6763c7f55843779 0.2s done
+#27 naming to docker.io/library/haven-integration-worker:latest 0.0s done
+#27 unpacking to docker.io/library/haven-integration-worker:latest
+#27 ...
+
+#26 [ops] exporting to image
+#26 exporting layers 25.5s done
+#26 exporting manifest sha256:7c01077c601ba65e4b8249da93d7c9c4504c447e37e809985b97f51fc97ce4e1 0.2s done
+#26 exporting config sha256:01aaeaa86afe550c36f618d657c2316a29fb4bf843889eae924265695feaa6dd 0.2s done
+#26 exporting attestation manifest sha256:0727a729801b63799a0f988fb10061c659f8c80aecec23789415cb94c378ca0b 0.5s done
+#26 exporting manifest list sha256:bcea8e25c5d86fc37626a646a618e1c01049f45adfab15fe65fcf44dcc9bb8d4 0.2s done
+#26 naming to docker.io/library/haven-integration-ops:latest 0.1s done
+#26 unpacking to docker.io/library/haven-integration-ops:latest
+#26 ...
+
+#28 [install] exporting to image
+#28 exporting layers 25.5s done
+#28 exporting manifest sha256:b55629d6d0c77155f112a65a01fedcee4d5d2eec840d4b7ba9d065e5e8b4a964 0.2s done
+#28 exporting config sha256:43c7260f97b46c5052431adc5d2dc2b1a43c6143f7e6250f61e04d67d83889d9 0.2s done
+#28 exporting attestation manifest sha256:7bc323e35db8c9f2000aeb5c1d02eb9beb766e51f43dca01fdc53818472150ee 0.5s done
+#28 exporting manifest list sha256:489859bd8bc2194d066e8414a5dd0faaa52f1b1aff98b82544386153f3f60b70 0.2s done
+#28 naming to docker.io/library/haven-integration-install:latest 0.1s done
+#28 unpacking to docker.io/library/haven-integration-install:latest
+#28 unpacking to docker.io/library/haven-integration-install:latest 9.1s done
+#28 DONE 36.2s
+
+#24 [tests] exporting to image
+#24 unpacking to docker.io/library/haven-integration-tests:latest 9.2s done
+#24 DONE 36.2s
+
+#26 [ops] exporting to image
+#26 unpacking to docker.io/library/haven-integration-ops:latest 9.1s done
+#26 DONE 36.2s
+
+#27 [worker] exporting to image
+#27 unpacking to docker.io/library/haven-integration-worker:latest 9.1s done
+#27 DONE 36.2s
+
+#25 [migrate] exporting to image
+#25 unpacking to docker.io/library/haven-integration-migrate:latest 9.1s done
+#25 DONE 36.2s
+
+#30 [api] exporting to image
+#30 unpacking to docker.io/library/haven-integration-api:latest 9.1s done
+#30 DONE 36.2s
+
+#29 [web] exporting to image
+#29 unpacking to docker.io/library/haven-integration-web:latest 9.1s done
+#29 DONE 36.2s
+
+#31 [worker] resolving provenance for metadata file
+#31 ...
+
+#32 [tests] resolving provenance for metadata file
+#32 DONE 0.5s
+
+#31 [worker] resolving provenance for metadata file
+#31 DONE 0.5s
+
+#33 [api] resolving provenance for metadata file
+#33 DONE 0.1s
+
+#34 [migrate] resolving provenance for metadata file
+#34 DONE 0.2s
+
+#35 [ops] resolving provenance for metadata file
+#35 DONE 0.4s
+
+#36 [install] resolving provenance for metadata file
+#36 DONE 0.3s
+
+#37 [web] resolving provenance for metadata file
+#37 DONE 0.0s
+ Image haven-integration-tests Built 
+ Image haven-integration-install Built 
+ Image haven-integration-worker Built 
+ Image haven-integration-migrate Built 
+ Image haven-integration-api Built 
+ Image haven-integration-ops Built 
+ Image haven-integration-web Built 
+ Network haven-integration_private Creating 
+ Network haven-integration_private Created 
+ Volume haven-integration_packages-test-support-dependencies Creating 
+ Volume haven-integration_packages-test-support-dependencies Created 
+ Volume haven-integration_database Creating 
+ Volume haven-integration_database Created 
+ Volume haven-integration_apps-ops-dependencies Creating 
+ Volume haven-integration_apps-ops-dependencies Created 
+ Volume haven-integration_packages-database-dependencies Creating 
+ Volume haven-integration_packages-database-dependencies Created 
+ Volume haven-integration_virus-signatures Creating 
+ Volume haven-integration_virus-signatures Created 
+ Volume haven-integration_packages-contracts-dependencies Creating 
+ Volume haven-integration_packages-contracts-dependencies Created 
+ Volume haven-integration_apps-worker-dependencies Creating 
+ Volume haven-integration_apps-worker-dependencies Created 
+ Volume haven-integration_apps-api-dependencies Creating 
+ Volume haven-integration_apps-api-dependencies Created 
+ Volume haven-integration_packages-config-dependencies Creating 
+ Volume haven-integration_packages-config-dependencies Created 
+ Volume haven-integration_packages-ui-dependencies Creating 
+ Volume haven-integration_packages-ui-dependencies Created 
+ Volume haven-integration_dependencies Creating 
+ Volume haven-integration_dependencies Created 
+ Volume haven-integration_mail-data Creating 
+ Volume haven-integration_mail-data Created 
+ Volume haven-integration_search Creating 
+ Volume haven-integration_search Created 
+ Volume haven-integration_apps-web-dependencies Creating 
+ Volume haven-integration_apps-web-dependencies Created 
+ Volume haven-integration_objects Creating 
+ Volume haven-integration_objects Created 
+ Volume haven-integration_cache Creating 
+ Volume haven-integration_cache Created 
+ Container haven-integration-mail-1 Creating 
+ Container haven-integration-cache-1 Creating 
+ Container haven-integration-scanner-1 Creating 
+ Container haven-integration-search-1 Creating 
+ Container haven-integration-install-1 Creating 
+ Container haven-integration-storage-1 Creating 
+ Container haven-integration-db-1 Creating 
+ Container haven-integration-search-1 Created 
+ Container haven-integration-scanner-1 Created 
+ Container haven-integration-cache-1 Created 
+ Container haven-integration-mail-1 Created 
+ Container haven-integration-db-1 Created 
+ Container haven-integration-identity-1 Creating 
+ Container haven-integration-storage-1 Created 
+ Container haven-integration-identity-1 Created 
+ Container haven-integration-install-1 Created 
+ Container haven-integration-migrate-1 Creating 
+ Container haven-integration-migrate-1 Created 
+ Container haven-integration-worker-1 Creating 
+ Container haven-integration-api-1 Creating 
+ Container haven-integration-worker-1 Created 
+ Container haven-integration-api-1 Created 
+ Container haven-integration-ops-1 Creating 
+ Container haven-integration-web-1 Creating 
+ Container haven-integration-ops-1 Created 
+ Container haven-integration-web-1 Created 
+ Container haven-integration-proxy-1 Creating 
+ Container haven-integration-proxy-1 Created 
+ Container haven-integration-scanner-1 Starting 
+ Container haven-integration-search-1 Starting 
+ Container haven-integration-cache-1 Starting 
+ Container haven-integration-mail-1 Starting 
+ Container haven-integration-db-1 Starting 
+ Container haven-integration-storage-1 Starting 
+ Container haven-integration-install-1 Starting 
+ Container haven-integration-search-1 Started 
+ Container haven-integration-scanner-1 Started 
+ Container haven-integration-install-1 Started 
+ Container haven-integration-mail-1 Started 
+ Container haven-integration-cache-1 Started 
+ Container haven-integration-storage-1 Started 
+ Container haven-integration-db-1 Started 
+ Container haven-integration-db-1 Waiting 
+ Container haven-integration-db-1 Waiting 
+ Container haven-integration-install-1 Waiting 
+ Container haven-integration-install-1 Exited 
+ Container haven-integration-db-1 Healthy 
+ Container haven-integration-migrate-1 Starting 
+ Container haven-integration-db-1 Healthy 
+ Container haven-integration-identity-1 Starting 
+ Container haven-integration-migrate-1 Started 
+ Container haven-integration-cache-1 Waiting 
+ Container haven-integration-search-1 Waiting 
+ Container haven-integration-mail-1 Waiting 
+ Container haven-integration-migrate-1 Waiting 
+ Container haven-integration-identity-1 Started 
+ Container haven-integration-scanner-1 Waiting 
+ Container haven-integration-storage-1 Waiting 
+ Container haven-integration-migrate-1 Waiting 
+ Container haven-integration-identity-1 Waiting 
+ Container haven-integration-cache-1 Healthy 
+ Container haven-integration-mail-1 Healthy 
+ Container haven-integration-search-1 Healthy 
+ Container haven-integration-storage-1 Healthy 
+ Container haven-integration-migrate-1 Exited 
+ Container haven-integration-migrate-1 Exited 
+ Container haven-integration-worker-1 Starting 
+ Container haven-integration-worker-1 Started 
+ Container haven-integration-scanner-1 Healthy 
+ Container haven-integration-identity-1 Healthy 
+ Container haven-integration-api-1 Starting 
+ Container haven-integration-api-1 Started 
+ Container haven-integration-api-1 Waiting 
+ Container haven-integration-api-1 Waiting 
+ Container haven-integration-api-1 Healthy 
+ Container haven-integration-api-1 Healthy 
+ Container haven-integration-ops-1 Starting 
+ Container haven-integration-web-1 Starting 
+ Container haven-integration-ops-1 Started 
+ Container haven-integration-web-1 Started 
+ Container haven-integration-proxy-1 Starting 
+ Container haven-integration-proxy-1 Started 
+ Container haven-integration-storage-1 Waiting 
+ Container haven-integration-ops-1 Waiting 
+ Container haven-integration-migrate-1 Waiting 
+ Container haven-integration-mail-1 Waiting 
+ Container haven-integration-web-1 Waiting 
+ Container haven-integration-identity-1 Waiting 
+ Container haven-integration-proxy-1 Waiting 
+ Container haven-integration-api-1 Waiting 
+ Container haven-integration-search-1 Waiting 
+ Container haven-integration-worker-1 Waiting 
+ Container haven-integration-install-1 Waiting 
+ Container haven-integration-scanner-1 Waiting 
+ Container haven-integration-cache-1 Waiting 
+ Container haven-integration-db-1 Waiting 
+ Container haven-integration-cache-1 Healthy 
+ Container haven-integration-db-1 Healthy 
+ Container haven-integration-storage-1 Healthy 
+ Container haven-integration-scanner-1 Healthy 
+ Container haven-integration-migrate-1 Exited 
+ Container haven-integration-mail-1 Healthy 
+ Container haven-integration-worker-1 Healthy 
+ Container haven-integration-identity-1 Healthy 
+ Container haven-integration-api-1 Healthy 
+ Container haven-integration-install-1 Exited 
+ Container haven-integration-search-1 Healthy 
+ Container haven-integration-proxy-1 Healthy 
+ Container haven-integration-web-1 Healthy 
+ Container haven-integration-ops-1 Healthy 
+Synthetic fixture fingerprint: b310f33cb52d38027742e93b7d7ddcf6ac85dc8d30e6c197741ee906ac96dc42
+Identity staff OTP and verified level-2 policy configured.
+ Container haven-integration-tests-run-02dd8f5f82b2 Creating 
+ Container haven-integration-tests-run-02dd8f5f82b2 Created 
+
+> haven-real-estate@0.1.0 test:unit /workspace
+> vitest run tests/unit
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/unit/contracts.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/unit/fixtures.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m tests/unit/observability.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m16 passed[39m[22m[90m (16)[39m
+[2m   Start at [22m 05:17:49
+[2m   Duration [22m 697ms[2m (import 50%, transform 32%, tests 14%, worker 3%)[22m
+
+
+> haven-real-estate@0.1.0 test:integration /workspace
+> vitest run tests/integration
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/database.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 153[2mms[22m[39m
+ [32m✓[39m tests/integration/outbox.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1856[2mms[22m[39m
+   [32m✓[39m F09 real queue replay and crash recovery [2m(2)[22m
+     [33m[2m✓[22m[39m crash after SMTP delivery retries without duplicating mail or notifications[33m 1123[2mms[22m[39m
+     [33m[2m✓[22m[39m an old publish event cannot resurrect withdrawn inventory[33m 726[2mms[22m[39m
+ [32m✓[39m tests/integration/contracts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1071[2mms[22m[39m
+ [32m✓[39m tests/integration/readiness.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m24 passed[39m[22m[90m (24)[39m
+[2m   Start at [22m 05:17:50
+[2m   Duration [22m 4.85s[2m (tests 70%, import 26%, transform 3%)[22m
+
+[2m    Isolate [22m [33m4 workers spawned[39m[2m · ~99ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~298ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+> haven-real-estate@0.1.0 test:e2e /workspace
+> playwright test
+
+
+Running 34 tests using 1 worker
+
+  ✓   1 [desktop] › tests/e2e/journeys.spec.ts:4:1 › N04/N05 developer inventory persists and rejects stale updates (8.0s)
+  ✓   2 [desktop] › tests/e2e/journeys.spec.ts:27:1 › U03/D01/D03 public browse, cancel/apply filters, responsive evidence (6.7s)
+  ✓   3 [desktop] › tests/e2e/journeys.spec.ts:28:1 › F06/U05 logged-in favorite, inquiry, viewing and message persistence (10.5s)
+  ✓   4 [desktop] › tests/e2e/journeys.spec.ts:29:1 › T01/T02/T03 mortgage zero-rate fixture, validation and CSV (1.3s)
+  ✓   5 [desktop] › tests/e2e/journeys.spec.ts:30:1 › P06/P08/P09/P10 management charge idempotency, allocation race and reversal (2.9s)
+  ✓   6 [desktop] › tests/e2e/journeys.spec.ts:31:1 › F07 permission denial, invalid login state and safe redirects (2.7s)
+  ✓   7 [desktop] › tests/e2e/journeys.spec.ts:32:1 › Q03 responsive widths and accessibility (5.7s)
+  ✓   8 [desktop] › tests/e2e/journeys.spec.ts:33:1 › O01/O03/O05/F12 owner submission, media validation, private evidence and moderation (11.0s)
+  ✓   9 [desktop] › tests/e2e/journeys.spec.ts:34:1 › P11/P12/P13 tenant request, manager update and private note isolation (10.1s)
+  ✓  10 [desktop] › tests/e2e/media-security.spec.ts:10:1 › F12 sanitizes image variants and denies unsigned access to originals (2.1s)
+  ✓  11 [desktop] › tests/e2e/observability.spec.ts:3:1 › F13 readiness, tracing and operational metrics are scoped to administrators (5.0s)
+  ✓  12 [desktop] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation (40.4s)
+  ✓  13 [desktop] › tests/e2e/rich-media.spec.ts:81:1 › F12 scan rejection, spoofed video MIME and oversized upload intents (2.1s)
+  ✓  14 [desktop] › tests/e2e/rich-media.spec.ts:91:1 › development floor-plan drawings are uploaded, reviewed and displayed with plan inventory (13.4s)
+  ✓  15 [desktop] › tests/e2e/sessions.spec.ts:18:1 › F06 staff password alone is insufficient; verified OTP grants access (4.6s)
+  ✓  16 [desktop] › tests/e2e/sessions.spec.ts:34:1 › F06 session rotation, expired-session denial and provider logout (6.4s)
+  ✓  17 [desktop] › tests/e2e/sessions.spec.ts:52:1 › F09 idempotency replays once and rejects a changed payload (2.1s)
+  ✓  18 [mobile] › tests/e2e/journeys.spec.ts:4:1 › N04/N05 developer inventory persists and rejects stale updates (19.6s)
+  ✓  19 [mobile] › tests/e2e/journeys.spec.ts:27:1 › U03/D01/D03 public browse, cancel/apply filters, responsive evidence (6.6s)
+  ✓  20 [mobile] › tests/e2e/journeys.spec.ts:28:1 › F06/U05 logged-in favorite, inquiry, viewing and message persistence (6.7s)
+  ✓  21 [mobile] › tests/e2e/journeys.spec.ts:29:1 › T01/T02/T03 mortgage zero-rate fixture, validation and CSV (1.2s)
+  ✓  22 [mobile] › tests/e2e/journeys.spec.ts:30:1 › P06/P08/P09/P10 management charge idempotency, allocation race and reversal (1.7s)
+  ✓  23 [mobile] › tests/e2e/journeys.spec.ts:31:1 › F07 permission denial, invalid login state and safe redirects (1.5s)
+  ✓  24 [mobile] › tests/e2e/journeys.spec.ts:32:1 › Q03 responsive widths and accessibility (7.8s)
+  ✓  25 [mobile] › tests/e2e/journeys.spec.ts:33:1 › O01/O03/O05/F12 owner submission, media validation, private evidence and moderation (6.2s)
+  ✓  26 [mobile] › tests/e2e/journeys.spec.ts:34:1 › P11/P12/P13 tenant request, manager update and private note isolation (4.5s)
+  ✓  27 [mobile] › tests/e2e/media-security.spec.ts:10:1 › F12 sanitizes image variants and denies unsigned access to originals (1.5s)
+  ✓  28 [mobile] › tests/e2e/observability.spec.ts:3:1 › F13 readiness, tracing and operational metrics are scoped to administrators (2.5s)
+  ✓  29 [mobile] › tests/e2e/rich-media.spec.ts:3:1 › D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation (23.7s)
+  ✓  30 [mobile] › tests/e2e/rich-media.spec.ts:81:1 › F12 scan rejection, spoofed video MIME and oversized upload intents (1.3s)
+  ✓  31 [mobile] › tests/e2e/rich-media.spec.ts:91:1 › development floor-plan drawings are uploaded, reviewed and displayed with plan inventory (23.7s)
+  ✓  32 [mobile] › tests/e2e/sessions.spec.ts:18:1 › F06 staff password alone is insufficient; verified OTP grants access (1.7s)
+  ✓  33 [mobile] › tests/e2e/sessions.spec.ts:34:1 › F06 session rotation, expired-session denial and provider logout (2.8s)
+  ✓  34 [mobile] › tests/e2e/sessions.spec.ts:52:1 › F09 idempotency replays once and rejects a changed payload (1.2s)
+
+  34 passed (4.2m)

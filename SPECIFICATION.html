@@ -1,0 +1,2000 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>English Real Estate Platform Specification</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f7f8fa;color:#17212d;font:16px/1.65 system-ui,sans-serif}header{background:#122236;color:white;padding:28px 36px}header h1{margin:0;font-size:25px}header p{margin:8px 0 0;color:#ced8e2}main{max-width:1160px;margin:auto;padding:30px 32px;background:white}nav{display:flex;gap:8px;flex-wrap:wrap;padding:18px 0;border-bottom:1px solid #dde3e8}nav a{font-size:13px;padding:7px 10px;background:#eef3f8;border-radius:5px}h1{font-size:30px;line-height:1.25}h2{font-size:24px;margin-top:48px;scroll-margin-top:20px}h3{font-size:19px;margin-top:30px}p{margin:12px 0}a{color:#1454a0;overflow-wrap:anywhere}li{margin:6px 0}.tablewrap{overflow-x:auto;margin:20px 0}table{width:100%;border-collapse:collapse;font-size:14px}th,td{border:1px solid #d8dfe7;padding:12px;text-align:left;vertical-align:top}th{background:#eaf0f6;color:#142335}tr:nth-child(even){background:#f8fafc}pre{padding:20px;background:#142335;color:#edf4ff;overflow:auto;font-size:13px}code{font-family:ui-monospace,monospace;font-size:.9em}hr{border:0;border-top:2px solid #d8dfe7;margin:50px 0}@media(max-width:600px){main{padding:20px 16px}header{padding:24px 16px}h1{font-size:25px}table{min-width:620px}}@media print{body,main{background:white}nav{display:none}header{background:white;color:black;padding:0}header p{color:black}main{padding:0}h2,h3{break-after:avoid}tr{break-inside:avoid}a{color:inherit}}
+</style></head><body><header><h1>English Real Estate Platform</h1><p>Architecture, implementation specification and 120 small Codex tasks</p></header><main><nav><a href="#1-architecture-decision">1 Architecture decision</a><a href="#2-reference-evidence-and-parity-contract">2 Reference evidence and parity contract</a><a href="#3-business-categories-and-product-scope">3 Business categories and product scope</a><a href="#4-domain-model-and-data-integrity">4 Domain model and data integrity</a><a href="#5-api-contracts-and-integrations">5 API contracts and integrations</a><a href="#6-route-and-screen-specifications">6 Route and screen specifications</a><a href="#7-security-and-operational-quality">7 Security and operational quality</a><a href="#8-open-source-findings-and-reuse-decision">8 Open source findings and reuse decision</a><a href="#9-implementation-ordering-and-continuous-execution">9 Implementation ordering and continuous execution</a><a href="#10-definition-of-release-completion">10 Definition of release completion</a><a href="#11-sources">11 Sources</a><a href="#implementation-tasks">Task backlog</a></nav><h1 id="english-real-estate-platform-technical-specification">English Real Estate Platform Technical Specification</h1>
+<p>Version 1.0 | 4 October 2026 | Intended implementer: Codex</p>
+<p>Build an English-language real estate platform whose consumer information architecture, interaction patterns, screen composition, and business capabilities closely reproduce the mobile web experience at <a href="https://m.ke.com/bj/.">https://m.ke.com/bj/.</a> Deliver functioning consumer, agent, owner, developer, property-manager, and administration workflows, with durable data and deployment runbooks. This document defines the target architecture first; TASKS.json supplies the ordered implementation backlog and minimum tests.</p>
+<h2 id="1-architecture-decision">1 Architecture decision</h2>
+<p>Use a TypeScript monorepo with a modular NestJS backend, a Next.js consumer application, a Next.js operations application, and asynchronous workers. PostgreSQL is the authoritative datastore. Search, notifications, image processing, and analytics are projections or integrations, never the source of property availability or permissions. Start as a modular monolith with separate worker processes. Extract services only after measured operational needs justify it.</p>
+<div class="tablewrap"><table>
+<tr><th>Layer</th><th>Default choice</th><th>Responsibility</th></tr>
+<tr><td>Public application</td><td>Next.js and React with TypeScript</td><td>Server-rendered discovery and details, responsive English interface, client interactions</td></tr>
+<tr><td>Operations application</td><td>Next.js and React</td><td>Agent, owner, developer, manager, support and administrator workspaces</td></tr>
+<tr><td>API</td><td>NestJS with Fastify adapter</td><td>Business rules, permissions, REST endpoints, OpenAPI and event creation</td></tr>
+<tr><td>Database</td><td>PostgreSQL with PostGIS</td><td>Listings, CRM, geographic queries, leases, immutable financial records</td></tr>
+<tr><td>SQL access</td><td>Drizzle ORM plus reviewed SQL migrations</td><td>Typed queries; SQL for spatial operations, constraints and row security</td></tr>
+<tr><td>Identity</td><td>Keycloak through OIDC authorization code with PKCE</td><td>Accounts, email verification, credential recovery and staff MFA</td></tr>
+<tr><td>Search</td><td>Meilisearch Community Edition</td><td>Text search, autocomplete and faceted public discovery</td></tr>
+<tr><td>Jobs and cache</td><td>BullMQ and Valkey</td><td>Durable background processing and cache; verify pinned-version compatibility before adoption</td></tr>
+<tr><td>Media</td><td>S3-compatible object storage and Sharp</td><td>Private originals, image variants, scoped signed downloads</td></tr>
+<tr><td>Maps</td><td>MapLibre GL JS</td><td>Map rendering; separately contracted tiles, geocoding and geographic data</td></tr>
+<tr><td>Tours</td><td>Pannellum</td><td>Uploaded 360 panoramas and linked scenes; separate provider adapter for advanced tours</td></tr>
+<tr><td>Forms</td><td>React Hook Form and Zod</td><td>Shared input rules and accessible form feedback</td></tr>
+<tr><td>Client data</td><td>TanStack Query</td><td>Request state, invalidation and pagination</td></tr>
+<tr><td>Testing</td><td>Vitest, real service integration tests, Playwright and axe</td><td>Small deterministic tests with end-to-end business evidence</td></tr>
+<tr><td>Operations</td><td>Docker Compose, Traefik, OpenTelemetry</td><td>Local/staging/initial production packaging, HTTPS, logs, metrics and traces</td></tr>
+</table></div>
+<p>All versions are selected and pinned during task F02. Verify current official requirements, releases, licenses and security notices then; never use floating latest container tags. Record a compatibility matrix for Node LTS, Next, React, Nest, database, Keycloak and queues. Framework examples do not establish compatibility with the selected set.</p>
+<h3 id="1-1-runtime-boundaries">1.1 Runtime boundaries</h3>
+<p>Browser -&gt; HTTPS reverse proxy -&gt; consumer or operations Next application -&gt; Nest API -&gt; PostgreSQL. Browser authenticated mutations go through a same-origin backend-for-frontend session layer. Tokens remain server-side in encrypted session storage; the browser receives Secure, HttpOnly, SameSite cookies. API validates issuer, audience, expiry and authorization. Next does not implement parallel business rules or directly mutate the business database.</p>
+<p>API transactions write business changes and outbox events together. A dispatcher sends outbox jobs to workers. Workers maintain public search documents, media variants, email delivery and aggregate analytics. Workers can retry, so every side effect needs a deduplication key. WebSocket connections authenticate and authorize each conversation; reconnection recovers persisted messages by sequence number.</p>
+<p>Run public and operations apps on separate configured hostnames, API behind the reverse proxy, identity on an auth hostname and assets on an assets hostname. Hostnames remain environment values until supplied. No database, search administration endpoint, cache or object-storage administration console is publicly reachable. Staging and production have separate databases, buckets, identity realms, secrets and provider accounts.</p>
+<h3 id="1-2-repository-layout">1.2 Repository layout</h3>
+<pre><code>
+apps/web/                  public Next application
+
+apps/ops/                  operations Next application
+
+apps/api/                  Nest API modules
+
+apps/worker/               outbox and background workers
+
+packages/ui/               measured consumer components and operations primitives
+
+packages/contracts/        OpenAPI generated client and shared enums
+
+packages/database/         schema, SQL migrations and fixture generation
+
+packages/config/           typed environment configuration
+
+packages/test-support/     personas, service helpers and fixture assets
+
+docs/reference/            screen manifest, translations, evidence and gaps
+
+docs/adr/                  architecture decisions and version compatibility
+
+docs/runbooks/             deploy, rollback, restore and provider setup
+
+evidence/tasks/            small task reports and test artifacts
+
+infra/                     Docker, Compose, proxy and CI configuration
+
+TASKS.json                 task status and dependency graph
+
+PROGRESS.md                resume point and verified milestones
+
+BLOCKERS.md                externally blocked tasks and needed inputs
+
+AGENTS.md                  implementation and verification contract
+
+</code></pre>
+<h2 id="2-reference-evidence-and-parity-contract">2 Reference evidence and parity contract</h2>
+<p>The requested benchmark is the mobile website, not an inferred native app or its private internal systems. The homepage was accessible in the direct browser on 4 October 2026. Its category links and recommendation structure were inspected. Opening resale search produced a CAPTCHA. A public search-service retrieval exposed resale filter text, but this is not visual inspection. No authenticated account, private agent system or property-manager system was inspected. No measured typography, colors, geometry, gestures or animation timings are available yet.</p>
+<p>Use these evidence labels on every requirement and reference screen:</p>
+<ul>
+<li><strong>O — observed:</strong> visible homepage content and navigation observed directly.</li>
+<li><strong>R — retrieved:</strong> text supported by public first-party pages retrieved separately; visual behavior unverified.</li>
+<li><strong>P — proposed:</strong> product requirement added to create a complete operable platform; not asserted to exist in the benchmark.</li>
+<li><strong>V — needs visual verification:</strong> final shape and behavior must be captured from accessible reference screens before exact parity can pass.</li>
+</ul>
+<p>O: resale, new homes, rentals, renovation, commercial offices, communities, agents, support phone, mortgage calculator and sell-property entry points. The homepage has city/search controls, curated resale and new-development sections, ranking shortcuts and recommendation feeds for resale, developments and rentals. Cards expose relevant price, area, room-layout, location and amenity information. [S01]</p>
+<p>R: resale discovery includes location/subway, price, layout, additional filters and sort. Additional filter vocabulary includes area, orientation, floor, age, decoration, use, elevator, heating, ownership, building type, VR and recently added listings. [S02]</p>
+<p>R: first-party policy text describes owner submission information, listing photos/floor plans/VR, agent feedback, and a distinction between public listing data and private identifying/property-document data. This corroborates capability names, not their implementation or screen layout. [S03]</p>
+<p>All operational dashboards, tenancy management, maintenance, CRM states and internal approval rules below are P. Tours and messaging are proposed implementation contracts informed by public capability references; native app behavior remains outside the verified evidence.</p>
+<h3 id="2-1-exact-ui-and-ux-acceptance">2.1 Exact UI and UX acceptance</h3>
+<p>Create docs/reference/screens.json with one record per route/state: reference URL, evidence label, capture date, viewport, screenshot, interaction notes, measured boxes, typography, spacing, colors, original text, approved English copy, task IDs, and parity status. Capture the actual mobile layouts at 390 x 844 and 375 x 812 CSS pixels plus a 1440 x 900 desktop view if reference access permits. Also test 320 and 768 CSS-pixel widths for robustness. Screen capture must include home, city selector, each category list and detail, filter sheets, sorting, search suggestions, owner submission, mortgage calculator and signed-in states when available.</p>
+<p>Do not invent screenshot measurements or mark V screens verified. Continue implementation of defined behavior while exact visual evidence is blocked. Missing reference evidence blocks the exact-parity milestone, not unrelated backend tasks. Request authorized reference screenshots/access as a single concrete blocker when needed. Never bypass the website&#x27;s access controls.</p>
+<p>Preserve screen hierarchy, category order, content density, image proportions, card arrangements, filter grouping and primary-action placement after measurements are available. English labels may wrap differently; define stable two-line title clamps and flexible button widths. Translate semantic concepts rather than copying Chinese word order. Do not convert one living room into an extra bedroom. Show full formatted currency amounts instead of Chinese ten-thousand-unit notation. Keep ownership/holding-period tags as configurable market-specific attributes; do not imply identical tax consequences in another market.</p>
+<p>Until measurements exist, use provisional CSS variables only: 4/8/12/16/24/32-pixel spacing scale, 44-pixel minimum targets, system sans font, white surfaces, neutral text, a configurable primary accent, 16-pixel body and 12-pixel metadata. These are proposed defaults, not benchmark measurements. Replace with measured tokens in U01/U02. Do not adopt a template&#x27;s visual theme as the consumer design.</p>
+<p>For each verified screen, produce local screenshots using deterministic English fixtures and the same viewport. Compare structure using normalized fixtures and separate reference geometry from translated text differences. Default visual gates: anchor boxes within 4 CSS pixels of the measured specification; no unexpected overlap or horizontal overflow; local approved-English regression baselines at maxDiffPixelRatio 0.005 using a pinned renderer and masked dynamic regions. Do not pixel-diff live Chinese content against unrelated English fixture content and call it parity. Human reference review remains required for first English baseline approval. No test may automatically refresh its own baseline to pass.</p>
+<p>Use an independent configurable product name and original or licensed icons, photography and branding. Reference structure and interaction are the target; benchmark listings and agents are not your production inventory. Seed synthetic English data and track media rights/provenance. No KE logos, private APIs or production-data imports are required for this build.</p>
+<h2 id="3-business-categories-and-product-scope">3 Business categories and product scope</h2>
+<div class="tablewrap"><table>
+<tr><th>Category</th><th>Personas</th><th>Required capabilities</th><th>Evidence</th></tr>
+<tr><td>Users and identity</td><td>Visitors, buyers, renters</td><td>Browse anonymously, account, saved listings/searches, history, inquiries, viewings and notifications</td><td>Account entry O; detailed account workflow P/V</td></tr>
+<tr><td>Geography and discovery</td><td>All consumers</td><td>City/district/community, keyword search, category filters, sort, map, rankings and recommendations</td><td>O/R; map/ranking algorithms P</td></tr>
+<tr><td>Property inventory</td><td>Owners, agents, moderators</td><td>Canonical buildings/units, sale and rent offers, gallery, floor plans, verification and lifecycle</td><td>Public inventory O/R; operations P</td></tr>
+<tr><td>Resale homes</td><td>Buyers, agents</td><td>Resale list/detail, price per area, features, history, related community and contact</td><td>O/R/V</td></tr>
+<tr><td>Rentals</td><td>Renters, landlords</td><td>Entire/shared rental, price period, furnishing, availability, deposit and rent conditions</td><td>Cards O; workflow P/V</td></tr>
+<tr><td>New developments</td><td>Buyers, developers</td><td>Development, phases, buildings, floor-plan types, availability bands, launch/sales status and inquiries</td><td>Cards O; operations P/V</td></tr>
+<tr><td>Commercial property</td><td>Businesses, commercial agents</td><td>Offices/retail, sale/rent, space and fit-out criteria, business inquiries</td><td>Entry O; details P/V</td></tr>
+<tr><td>Real estate agents and agencies</td><td>Agents, brokerage managers</td><td>Public profile, verified credentials, assigned listings, CRM, appointments and reporting</td><td>Directory entry O; internal workflow P</td></tr>
+<tr><td>Owners and landlords</td><td>Owners</td><td>Sell/rent request, private ownership evidence, agent assignment and progress</td><td>Entry O and submission concepts R; workflow P/V</td></tr>
+<tr><td>Property management</td><td>Managers, landlords, tenants</td><td>Managed units, tenants, leases, charges, payment records, deposits, maintenance and statements</td><td>P extension requested by user</td></tr>
+<tr><td>Renovation and service providers</td><td>Consumers, vendors</td><td>Services, portfolio, quote requests and lead management</td><td>Entry O; internal workflow P/V</td></tr>
+<tr><td>Finance and tools</td><td>Buyers</td><td>Mortgage estimator, repayment schedule and configurable market settings</td><td>Entry O; formulas P/V</td></tr>
+<tr><td>Communications and support</td><td>Consumers, agents, support</td><td>Inquiries, chat, viewing bookings, reminders, support cases and complaints</td><td>Support entry O; details P</td></tr>
+<tr><td>Administration and content</td><td>Moderators, editors, administrators</td><td>Verification, moderation, user roles, taxonomy, home curation, analytics and audit</td><td>P</td></tr>
+</table></div>
+<p>All categories are in the planned deliverable. Marketplace parity and management extension have separate milestones so additions cannot be mistaken for benchmark evidence. There is no partial homepage-only completion condition. Native mobile apps, escrow, lender underwriting, official automated valuations, electronic contract signing and automatic real-estate payment settlement require separately specified providers and are not implied by mobile web parity. Links to download a native app remain configurable and hidden until a real target exists; do not show dead links.</p>
+<h3 id="3-1-users-and-roles">3.1 Users and roles</h3>
+<p>Visitor can see published public information. Consumer can manage only their own favorites, alerts, inquiries, conversations and bookings. Owner can manage owned property submission drafts and explicitly granted private documents. Agent can update listings and leads assigned to them within their agency. Agency manager can assign their agency&#x27;s staff and inventory. Developer can manage their organization&#x27;s developments. Property manager can access only granted buildings/units and management records. Tenant can access only their linked lease, charges and maintenance requests. Vendor can manage own renovation profile/quotes. Moderator reviews listings and credential submissions. Support can handle cases with least-privilege data access. Editor can curate content. Platform admin manages configuration and permissions; financial corrections require an explicit finance permission, not just agent membership.</p>
+<p>Permissions are server-side action/resource checks, combining identity, agency or management organization, ownership/assignment, and workflow state. An organization_id supplied by a client never grants membership. Cross-organization modifications and private reads return 404 or 403 consistently. Public read models contain only deliberately published fields, including approved agent contact details. Private phone numbers, exact occupied-unit addresses, identity evidence, tenant information, notes and ownership documents are excluded from public serializers and search indexes.</p>
+<h3 id="3-2-market-configuration">3.2 Market configuration</h3>
+<p>Default interface is English. Default sample dataset is English-labeled Beijing with CNY, metric areas and Asia/Shanghai property viewing time; this preserves geographic context without assuming a UAE launch. User profile locale may be en-GB initially; currency is the property&#x27;s currency and is never inferred from interface language. Store IANA time zones, UTC instants and decimal area. Make country, cities, currency, rent period, measurement units, tax/ownership labels, mortgage interest settings and required credential fields configurable. UAE deployment is an additional market configuration, not silent replacement of Beijing semantics. Add Chinese names/transliterations as optional searchable aliases, not visible untranslated interface copy.</p>
+<h2 id="4-domain-model-and-data-integrity">4 Domain model and data integrity</h2>
+<p>Use UUID primary keys, timestamptz timestamps, actor IDs, soft-archive semantics where appropriate, and optimistic integer versions on editable aggregates. Prices/amounts are NUMERIC(18,2), exposed as decimal strings; area is NUMERIC(10,2). Currency is a required ISO code; rent period is an explicit enum. Never sum different currencies or use binary float for posted accounting. Track created_at, updated_at and the source/provenance of imported records.</p>
+<div class="tablewrap"><table>
+<tr><th>Aggregate</th><th>Minimum fields and relationships</th></tr>
+<tr><td>UserProfile</td><td>Keycloak subject unique, display name, locale, verified contact references, state; credentials stay in identity service</td></tr>
+<tr><td>Organization and Membership</td><td>Type agency/developer/manager/vendor; user, role, status, invitations; unique active membership</td></tr>
+<tr><td>AgentProfile</td><td>User, agency, public biography, languages, service areas, credential verification state, consented contacts</td></tr>
+<tr><td>City, District, Neighborhood</td><td>Hierarchy, English name, aliases, slug, country and IANA zone</td></tr>
+<tr><td>Community</td><td>Neighborhood, public address, approximate point, year, amenities, photos and buildings</td></tr>
+<tr><td>Building and Unit</td><td>Community/development, building identifier, floors; unit area, beds, living rooms, baths, orientation, amenities; private unit address</td></tr>
+<tr><td>Listing</td><td>Canonical unit, organization, owner grants, responsible agents, transaction sale/rent, segment residential/commercial, title, description, currency, price, rent period, status, version, verification</td></tr>
+<tr><td>ResidentialDetails</td><td>Finishing, furnishing, heating, elevator, ownership/holding-period attributes, occupancy and availability</td></tr>
+<tr><td>CommercialDetails</td><td>Office/retail/warehouse, gross and usable area, fit-out, floor, parking, permitted uses and rent basis</td></tr>
+<tr><td>RentalTerms</td><td>Entire/shared, lease minimum, deposit amount, billing period, utilities, move-in date and room attributes</td></tr>
+<tr><td>MediaAsset</td><td>Entity owner, object key, rights/source, MIME, dimensions, scan state, visibility, variant keys and ordering</td></tr>
+<tr><td>VirtualTour and Scene</td><td>Listing, panorama assets, scene links/hotspots, thumbnail and provider reference</td></tr>
+<tr><td>Development and Phase</td><td>Developer, geographic reference, sales status, range currency/price basis, completion dates and phases</td></tr>
+<tr><td>FloorPlanType and DevelopmentInventory</td><td>Development/phase/building, room counts, area range, floor-plan media, availability and inventory timestamp</td></tr>
+<tr><td>ListingRevision and PriceHistory</td><td>Previous/next values, effective date, actor, review status and reason</td></tr>
+<tr><td>Favorite and SavedSearch</td><td>User/listing uniqueness; normalized filters, city, segment, currency, cadence and dedupe state</td></tr>
+<tr><td>Lead</td><td>Consumer/guest contact vault reference, resource, assigned organization/agent, source, consent, status and timeline</td></tr>
+<tr><td>Viewing</td><td>Listing, consumer, agent, timezone, start/end, status, capacity and revision</td></tr>
+<tr><td>Conversation and Message</td><td>Members/grants, linked lead/listing, monotonically increasing sequence, sender, sanitized body, attachments and read cursor</td></tr>
+<tr><td>SupportCase and Complaint</td><td>Reporter, resource, category, messages, assignment, status and resolution</td></tr>
+<tr><td>ManagedProperty and ManagementGrant</td><td>Organization, canonical units, owner relationships and grant duration</td></tr>
+<tr><td>TenantProfile and Lease</td><td>Tenant account links, unit, landlord/manager, local start/end dates, currency, rent terms, deposit, status and document grants</td></tr>
+<tr><td>Charge, PaymentRecord and Allocation</td><td>Lease, period, money, due date, posting actor; provider reference optional; immutable posted record with reversal link</td></tr>
+<tr><td>DepositMovement and MaintenanceRequest</td><td>Lease liabilities/release records; unit, requester, category, photos, urgency, assignment and status</td></tr>
+<tr><td>ServiceProvider and QuoteRequest</td><td>Organization, service areas, categories, portfolios, requester, proposed slot, status and assigned vendor</td></tr>
+<tr><td>Content and HomeSection</td><td>City/category, translated text, order, eligibility predicate, schedule and published version</td></tr>
+<tr><td>Notification and DeliveryAttempt</td><td>User, channel, template/version, event key, send state, retries and provider reference</td></tr>
+<tr><td>AuditEvent, OutboxEvent and IdempotencyRecord</td><td>Actor/resource/action, redacted change; aggregate/version, payload schema, dispatch state; scoped key/request hash/result</td></tr>
+</table></div>
+<p>Important database invariants: positive area and nonnegative money; required matching currency on allocations; district belongs to selected city; parent/child records cannot cross organizations; unit listing deduplication does not prohibit legitimate concurrent agency mandates. Use a reviewable duplicate candidate mechanism instead of forcing global uniqueness on public addresses. One active lease per independently rentable unit; rooms may be modeled as child units. Booked exclusive agent intervals cannot overlap, enforced transactionally. Favorite and message client-id uniqueness prevent duplicate records. Published-media references must be approved and resolvable.</p>
+<p>Index public listing status/city/category/price/published_at, unit/community keys, geographic points using GiST, lead organization/assignee/state, message conversation/sequence, lease unit/state and charge lease/due date. Review query plans using realistic performance fixtures. API runtime database role does not own tables; migrations use a separate role. Use row-level security for organization-scoped private tables, set scope transaction-locally and test pooled-connection leakage. Public listings have a separate published projection; deliberate multi-organization reporting requires explicit administrative paths.</p>
+<h3 id="4-1-workflow-states">4.1 Workflow states</h3>
+<ul>
+<li>Listing: draft -&gt; submitted -&gt; under_review -&gt; published; review may reject with reasons. Published -&gt; paused, sold/leased, expired or archived. A rejected draft can be corrected and resubmitted. Owner edits to published core facts create a pending revision; approval swaps the public version atomically. Moderators cannot publish incomplete or unverified required data. Each transition writes an audit event and outbox event.</li>
+<li>Credential: pending -&gt; under_review -&gt; approved/rejected -&gt; expired or revoked. Public verification badge derives from a currently valid approved record.</li>
+<li>Lead: new -&gt; assigned -&gt; contacted -&gt; qualified -&gt; viewing -&gt; offer/discussion -&gt; won/lost. Reassignment is audited. A lead marked won does not automatically settle money or prove legal completion.</li>
+<li>Viewing: requested -&gt; confirmed -&gt; completed/no_show/cancelled. Booking uses a transactional overlap check and idempotency; store UTC and render property-local time.</li>
+<li>Lease: draft -&gt; active -&gt; ended/terminated. Activation requires a granted unit and tenant, dates and valid monetary terms. Activation atomically blocks incompatible new rental publication. Public listing withdrawal and lease activation cannot diverge silently.</li>
+<li>Charge/payment: draft -&gt; posted -&gt; reversed. Posted rows are immutable. Reversals preserve original entries; deposits remain separately tracked liabilities. Recorded payments are bookkeeping evidence, not transfers of funds.</li>
+<li>Maintenance: open -&gt; triaged -&gt; assigned -&gt; in_progress -&gt; resolved -&gt; closed/reopened. Tenant only sees their authorized unit and sanitized status updates.</li>
+<li>Renovation quote: requested -&gt; assigned -&gt; contacted -&gt; quoted -&gt; accepted/declined/closed. Acceptance records interest; it does not sign a contract or charge a card.</li>
+</ul>
+<h2 id="5-api-contracts-and-integrations">5 API contracts and integrations</h2>
+<p>Expose versioned REST under /api/v1 with generated OpenAPI and a typed client. Public GET routes are rate-limited and safe to cache by city, filters, currency and public revision. Private responses have no-store. Mutations validate input, permissions, workflow state, idempotency where needed and optimistic versions. Return an envelope with data/meta or error {code, message, fieldErrors, requestId}; omit stacks and private fields.</p>
+<div class="tablewrap"><table>
+<tr><th>Resource group</th><th>Representative endpoints</th></tr>
+<tr><td>Geography</td><td>GET /cities, /cities/:id/districts, /communities, /communities/:id</td></tr>
+<tr><td>Inventory</td><td>GET /listings, /listings/:id, /listings/:id/similar; POST /listings; PATCH /listings/:id; POST /listings/:id/submit</td></tr>
+<tr><td>Review</td><td>POST /listing-reviews/:id/approve or /reject; POST /listings/:id/pause, /mark-sold, /mark-leased</td></tr>
+<tr><td>Developments</td><td>GET /developments, /developments/:id, /developments/:id/floor-plans; organization-scoped POST/PATCH inventory</td></tr>
+<tr><td>Search</td><td>GET /search/suggest; GET /search/listings; GET /search/map; GET /rankings</td></tr>
+<tr><td>Users</td><td>GET/PATCH /me; GET/PUT/DELETE /me/favorites/:listingId; GET/POST/PATCH /me/saved-searches</td></tr>
+<tr><td>Agents</td><td>GET /agents, /agents/:id; GET/PATCH /ops/agent-profile; /ops/memberships, /ops/assignments</td></tr>
+<tr><td>Owners</td><td>POST /owner-submissions; GET /me/owner-submissions; POST /owner-submissions/:id/documents</td></tr>
+<tr><td>Leads and viewings</td><td>POST /inquiries; GET/PATCH /ops/leads/:id; GET /viewing-slots; POST /viewings; POST /viewings/:id/cancel</td></tr>
+<tr><td>Messages</td><td>GET/POST /conversations; GET/POST /conversations/:id/messages; PATCH /conversations/:id/read-cursor</td></tr>
+<tr><td>Media</td><td>POST /media/upload-intents; POST /media/:id/finalize; PATCH /media/order; GET /documents/:id/download-url</td></tr>
+<tr><td>Management</td><td>/ops/managed-properties, /ops/tenants, /ops/leases, /ops/charges, /ops/payment-records, /ops/allocations, /ops/deposits</td></tr>
+<tr><td>Tenant portal</td><td>GET /me/leases, /me/charges; GET/POST /me/maintenance; scoped document downloads</td></tr>
+<tr><td>Services and tools</td><td>GET /renovation/providers; POST /quote-requests; POST /tools/mortgage-estimate</td></tr>
+<tr><td>Support and admin</td><td>/support-cases, /complaints, /ops/reviews, /ops/content, /ops/config, /ops/audit</td></tr>
+</table></div>
+<p>List queries accept city, district, neighborhood, community, transaction, segment, text, min/max price, currency, rent period, beds, living rooms, min/max area, orientation, floor category, build-age range, finishing, furnishing, elevator, heating, ownership, building type, tour available, recent days, features, sort and opaque cursor. OR within one multi-select facet; AND between facets. Reject min &gt; max and mixed currency ranges. Page size default 20, maximum 50. Stable ordering uses selected field plus UUID tie-breaker. Filter changes reset cursor. Detail reads recheck published state against PostgreSQL so stale search documents cannot expose withdrawn listings. For search iteration, bounded offsets are acceptable if explicitly labeled; deep traversal/export uses stable database cursors and has a tested limit.</p>
+<p>Write an explicit mapping from canonical filters to SQL and search syntax; never interpolate raw client expressions. Search documents contain only public data and schema/aggregate version. Index settings version in code. Outbox upsert/delete is idempotent; older events cannot overwrite newer versions. Rebuild into a new index, verify counts and swap. Search unavailable: return a declared degraded SQL path with supported filters or a retryable error, never a silently empty feed. Detail, favorites and inquiries continue using the database.</p>
+<p>Provider interfaces: IdentityAdapter, ObjectStore, MapTiles, Geocoder, MailSender, SmsSender, TourProvider and optional PaymentEvidenceAdapter. Development uses deterministic local providers. Production routes require configured working integrations for visible actions. No production OTP bypass, demo success payment, hardcoded phone number or fake delivered status. Store provider secrets only server-side. MapLibre provides rendering, not tile or geocoder rights or unlimited use. Include attribution and provider usage policies in deployment setup.</p>
+<p>Upload flow: authorized upload intent -&gt; presigned upload to quarantine -&gt; finalize verifies key/size/MIME -&gt; scanner and decoder -&gt; public variants or private approved document. Proposed limits: images 10 MB, documents 20 MB, panoramas 30 MB; image count 30/listing. Validate decoded content and decompression limits; strip EXIF including location; private evidence uses short-lived signed URLs and download audit. Reject remote image import by default to avoid SSRF; authorized importer needs allowlist, redirect validation, size and timeout limits.</p>
+<h2 id="6-route-and-screen-specifications">6 Route and screen specifications</h2>
+<div class="tablewrap"><table>
+<tr><th>Surface</th><th>Routes</th><th>Required structure and behavior</th></tr>
+<tr><td>Home</td><td>/:city</td><td>City and search header, ten category actions in observed order, curated and recommended sections, ranking shortcuts, profile entry and configured footer</td></tr>
+<tr><td>Global search</td><td>/:city/search</td><td>Category context, suggestions by community/area/name, history, clear action and keyboard support</td></tr>
+<tr><td>Resale</td><td>/:city/buy and /:city/buy/:slug</td><td>Search/header, filter bar, selection sheets, quick tags, card feed; detail with gallery, facts, features, floor plan, community, agents and contact/viewing actions</td></tr>
+<tr><td>Rentals</td><td>/:city/rent and /:city/rent/:slug</td><td>Rental-specific filters/cards; detail with terms, availability, utilities and owner/agent contact</td></tr>
+<tr><td>New homes</td><td>/:city/new-homes and /:city/new-homes/:slug</td><td>Development filters/cards; overview, phase/status, price basis, unit types, map and sales inquiry</td></tr>
+<tr><td>Commercial</td><td>/:city/commercial and /:city/commercial/:slug</td><td>Sale/rent and commercial criteria; space/fit-out details and business inquiry</td></tr>
+<tr><td>Communities</td><td>/:city/communities and /:city/communities/:slug</td><td>Search/list; overview, building facts, amenities, associated listings and time-stamped statistics</td></tr>
+<tr><td>Agents</td><td>/:city/agents and /:city/agents/:slug</td><td>Name/service-area search, cards, profile, credentials, inventory and contact</td></tr>
+<tr><td>Owners</td><td>/:city/list-property</td><td>Sell/rent choice, step form, drafts, private evidence and submission confirmation</td></tr>
+<tr><td>Services</td><td>/:city/renovation and /:city/renovation/:slug</td><td>Provider directory, services/portfolio and quote form</td></tr>
+<tr><td>Finance</td><td>/:city/tools/mortgage</td><td>Principal/down-payment inputs, annual rate, years, repayment method and monthly/total schedule</td></tr>
+<tr><td>User area</td><td>/account, /account/favorites, /account/searches, /account/viewings, /account/messages</td><td>Session gate, profile and personal collections, empty/error/loading states</td></tr>
+<tr><td>Operations</td><td>/ops/agency, /ops/listings, /ops/leads, /ops/developments, /ops/management, /ops/support, /ops/admin</td><td>Role-specific navigation, server permission gates, table/detail/edit flows and audit history</td></tr>
+<tr><td>Tenant</td><td>/tenant/leases, /tenant/charges, /tenant/maintenance</td><td>Linked records only, balance display, request form and status timeline</td></tr>
+</table></div>
+<p>Never silently rename draft routes in generated tests. Slugs are descriptive; opaque IDs are canonical. Changed slugs redirect without exposing private resources. Invalid or unavailable listings show a real unavailable screen with alternatives, not an endless loader. Return 404/410 as appropriate and remove withdrawn pages from sitemap. Back navigation restores filters and scroll position without double-counting views.</p>
+<h3 id="6-1-public-discovery-and-details">6.1 Public discovery and details</h3>
+<p>One reusable listing-card primitive with segment variants: media, optional availability/tour tag, title, beds/living rooms/area/orientation, location, two or three concise features, total or periodic price, and unit-price secondary value when relevant. Confirm the final ordering from reference captures. Loading skeletons reserve image/price space. Whole-card navigation is accessible without nested interactive anchors; favorites use a separate labeled button. Missing image uses a deliberate fallback; missing price uses &#x27;Price on request&#x27;, not zero. Out-of-date or sold/leased cards cannot retain an active book action.</p>
+<p>Filter sheets use a single draft selection state; Apply updates URL and result request atomically, Cancel preserves applied state and Reset resets draft only until applied. Selected facets persist on refresh and browser Back. Price presets come from market configuration. Map pins use coarse public positions, clustering and synchronized selection; exact private unit coordinates never leak. Recommendations start with documented deterministic city/category/availability rules, freshness and curated boosts; no opaque AI dependency. Rankings compute from aggregate event definitions and anti-abuse dedupe, with published period and sponsorship labels. Never invent public agent success counts or community prices.</p>
+<p>Details render gallery with swipe and keyboard controls, count, zoom/lightbox, floor-plan tab, overview, attributes, description, approximate map and nearby facilities, community link, eligible agent contacts, similar listings and sticky primary contact actions if confirmed by reference. Virtual tour is lazy-loaded only for approved scenes. Show area basis and data timestamp; historic values and unit-price calculations use the correct money/area basis. A photo measurement never supersedes recorded legal area.</p>
+<h3 id="6-2-agents-and-agencies">6.2 Agents and agencies</h3>
+<p>Agent onboarding collects public profile and private credential data separately. Admin validates credentials and expiry before verification display. Agency manager invites staff and assigns roles; agent cannot self-approve or edit another agency. Assignment changes affect listing permissions and lead visibility immediately. CRM supports filtered queues, detail/timeline, contact status, notes, ownership reassignment and export of permitted fields. Viewing calendar handles availability, travel buffers as configurable policy, cancellation, reschedule and duplicate reservation prevention. Public agent statistics derive from approved events, with definitions and an &#x27;unverified&#x27; fallback rather than fabricated claims.</p>
+<h3 id="6-3-owners-and-property-inventory">6.3 Owners and property inventory</h3>
+<p>Sell/rent submission has location/community, property facts, proposed price/terms, media, contact verification and final review. Save per-step drafts and preserve them on login return. Private ownership evidence is optional in draft and required only by configured publication policy. Owner consents to public fields, selects permitted contact visibility, and sees assigned agent/review status. Manager/agent can prepare listing revisions; core facts cannot change on public pages before moderation when review is required. Listing expiry, renew, pause and sold/leased transitions invalidate feeds and search. Draft content and internal rejection notes are never indexed.</p>
+<h3 id="6-4-development-and-commercial-inventory">6.4 Development and commercial inventory</h3>
+<p>Developments distinguish project, phase, building, floor-plan type and offered unit inventory. A development card may report a range per area or a starting total price, so price basis is explicit; no multiplying an unknown area to invent a total. Show unavailable/sold-out floor plans and inventory timestamp. Developer permissions are scoped. Commercial offers reuse identity/media/location infrastructure but have their own criteria and price basis, including area/day/month/year where configured. Do not sum a monthly rent listing with yearly rent results without explicit normalization and visible billing-period labels.</p>
+<h3 id="6-5-property-management-extension">6.5 Property management extension</h3>
+<p>Build a separate operations and tenant experience over the same canonical units. Management grants establish which organization can manage which units and owner data. Lease creation, activation, renewal and ending have validated dates, rent periods and deposit terms. Monthly charge generation is idempotent by lease/period/type and excludes out-of-term leases. Payment records support partial payments, allocation, overpayment credits and reversal; amounts remain exact decimals, currencies match, allocations cannot exceed available amounts. Deposits stay distinct from rent revenue and have a movement history.</p>
+<p>Initial scope records payment evidence and balances; it does not hold funds, transfer money or claim certified trust accounting. Record who entered payment evidence and its source. Basic statements report charges, allocations, payments, deposits and reversals separately; reconcile totals to source entries. Add full accounting/export integration only through a separately defined financial contract. Maintenance supports photos, assignment, urgency, status and tenant-safe comments. Owner statement and tenant statement access are different grants; downloading another lease&#x27;s document must fail.</p>
+<h3 id="6-6-communications-and-service-requests">6.6 Communications and service requests</h3>
+<p>An inquiry is a persisted lead linked to listing/development/provider and its assigned destination. Deduplicate network retries with idempotency; guest inquiries require validated contact and anti-abuse limits. Booking cannot succeed for a withdrawn listing. Persist messages before acknowledging; support client-generated message IDs, read cursors, reconnect replay and attachment authorization. Escape message text, prohibit executable HTML, and rate-limit sends. Automated notifications are templated in English and honor opt-outs, except strictly necessary transactional events. Support cases can be assigned, escalated and resolved; private support notes stay out of public chat.</p>
+<h3 id="6-7-mortgage-calculation">6.7 Mortgage calculation</h3>
+<p>Offer equal-payment amortization and equal-principal methods as proposed baseline methods; confirm reference calculator inputs during visual audit. For equal payments with principal P, monthly rate r = annual nominal rate/12 and n months, M = P*r/(1-(1+r)^(-n)); when r=0, M=P/n. Compute schedules with decimal arithmetic, disclose nominal-rate assumption and rounding, and adjust final payment to clear principal. Down payment cannot exceed property price; principal and term must be positive; rates cannot be negative. Show monthly payment, total interest, total repaid and downloadable schedule. Market-specific tax and lender fees default to excluded and display that fact; results are estimates, not lender approval. Fixture: P=120000, rate=0, term=120 months yields 1000 per month, zero interest and zero closing balance.</p>
+<h2 id="7-security-and-operational-quality">7 Security and operational quality</h2>
+<p>Minimum release gates are proposed engineering targets, not benchmark claims. Protect session cookies with CSRF/origin validation on mutations, rotate sessions after authentication, restrict redirect targets, and test logout and revoked membership behavior. Require MFA for platform staff; role grants are audited. Rate-limit login handoffs, inquiries, uploads, downloads and message sends with consistent 429 feedback. Use CSP, safe escaping, MIME validation, request size limits, parameterized queries and private buckets. Scan dependencies/secrets; resolve exploitable high/critical findings before release. Logs must redact tokens, private contacts and document URLs. No default administrator password is committed or displayed; bootstrap through a one-time invitation/secret mechanism.</p>
+<p>Accessible interface: WCAG 2.2 AA target, keyboard-reachable controls, visible focus, semantic labels, modal focus return, 44-pixel touch targets, contrast and reduced-motion handling. Test translated overflow at 320-pixel width. Color is never the only status indicator.</p>
+<p>Performance targets: on a declared production-like fixture of 100000 listings and 1000 concurrent browsing sessions, document the hardware and request mix; public search p95 under 500 ms, detail API p95 under 300 ms, errors below 1 percent during a 10-minute test after warmup. Use a smaller 100-session smoke gate during development. Browser LCP &lt;=2.5 s, INP &lt;=200 ms and CLS &lt;=0.1 are launch targets on representative mobile devices; lab reports and later field monitoring are separate evidence. No claim of meeting a target without a recorded run. Resize images, lazy-load noncritical media, SSR meaningful public content, cache public reads and inspect query plans.</p>
+<p>SEO: unique English metadata, canonical URLs, accurate structured data where appropriate, city/category/detail sitemap, robots exclusion for account/ops/tenant and controlled indexing of filter permutations. No indexing of private data or infinite faceted URLs. Analytics events are defined and consent-aware: listing_impression, listing_view, favorite_added, inquiry_submitted, viewing_requested and quote_requested, deduped by documented keys. Do not record typed private messages or identity documents in analytics.</p>
+<p>Logs/metrics: request correlation, API latency/error rate, outbox age, queue retries/dead letters, search lag, media failures, email delivery and database resource usage. Distinguish liveness from readiness; production readiness must fail when required migrations/database access are unavailable. Alert on outbox lag above 60 seconds sustained for 5 minutes and repeated delivery/media failures; tune from operations data.</p>
+<p>Proposed backup target: database point-in-time recovery with &lt;=15-minute RPO and &lt;=4-hour RTO, versioned object storage, encrypted off-host backups and quarterly restore drills. Keycloak realm configuration and identity database need their own protected backups. Cache and search can be rebuilt. Until WAL archiving is configured and recovery verified, do not claim 15-minute RPO. Deploy with immutable image digests, expand/contract migrations, preflight checks and a database-aware rollback plan. Never promise that restoring a previous app image safely reverses arbitrary schema changes.</p>
+<h2 id="8-open-source-findings-and-reuse-decision">8 Open source findings and reuse decision</h2>
+<p>Research date: 4 October 2026. Repository descriptions and license files were inspected using public sources. No candidate was cloned, built, security-audited or load-tested during this specification task. &#x27;Reliable&#x27; adoption therefore means established component candidates plus a required compatibility/security evaluation, not certification of complete starter applications. Recheck the selected commit and license before importing code.</p>
+<div class="tablewrap"><table>
+<tr><th>Project</th><th>Observed license/status</th><th>Decision and use</th></tr>
+<tr><td><a href="https://github.com/vercel/next.js">https://github.com/vercel/next.js</a></td><td>MIT repository</td><td>Adopt for consumer and operations apps; preserve custom reference components [S04]</td></tr>
+<tr><td><a href="https://github.com/nestjs/nest">https://github.com/nestjs/nest</a></td><td>MIT repository</td><td>Adopt for modular API; verify Fastify adapter compatibility [S05]</td></tr>
+<tr><td><a href="https://github.com/keycloak/keycloak">https://github.com/keycloak/keycloak</a></td><td>Apache 2.0</td><td>Adopt identity; business roles/grants remain domain-controlled [S06]</td></tr>
+<tr><td><a href="https://github.com/drizzle-team/drizzle-orm">https://github.com/drizzle-team/drizzle-orm</a></td><td>ORM Apache 2.0; toolkit package MIT</td><td>Adopt SQL layer; verify PostGIS/RLS SQL migrations and pin separately [S07]</td></tr>
+<tr><td><a href="https://github.com/meilisearch/meilisearch">https://github.com/meilisearch/meilisearch</a></td><td>Community MIT; Enterprise has separate restricted terms</td><td>Adopt CE only; no dependence on enterprise-only sharding/streaming snapshots [S08]</td></tr>
+<tr><td><a href="https://github.com/maplibre/maplibre-gl-js">https://github.com/maplibre/maplibre-gl-js</a></td><td>BSD 3 Clause</td><td>Adopt map renderer; separately supply tiles and geocoder [S09]</td></tr>
+<tr><td><a href="https://github.com/taskforcesh/bullmq">https://github.com/taskforcesh/bullmq</a></td><td>MIT core</td><td>Adopt queue core only after compatibility/retry tests; paid Pro features unnecessary [S10]</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey">https://github.com/valkey-io/valkey</a></td><td>BSD 3 Clause core with bundled notices</td><td>Adopt cache/queue service if pinned queue tests pass [S11]</td></tr>
+<tr><td><a href="https://github.com/mpetroff/pannellum">https://github.com/mpetroff/pannellum</a></td><td>MIT</td><td>Adopt web panorama viewer; actual scenes/media supplied by listing providers [S12]</td></tr>
+<tr><td><a href="https://github.com/lovell/sharp">https://github.com/lovell/sharp</a></td><td>Apache 2.0</td><td>Adopt image processing; preserve transitive libvips notices [S13]</td></tr>
+<tr><td><a href="https://github.com/microsoft/playwright">https://github.com/microsoft/playwright</a></td><td>Apache 2.0</td><td>Adopt browser E2E and screenshot regression tooling [S14]</td></tr>
+<tr><td><a href="https://github.com/payloadcms/payload">https://github.com/payloadcms/payload</a></td><td>MIT</td><td>Optional editorial CMS if required; not the inventory/lease source of truth [S15]</td></tr>
+<tr><td><a href="https://github.com/strapi/strapi">https://github.com/strapi/strapi</a></td><td>Community MIT with separate enterprise areas</td><td>Alternative editorial CMS; do not install both Strapi and Payload [S16]</td></tr>
+<tr><td><a href="https://github.com/auxcoder/lara-real-state">https://github.com/auxcoder/lara-real-state</a></td><td>README says MIT; small starter using Laravel 10</td><td>Do not adopt as core: stack mismatch and maintenance/security evaluation still needed [S17]</td></tr>
+<tr><td><a href="https://github.com/jwh3times/LeaseBook">https://github.com/jwh3times/LeaseBook</a></td><td>AGPL 3.0; README says prerelease, not production deployed</td><td>Evaluate concepts only; not a production foundation or copy source for this default stack [S18]</td></tr>
+<tr><td><a href="https://github.com/microrealestate/microrealestate">https://github.com/microrealestate/microrealestate</a></td><td>Current Sustainable Use License v2, commercial use restricted</td><td>Exclude from default commercial build; old descriptions of permissive licensing are insufficient [S19]</td></tr>
+<tr><td><a href="https://github.com/directus/directus">https://github.com/directus/directus</a></td><td>Current Monospace Sustainable Core License, source available</td><td>Exclude from default permissive stack; licensing requires separate evaluation [S20]</td></tr>
+</table></div>
+<p>Additional component shortlist: Zod for schema validation [S21], React Hook Form for form state [S22], TanStack Query for server state [S23]. During F02 also evaluate Embla for galleries, date-fns/date-fns-tz for calendars, decimal.js for finance, Lucide or original SVG icons, axe-core for accessibility, Testcontainers for integration services, k6 for load tests, and AWS SDK S3 support. These supplementary candidates are implementation research tasks; this document does not claim their current versions/licenses were verified. Do not add dependency alternatives without a concrete need.</p>
+<p>PostGIS is a separate GPL-licensed database extension candidate [S24]; include its and other service/container license obligations in the third-party register. Object storage may use a managed S3-compatible provider; do not silently install an unreviewed storage server because it is described as open source. CMS is optional and disabled initially: build a small content module until an editorial need justifies a second backend.</p>
+<p>The search did not establish a maintained, audited, complete open source equivalent to this benchmark. A custom domain implementation over the selected components gives clearer control over reference UI fidelity, agency permissions, moderation, inventory and finance integrity than adopting an unverified marketplace clone.</p>
+<h2 id="9-implementation-ordering-and-continuous-execution">9 Implementation ordering and continuous execution</h2>
+<p>Milestones are ordered by dependencies rather than business-category numbering alone:</p>
+<p>1. Architecture decisions, dependency/license evaluation, repository, containers, database, identity, contracts, outbox, test harness and seed data.</p>
+<p>2. Geography, canonical inventory, review and media; build a first complete resale browse -&gt; inquiry flow over real data.</p>
+<p>3. Measured shared UI, home, users, resale discovery, filters, detail and maps.</p>
+<p>4. Rentals, developments, commercial, communities, owner onboarding and agency workflows.</p>
+<p>5. CRM, viewings, messaging, renovation, tools, support and administration.</p>
+<p>6. Requested property-management extension including tenant workflows and money-record integrity.</p>
+<p>7. English visual audit, accessibility, end-to-end flows, performance/security checks and staging deployment/restore/rollback evidence.</p>
+<p>TASKS.json is authoritative for small task IDs, prerequisites and minimum tests. TASKS.md is the readable copy. Each task is one independently testable slice, normally 1 to 4 hours after foundations exist; estimates are planning units, not a promised project duration. Split tasks that exceed a working day into child tasks retaining the parent acceptance criteria. Do not replace specific minimum tests with global coverage targets.</p>
+<p>Read AGENTS.md and CODEX_START.md at session start. Pick the earliest todo task whose prerequisites are done; task category alone does not determine readiness. Implement its API/data/UI as applicable, run only its required targeted tests plus relevant regression checks, then save evidence and continue. Avoid stopping after every feature to ask whether to proceed. A skipped test, UI stub, fake success response or TODO in a required flow cannot satisfy done.</p>
+<h3 id="9-1-minimum-test-policy">9.1 Minimum test policy</h3>
+<p>Every functional task gets at least one automated success assertion and one relevant failure/boundary assertion. Every permission-bearing task also gets an unauthorized or cross-organization integration assertion against the actual application/database role. Every new visible interaction gets one browser or component interaction test; every screen gets loading/empty/error handling and visual evidence at mobile width. Pure document/configuration tasks use a reproducible contract validation instead of meaningless unit tests. Finance and booking concurrency add invariant/race tests because a happy path cannot establish correctness.</p>
+<p>Use fixed clocks, seeded deterministic fixtures and independent users/organizations. Database integrations exercise migrations on PostgreSQL/PostGIS, not mocked in-memory storage. Queue tests exercise real pinned service containers. Unit tests are reserved for state transitions, parsing, formulas and transformations. E2E runs local integrated services, not benchmark scraping. Provider adapters use protocol fixtures plus a staging connectivity check for configured production providers. Do not depend on paid external calls in ordinary CI.</p>
+<p>Proposed root scripts that Codex must implement: pnpm lint, pnpm typecheck, pnpm build, pnpm test:unit -- &lt;test-path&gt;, pnpm test:integration -- &lt;test-path&gt;, pnpm test:e2e -- --grep &lt;task-id&gt;, pnpm test:visual -- --grep &lt;screen-id&gt;, pnpm task:validate and pnpm check:release. Commands are a target interface, not commands proven to exist in this handoff. Avoid treating command exit zero as sufficient: record asserted business outcomes. PR CI runs affected tests and schema/contract checks; milestone CI runs integrated critical journeys; release CI runs the full declared gate once after final changes.</p>
+<h3 id="9-2-resume-and-blocker-behavior">9.2 Resume and blocker behavior</h3>
+<p>For a task set in_progress, checkpoint before long tool calls. On completion record changed files, exact commands/exit results, test assertions, screenshot paths, commit SHA and any remaining limitation under evidence/tasks/ID.md. Update TASKS.json, its readable copy and PROGRESS.md in the same change. Preserve unrelated user edits and never reset a repository to manufacture a clean state.</p>
+<p>On failure, diagnose and fix before broadening work. On a true external blocker mark only affected tasks blocked, state exact missing input and continue independent ready tasks. Reference access cannot be invented; provider credentials cannot be fabricated; production data cannot be substituted with synthetic fixtures without clear demo labeling. The coding runtime has context/session limits: &#x27;continuous&#x27; means continuing through available ready work and writing a reliable checkpoint for automatic or manual resumption, not promising indefinite background execution. This package specifies development; it does not start an automation or deploy a live platform.</p>
+<h2 id="10-definition-of-release-completion">10 Definition of release completion</h2>
+<p>Marketplace release requires all marketplace tasks done, each observed/retrieved requirement mapped to evidence, all V screens either verified or explicitly accepted as a documented deviation, all critical journeys passing, and no known critical/high exploitable security defect. Exact benchmark parity cannot be claimed while unverified screen states remain. Management release separately requires its role-isolation, charge-generation, allocation/reversal/deposit and statement reconciliation evidence.</p>
+<p>Required complete journeys: anonymous resale filter/detail -&gt; sign-in -&gt; favorite; owner draft -&gt; private evidence -&gt; submit -&gt; moderator approval -&gt; public listing; rental inquiry -&gt; agent contact -&gt; confirmed viewing -&gt; cancellation/reschedule; developer floor-plan publication -&gt; buyer inquiry; agency membership -&gt; assignment -&gt; scoped CRM; commercial inquiry; renovation quote; mortgage schedule; manager lease -&gt; charge -&gt; payment allocation -&gt; tenant statement -&gt; reversal; tenant maintenance -&gt; manager resolution; complaint -&gt; support resolution; search withdrawal and queue replay; restore and application rollback.</p>
+<p>Operations completion includes working HTTPS staging with synthetic fixtures, production-ready container configuration, environment reference, seed/backup/import instructions, verified restore and rollback reports, and a provider/hostname readiness checklist. Production launch needs actual inventory, authorized domain/provider access and launch configuration. Do all reversible setup and verification before reporting these specific external inputs; do not ask for routine implementation approval. Do not claim production completion from a local demo.</p>
+<h2 id="11-sources">11 Sources</h2>
+<p>Sources were read on 4 October 2026. Links identify primary repositories or first-party pages. Research statements are limited to what those pages exposed. Business rules, performance targets and implementation task design above are engineering proposals.</p>
+<ul>
+<li>S01 <a href="https://m.ke.com/bj/">https://m.ke.com/bj/</a> — direct browser homepage inspection and public retrieval.</li>
+<li>S02 <a href="https://m.ke.com/bj/ershoufang">https://m.ke.com/bj/ershoufang</a> — public retrieval of resale filter vocabulary; browser CAPTCHA blocked visual inspection.</li>
+<li>S03 <a href="https://m.ke.com/bj/zhuanti/protocol">https://m.ke.com/bj/zhuanti/protocol</a> — first-party public-data and owner-submission capability descriptions.</li>
+<li>S04 <a href="https://github.com/vercel/next.js">https://github.com/vercel/next.js</a></li>
+<li>S05 <a href="https://github.com/nestjs/nest">https://github.com/nestjs/nest</a> and <a href="https://github.com/fastify/fastify">https://github.com/fastify/fastify</a></li>
+<li>S06 <a href="https://github.com/keycloak/keycloak">https://github.com/keycloak/keycloak</a> and <a href="https://www.keycloak.org/">https://www.keycloak.org/</a></li>
+<li>S07 <a href="https://github.com/drizzle-team/drizzle-orm">https://github.com/drizzle-team/drizzle-orm</a> and repository package license manifests</li>
+<li>S08 <a href="https://github.com/meilisearch/meilisearch">https://github.com/meilisearch/meilisearch</a> — Community and Enterprise licensing section.</li>
+<li>S09 <a href="https://github.com/maplibre/maplibre-gl-js">https://github.com/maplibre/maplibre-gl-js</a></li>
+<li>S10 <a href="https://github.com/taskforcesh/bullmq/blob/master/LICENSE">https://github.com/taskforcesh/bullmq/blob/master/LICENSE</a> and <a href="https://docs.bullmq.io/guide/redis-tm-compatibility/">https://docs.bullmq.io/guide/redis-tm-compatibility/</a></li>
+<li>S11 <a href="https://github.com/valkey-io/valkey/blob/unstable/COPYING">https://github.com/valkey-io/valkey/blob/unstable/COPYING</a></li>
+<li>S12 <a href="https://github.com/mpetroff/pannellum">https://github.com/mpetroff/pannellum</a></li>
+<li>S13 <a href="https://github.com/lovell/sharp">https://github.com/lovell/sharp</a></li>
+<li>S14 <a href="https://github.com/microsoft/playwright">https://github.com/microsoft/playwright</a></li>
+<li>S15 <a href="https://github.com/payloadcms/payload">https://github.com/payloadcms/payload</a></li>
+<li>S16 <a href="https://github.com/strapi/strapi/blob/develop/LICENSE">https://github.com/strapi/strapi/blob/develop/LICENSE</a></li>
+<li>S17 <a href="https://github.com/auxcoder/lara-real-state">https://github.com/auxcoder/lara-real-state</a></li>
+<li>S18 <a href="https://github.com/jwh3times/LeaseBook">https://github.com/jwh3times/LeaseBook</a> — status, architecture and license sections.</li>
+<li>S19 <a href="https://github.com/microrealestate/microrealestate">https://github.com/microrealestate/microrealestate</a> — current license section.</li>
+<li>S20 <a href="https://github.com/directus/directus/blob/main/directus/license">https://github.com/directus/directus/blob/main/directus/license</a></li>
+<li>S21 <a href="https://github.com/colinhacks/zod">https://github.com/colinhacks/zod</a></li>
+<li>S22 <a href="https://github.com/react-hook-form/react-hook-form">https://github.com/react-hook-form/react-hook-form</a></li>
+<li>S23 <a href="https://github.com/TanStack/query">https://github.com/TanStack/query</a></li>
+<li>S24 <a href="https://github.com/postgis/postgis">https://github.com/postgis/postgis</a></li>
+</ul><hr><h1 id="implementation-tasks">Implementation tasks</h1>
+<p>120 small tasks grouped by business category. All tasks start todo. Tests below are requirements to implement, not tests already run. The detailed architecture and API rules live in TECHNICAL_SPEC.md.</p>
+<h2 id="architecture-and-foundations">Architecture and foundations</h2>
+<h3 id="f01-record-architecture-and-boundaries">F01 Record architecture and boundaries</h3>
+<p>Dependencies: none | Scope: marketplace | Status: todo</p>
+<p>Create ADRs for modular monolith, BFF sessions, public/private projections, identity and database ownership.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Architecture matches specification</li>
+<li>Module ownership and integration ports documented</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Contract check: every required module has one owner</li>
+<li>Boundary check rejects an undocumented cross-module table mutation</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F01.md</code>. Tag browser tests <code>F01</code>.</p>
+<h3 id="f02-pin-compatible-dependencies-and-licenses">F02 Pin compatible dependencies and licenses</h3>
+<p>Dependencies: F01 | Scope: marketplace | Status: todo</p>
+<p>Inspect official release requirements and licenses; pin Node LTS, package manager, packages and service image digests. Evaluate shortlist; record SBOM input.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Lockfile and compatibility matrix committed</li>
+<li>Restricted components excluded or explicitly licensed</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Frozen install and build succeeds on declared runtime</li>
+<li>License manifest identifies each pinned direct package and service; missing license fails</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F02.md</code>. Tag browser tests <code>F02</code>.</p>
+<h3 id="f03-initialize-monorepo-and-check-scripts">F03 Initialize monorepo and check scripts</h3>
+<p>Dependencies: F02 | Scope: marketplace | Status: todo</p>
+<p>Create web, ops, api, worker and shared packages with lint, typecheck, build and task validator scripts.</p>
+<p>Acceptance:</p>
+<ul>
+<li>All applications build</li>
+<li>No app imports another app internals</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Build all workspaces</li>
+<li>Architecture import check rejects prohibited dependency</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F03.md</code>. Tag browser tests <code>F03</code>.</p>
+<h3 id="f04-start-isolated-development-services">F04 Start isolated development services</h3>
+<p>Dependencies: F03 | Scope: marketplace | Status: todo</p>
+<p>Compose PostgreSQL/PostGIS, identity, search, cache and local object store with persistent volumes and health checks.</p>
+<p>Acceptance:</p>
+<ul>
+<li>One documented command boots dependencies</li>
+<li>No admin service binds publicly by default</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Boot and wait for every dependency readiness</li>
+<li>Missing required environment variable produces a clear failure</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F04.md</code>. Tag browser tests <code>F04</code>.</p>
+<h3 id="f05-create-database-migrations-and-roles">F05 Create database migrations and roles</h3>
+<p>Dependencies: F04 | Scope: marketplace | Status: todo</p>
+<p>Create application, migration and read roles; base users/organizations schema, PostGIS and migration journal.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Fresh database applies migrations</li>
+<li>Runtime cannot alter schemas</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Apply migrations to clean PostgreSQL and query tables</li>
+<li>Runtime ALTER TABLE fails</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F05.md</code>. Tag browser tests <code>F05</code>.</p>
+<h3 id="f06-implement-identity-and-server-sessions">F06 Implement identity and server sessions</h3>
+<p>Dependencies: F05 | Scope: marketplace | Status: todo</p>
+<p>Integrate OIDC PKCE with server session store, callback state/nonce, safe redirects, logout and staff MFA policy.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Login returns to permitted route</li>
+<li>Tokens unavailable to browser JavaScript</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Integrated login/logout flow with test Keycloak</li>
+<li>Invalid state and external redirect rejected; expired session denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F06.md</code>. Tag browser tests <code>F06</code>.</p>
+<h3 id="f07-implement-role-and-organization-authorization">F07 Implement role and organization authorization</h3>
+<p>Dependencies: F06 | Scope: marketplace | Status: todo</p>
+<p>Create memberships, permissions and resource guards; transactional RLS context on private tables.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Deny-by-default checks run on every private operation</li>
+<li>Public serialization explicit</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>User A cannot read organization B private row</li>
+<li>Reuse pooled connection across organizations and assert no context leak</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F07.md</code>. Tag browser tests <code>F07</code>.</p>
+<h3 id="f08-publish-api-contracts-and-generated-client">F08 Publish API contracts and generated client</h3>
+<p>Dependencies: F07 | Scope: marketplace | Status: todo</p>
+<p>Implement errors, validation, OpenAPI, decimal-string conventions, pagination and SDK generation.</p>
+<p>Acceptance:</p>
+<ul>
+<li>One canonical API client</li>
+<li>Request IDs and stable errors</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Generated client contract matches API</li>
+<li>Invalid range returns field error without stack or private data</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F08.md</code>. Tag browser tests <code>F08</code>.</p>
+<h3 id="f09-build-outbox-and-idempotency-infrastructure">F09 Build outbox and idempotency infrastructure</h3>
+<p>Dependencies: F08 | Scope: marketplace | Status: todo</p>
+<p>Commit aggregate event with transaction; dispatcher and workers dedupe by event/version. Verify BullMQ/Valkey behavior.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Retry cannot repeat business effect</li>
+<li>Old events do not overwrite new projections</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Real queue replay and crash/retry leaves one effect</li>
+<li>Same idempotency key with different payload returns conflict</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F09.md</code>. Tag browser tests <code>F09</code>.</p>
+<h3 id="f10-create-deterministic-integrated-test-harness">F10 Create deterministic integrated test harness</h3>
+<p>Dependencies: F09 | Scope: marketplace | Status: todo</p>
+<p>Use real PostgreSQL/identity/search/cache fixtures, fixed clocks, two organizations and role personas; seed reset isolation.</p>
+<p>Acceptance:</p>
+<ul>
+<li>No integration suite depends on benchmark site</li>
+<li>Services reliably reset per run</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Run same fixture twice with identical outcomes</li>
+<li>Test intentionally forbidden cross-org request returns expected denial</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F10.md</code>. Tag browser tests <code>F10</code>.</p>
+<h3 id="f11-prepare-representative-english-fixture-contracts">F11 Prepare representative English fixture contracts</h3>
+<p>Dependencies: F10 | Scope: marketplace | Status: todo</p>
+<p>Create deterministic fixture files/generators for synthetic Beijing geography, 60 resale, 30 rentals, 10 commercial listings, 8 developments, agents, owners and media. Persist each domain only after its schema task exists.</p>
+<p>Acceptance:</p>
+<ul>
+<li>No real benchmark people or private data</li>
+<li>Edge fixtures include empty price, sold, missing image and unauthorized organization</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Generate fixtures twice with identical IDs/content</li>
+<li>All visible fixture text is English except explicit searchable aliases; format/schema validation passes</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F11.md</code>. Tag browser tests <code>F11</code>.</p>
+<h3 id="f12-add-media-quarantine-and-signed-uploads">F12 Add media quarantine and signed uploads</h3>
+<p>Dependencies: F11 | Scope: marketplace | Status: todo</p>
+<p>Implement upload intents/finalization, MIME decoder, scanning interface, EXIF removal, variants, rights and private document download.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Public assets pass validation</li>
+<li>Private originals never share a public bucket policy</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Valid image becomes correct variants</li>
+<li>Spoofed MIME/oversized payload rejected; unauthorized document URL denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F12.md</code>. Tag browser tests <code>F12</code>.</p>
+<h3 id="f13-add-logs-readiness-and-redaction">F13 Add logs readiness and redaction</h3>
+<p>Dependencies: F12 | Scope: marketplace | Status: todo</p>
+<p>Request tracing, separate live/ready endpoints, redaction and queue/outbox metrics.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Readiness checks required database and migrations</li>
+<li>Logs exclude secrets</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Healthy stack readiness succeeds</li>
+<li>Database outage fails readiness; token/email fixture is redacted</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F13.md</code>. Tag browser tests <code>F13</code>.</p>
+<h3 id="f14-create-ci-contract">F14 Create CI contract</h3>
+<p>Dependencies: F13 | Scope: marketplace | Status: todo</p>
+<p>CI frozen install, lint, typecheck, build, task validation and targeted integrated checks; retain failure artifacts.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Failing business test blocks completion</li>
+<li>No automatic baseline updates</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Intentional failing test blocks CI</li>
+<li>Clean seed and affected tests pass with uploaded report</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/F14.md</code>. Tag browser tests <code>F14</code>.</p>
+<h2 id="geography-and-communities">Geography and communities</h2>
+<h3 id="g01-implement-geography-hierarchy">G01 Implement geography hierarchy</h3>
+<p>Dependencies: F14 | Scope: marketplace | Status: todo</p>
+<p>CRUD city, district, neighborhood and transit line/station with English aliases and market settings.</p>
+<p>Acceptance:</p>
+<ul>
+<li>City selection scopes descendants</li>
+<li>Slugs stable</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>District endpoint returns only selected city</li>
+<li>Cross-city parent mismatch rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/G01.md</code>. Tag browser tests <code>G01</code>.</p>
+<h3 id="g02-create-community-and-building-records">G02 Create community and building records</h3>
+<p>Dependencies: G01, F14 | Scope: marketplace | Status: todo</p>
+<p>Create communities, buildings and approximate public positions; retain private unit addresses separately.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Community links resolve</li>
+<li>Public DTO omits private fields</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Read known community/buildings</li>
+<li>Invalid parent rejected and private-address sentinel absent</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/G02.md</code>. Tag browser tests <code>G02</code>.</p>
+<h3 id="g03-build-city-selector">G03 Build city selector</h3>
+<p>Dependencies: G02, F14 | Scope: marketplace | Status: todo</p>
+<p>Search cities, select and persist active city; change category route and clear incompatible filters.</p>
+<p>Acceptance:</p>
+<ul>
+<li>URL city authoritative</li>
+<li>Previous city district cleared</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Select city then refresh preserves selection</li>
+<li>Unknown city renders usable 404 and no stale filters</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/G03.md</code>. Tag browser tests <code>G03</code>.</p>
+<h3 id="g04-build-community-discovery">G04 Build community discovery</h3>
+<p>Dependencies: G03, F14 | Scope: marketplace | Status: todo</p>
+<p>Community text search, district filter, cards, pagination and empty states.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Results respect city/district</li>
+<li>Cards navigate to correct community</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Browser search returns seeded target</li>
+<li>Empty query results show clear reset option</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/G04.md</code>. Tag browser tests <code>G04</code>.</p>
+<h3 id="g05-build-community-detail">G05 Build community detail</h3>
+<p>Dependencies: G04, F14 | Scope: marketplace | Status: todo</p>
+<p>Overview, amenities, buildings, sale/rent tabs and dated statistics calculated from permitted records.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Counts reconcile to eligible inventory</li>
+<li>Unknown statistics show unavailable</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Tab switch shows correct transaction listings</li>
+<li>No private unit or tenant data in HTML/network</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/G05.md</code>. Tag browser tests <code>G05</code>.</p>
+<h2 id="property-inventory-and-moderation">Property inventory and moderation</h2>
+<h3 id="i01-create-canonical-unit-and-listing-schema">I01 Create canonical unit and listing schema</h3>
+<p>Dependencies: F14, G02 | Scope: marketplace | Status: todo</p>
+<p>Implement unit, listing and segment-specific tables with decimal fields, geography and organization grants. Load the corresponding F11 fixtures now that their tables exist; later domain tasks activate their own fixture subsets.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Unit reused across sale/rent/management</li>
+<li>Money and area constraints enforced</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Create/retrieve a valid sale listing and seed twice without duplicates</li>
+<li>Negative area and organization-parent mismatch rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/I01.md</code>. Tag browser tests <code>I01</code>.</p>
+<h3 id="i02-implement-draft-listing-editing">I02 Implement draft listing editing</h3>
+<p>Dependencies: I01, F14, G02 | Scope: marketplace | Status: todo</p>
+<p>Agent/owner scoped draft creation and edits using version checks.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Persist draft after refresh</li>
+<li>Stale concurrent edits cannot overwrite</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Authorized agent saves and reads draft</li>
+<li>Other agency denied and stale version returns 409</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/I02.md</code>. Tag browser tests <code>I02</code>.</p>
+<h3 id="i03-implement-listing-workflow-service">I03 Implement listing workflow service</h3>
+<p>Dependencies: I02, F14, G02 | Scope: marketplace | Status: todo</p>
+<p>Central state machine for submit/review/publish/pause/sold/leased/expire with audit and outbox.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Incomplete listing cannot publish</li>
+<li>Terminal state cannot be booked</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Draft-to-published valid transition</li>
+<li>Invalid transition denied and audit/outbox remains atomic</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/I03.md</code>. Tag browser tests <code>I03</code>.</p>
+<h3 id="i04-create-moderation-queue-and-decisions">I04 Create moderation queue and decisions</h3>
+<p>Dependencies: I03, F14, G02 | Scope: marketplace | Status: todo</p>
+<p>Moderator lists submissions, views redacted/private evidence by grant and records approve/reject reasons.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Agent cannot approve own listing</li>
+<li>Decisions audited</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Moderator approves valid submission</li>
+<li>Agent approval request denied; reject requires reason</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/I04.md</code>. Tag browser tests <code>I04</code>.</p>
+<h3 id="i05-protect-published-revisions">I05 Protect published revisions</h3>
+<p>Dependencies: I04, F14, G02 | Scope: marketplace | Status: todo</p>
+<p>Pending edits preserve current public revision until approval, then atomically invalidate projections.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Unapproved core changes remain private</li>
+<li>Approved version visible consistently</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Price edit stays pending then publishes after review</li>
+<li>Rejected revision leaves original public price</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/I05.md</code>. Tag browser tests <code>I05</code>.</p>
+<h3 id="i06-create-price-and-status-history">I06 Create price and status history</h3>
+<p>Dependencies: I05, F14, G02 | Scope: marketplace | Status: todo</p>
+<p>Append changes with actor/reason/time, public subset and retention rules.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Historic values immutable</li>
+<li>Public history excludes private notes</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Approved price change creates one history event</li>
+<li>Editing past event denied; public notes sentinel absent</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/I06.md</code>. Tag browser tests <code>I06</code>.</p>
+<h3 id="i07-create-inventory-workbench">I07 Create inventory workbench</h3>
+<p>Dependencies: I06, F14, G02 | Scope: marketplace | Status: todo</p>
+<p>Ops list, filters, create/detail/edit forms, media ordering and status actions.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Role-specific actions work end to end</li>
+<li>All form errors visible</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Agent creates/uploads/submits draft via browser</li>
+<li>Unassigned listing edit link and API both deny access</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/I07.md</code>. Tag browser tests <code>I07</code>.</p>
+<h3 id="i08-implement-expiration-and-withdrawal">I08 Implement expiration and withdrawal</h3>
+<p>Dependencies: I07, F14, G02 | Scope: marketplace | Status: todo</p>
+<p>Worker expires scheduled listings; pause/sold/leased removes them from eligible search/cache/recommendations.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Detail no longer offers inquiry/booking</li>
+<li>Late duplicate jobs safe</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Expire a fixture and assert public removal</li>
+<li>Retry expiration yields one state transition</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/I08.md</code>. Tag browser tests <code>I08</code>.</p>
+<h2 id="english-ui-and-reference-fidelity">English UI and reference fidelity</h2>
+<h3 id="u01-create-reference-screen-manifest">U01 Create reference screen manifest</h3>
+<p>Dependencies: F14 | Scope: marketplace | Status: todo</p>
+<p>Inventory benchmark routes/states, O/R/P/V labels and captures when accessible; record blockers per screen.</p>
+<p>Acceptance:</p>
+<ul>
+<li>No invented visual metrics</li>
+<li>Every route has parity status</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Manifest schema and file references valid</li>
+<li>Missing screenshot cannot be marked visually verified</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/U01.md</code>. Tag browser tests <code>U01</code>.</p>
+<h3 id="u02-implement-measured-design-tokens">U02 Implement measured design tokens</h3>
+<p>Dependencies: U01, F14 | Scope: marketplace | Status: todo</p>
+<p>Measure available captures; configure fonts/colors/spacing and English terminology; label unmeasured values provisional.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Tokens traceable to evidence or proposal</li>
+<li>English terminology consistent</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Token validation rejects untraceable verified values</li>
+<li>Long English labels fit at 320px</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/U02.md</code>. Tag browser tests <code>U02</code>.</p>
+<h3 id="u03-implement-shared-mobile-shell">U03 Implement shared mobile shell</h3>
+<p>Dependencies: U02, F14 | Scope: marketplace | Status: todo</p>
+<p>Header, city/search slot, navigation, filter sheet/dialog primitives, scroll restoration and footer.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Reference composition retained where verified</li>
+<li>Accessible focus and safe areas</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Keyboard open/close sheet returns focus</li>
+<li>Back restores prior filter/scroll without overflow</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/U03.md</code>. Tag browser tests <code>U03</code>.</p>
+<h3 id="u04-implement-listing-and-development-cards">U04 Implement listing and development cards</h3>
+<p>Dependencies: U03, F14 | Scope: marketplace | Status: todo</p>
+<p>Segment variants for sale/rent/commercial/development, image fallback, price bases and features.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Correct area/room/price labels</li>
+<li>Separate favorite and navigation targets</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Card shows fixture sale/rental amounts correctly</li>
+<li>Missing price is not rendered as zero; keyboard favorite avoids navigation</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/U04.md</code>. Tag browser tests <code>U04</code>.</p>
+<h3 id="u05-implement-standard-ui-states">U05 Implement standard UI states</h3>
+<p>Dependencies: U04, F14 | Scope: marketplace | Status: todo</p>
+<p>Loading, empty, error, unavailable, offline retry and validation components with English copy.</p>
+<p>Acceptance:</p>
+<ul>
+<li>No silent blank screen</li>
+<li>Retrying preserves intended context</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Simulated fetch failure displays retry then results</li>
+<li>Empty state and withdrawn listing display distinct messages</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/U05.md</code>. Tag browser tests <code>U05</code>.</p>
+<h3 id="u06-establish-visual-regression-fixtures">U06 Establish visual regression fixtures</h3>
+<p>Dependencies: U05, F14 | Scope: marketplace | Status: todo</p>
+<p>Pinned browser, deterministic English data, approved local baselines and geometry checks per captured screen.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Baseline changes reviewed explicitly</li>
+<li>Dynamic data masked narrowly</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Known layout shift fails comparison</li>
+<li>No script updates its own baseline on failure</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/U06.md</code>. Tag browser tests <code>U06</code>.</p>
+<h3 id="u07-build-accessibility-interaction-harness">U07 Build accessibility interaction harness</h3>
+<p>Dependencies: U06, F14 | Scope: marketplace | Status: todo</p>
+<p>axe scanning plus keyboard/focus/contrast/target checks for shared navigation and modal controls.</p>
+<p>Acceptance:</p>
+<ul>
+<li>No serious/critical automated violations</li>
+<li>Focus order usable</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Keyboard completes filter selection and dismissal</li>
+<li>Hidden focus trap and missing label fixture detected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/U07.md</code>. Tag browser tests <code>U07</code>.</p>
+<h2 id="search-and-discovery">Search and discovery</h2>
+<h3 id="d01-index-approved-public-inventory">D01 Index approved public inventory</h3>
+<p>Dependencies: I08, G05, U07 | Scope: marketplace | Status: todo</p>
+<p>Versioned search schema, outbox upsert/remove, price decimals and approved facets.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Only published fields indexed</li>
+<li>Older events cannot resurrect withdrawal</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Publish listing and search for it</li>
+<li>Replay old publish after withdrawal keeps it absent; private sentinel not indexed</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/D01.md</code>. Tag browser tests <code>D01</code>.</p>
+<h3 id="d02-implement-typed-search-api">D02 Implement typed search API</h3>
+<p>Dependencies: D01, I08, G05, U07 | Scope: marketplace | Status: todo</p>
+<p>Normalize allowed filter expressions, paginate and sort with stable ties; SQL degradation contract.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Invalid filters rejected</li>
+<li>Consistent sort and bounded pages</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Price+city search returns exact fixture IDs</li>
+<li>Injected expression rejected; equal-price pages have no duplicate IDs</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/D02.md</code>. Tag browser tests <code>D02</code>.</p>
+<h3 id="d03-build-autocomplete-and-recent-searches">D03 Build autocomplete and recent searches</h3>
+<p>Dependencies: D02, I08, G05, U07 | Scope: marketplace | Status: todo</p>
+<p>Debounced text, city-scoped community/area suggestions, cancellation and account/local history.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Stale responses do not replace latest query</li>
+<li>Clear history works</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Typing target yields city-matching suggestions</li>
+<li>Reversed response order cannot show obsolete query</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/D03.md</code>. Tag browser tests <code>D03</code>.</p>
+<h3 id="d04-build-resale-list-and-filter-sheets">D04 Build resale list and filter sheets</h3>
+<p>Dependencies: D03, I08, G05, U07 | Scope: marketplace | Status: todo</p>
+<p>Location/transit, price, layout, area/features and sort; URL-driven applied state with draft reset/cancel.</p>
+<p>Acceptance:</p>
+<ul>
+<li>AND across facets and OR within facet</li>
+<li>Refresh/Back preserve filters</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Browser applies combined filters and checks exact IDs</li>
+<li>Cancel leaves applied state; min&gt;max rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/D04.md</code>. Tag browser tests <code>D04</code>.</p>
+<h3 id="d05-build-map-search">D05 Build map search</h3>
+<p>Dependencies: D04, I08, G05, U07 | Scope: marketplace | Status: todo</p>
+<p>MapLibre pins/clusters synchronized with bounds/filters and selected card; coarse positions only.</p>
+<p>Acceptance:</p>
+<ul>
+<li>List and map apply same criteria</li>
+<li>Attribution and fallback present</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Bounds filter shows expected point fixtures</li>
+<li>Private coordinate sentinel absent and tile failure retains list</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/D05.md</code>. Tag browser tests <code>D05</code>.</p>
+<h3 id="d06-implement-rankings-and-recommendations">D06 Implement rankings and recommendations</h3>
+<p>Dependencies: D05, I08, G05, U07 | Scope: marketplace | Status: todo</p>
+<p>Versioned deterministic eligibility/ranking rules, periods, curated boosts and deduped aggregate signals.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Withdrawn listings excluded</li>
+<li>Sponsored boosts labeled</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Known fixture score yields expected order</li>
+<li>Duplicate view event cannot increase counted score</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/D06.md</code>. Tag browser tests <code>D06</code>.</p>
+<h3 id="d07-build-homepage-sections">D07 Build homepage sections</h3>
+<p>Dependencies: D06, I08, G05, U07 | Scope: marketplace | Status: todo</p>
+<p>Observed category order, curated resale/new homes, ranking shortcuts and three recommendation categories.</p>
+<p>Acceptance:</p>
+<ul>
+<li>All category routes functional</li>
+<li>Empty section omitted or useful</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Every home entry opens correct category</li>
+<li>Empty category does not show dead carousel or wrong-city cards</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/D07.md</code>. Tag browser tests <code>D07</code>.</p>
+<h3 id="d08-build-resale-detail-and-gallery">D08 Build resale detail and gallery</h3>
+<p>Dependencies: D07, I08, G05, U07 | Scope: marketplace | Status: todo</p>
+<p>Photos/lightbox, facts, floor plan, community, approximate map, eligible agents and related listings.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Sticky actions do not hide content</li>
+<li>Facts come from published revision</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Gallery keyboard/swipe and community navigation succeed</li>
+<li>Withdrawn listing has unavailable screen and no booking</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/D08.md</code>. Tag browser tests <code>D08</code>.</p>
+<h3 id="d09-add-approved-virtual-tours">D09 Add approved virtual tours</h3>
+<p>Dependencies: D08, I08, G05, U07 | Scope: marketplace | Status: todo</p>
+<p>Linked panorama scenes/hotspots and lazy-load viewer; permissions and provider fallback.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Only approved assets load</li>
+<li>Tour badge reflects usable tour</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Navigate two fixture scenes and return to detail</li>
+<li>Broken/unauthorized asset shows fallback without leaking URL</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/D09.md</code>. Tag browser tests <code>D09</code>.</p>
+<h3 id="d10-implement-search-rebuild-and-recovery">D10 Implement search rebuild and recovery</h3>
+<p>Dependencies: D09, I08, G05, U07 | Scope: marketplace | Status: todo</p>
+<p>Reindex into temporary index, compare eligibility/counts, swap; handle outage and monitor lag.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Rebuild preserves availability</li>
+<li>API degradation explicit</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Rebuild produces expected published count</li>
+<li>Search outage uses declared SQL fallback or retryable error, not false zero</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/D10.md</code>. Tag browser tests <code>D10</code>.</p>
+<h2 id="users-and-personal-collections">Users and personal collections</h2>
+<h3 id="a01-build-account-profile">A01 Build account profile</h3>
+<p>Dependencies: F14, I08, U07 | Scope: marketplace | Status: todo</p>
+<p>English profile, contact verification references, locale and session-expiry handling.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Only own fields editable</li>
+<li>Identity-managed recovery links work</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>User edits own display name and refreshes</li>
+<li>Other profile ID denied and invalid input shows field error</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/A01.md</code>. Tag browser tests <code>A01</code>.</p>
+<h3 id="a02-implement-persistent-favorites">A02 Implement persistent favorites</h3>
+<p>Dependencies: A01, F14, I08, U07 | Scope: marketplace | Status: todo</p>
+<p>Unique user/listing favorite, logged-out return intent and optimistic toggle rollback.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Favorites survive refresh</li>
+<li>Repeated toggles idempotent</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Login return adds intended favorite once</li>
+<li>Failed mutation restores visual state and another user cannot read list</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/A02.md</code>. Tag browser tests <code>A02</code>.</p>
+<h3 id="a03-build-favorite-lists-and-history">A03 Build favorite lists and history</h3>
+<p>Dependencies: A02, F14, I08, U07 | Scope: marketplace | Status: todo</p>
+<p>Personal saved listings and consented browsing history with clear/remove actions.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Unavailable listing state visible</li>
+<li>History collection clearable</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Saved list opens eligible detail</li>
+<li>Archived listing shows unavailable; clearing does not delete other user history</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/A03.md</code>. Tag browser tests <code>A03</code>.</p>
+<h3 id="a04-implement-saved-searches">A04 Implement saved searches</h3>
+<p>Dependencies: A03, F14, I08, U07 | Scope: marketplace | Status: todo</p>
+<p>Versioned normalized criteria, cadence, pause/edit/delete and alert eligibility.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Saved filters restore exactly</li>
+<li>No mixed currency alerts</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Save and reload complex rental search</li>
+<li>Invalid filters rejected; other user cannot update</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/A04.md</code>. Tag browser tests <code>A04</code>.</p>
+<h3 id="a05-deliver-notifications-and-alerts">A05 Deliver notifications and alerts</h3>
+<p>Dependencies: A04, F14, I08, U07 | Scope: marketplace | Status: todo</p>
+<p>English templates, preferences, outbox delivery and retries; digest deduplication.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Provider delivery states truthful</li>
+<li>Opt-out honored for optional alerts</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>New matching listing sends one test-provider alert</li>
+<li>Replayed event/opt-out produces no duplicate/optional email</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/A05.md</code>. Tag browser tests <code>A05</code>.</p>
+<h3 id="a06-add-account-export-and-deletion-workflow">A06 Add account export and deletion workflow</h3>
+<p>Dependencies: A05, F14, I08, U07 | Scope: marketplace | Status: todo</p>
+<p>Scoped export, deletion request, retention classification and session revocation; bookkeeping retained under policy.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Personal export isolated</li>
+<li>No blind deletion of posted finance records</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Export contains only requesting persona data</li>
+<li>Deletion request revokes access but preserves required reversal history</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/A06.md</code>. Tag browser tests <code>A06</code>.</p>
+<h2 id="rentals">Rentals</h2>
+<h3 id="r01-implement-rental-terms">R01 Implement rental terms</h3>
+<p>Dependencies: D10, A06 | Scope: marketplace | Status: todo</p>
+<p>Entire/shared modes, explicit rentable child units, deposit, rent period, furnishing/utilities and availability.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Rental schema separates period from amount</li>
+<li>Shared room has correct unit scope</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Create monthly shared-room listing</li>
+<li>Missing rent period and invalid deposit rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/R01.md</code>. Tag browser tests <code>R01</code>.</p>
+<h3 id="r02-build-rental-filters-and-cards">R02 Build rental filters and cards</h3>
+<p>Dependencies: R01, D10, A06 | Scope: marketplace | Status: todo</p>
+<p>Rent mode, billing period, budget, district/transit, furnishing, move-in and amenities.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Prices display period explicitly</li>
+<li>Filters persist in URL</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Filter entire furnished monthly rentals</li>
+<li>Yearly listing cannot silently pass monthly price comparison</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/R02.md</code>. Tag browser tests <code>R02</code>.</p>
+<h3 id="r03-build-rental-detail">R03 Build rental detail</h3>
+<p>Dependencies: R02, D10, A06 | Scope: marketplace | Status: todo</p>
+<p>Gallery, room/unit attributes, deposit/rent terms, utilities, availability and contact actions.</p>
+<p>Acceptance:</p>
+<ul>
+<li>All fees/periods explicit</li>
+<li>Unavailable unit cannot book</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Detail shows fixture deposit/utilities accurately</li>
+<li>Missing terms show unavailable rather than fabricated defaults</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/R03.md</code>. Tag browser tests <code>R03</code>.</p>
+<h3 id="r04-protect-rental-availability">R04 Protect rental availability</h3>
+<p>Dependencies: R03, D10, A06 | Scope: marketplace | Status: todo</p>
+<p>Withdrawal/leased events block incompatible publication/inquiry; expose an availability service used later by P04 for atomic managed lease activation.</p>
+<p>Acceptance:</p>
+<ul>
+<li>One authority for availability</li>
+<li>Race-safe validation</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Mark listing leased and assert search/detail updates</li>
+<li>Inquiry after listing status transition rejected even with stale search document; full lease race tested in P04</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/R04.md</code>. Tag browser tests <code>R04</code>.</p>
+<h2 id="new-developments-and-developers">New developments and developers</h2>
+<h3 id="n01-create-developer-organization-and-projects">N01 Create developer organization and projects</h3>
+<p>Dependencies: D10, F07 | Scope: marketplace | Status: todo</p>
+<p>Developer grants, development/phase/building relationships and sales status.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Organization owns its projects</li>
+<li>Phase cannot attach across developers</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Developer creates valid phase</li>
+<li>Other developer cannot edit or link foreign building</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/N01.md</code>. Tag browser tests <code>N01</code>.</p>
+<h3 id="n02-create-floor-plan-types-and-inventory">N02 Create floor-plan types and inventory</h3>
+<p>Dependencies: N01, D10, F07 | Scope: marketplace | Status: todo</p>
+<p>Room counts, decimal area ranges, media, offered inventory and publication timestamp.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Type and unit inventory distinct</li>
+<li>Negative availability forbidden</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Publish fixture floor-plan range</li>
+<li>Invalid range/foreign media rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/N02.md</code>. Tag browser tests <code>N02</code>.</p>
+<h3 id="n03-build-development-discovery">N03 Build development discovery</h3>
+<p>Dependencies: N02, D10, F07 | Scope: marketplace | Status: todo</p>
+<p>District, budget/price basis, status, unit type/area filters and cards.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Starting total and per-area prices distinguishable</li>
+<li>Sold-out status visible</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Search returns expected development</li>
+<li>Unknown total price cannot be inferred and displayed</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/N03.md</code>. Tag browser tests <code>N03</code>.</p>
+<h3 id="n04-build-development-detail">N04 Build development detail</h3>
+<p>Dependencies: N03, D10, F07 | Scope: marketplace | Status: todo</p>
+<p>Project overview, phase, unit-type tabs, plan gallery, map and sales lead form.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Chosen unit type linked to inquiry</li>
+<li>Inventory timestamp shown</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Buyer selects type and submits lead</li>
+<li>Sold-out type disables available-unit request without fake booking</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/N04.md</code>. Tag browser tests <code>N04</code>.</p>
+<h3 id="n05-build-developer-inventory-workspace">N05 Build developer inventory workspace</h3>
+<p>Dependencies: N04, D10, F07 | Scope: marketplace | Status: todo</p>
+<p>Scoped edit, inventory update, review submission and lead queue.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Publication obeys moderation</li>
+<li>Concurrent updates version checked</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Developer updates inventory through browser</li>
+<li>Cross-developer edit denied; stale edit conflicts</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/N05.md</code>. Tag browser tests <code>N05</code>.</p>
+<h2 id="commercial-property">Commercial property</h2>
+<h3 id="c01-add-commercial-attributes-and-price-bases">C01 Add commercial attributes and price bases</h3>
+<p>Dependencies: D10, I08 | Scope: marketplace | Status: todo</p>
+<p>Office/retail/warehouse, gross/usable area, fit-out, parking and permitted use; sale/rent basis enums.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Schema validates transaction-specific fields</li>
+<li>Area basis explicit</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Create annual-per-area office offer</li>
+<li>Missing basis or nonpositive usable area rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/C01.md</code>. Tag browser tests <code>C01</code>.</p>
+<h3 id="c02-build-commercial-discovery">C02 Build commercial discovery</h3>
+<p>Dependencies: C01, D10, I08 | Scope: marketplace | Status: todo</p>
+<p>Sale/rent toggle, area, use, fit-out, price period, city and sort.</p>
+<p>Acceptance:</p>
+<ul>
+<li>No residential-only filters misapplied</li>
+<li>Results show correct basis</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Filter furnished office rentals</li>
+<li>Monthly/yearly basis mismatch cannot silently compare</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/C02.md</code>. Tag browser tests <code>C02</code>.</p>
+<h3 id="c03-build-commercial-detail-and-inquiry">C03 Build commercial detail and inquiry</h3>
+<p>Dependencies: C02, D10, I08 | Scope: marketplace | Status: todo</p>
+<p>Business facts/gallery/map, responsible commercial agent and lead context.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Submitted inquiry retains commercial context</li>
+<li>Availability rechecked</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Business inquiry persists for target office</li>
+<li>Withdrawn offer rejected; other agency cannot read lead</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/C03.md</code>. Tag browser tests <code>C03</code>.</p>
+<h2 id="owners-and-landlord-submissions">Owners and landlord submissions</h2>
+<h3 id="o01-create-owner-grants-and-submissions">O01 Create owner grants and submissions</h3>
+<p>Dependencies: I08, A06, R04 | Scope: marketplace | Status: todo</p>
+<p>Owner-to-unit grants, sell/rent submission drafts and contact privacy settings.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Ownership not inferred from client IDs</li>
+<li>Draft stays private</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Owner creates owned-unit draft</li>
+<li>Foreign owner grant rejected and draft absent from public API</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/O01.md</code>. Tag browser tests <code>O01</code>.</p>
+<h3 id="o02-build-step-by-step-owner-form">O02 Build step-by-step owner form</h3>
+<p>Dependencies: O01, I08, A06, R04 | Scope: marketplace | Status: todo</p>
+<p>Location/facts, terms, media, contact, review; draft autosave and login return.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Progress survives refresh</li>
+<li>Invalid step cannot submit</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Complete valid sale submission in browser</li>
+<li>Invalid area retains inputs with clear validation</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/O02.md</code>. Tag browser tests <code>O02</code>.</p>
+<h3 id="o03-upload-private-ownership-evidence">O03 Upload private ownership evidence</h3>
+<p>Dependencies: O02, I08, A06, R04 | Scope: marketplace | Status: todo</p>
+<p>Use private media workflow, configured required documents and authorized reviewer access.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Public search/HTML omit evidence</li>
+<li>Download audited</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Owner uploads and reviewer downloads approved document</li>
+<li>Unrelated user denied and expired signed URL rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/O03.md</code>. Tag browser tests <code>O03</code>.</p>
+<h3 id="o04-assign-agent-and-track-submission">O04 Assign agent and track submission</h3>
+<p>Dependencies: O03, I08, A06, R04 | Scope: marketplace | Status: todo</p>
+<p>Moderation/assignment workflow plus owner timeline and notifications.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Only owning agency/authorized moderator assigns</li>
+<li>Owner sees safe status</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Assign agent and display owner progress</li>
+<li>Cross-agency assignment denied; private review note hidden</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/O04.md</code>. Tag browser tests <code>O04</code>.</p>
+<h3 id="o05-build-owner-listing-lifecycle-controls">O05 Build owner listing lifecycle controls</h3>
+<p>Dependencies: O04, I08, A06, R04 | Scope: marketplace | Status: todo</p>
+<p>Request price revision, pause/renew and mark completion; history and review policies.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Pending revision not public</li>
+<li>Actions audit owner identity</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Owner requests revision then approval updates price</li>
+<li>Owner cannot republish expired verification without review</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/O05.md</code>. Tag browser tests <code>O05</code>.</p>
+<h2 id="agents-and-agencies">Agents and agencies</h2>
+<h3 id="b01-onboard-agents-and-verify-credentials">B01 Onboard agents and verify credentials</h3>
+<p>Dependencies: I08, A06, U07 | Scope: marketplace | Status: todo</p>
+<p>Separate public profile/private documents; review, expiry, revocation and public badge.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Badge requires valid approval</li>
+<li>Agent cannot self-verify</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Moderator approves valid credential</li>
+<li>Expired/revoked record removes badge; self-approval denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/B01.md</code>. Tag browser tests <code>B01</code>.</p>
+<h3 id="b02-build-agent-directory-and-profiles">B02 Build agent directory and profiles</h3>
+<p>Dependencies: B01, I08, A06, U07 | Scope: marketplace | Status: todo</p>
+<p>Service-area/name filters, languages, biography, eligible listings and consented contact actions.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Statistics derived from declared events</li>
+<li>Private credentials hidden</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Search seeded agent and open assigned listings</li>
+<li>Profile excludes unapproved stats and credential document key</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/B02.md</code>. Tag browser tests <code>B02</code>.</p>
+<h3 id="b03-manage-agency-members-and-roles">B03 Manage agency members and roles</h3>
+<p>Dependencies: B02, I08, A06, U07 | Scope: marketplace | Status: todo</p>
+<p>Manager invitations, role grants/removal and membership audit.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Role changes update access immediately</li>
+<li>Cross-agency invites unavailable</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Invite agent and grant listing permission</li>
+<li>Removed agent loses access; foreign manager denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/B03.md</code>. Tag browser tests <code>B03</code>.</p>
+<h3 id="b04-assign-inventory-and-leads">B04 Assign inventory and leads</h3>
+<p>Dependencies: B03, I08, A06, U07 | Scope: marketplace | Status: todo</p>
+<p>Manager selects eligible agency agents and assignment policy; atomic audit/notification.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Assignment narrows edit/read rights</li>
+<li>Disabled agent cannot be assigned</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Assign listing then assigned agent can edit</li>
+<li>Unassigned/other-agency agent denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/B04.md</code>. Tag browser tests <code>B04</code>.</p>
+<h3 id="b05-build-agent-dashboard">B05 Build agent dashboard</h3>
+<p>Dependencies: B04, I08, A06, U07 | Scope: marketplace | Status: todo</p>
+<p>Assigned inventory, new leads and upcoming appointments; time-stamped aggregate indicators.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Counts reflect scoped source records</li>
+<li>No fabricated empty metrics</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Dashboard counts match fixture assignments</li>
+<li>Other agency records absent in rendered payload</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/B05.md</code>. Tag browser tests <code>B05</code>.</p>
+<h2 id="leads-and-viewing-bookings">Leads and viewing bookings</h2>
+<h3 id="l01-persist-inquiries-and-route-leads">L01 Persist inquiries and route leads</h3>
+<p>Dependencies: D10, A06, B05, N05, C03, O05 | Scope: marketplace | Status: todo</p>
+<p>Guest/consumer inquiry validation, consent, idempotency and destination assignment.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Each submission produces one lead</li>
+<li>Unpublished resource unavailable</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Valid inquiry returns persisted lead ID</li>
+<li>Repeated request creates one lead; spam-limit and withdrawn listing rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/L01.md</code>. Tag browser tests <code>L01</code>.</p>
+<h3 id="l02-build-crm-queue-and-lead-timeline">L02 Build CRM queue and lead timeline</h3>
+<p>Dependencies: L01, D10, A06, B05, N05, C03, O05 | Scope: marketplace | Status: todo</p>
+<p>Scope, statuses, safe notes, assignments and filtered queue; stable event history.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Status changes validated</li>
+<li>Notes only authorized operations</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Agent contacts and qualifies assigned lead</li>
+<li>Other agency denied; invalid state change rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/L02.md</code>. Tag browser tests <code>L02</code>.</p>
+<h3 id="l03-create-agent-availability-slots">L03 Create agent availability slots</h3>
+<p>Dependencies: L02, D10, A06, B05, N05, C03, O05 | Scope: marketplace | Status: todo</p>
+<p>Working hours, property timezone, buffers and unavailable intervals.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Only valid future slots exposed</li>
+<li>Times render in property zone</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Fixture slot converts UTC correctly</li>
+<li>Past/blocked/DST-invalid local times excluded</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/L03.md</code>. Tag browser tests <code>L03</code>.</p>
+<h3 id="l04-reserve-viewings-transactionally">L04 Reserve viewings transactionally</h3>
+<p>Dependencies: L03, D10, A06, B05, N05, C03, O05 | Scope: marketplace | Status: todo</p>
+<p>Request/confirmation with availability check, interval lock/exclusion and idempotency.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Exclusive booking cannot double-reserve</li>
+<li>Listing status rechecked</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Valid slot reserved once</li>
+<li>Two concurrent requests yield one accepted booking and one conflict</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/L04.md</code>. Tag browser tests <code>L04</code>.</p>
+<h3 id="l05-build-booking-calendar-and-actions">L05 Build booking calendar and actions</h3>
+<p>Dependencies: L04, D10, A06, B05, N05, C03, O05 | Scope: marketplace | Status: todo</p>
+<p>Consumer/agent views, cancellation, reschedule, completion and no-show.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Reschedule atomic</li>
+<li>Cancellation releases capacity</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Browser reschedules confirmed viewing</li>
+<li>Unauthorized cancellation denied and failed reschedule preserves original</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/L05.md</code>. Tag browser tests <code>L05</code>.</p>
+<h3 id="l06-send-viewing-reminders-and-reports">L06 Send viewing reminders and reports</h3>
+<p>Dependencies: L05, D10, A06, B05, N05, C03, O05 | Scope: marketplace | Status: todo</p>
+<p>Idempotent reminder jobs, cancellation invalidation and permitted scoped CRM exports.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Cancelled booking no reminder</li>
+<li>Export respects scope</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Confirmed booking sends one reminder</li>
+<li>Cancel/retry produces no stale reminder; CSV formula injection neutralized</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/L06.md</code>. Tag browser tests <code>L06</code>.</p>
+<h2 id="messaging-and-communication">Messaging and communication</h2>
+<h3 id="m01-create-authorized-conversations">M01 Create authorized conversations</h3>
+<p>Dependencies: L06, F12 | Scope: marketplace | Status: todo</p>
+<p>Persist members/resource context and grant checks before messages/subscriptions.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Only linked participants can read</li>
+<li>No guessed-ID joins</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Consumer and assigned agent open conversation</li>
+<li>Unrelated user cannot read or join WebSocket room</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/M01.md</code>. Tag browser tests <code>M01</code>.</p>
+<h3 id="m02-persist-and-deduplicate-messages">M02 Persist and deduplicate messages</h3>
+<p>Dependencies: M01, L06, F12 | Scope: marketplace | Status: todo</p>
+<p>Client IDs, sequence ordering, sanitized text and attachment grants; commit before ACK.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Retry returns same message</li>
+<li>No executable HTML</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Send then replay client ID yields one message</li>
+<li>Script markup rendered inert and foreign attachment denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/M02.md</code>. Tag browser tests <code>M02</code>.</p>
+<h3 id="m03-build-inbox-and-chat-interface">M03 Build inbox and chat interface</h3>
+<p>Dependencies: M02, L06, F12 | Scope: marketplace | Status: todo</p>
+<p>Conversation list, unread count, send state, retry and read cursor.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Failure clearly visible</li>
+<li>Correct conversation selected after refresh</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Browser sends/reads message and unread count updates</li>
+<li>Failed send retains draft and does not show delivered</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/M03.md</code>. Tag browser tests <code>M03</code>.</p>
+<h3 id="m04-recover-realtime-sessions">M04 Recover realtime sessions</h3>
+<p>Dependencies: M03, L06, F12 | Scope: marketplace | Status: todo</p>
+<p>Authenticated WebSocket, per-message checks, reconnect replay and revoked grant handling.</p>
+<p>Acceptance:</p>
+<ul>
+<li>No loss after reconnect</li>
+<li>Revocation removes subscription access</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Disconnect/reconnect recovers ordered missing messages</li>
+<li>Expired token/revoked assignment denied on subsequent action</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/M04.md</code>. Tag browser tests <code>M04</code>.</p>
+<h2 id="renovation-and-providers">Renovation and providers</h2>
+<h3 id="v01-create-service-provider-catalog">V01 Create service provider catalog</h3>
+<p>Dependencies: A06, L06, U07 | Scope: marketplace | Status: todo</p>
+<p>Vendor profiles, categories, areas, portfolio rights and approval state.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Only approved profiles public</li>
+<li>Vendor owns own records</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Publish approved vendor in selected area</li>
+<li>Unapproved profile absent; another vendor cannot edit</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/V01.md</code>. Tag browser tests <code>V01</code>.</p>
+<h3 id="v02-build-provider-discovery-and-detail">V02 Build provider discovery and detail</h3>
+<p>Dependencies: V01, A06, L06, U07 | Scope: marketplace | Status: todo</p>
+<p>Category/location filters, service cards, portfolio/gallery and inquiry action.</p>
+<p>Acceptance:</p>
+<ul>
+<li>English service details complete</li>
+<li>Empty results handled</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Search provider and navigate portfolio</li>
+<li>Broken media uses fallback without blocking quote form</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/V02.md</code>. Tag browser tests <code>V02</code>.</p>
+<h3 id="v03-implement-renovation-quote-workflow">V03 Implement renovation quote workflow</h3>
+<p>Dependencies: V02, A06, L06, U07 | Scope: marketplace | Status: todo</p>
+<p>Request details, validated contact, assigned vendor, timeline and nonbinding status.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Persisted quote routed to intended vendor</li>
+<li>No payment/contract implied</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Consumer submits quote and vendor marks contacted</li>
+<li>Other vendor denied and duplicate submit creates one quote</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/V03.md</code>. Tag browser tests <code>V03</code>.</p>
+<h2 id="finance-tools">Finance tools</h2>
+<h3 id="t01-implement-mortgage-calculation-engine">T01 Implement mortgage calculation engine</h3>
+<p>Dependencies: F08, U07 | Scope: marketplace | Status: todo</p>
+<p>Decimal equal-payment and equal-principal schedules with zero-rate branch and final rounding adjustment.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Schedule clears principal exactly</li>
+<li>Method/rate assumptions explicit</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>120000 principal at 0 percent for 120 months yields 1000 and zero interest</li>
+<li>Known nonzero-rate fixture reconciles; zero term/negative rate rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/T01.md</code>. Tag browser tests <code>T01</code>.</p>
+<h3 id="t02-build-mortgage-interface">T02 Build mortgage interface</h3>
+<p>Dependencies: T01, F08, U07 | Scope: marketplace | Status: todo</p>
+<p>Price/down payment/rate/years/method, results and loan schedule; English validation.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Results update predictably</li>
+<li>Down payment cannot exceed price</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Browser changes method and verifies expected fixture payment</li>
+<li>Invalid price/down payment shows error without NaN</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/T02.md</code>. Tag browser tests <code>T02</code>.</p>
+<h3 id="t03-export-repayment-schedule">T03 Export repayment schedule</h3>
+<p>Dependencies: T02, F08, U07 | Scope: marketplace | Status: todo</p>
+<p>CSV schedule, totals and market-configured estimate notes with no personal data by default.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Export matches visible totals</li>
+<li>No fake lender approval</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Export rows reconcile principal and interest</li>
+<li>Unicode/formula-like custom title safely escaped</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/T03.md</code>. Tag browser tests <code>T03</code>.</p>
+<h2 id="property-management-and-tenant-services">Property management and tenant services</h2>
+<h3 id="p01-create-management-grants-and-portfolios">P01 Create management grants and portfolios</h3>
+<p>Dependencies: R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Managed units, owner links and time-bounded organization grants over canonical inventory.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Access tied to valid grant</li>
+<li>Same unit not duplicated</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Manager lists granted portfolio</li>
+<li>Expired/foreign management grant denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P01.md</code>. Tag browser tests <code>P01</code>.</p>
+<h3 id="p02-create-tenant-profiles-and-account-links">P02 Create tenant profiles and account links</h3>
+<p>Dependencies: P01, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Invite/link tenant persona, private details and tenant-scoped serializers.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Account linkage verified</li>
+<li>Tenant cannot enumerate other tenants</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Linked tenant sees own profile</li>
+<li>Guessed tenant ID and cross-org link denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P02.md</code>. Tag browser tests <code>P02</code>.</p>
+<h3 id="p03-create-lease-drafts-and-term-validation">P03 Create lease drafts and term validation</h3>
+<p>Dependencies: P02, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Unit, tenant, start/end dates, currency, rent schedule and private documents.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Draft uses permitted unit</li>
+<li>End cannot precede start</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Create valid lease with exact decimals</li>
+<li>Invalid dates/currency and unauthorized document rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P03.md</code>. Tag browser tests <code>P03</code>.</p>
+<h3 id="p04-activate-lease-and-enforce-availability">P04 Activate lease and enforce availability</h3>
+<p>Dependencies: P03, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Activate atomically, prevent overlapping active occupation and withdraw incompatible rental offer.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Lease/public availability consistent</li>
+<li>No overlapping exclusive tenancy</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Activate lease and assert rental unavailable</li>
+<li>Concurrent overlapping activation yields one success</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P04.md</code>. Tag browser tests <code>P04</code>.</p>
+<h3 id="p05-renew-and-end-leases">P05 Renew and end leases</h3>
+<p>Dependencies: P04, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>New term/revision, ending/termination reasons and availability review; retain history.</p>
+<p>Acceptance:</p>
+<ul>
+<li>History retained</li>
+<li>Ending does not silently republish listing</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Renew lease with valid next term</li>
+<li>Overlapping renewal denied and ended lease remains auditable</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P05.md</code>. Tag browser tests <code>P05</code>.</p>
+<h3 id="p06-generate-recurring-charges">P06 Generate recurring charges</h3>
+<p>Dependencies: P05, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Period-based idempotent rent charges, proration policy from config and due dates; use decimal amounts.</p>
+<p>Acceptance:</p>
+<ul>
+<li>One charge per lease/period/type</li>
+<li>Out-of-term charge excluded</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Run same month twice yields one charge</li>
+<li>Leap-month/proration fixture reconciles and ended lease excluded</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P06.md</code>. Tag browser tests <code>P06</code>.</p>
+<h3 id="p07-record-payment-evidence">P07 Record payment evidence</h3>
+<p>Dependencies: P06, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Draft/post payment, source/reference, exact amounts/currency and immutable posted data.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Record is bookkeeping evidence</li>
+<li>Posted row cannot edit</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Post valid payment and retrieve audit</li>
+<li>Negative/mismatched currency rejected and posted amount update denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P07.md</code>. Tag browser tests <code>P07</code>.</p>
+<h3 id="p08-allocate-payments-and-credit-balances">P08 Allocate payments and credit balances</h3>
+<p>Dependencies: P07, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Partial allocations, overpayment credit and concurrency checks; per-lease totals.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Allocated amount never exceeds available</li>
+<li>No cross-lease allocation without explicit policy</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Partial payment leaves correct balance</li>
+<li>Concurrent allocations cannot overspend same payment</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P08.md</code>. Tag browser tests <code>P08</code>.</p>
+<h3 id="p09-reverse-charges-and-payments">P09 Reverse charges and payments</h3>
+<p>Dependencies: P08, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Linked reversal entries and allocation undo within audited transaction.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Original remains immutable</li>
+<li>Reversal reconciles outstanding balance</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Reverse payment and verify balance restored</li>
+<li>Repeat reversal idempotent and foreign finance persona denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P09.md</code>. Tag browser tests <code>P09</code>.</p>
+<h3 id="p10-track-deposits-separately">P10 Track deposits separately</h3>
+<p>Dependencies: P09, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Deposit received/released/adjusted evidence and liability movements; independent balance.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Deposit never counted as rent income</li>
+<li>Release cannot exceed held amount</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Receive and partially release deposit with exact remainder</li>
+<li>Excess release rejected and rent statement excludes deposit revenue</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P10.md</code>. Tag browser tests <code>P10</code>.</p>
+<h3 id="p11-build-tenant-lease-and-balance-portal">P11 Build tenant lease and balance portal</h3>
+<p>Dependencies: P10, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Linked lease/documents, charges, payments and clearly labeled recorded balance.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Only linked lease data visible</li>
+<li>No real transfer button unless implemented provider</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Tenant sees reconciled own balance</li>
+<li>Another lease detail/download denied and no private owner notes</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P11.md</code>. Tag browser tests <code>P11</code>.</p>
+<h3 id="p12-create-maintenance-requests">P12 Create maintenance requests</h3>
+<p>Dependencies: P11, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Tenant/manager creation with unit grant, category, urgency, photos and workflow.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Requester belongs to authorized unit</li>
+<li>Attachments remain private</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Tenant creates request and manager assigns</li>
+<li>Foreign unit/media denied and invalid transition rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P12.md</code>. Tag browser tests <code>P12</code>.</p>
+<h3 id="p13-build-maintenance-workbench-and-timeline">P13 Build maintenance workbench and timeline</h3>
+<p>Dependencies: P12, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Manager queue, assignee/status updates, tenant-safe comments and reopen.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Internal notes stay private</li>
+<li>Tenant sees status progression</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Manager resolves then tenant reopens allowed case</li>
+<li>Internal note sentinel absent from tenant API/UI</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P13.md</code>. Tag browser tests <code>P13</code>.</p>
+<h3 id="p14-generate-owner-and-tenant-statements">P14 Generate owner and tenant statements</h3>
+<p>Dependencies: P13, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Source-based reports for period, charges/allocations/payment evidence/deposits/reversals and CSV/PDF or HTML print.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Statement totals reconcile</li>
+<li>Grants determine view</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Golden fixture balances reconcile to posted records</li>
+<li>Other owner denied and different currencies not combined</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P14.md</code>. Tag browser tests <code>P14</code>.</p>
+<h3 id="p15-build-management-dashboards">P15 Build management dashboards</h3>
+<p>Dependencies: P14, R04, O05, B05, F12 | Scope: management | Status: todo</p>
+<p>Unit occupancy, arrears aging and maintenance counts from authorized source records with effective dates.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Definitions and period displayed</li>
+<li>No global agency leakage</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Fixture dashboard counts match source records</li>
+<li>Foreign records absent; reversed payments adjust arrears correctly</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/P15.md</code>. Tag browser tests <code>P15</code>.</p>
+<h2 id="support-content-and-administration">Support content and administration</h2>
+<h3 id="s01-create-support-cases-and-complaints">S01 Create support cases and complaints</h3>
+<p>Dependencies: L06, M04, V03, I08 | Scope: marketplace | Status: todo</p>
+<p>Consumer reporter, listing link, category, attachments and triage assignment.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Reporter sees own case</li>
+<li>Complaint does not automatically remove listing</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Submit and retrieve support case</li>
+<li>Other user denied and invalid attachment rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/S01.md</code>. Tag browser tests <code>S01</code>.</p>
+<h3 id="s02-build-support-workbench">S02 Build support workbench</h3>
+<p>Dependencies: S01, L06, M04, V03, I08 | Scope: marketplace | Status: todo</p>
+<p>Queues, escalation, public/internal messages, resolution and consumer timeline.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Support permission limited</li>
+<li>Internal notes hidden</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Support resolves case and consumer sees resolution</li>
+<li>Private-note sentinel hidden and unauthorized export denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/S02.md</code>. Tag browser tests <code>S02</code>.</p>
+<h3 id="s03-manage-home-curation-and-taxonomy">S03 Manage home curation and taxonomy</h3>
+<p>Dependencies: S02, L06, M04, V03, I08 | Scope: marketplace | Status: todo</p>
+<p>Editor section ordering, category eligibility, schedule, English copy and preview/publish.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Content changes versioned</li>
+<li>Wrong-city/unpublished items cannot be curated</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Publish scheduled section with valid listings</li>
+<li>Invalid link/foreign city entry rejected</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/S03.md</code>. Tag browser tests <code>S03</code>.</p>
+<h3 id="s04-manage-platform-users-and-verification">S04 Manage platform users and verification</h3>
+<p>Dependencies: S03, L06, M04, V03, I08 | Scope: marketplace | Status: todo</p>
+<p>Staff role grants, credential/listing reviews and suspension actions through audited permissions.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Least-privilege administration</li>
+<li>Self privilege escalation impossible</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Admin suspends abusive agent and access revoked</li>
+<li>Non-admin grant request denied and audit immutable</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/S04.md</code>. Tag browser tests <code>S04</code>.</p>
+<h3 id="s05-manage-market-configuration">S05 Manage market configuration</h3>
+<p>Dependencies: S04, L06, M04, V03, I08 | Scope: marketplace | Status: todo</p>
+<p>Currency/units/rent periods, credential rules, ownership tags, contact links and finance assumptions.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Config validated/versioned</li>
+<li>Existing monetary records not reinterpreted</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Activate new market config with valid fields</li>
+<li>Unknown currency/zone rejected and historic amounts unchanged</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/S05.md</code>. Tag browser tests <code>S05</code>.</p>
+<h3 id="s06-publish-scoped-analytics-and-audit">S06 Publish scoped analytics and audit</h3>
+<p>Dependencies: S05, L06, M04, V03, I08 | Scope: marketplace | Status: todo</p>
+<p>Aggregate funnel definitions and filters, deduped events, export and redacted audit search.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Counts traceable to declared events</li>
+<li>Private text absent</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Fixture funnel counts match unique events</li>
+<li>Duplicate event ignored; private message/document not in analytics</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/S06.md</code>. Tag browser tests <code>S06</code>.</p>
+<h2 id="release-quality-deployment-and-recovery">Release quality deployment and recovery</h2>
+<h3 id="q01-complete-seo-and-routing-behavior">Q01 Complete SEO and routing behavior</h3>
+<p>Dependencies: G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06 | Scope: marketplace | Status: todo</p>
+<p>English metadata/canonicals/structured data/sitemap, private noindex and archived redirect semantics.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Public eligible routes indexed</li>
+<li>Account/ops/tenant excluded</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Sitemap includes published fixture only</li>
+<li>Withdrawn listing absent and private route noindexed</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/Q01.md</code>. Tag browser tests <code>Q01</code>.</p>
+<h3 id="q02-audit-full-english-visual-parity">Q02 Audit full English visual parity</h3>
+<p>Dependencies: Q01, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06 | Scope: marketplace | Status: todo</p>
+<p>Complete available reference captures and approved English geometry/copy; keep inaccessible V states explicitly unresolved.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Exact-parity gate cannot pass with V gaps</li>
+<li>Every category screen has evidence</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>All verified geometry/regression checks pass at mobile viewports</li>
+<li>Validator refuses exact-parity signoff when required capture is missing</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/Q02.md</code>. Tag browser tests <code>Q02</code>.</p>
+<h3 id="q03-audit-responsive-accessibility">Q03 Audit responsive accessibility</h3>
+<p>Dependencies: Q02, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06 | Scope: marketplace | Status: todo</p>
+<p>Run all category flows at 320/375/390/768/1440 widths, keyboard/focus and axe; fix defects.</p>
+<p>Acceptance:</p>
+<ul>
+<li>No horizontal overflow</li>
+<li>Critical controls accessible</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Complete keyboard inquiry/filter/modal journeys</li>
+<li>Axe serious/critical violations zero; long labels and missing images still usable</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/Q03.md</code>. Tag browser tests <code>Q03</code>.</p>
+<h3 id="q04-run-marketplace-critical-journeys">Q04 Run marketplace critical journeys</h3>
+<p>Dependencies: Q03, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06 | Scope: marketplace | Status: todo</p>
+<p>Integrated browser tests for user, owner review, agent CRM/viewing, new homes, commercial, service quote and tools.</p>
+<p>Acceptance:</p>
+<ul>
+<li>All journeys persist data through real services</li>
+<li>Required buttons have no mocks</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Execute each listed journey with distinct personas</li>
+<li>Unauthorized actions and withdrawal races remain denied</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/Q04.md</code>. Tag browser tests <code>Q04</code>.</p>
+<h3 id="q05-run-management-integrity-journeys">Q05 Run management integrity journeys</h3>
+<p>Dependencies: Q04, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06 | Scope: marketplace | Status: todo</p>
+<p>Lease/charge/payment/allocation/reversal/deposit/statement and maintenance paths with real database.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Posted-money invariants hold</li>
+<li>Tenant/owner/manager scopes tested</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Golden financial fixture and tenant maintenance journey pass</li>
+<li>Cross-lease denial, duplicate charges and concurrent allocation verified</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/Q05.md</code>. Tag browser tests <code>Q05</code>.</p>
+<h3 id="q06-run-security-and-provider-readiness-checks">Q06 Run security and provider readiness checks</h3>
+<p>Dependencies: Q05, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06 | Scope: marketplace | Status: todo</p>
+<p>Dependency/secret scan, session/CSRF checks, upload/private-data probes and real configured provider smoke.</p>
+<p>Acceptance:</p>
+<ul>
+<li>No exposed credentials</li>
+<li>Visible integrations work or remain visibly blocked</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Staging mail/storage/identity/map integration succeeds</li>
+<li>CSRF/private download/credential scan probes pass; missing provider cannot fake success</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/Q06.md</code>. Tag browser tests <code>Q06</code>.</p>
+<h3 id="q07-measure-performance-and-fix-bottlenecks">Q07 Measure performance and fix bottlenecks</h3>
+<p>Dependencies: Q06, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06 | Scope: marketplace | Status: todo</p>
+<p>Generate 100000 listing fixture, declare hardware, small smoke then 1000-session load mix, browser lab metrics and query plans.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Record actual p95/error results</li>
+<li>No unsupported performance claim</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Run timed fixture load and compare to targets</li>
+<li>Search outage/queue lag gives declared graceful behavior</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/Q07.md</code>. Tag browser tests <code>Q07</code>.</p>
+<h3 id="q08-package-staging-deployment">Q08 Package staging deployment</h3>
+<p>Dependencies: Q07, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06 | Scope: marketplace | Status: todo</p>
+<p>Immutable production Dockerfiles, Compose/proxy/HTTPS, resource limits, environment validation and synthetic staging seed.</p>
+<p>Acceptance:</p>
+<ul>
+<li>One documented staging deploy works</li>
+<li>No public database/cache/search admin</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>HTTPS health and end-to-end inquiry smoke succeeds</li>
+<li>Missing secret blocks boot and external port scan finds only approved endpoints</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/Q08.md</code>. Tag browser tests <code>Q08</code>.</p>
+<h3 id="q09-verify-backup-and-restore">Q09 Verify backup and restore</h3>
+<p>Dependencies: Q08, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06 | Scope: marketplace | Status: todo</p>
+<p>Configure encrypted off-host database/PITR/media/identity backups; restore isolated environment and reindex.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Recovery report measures RPO/RTO</li>
+<li>Restored app consistent</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Restore known fixture and reconcile rows/media/identity</li>
+<li>Missing backup segment causes explicit failure rather than successful restore report</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/Q09.md</code>. Tag browser tests <code>Q09</code>.</p>
+<h3 id="q10-verify-migrations-and-rollback">Q10 Verify migrations and rollback</h3>
+<p>Dependencies: Q09, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06 | Scope: marketplace | Status: todo</p>
+<p>Expand/contract upgrade rehearsal, previous-image compatibility and recovery procedures.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Rollback sequence documented with schema limits</li>
+<li>No data-losing automatic reset</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Upgrade populated staging then run permitted rollback smoke</li>
+<li>Incompatible migration preflight blocks rollback with actionable report</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/Q10.md</code>. Tag browser tests <code>Q10</code>.</p>
+<h3 id="q11-complete-documentation-and-launch-handoff">Q11 Complete documentation and launch handoff</h3>
+<p>Dependencies: Q10, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06 | Scope: marketplace | Status: todo</p>
+<p>Install/provider/import/deploy/runbooks, role guides, acceptance ledger, blocker list and verified release checklist.</p>
+<p>Acceptance:</p>
+<ul>
+<li>Marketplace and management completion separate</li>
+<li>Exact parity gaps and production inputs explicit</li>
+</ul>
+<p>Minimum tests:</p>
+<ul>
+<li>Clean checkout follows documented setup and task validator</li>
+<li>Release check fails any missing mandatory task/evidence/test</li>
+</ul>
+<p>Evidence: <code>evidence/tasks/Q11.md</code>. Tag browser tests <code>Q11</code>.</p></main></body></html>

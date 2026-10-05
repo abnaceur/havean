@@ -1,0 +1,56 @@
+ Container haven-integration-tests-run-fe95cf359f08 Creating 
+ Container haven-integration-tests-run-fe95cf359f08 Created 
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/ui typecheck$ tsc --noEmit
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/ui typecheck: Done
+packages/contracts typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/ops typecheck$ tsc --noEmit
+apps/web typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+apps/ops typecheck: Done
+apps/api typecheck: Done
+apps/web typecheck: Done
+
+> haven-real-estate@0.1.0 test:unit /workspace
+> vitest run tests/unit
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/unit/contracts.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m tests/unit/fixtures.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m tests/unit/visual-policy.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/unit/observability.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/unit/reference.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m21 passed[39m[22m[90m (21)[39m
+[2m   Start at [22m 06:43:04
+[2m   Duration [22m 1.02s[2m (import 47%, transform 32%, tests 16%, worker 5%)[22m
+
+[2m    Isolate [22m [33m5 workers spawned[39m[2m · ~98ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~393ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/contracts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 292[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 06:43:06
+[2m   Duration [22m 628ms[2m (tests 56%, import 22%, transform 21%, worker 1%)[22m
+

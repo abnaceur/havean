@@ -1,0 +1,41 @@
+
+> haven-real-estate@0.1.0 test:unit /workspace
+> vitest run tests/unit
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/unit/fixtures.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m tests/unit/contracts.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/unit/observability.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/unit/reference.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [31m❯[39m tests/unit/ci-negative.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 10[2mms[22m[39m
+[31m   [31m×[31m intentional business assertion must block CI[39m[32m 9[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/unit/ci-negative.test.ts[2m > [22mintentional business assertion must block CI
+[31m[1mAssertionError[22m: expected 'submitted' to be 'published' // Object.is equality[39m
+
+Expected: [32m"[7mp[27mub[7mlish[27med"[39m
+Received: [31m"[7ms[27mub[7mmitt[27med"[39m
+
+[36m [2m❯[22m tests/unit/ci-negative.test.ts:[2m3:115[22m[39m
+    [90m  1|[39m import {expect,it} from 'vitest';
+    [90m  2|[39m import {transition,listingTransitions} from '../../packages/contracts/…
+    [90m  3|[39m it('intentional business assertion must block CI',()=>{expect(transiti…
+    [90m   |[39m                                                                                                                   [31m^[39m
+    [90m  4|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m4 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m19 passed[39m[22m[90m (20)[39m
+[2m   Start at [22m 05:23:55
+[2m   Duration [22m 1.42s[2m (transform 54%, import 35%, tests 8%, worker 3%)[22m
+
+[2m    Isolate [22m [33m5 workers spawned[39m[2m · ~105ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~420ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+ ELIFECYCLE  Command failed with exit code 1.

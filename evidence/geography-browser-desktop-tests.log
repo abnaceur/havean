@@ -1,0 +1,104 @@
+ Container haven-integration-tests-run-9504f76d99a7 Creating 
+ Container haven-integration-tests-run-9504f76d99a7 Created 
+
+Running 4 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/geography.spec.ts:3:1 › G01 geography administration scopes descendants and rejects cross-city parents (8.2s)
+  ✓  2 [desktop] › tests/e2e/geography.spec.ts:28:1 › G02 community/building records resolve without private unit addresses (21.0s)
+  ✘  3 [mobile] › tests/e2e/geography.spec.ts:3:1 › G01 geography administration scopes descendants and rejects cross-city parents (1.5m)
+  ✓  4 [mobile] › tests/e2e/geography.spec.ts:28:1 › G02 community/building records resolve without private unit addresses (2.5s)
+
+
+  1) [mobile] › tests/e2e/geography.spec.ts:3:1 › G01 geography administration scopes descendants and rejects cross-city parents 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.click: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'Save location', exact: true })
+        - locator resolved to <button class="button">Save location</button>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <span>Stable slug</span> from <label class="field">…</label> subtree intercepts pointer events
+      - retrying click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <form class="field-form">…</form> intercepts pointer events
+      - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <span>Stable slug</span> from <label class="field">…</label> subtree intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        29 × waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <span>Stable slug</span> from <label class="field">…</label> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <form class="field-form">…</form> intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <span>Stable slug</span> from <label class="field">…</label> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+           - waiting for element to be visible, enabled and stable
+           - element is visible, enabled and stable
+           - scrolling into view if needed
+           - done scrolling
+           - <span>Stable slug</span> from <label class="field">…</label> subtree intercepts pointer events
+         - retrying click action
+           - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - <span>Stable slug</span> from <label class="field">…</label> subtree intercepts pointer events
+      - retrying click action
+        - waiting 500ms
+
+
+       7 |  await page.getByLabel('Location name',{exact:true}).fill('Sample city '+suffix);
+       8 |  await page.getByLabel('Stable slug',{exact:true}).fill(slug);
+    >  9 |  await page.getByRole('button',{name:'Save location',exact:true}).click();
+         |                                                                   ^
+      10 |  await expect(page.getByRole('status').filter({hasText:'Location saved'})).toBeVisible();
+      11 |  const createdCity=(await (await page.request.get('http://localhost:8089/api/v1/cities')).json()).data.find((row:any)=>row.slug===slug);expect(createdCity).toBeTruthy();
+      12 |  const create=async(kind:string,body:any)=>{const response=await apiRequest(page,'/ops/geography/'+kind,{kind,...body});expect(response.status()).toBe(201);return (await response.json()).data;};
+        at /workspace/tests/e2e/geography.spec.ts:9:67
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/geography-G01-geography-ad-7afc3--rejects-cross-city-parents-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/geography-G01-geography-ad-7afc3--rejects-cross-city-parents-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/geography-G01-geography-ad-7afc3--rejects-cross-city-parents-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/geography-G01-geography-ad-7afc3--rejects-cross-city-parents-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile] › tests/e2e/geography.spec.ts:3:1 › G01 geography administration scopes descendants and rejects cross-city parents 
+  3 passed (2.1m)
+

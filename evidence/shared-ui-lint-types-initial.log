@@ -1,0 +1,84 @@
+ Container haven-integration-tests-run-f1b2e29980ed Creating 
+ Container haven-integration-tests-run-f1b2e29980ed Created 
+
+> haven-real-estate@0.1.0 lint /workspace
+> eslint . && node scripts/boundaries.mjs
+
+Application import boundaries passed
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/ui typecheck$ tsc --noEmit
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/ui typecheck: Done
+packages/contracts typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/web typecheck$ tsc --noEmit
+apps/ops typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+apps/ops typecheck: Done
+apps/web typecheck: Done
+apps/api typecheck: Done
+
+> haven-real-estate@0.1.0 test:unit /workspace
+> vitest run tests/unit
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/unit/fixtures.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [31m❯[39m tests/unit/contracts.test.ts [2m([22m[2m11 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 27[2mms[22m[39m
+   [31m❯[39m F01/F03 architecture contract [2m(3)[22m
+[31m     [31m×[31m has one owner per domain table[39m[32m 9[2mms[22m[39m
+     [32m✓[39m rejects undocumented cross-module mutations[32m 2[2mms[22m[39m
+     [32m✓[39m rejects cross application and browser database imports[32m 1[2mms[22m[39m
+   [32m✓[39m F08 discovery validation [2m(2)[22m
+     [32m✓[39m accepts bounded filters[32m 3[2mms[22m[39m
+     [32m✓[39m rejects inverted ranges and oversized pages[32m 2[2mms[22m[39m
+   [32m✓[39m I03/L02/P12 transitions [2m(2)[22m
+     [32m✓[39m allows declared transitions[32m 0[2mms[22m[39m
+     [32m✓[39m rejects invalid shortcuts[32m 1[2mms[22m[39m
+   [32m✓[39m T01/T03 mortgage [2m(4)[22m
+     [32m✓[39m repays 120000 principal at zero rate over 120 months exactly[32m 4[2mms[22m[39m
+     [32m✓[39m reconciles known nonzero-rate fixture in both methods[32m 4[2mms[22m[39m
+     [32m✓[39m rejects zero term, negative rate and excessive down payment[32m 1[2mms[22m[39m
+     [32m✓[39m escapes CSV formula-like and Unicode titles[32m 0[2mms[22m[39m
+ [32m✓[39m tests/unit/reference.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/unit/observability.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/unit/contracts.test.ts[2m > [22mF01/F03 architecture contract[2m > [22mhas one owner per domain table
+[31m[1mAssertionError[22m: expected 47 to be 48 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 48[39m
+[31m+ 47[39m
+
+[36m [2m❯[22m tests/unit/contracts.test.ts:[2m7:209[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m18 passed[39m[22m[90m (19)[39m
+[2m   Start at [22m 06:22:18
+[2m   Duration [22m 904ms[2m (import 47%, transform 35%, tests 14%, worker 3%)[22m
+
+[2m    Isolate [22m [33m4 workers spawned[39m[2m · ~97ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~290ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+ ELIFECYCLE  Command failed with exit code 1.
+

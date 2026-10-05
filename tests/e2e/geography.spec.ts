@@ -1,0 +1,34 @@
+import {test,expect} from '@playwright/test';
+import {login,apiRequest} from '../support/browser';
+test('G01 geography administration scopes descendants and rejects cross-city parents',async({page},info)=>{
+ await login(page,'admin','http://localhost:8089','/ops/geography');
+ const suffix=info.project.name+'-'+crypto.randomUUID().slice(0,8),slug='sample-'+suffix;
+ await expect(page.locator('.geography-workbench table')).toBeVisible();
+ expect(await page.evaluate(width=>document.documentElement.scrollWidth<=width,page.viewportSize()!.width)).toBe(true);
+ await page.getByRole('button',{name:'Add location',exact:true}).click();
+ await page.getByLabel('Location name',{exact:true}).fill('Sample city '+suffix);
+ await page.getByLabel('Stable slug',{exact:true}).fill(slug);
+ await page.getByRole('button',{name:'Save location',exact:true}).click();
+ await expect(page.getByRole('status').filter({hasText:'Location saved'})).toBeVisible();
+ const createdCity=(await (await page.request.get('http://localhost:8089/api/v1/cities')).json()).data.find((row:any)=>row.slug===slug);expect(createdCity).toBeTruthy();
+ const create=async(kind:string,body:any)=>{const response=await apiRequest(page,'/ops/geography/'+kind,{kind,...body});expect(response.status()).toBe(201);return (await response.json()).data;};
+ const district=await create('districts',{name:'Sample district '+suffix,slug:'sample-district',cityId:createdCity.id});
+ const neighborhood=await create('neighborhoods',{name:'Sample neighborhood',slug:'sample-neighborhood',districtId:district.id});
+ const line=await create('lines',{name:'Sample line',slug:'sample-line',cityId:createdCity.id});
+ const beijing=(await (await page.request.get('http://localhost:8089/api/v1/cities/bj/geography')).json()).data;
+ expect(beijing.districts.some((row:any)=>row.id===district.id)).toBe(false);
+ const wrong=await apiRequest(page,'/ops/geography/stations',{kind:'stations',name:'Invalid station',slug:'invalid-station',cityId:createdCity.id,lineId:line.id,districtId:beijing.districts[0].id,latitude:39.9,longitude:116.4});expect(wrong.status()).toBe(400);expect((await wrong.json()).error.code).toBe('INVALID_PARENT');
+ const station=await create('stations',{name:'Sample station',slug:'sample-station',cityId:createdCity.id,lineId:line.id,districtId:district.id,latitude:39.9,longitude:116.4});
+ const hierarchy=(await (await page.request.get('http://localhost:8089/api/v1/cities/'+slug+'/geography')).json()).data;expect(hierarchy.districts.map((row:any)=>row.id)).toEqual([district.id]);expect(hierarchy.stations.map((row:any)=>row.id)).toEqual([station.id]);expect(hierarchy.neighborhoods.map((row:any)=>row.id)).toEqual([neighborhood.id]);
+ const immutable=await apiRequest(page,'/ops/geography/districts/'+district.id,{kind:'districts',name:district.name,slug:'changed-slug',cityId:createdCity.id,version:district.version},'PATCH');expect(immutable.status()).toBe(400);expect((await immutable.json()).error.code).toBe('IMMUTABLE_SLUG');
+ const edited=await apiRequest(page,'/ops/geography/districts/'+district.id,{kind:'districts',name:district.name+' updated',slug:district.slug,cityId:createdCity.id,version:district.version},'PATCH');expect(edited.status()).toBe(200);
+ const stale=await apiRequest(page,'/ops/geography/districts/'+district.id,{kind:'districts',name:district.name,slug:district.slug,cityId:createdCity.id,version:district.version},'PATCH');expect(stale.status()).toBe(409);
+ const citySettings=(await (await page.request.get('http://localhost:8089/api/v1/config?city='+slug)).json()).data;expect(citySettings.data.name).toBe(createdCity.name);
+ const invalidRate=await apiRequest(page,'/ops/cities/'+slug+'/market',{version:citySettings.version,areaUnit:'m²',annualRate:'99',rentPeriod:'month',supportEmail:'support@example.test',demo:true},'PATCH');expect(invalidRate.status()).toBe(400);
+ await login(page,'buyer');expect((await page.request.post('/api/v1/ops/geography/cities',{headers:{Origin:'http://localhost:8088','idempotency-key':crypto.randomUUID()},data:{kind:'cities',name:'Forbidden city',slug:'forbidden-city',country:'CN',currency:'CNY',timezone:'Asia/Shanghai'}})).status()).toBe(403);
+});
+test('G02 community/building records resolve without private unit addresses',async({page})=>{
+ const response=await page.request.get('/api/v1/communities/willow-park/buildings');expect(response.status()).toBe(200);const buildings=(await response.json()).data;expect(buildings.length).toBeGreaterThan(0);expect(buildings[0].name).toContain('Building');expect(JSON.stringify(buildings)).not.toMatch(/PRIVATE_FIXTURE|private_address|tenant_id/);
+ await login(page,'admin','http://localhost:8089','/ops/geography');const city=(await (await page.request.get('http://localhost:8089/api/v1/cities/bj/geography')).json()).data;
+ const wrong=await apiRequest(page,'/ops/geography/communities',{kind:'communities',name:'Incorrect parent community',slug:'bad-parent-'+crypto.randomUUID().slice(0,8),districtId:city.districts[0].id,neighborhoodId:city.neighborhoods.find((row:any)=>row.district_id!==city.districts[0].id).id,address:'Approximate public address',latitude:39.9,longitude:116.4});expect(wrong.status()).toBe(400);
+});

@@ -1,0 +1,10 @@
+import {createRequire} from 'node:module';
+import {createProcessor} from '../../apps/worker/src/processor';
+const require=createRequire(new URL('../../apps/worker/package.json',import.meta.url));
+const {Worker}=require('bullmq');
+const url=new URL(process.env.REDIS_URL!),queue=process.env.TEST_QUEUE!;
+const point=process.env.TEST_CRASH_POINT;
+const processor=createProcessor({mailApiUrl:process.env.MAIL_API_URL,mailHost:process.env.MAIL_HOST,mailPort:Number(process.env.MAIL_PORT)||1025,afterEffect:async effect=>{if(effect===point){process.send?.({event:'effect-applied'});await new Promise(()=>{});}}});
+const worker=new Worker(queue,processor,{connection:{host:url.hostname,port:Number(url.port)||6379,maxRetriesPerRequest:null},lockDuration:1000,stalledInterval:1000});
+worker.on('ready',()=>process.send?.({event:'ready'}));
+worker.on('failed',()=>process.send?.({event:'failed'}));

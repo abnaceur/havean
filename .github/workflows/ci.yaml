@@ -1,0 +1,38 @@
+name: Integration contract
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: haven-ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - name: Clean Docker seed and required gates
+        run: ./ci.sh
+      - name: Retain sanitized reports and failure screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: haven-contract-${{ github.run_id }}
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            evidence/ci/*.log
+            evidence/ci/report-upload.json
+            evidence/latest-fixture-fingerprint.json
+            evidence/visual/layout-shift-pixel-result.json
+            test-results/**/*.png
+            evidence/*-desktop.png
+            evidence/*-mobile.png
+      - name: Dispose isolated test stack
+        if: always()
+        run: docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests down --volumes --remove-orphans

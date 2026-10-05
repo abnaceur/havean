@@ -1,0 +1,18 @@
+'use client';
+import {useState,useCallback} from 'react';
+import {useQuery} from '@tanstack/react-query';
+import {api} from '@haven/contracts';
+import {Dialog,Spinner,ErrorBox} from '@haven/ui';
+import dynamic from 'next/dynamic';
+const Panorama=dynamic(()=>import('./panorama').then(m=>m.Panorama),{ssr:false,loading:()=> <Spinner/>});
+type Asset={id:string;kind:string;title:string;url:string;poster:string|null;caption:string;duration:string|null;hotspots:{targetId:string;label:string;yaw:number;pitch:number}[]};
+export function PropertyMedia({listingId,resourceType='listings'}:{listingId:string;resourceType?:'listings'|'developments'}){
+ const query=useQuery({queryKey:['property-media',resourceType,listingId],queryFn:()=>api<Asset[]>('/'+resourceType+'/'+listingId+'/media')});
+ const [tab,setTab]=useState(''),[scene,setScene]=useState(''),[plan,setPlan]=useState<Asset|null>(null),[zoom,setZoom]=useState(100);
+ const close=useCallback(()=>setPlan(null),[]);
+ if(query.isPending)return <Spinner/>;if(query.isError)return <ErrorBox message={query.error.message} retry={()=>query.refetch()}/>;
+ const rows=query.data.data;if(!rows.length)return null;
+ const types=[['video','Property videos'],['floor_plan','Floor plans'],['panorama','360° tour'],['photo','More photos']].filter(([kind])=>rows.some(r=>r.kind===kind));
+ const active=types.some(([kind])=>kind===tab)?tab:types[0][0],items=rows.filter(r=>r.kind===active),selected=items.find(r=>r.id===scene)||items[0];
+ return <section className="detail-section property-media"><h2>Explore this property</h2><div className="media-tabs" role="group" aria-label="Property media">{types.map(([kind,label])=><button className={'button '+(active===kind?'':'secondary')} key={kind} aria-pressed={active===kind} onClick={()=>setTab(kind)}>{label} ({rows.filter(r=>r.kind===kind).length})</button>)}</div>{active==='video'?items.map(asset=><figure key={asset.id}><h3>{asset.title}</h3><video aria-label={asset.title} src={asset.url} poster={asset.poster||undefined} controls playsInline preload="metadata" onError={e=>{e.currentTarget.parentElement?.querySelector('.video-error')?.removeAttribute('hidden');}}/><p className="video-error" role="status" hidden>Video playback is unavailable. Please try again or contact the property team.</p><figcaption>{asset.caption}</figcaption></figure>):active==='panorama'?<><div className="media-scenes" role="group" aria-label="Tour scenes">{items.map(asset=><button className="button secondary small" key={asset.id} aria-pressed={asset.id===selected.id} onClick={()=>setScene(asset.id)}>{asset.title}</button>)}</div><h3>{selected.title}</h3><Panorama scene={selected} onScene={setScene}/><p className="fine-print">{selected.caption}</p></>:<div className="plan-gallery">{items.map(asset=><figure key={asset.id}><button className="plan-image-button" onClick={()=>{setZoom(100);setPlan(asset);}} aria-label={'Open '+asset.title}><img src={asset.url} alt={asset.title} loading="lazy"/></button><figcaption><strong>{asset.title}</strong><p>{asset.caption}</p></figcaption></figure>)}</div>}{plan&&<Dialog title={plan.title} onClose={close}><div className="media-controls"><button className="button secondary" disabled={zoom<=50} onClick={()=>setZoom(z=>Math.max(50,z-25))}>Zoom out</button><button className="button secondary" disabled={zoom>=300} onClick={()=>setZoom(z=>Math.min(300,z+25))}>Zoom in</button><button className="button secondary" onClick={()=>setZoom(100)}>Fit plan</button><output>{zoom}%</output></div><div className="plan-zoom"><img src={plan.url} alt={plan.title} style={{width:zoom+'%',maxWidth:'none'}}/></div><p>{plan.caption}</p></Dialog>}</section>;
+}

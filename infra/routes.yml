@@ -1,0 +1,31 @@
+http:
+  routers:
+    web:
+      entryPoints: [web]
+      rule: PathPrefix(`/`)
+      service: web
+    ops:
+      entryPoints: [ops]
+      rule: PathPrefix(`/`)
+      service: ops
+    auth:
+      entryPoints: [auth]
+      rule: PathPrefix(`/`)
+      service: identity
+    mail:
+      entryPoints: [mail]
+      rule: PathPrefix(`/`)
+      service: mail
+  services:
+    web:
+      loadBalancer:
+        servers: [{url: 'http://web:3000'}]
+    ops:
+      loadBalancer:
+        servers: [{url: 'http://ops:3001'}]
+    identity:
+      loadBalancer:
+        servers: [{url: 'http://identity:8080'}]
+    mail:
+      loadBalancer:
+        servers: [{url: 'http://mail:8025'}]

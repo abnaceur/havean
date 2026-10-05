@@ -1,0 +1,6 @@
+import {test,expect} from '@playwright/test';
+import {login,apiRequest} from '../support/browser';
+test('I02 terminal inventory cannot be edited and another agency cannot claim the unit',async({page})=>{
+ await login(page,'agent','http://localhost:8089','/ops/listings');const rows=(await (await page.request.get('http://localhost:8089/api/v1/ops/listings')).json()).data;const sold=rows.find((row:any)=>row.status==='sold');expect(sold).toBeTruthy();const response=await apiRequest(page,'/ops/listings/'+sold.id,{title:'An invalid edit to a completed property',price:'2450000.75',version:sold.version},'PATCH');expect(response.status()).toBe(409);
+ await login(page,'outsider','http://localhost:8089','/ops/listings');const foreign=await apiRequest(page,'/ops/listings',{unitId:'10000000-0000-4000-8000-000000001000',title:'A forbidden foreign unit property draft',description:'A complete description must not grant access to another agency unit.',transaction:'sale',segment:'residential',currency:'CNY',price:'1000000.25',rentPeriod:null});expect(foreign.status()).toBe(404);await login(page,'buyer');await page.goto('/account/properties');await expect(page.getByRole('button',{name:'Create property draft',exact:true})).toHaveCount(0);
+});

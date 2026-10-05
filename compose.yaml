@@ -1,0 +1,232 @@
+name: haven
+x-app: &app
+  build:
+    context: .
+    dockerfile: infra/Dockerfile.dev
+    target: development
+  env_file: .env
+  init: true
+  volumes: &workspace-volumes
+    - .:/workspace
+    - dependencies:/workspace/node_modules
+    - packages-test-support-dependencies:/workspace/packages/test-support/node_modules
+    - packages-database-dependencies:/workspace/packages/database/node_modules
+    - packages-config-dependencies:/workspace/packages/config/node_modules
+    - packages-contracts-dependencies:/workspace/packages/contracts/node_modules
+    - packages-ui-dependencies:/workspace/packages/ui/node_modules
+    - apps-worker-dependencies:/workspace/apps/worker/node_modules
+    - apps-api-dependencies:/workspace/apps/api/node_modules
+    - apps-ops-dependencies:/workspace/apps/ops/node_modules
+    - apps-web-dependencies:/workspace/apps/web/node_modules
+  networks: [private]
+  restart: unless-stopped
+services:
+  db:
+    image: postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6
+    environment:
+      POSTGRES_DB: haven
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run ./dev.sh to generate secrets}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?Missing APP_DB_PASSWORD}
+      IDENTITY_DB_PASSWORD: ${IDENTITY_DB_PASSWORD:?Missing IDENTITY_DB_PASSWORD}
+    volumes: [database:/var/lib/postgresql/data, ./infra/init-db.sh:/docker-entrypoint-initdb.d/01-roles.sh:ro]
+    networks: [private]
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U postgres -d haven']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  install:
+    <<: *app
+    restart: 'no'
+    command: pnpm install --frozen-lockfile
+    environment:
+      CI: 'true'
+  migrate:
+    <<: *app
+    restart: 'no'
+    command: sh -c 'pnpm db:migrate && pnpm db:seed'
+    depends_on:
+      db: {condition: service_healthy}
+      install: {condition: service_completed_successfully}
+  identity:
+    image: quay.io/keycloak/keycloak:26.4.7@sha256:9409c59bdfb65dbffa20b11e6f18b8abb9281d480c7ca402f51ed3d5977e6007
+    command: start-dev --import-realm
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/haven_identity
+      KC_DB_USERNAME: haven_identity
+      KC_DB_PASSWORD: ${IDENTITY_DB_PASSWORD:?Missing IDENTITY_DB_PASSWORD}
+      KC_HOSTNAME: http://localhost:8090
+      KC_HTTP_ENABLED: 'true'
+      KC_PROXY_HEADERS: xforwarded
+      KC_HEALTH_ENABLED: 'true'
+      KC_BOOTSTRAP_ADMIN_USERNAME: local-admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?Missing KEYCLOAK_ADMIN_PASSWORD}
+    volumes: [./infra/generated/haven-realm.json:/opt/keycloak/data/import/haven-realm.json:ro]
+    networks: [private]
+    depends_on:
+      db: {condition: service_healthy}
+    healthcheck:
+      test: [CMD-SHELL, "bash -c 'exec 3<>/dev/tcp/localhost/9000; printf \"GET /health/ready HTTP/1.0\\r\\n\\r\\n\" >&3; grep -q UP <&3'"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+  search:
+    image: getmeili/meilisearch:v1.37.0@sha256:9cde2774864e6c19cdd09fcd2950bc01ac9a0454b6f343fffafa14faae6eb7ea
+    environment:
+      MEILI_MASTER_KEY: ${SEARCH_KEY:?Missing SEARCH_KEY}
+      MEILI_NO_ANALYTICS: 'true'
+      MEILI_ENV: development
+    volumes: [search:/meili_data]
+    networks: [private]
+    healthcheck:
+      test: [CMD, curl, -f, http://localhost:7700/health]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  cache:
+    image: valkey/valkey:8.1.6-alpine@sha256:1cb6b20b70d927560cc4cc5397b5f045e74aa603ff7696274778880bb6fadc75
+    command: valkey-server --appendonly yes
+    volumes: [cache:/data]
+    networks: [private]
+    healthcheck:
+      test: [CMD, valkey-cli, ping]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  storage:
+    image: chrislusf/seaweedfs:4.46@sha256:08d516132314207d10c8e37cbffc1f32b147d870169688734cc61c6231625b62
+    command: server -s3 -s3.config=/etc/seaweedfs/s3.json -dir=/data -ip=storage -volume.max=20 -master.volumeSizeLimitMB=100
+    volumes: [objects:/data, ./infra/generated/s3.json:/etc/seaweedfs/s3.json:ro]
+    networks: [private]
+    healthcheck:
+      test: [CMD-SHELL, 'wget -q -O /dev/null http://storage:9333/cluster/status && (wget -S -O /dev/null http://storage:8333 2>&1 | grep -q "403 Forbidden")']
+      interval: 10s
+      timeout: 5s
+      retries: 20
+  scanner:
+    image: clamav/clamav:1.4.3@sha256:75fb5fd95fcbe1d7e6d240c369c1572b686ee2c95949d1042b5148de8eddebb4
+    networks: [private]
+    volumes: [virus-signatures:/var/lib/clamav]
+    healthcheck:
+      test: [CMD, clamdscan, --ping, '1']
+      interval: 10s
+      timeout: 5s
+      retries: 40
+      start_period: 90s
+  mail:
+    environment:
+      MP_DATABASE: /data/mailpit.db
+    volumes: [mail-data:/data]
+    image: axllent/mailpit:v1.27.8@sha256:6abc8e633df15eaf785cfcf38bae48e66f64beecdc03121e249d0f9ec15f0707
+    networks: [private]
+    healthcheck:
+      test: [CMD, /mailpit, readyz]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  api:
+    <<: *app
+    command: pnpm --filter @haven/api dev
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      identity: {condition: service_healthy}
+      scanner: {condition: service_healthy}
+      storage: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://localhost:4000/api/v1/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+  worker:
+    <<: *app
+    command: pnpm --filter @haven/worker dev
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      cache: {condition: service_healthy}
+      search: {condition: service_healthy}
+      mail: {condition: service_healthy}
+  web:
+    <<: *app
+    command: pnpm --filter @haven/web dev
+    depends_on:
+      api: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://localhost:3000/bj').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+  ops:
+    <<: *app
+    command: pnpm --filter @haven/ops dev
+    environment:
+      PUBLIC_APP_URL: ${PUBLIC_OPS_URL}
+      NEXT_PUBLIC_OPS_URL: ${PUBLIC_OPS_URL}
+    depends_on:
+      api: {condition: service_healthy}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://localhost:3001/ops').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+  proxy:
+    image: traefik:v3.6.1@sha256:fd5932c796f7e2db9fd6bff485ef693d53797f0ee8ad03dc68aa424ea6f21958
+    ports: ['127.0.0.1:8088:8088','127.0.0.1:8089:8089','127.0.0.1:8090:8090','127.0.0.1:8091:8091']
+    volumes: [./infra/traefik.yml:/etc/traefik/traefik.yml:ro, ./infra/routes.yml:/etc/traefik/routes.yml:ro]
+    networks: [private]
+    depends_on: [web,ops,identity]
+    healthcheck:
+      test: [CMD, traefik, healthcheck, --ping]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+  tests:
+    env_file: .env
+    init: true
+    volumes: *workspace-volumes
+    profiles: [tests]
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.dev
+      target: tests
+    restart: 'no'
+    network_mode: service:proxy
+    environment:
+      HAVEN_CONTAINER_TESTS: 'true'
+      PLAYWRIGHT_BROWSERS_PATH: /ms-playwright
+    command: sh -c 'pnpm test:unit && pnpm test:integration && pnpm test:e2e'
+    depends_on:
+      proxy: {condition: service_healthy}
+      api: {condition: service_healthy}
+      worker: {condition: service_started}
+
+networks:
+  private:
+volumes:
+  mail-data:
+  virus-signatures:
+  database:
+  dependencies:
+  search:
+  cache:
+  objects:
+
+  apps-web-dependencies:
+
+  apps-ops-dependencies:
+
+  apps-api-dependencies:
+
+  apps-worker-dependencies:
+
+  packages-ui-dependencies:
+
+  packages-contracts-dependencies:
+
+  packages-config-dependencies:
+
+  packages-database-dependencies:
+
+  packages-test-support-dependencies:

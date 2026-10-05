@@ -1,0 +1,122 @@
+# Specification backlog
+
+- [x] **F01 Record architecture and boundaries** — done; dependencies: none
+- [x] **F02 Pin compatible dependencies and licenses** — done; dependencies: F01
+- [x] **F03 Initialize monorepo and check scripts** — done; dependencies: F02
+- [x] **F04 Start isolated development services** — done; dependencies: F03
+- [x] **F05 Create database migrations and roles** — done; dependencies: F04
+- [x] **F06 Implement identity and server sessions** — done; dependencies: F05
+- [x] **F07 Implement role and organization authorization** — done; dependencies: F06
+- [x] **F08 Publish API contracts and generated client** — done; dependencies: F07
+- [x] **F09 Build outbox and idempotency infrastructure** — done; dependencies: F08
+- [x] **F10 Create deterministic integrated test harness** — done; dependencies: F09
+- [x] **F11 Prepare representative English fixture contracts** — done; dependencies: F10
+- [x] **F12 Add media quarantine and signed uploads** — done; dependencies: F11
+- [x] **F13 Add logs readiness and redaction** — done; dependencies: F12
+- [x] **F14 Create CI contract** — done; dependencies: F13
+- [x] **G01 Implement geography hierarchy** — done; dependencies: F14
+- [x] **G02 Create community and building records** — done; dependencies: G01, F14
+- [x] **G03 Build city selector** — done; dependencies: G02, F14
+- [x] **G04 Build community discovery** — done; dependencies: G03, F14
+- [x] **G05 Build community detail** — done; dependencies: G04, F14
+- [x] **I01 Create canonical unit and listing schema** — done; dependencies: F14, G02
+- [x] **I02 Implement draft listing editing** — done; dependencies: I01, F14, G02
+- [ ] **I03 Implement listing workflow service** — in_progress; dependencies: I02, F14, G02
+- [ ] **I04 Create moderation queue and decisions** — todo; dependencies: I03, F14, G02
+- [ ] **I05 Protect published revisions** — todo; dependencies: I04, F14, G02
+- [ ] **I06 Create price and status history** — todo; dependencies: I05, F14, G02
+- [ ] **I07 Create inventory workbench** — todo; dependencies: I06, F14, G02
+- [ ] **I08 Implement expiration and withdrawal** — todo; dependencies: I07, F14, G02
+- [x] **U01 Create reference screen manifest** — done; dependencies: F14
+- [x] **U02 Implement measured design tokens** — done; dependencies: U01, F14
+- [x] **U03 Implement shared mobile shell** — done; dependencies: U02, F14
+- [x] **U04 Implement listing and development cards** — done; dependencies: U03, F14
+- [x] **U05 Implement standard UI states** — done; dependencies: U04, F14
+- [x] **U06 Establish visual regression fixtures** — done; dependencies: U05, F14
+- [x] **U07 Build accessibility interaction harness** — done; dependencies: U06, F14
+- [ ] **D01 Index approved public inventory** — todo; dependencies: I08, G05, U07
+- [ ] **D02 Implement typed search API** — todo; dependencies: D01, I08, G05, U07
+- [ ] **D03 Build autocomplete and recent searches** — todo; dependencies: D02, I08, G05, U07
+- [ ] **D04 Build resale list and filter sheets** — todo; dependencies: D03, I08, G05, U07
+- [ ] **D05 Build map search** — todo; dependencies: D04, I08, G05, U07
+- [ ] **D06 Implement rankings and recommendations** — todo; dependencies: D05, I08, G05, U07
+- [ ] **D07 Build homepage sections** — todo; dependencies: D06, I08, G05, U07
+- [ ] **D08 Build resale detail and gallery** — todo; dependencies: D07, I08, G05, U07
+- [ ] **D09 Add approved virtual tours** — todo; dependencies: D08, I08, G05, U07
+- [ ] **D10 Implement search rebuild and recovery** — todo; dependencies: D09, I08, G05, U07
+- [ ] **A01 Build account profile** — todo; dependencies: F14, I08, U07
+- [ ] **A02 Implement persistent favorites** — todo; dependencies: A01, F14, I08, U07
+- [ ] **A03 Build favorite lists and history** — todo; dependencies: A02, F14, I08, U07
+- [ ] **A04 Implement saved searches** — todo; dependencies: A03, F14, I08, U07
+- [ ] **A05 Deliver notifications and alerts** — todo; dependencies: A04, F14, I08, U07
+- [ ] **A06 Add account export and deletion workflow** — todo; dependencies: A05, F14, I08, U07
+- [ ] **R01 Implement rental terms** — todo; dependencies: D10, A06
+- [ ] **R02 Build rental filters and cards** — todo; dependencies: R01, D10, A06
+- [ ] **R03 Build rental detail** — todo; dependencies: R02, D10, A06
+- [ ] **R04 Protect rental availability** — todo; dependencies: R03, D10, A06
+- [ ] **N01 Create developer organization and projects** — todo; dependencies: D10, F07
+- [ ] **N02 Create floor-plan types and inventory** — todo; dependencies: N01, D10, F07
+- [ ] **N03 Build development discovery** — todo; dependencies: N02, D10, F07
+- [ ] **N04 Build development detail** — todo; dependencies: N03, D10, F07
+- [ ] **N05 Build developer inventory workspace** — todo; dependencies: N04, D10, F07
+- [ ] **C01 Add commercial attributes and price bases** — todo; dependencies: D10, I08
+- [ ] **C02 Build commercial discovery** — todo; dependencies: C01, D10, I08
+- [ ] **C03 Build commercial detail and inquiry** — todo; dependencies: C02, D10, I08
+- [ ] **O01 Create owner grants and submissions** — todo; dependencies: I08, A06, R04
+- [ ] **O02 Build step-by-step owner form** — todo; dependencies: O01, I08, A06, R04
+- [ ] **O03 Upload private ownership evidence** — todo; dependencies: O02, I08, A06, R04
+- [ ] **O04 Assign agent and track submission** — todo; dependencies: O03, I08, A06, R04
+- [ ] **O05 Build owner listing lifecycle controls** — todo; dependencies: O04, I08, A06, R04
+- [ ] **B01 Onboard agents and verify credentials** — todo; dependencies: I08, A06, U07
+- [ ] **B02 Build agent directory and profiles** — todo; dependencies: B01, I08, A06, U07
+- [ ] **B03 Manage agency members and roles** — todo; dependencies: B02, I08, A06, U07
+- [ ] **B04 Assign inventory and leads** — todo; dependencies: B03, I08, A06, U07
+- [ ] **B05 Build agent dashboard** — todo; dependencies: B04, I08, A06, U07
+- [ ] **L01 Persist inquiries and route leads** — todo; dependencies: D10, A06, B05, N05, C03, O05
+- [ ] **L02 Build CRM queue and lead timeline** — todo; dependencies: L01, D10, A06, B05, N05, C03, O05
+- [ ] **L03 Create agent availability slots** — todo; dependencies: L02, D10, A06, B05, N05, C03, O05
+- [ ] **L04 Reserve viewings transactionally** — todo; dependencies: L03, D10, A06, B05, N05, C03, O05
+- [ ] **L05 Build booking calendar and actions** — todo; dependencies: L04, D10, A06, B05, N05, C03, O05
+- [ ] **L06 Send viewing reminders and reports** — todo; dependencies: L05, D10, A06, B05, N05, C03, O05
+- [ ] **M01 Create authorized conversations** — todo; dependencies: L06, F12
+- [ ] **M02 Persist and deduplicate messages** — todo; dependencies: M01, L06, F12
+- [ ] **M03 Build inbox and chat interface** — todo; dependencies: M02, L06, F12
+- [ ] **M04 Recover realtime sessions** — todo; dependencies: M03, L06, F12
+- [ ] **V01 Create service provider catalog** — todo; dependencies: A06, L06, U07
+- [ ] **V02 Build provider discovery and detail** — todo; dependencies: V01, A06, L06, U07
+- [ ] **V03 Implement renovation quote workflow** — todo; dependencies: V02, A06, L06, U07
+- [ ] **T01 Implement mortgage calculation engine** — todo; dependencies: F08, U07
+- [ ] **T02 Build mortgage interface** — todo; dependencies: T01, F08, U07
+- [ ] **T03 Export repayment schedule** — todo; dependencies: T02, F08, U07
+- [ ] **P01 Create management grants and portfolios** — todo; dependencies: R04, O05, B05, F12
+- [ ] **P02 Create tenant profiles and account links** — todo; dependencies: P01, R04, O05, B05, F12
+- [ ] **P03 Create lease drafts and term validation** — todo; dependencies: P02, R04, O05, B05, F12
+- [ ] **P04 Activate lease and enforce availability** — todo; dependencies: P03, R04, O05, B05, F12
+- [ ] **P05 Renew and end leases** — todo; dependencies: P04, R04, O05, B05, F12
+- [ ] **P06 Generate recurring charges** — todo; dependencies: P05, R04, O05, B05, F12
+- [ ] **P07 Record payment evidence** — todo; dependencies: P06, R04, O05, B05, F12
+- [ ] **P08 Allocate payments and credit balances** — todo; dependencies: P07, R04, O05, B05, F12
+- [ ] **P09 Reverse charges and payments** — todo; dependencies: P08, R04, O05, B05, F12
+- [ ] **P10 Track deposits separately** — todo; dependencies: P09, R04, O05, B05, F12
+- [ ] **P11 Build tenant lease and balance portal** — todo; dependencies: P10, R04, O05, B05, F12
+- [ ] **P12 Create maintenance requests** — todo; dependencies: P11, R04, O05, B05, F12
+- [ ] **P13 Build maintenance workbench and timeline** — todo; dependencies: P12, R04, O05, B05, F12
+- [ ] **P14 Generate owner and tenant statements** — todo; dependencies: P13, R04, O05, B05, F12
+- [ ] **P15 Build management dashboards** — todo; dependencies: P14, R04, O05, B05, F12
+- [ ] **S01 Create support cases and complaints** — todo; dependencies: L06, M04, V03, I08
+- [ ] **S02 Build support workbench** — todo; dependencies: S01, L06, M04, V03, I08
+- [ ] **S03 Manage home curation and taxonomy** — todo; dependencies: S02, L06, M04, V03, I08
+- [ ] **S04 Manage platform users and verification** — todo; dependencies: S03, L06, M04, V03, I08
+- [ ] **S05 Manage market configuration** — todo; dependencies: S04, L06, M04, V03, I08
+- [ ] **S06 Publish scoped analytics and audit** — todo; dependencies: S05, L06, M04, V03, I08
+- [ ] **Q01 Complete SEO and routing behavior** — todo; dependencies: G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [ ] **Q02 Audit full English visual parity** — todo; dependencies: Q01, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [ ] **Q03 Audit responsive accessibility** — todo; dependencies: Q02, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [ ] **Q04 Run marketplace critical journeys** — todo; dependencies: Q03, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [ ] **Q05 Run management integrity journeys** — todo; dependencies: Q04, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [ ] **Q06 Run security and provider readiness checks** — todo; dependencies: Q05, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [ ] **Q07 Measure performance and fix bottlenecks** — todo; dependencies: Q06, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [ ] **Q08 Package staging deployment** — todo; dependencies: Q07, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [ ] **Q09 Verify backup and restore** — todo; dependencies: Q08, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [ ] **Q10 Verify migrations and rollback** — todo; dependencies: Q09, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [ ] **Q11 Complete documentation and launch handoff** — todo; dependencies: Q10, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06

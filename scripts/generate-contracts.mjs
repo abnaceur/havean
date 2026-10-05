@@ -1,0 +1,49 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import ts from 'typescript';
+const files=[];
+function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const file=path.join(dir,entry.name);if(entry.isDirectory())walk(file);else if(entry.name.endsWith('.ts'))files.push(file);}}
+walk('apps/api/src');
+const operations=[];
+for(const file of files){
+ const source=fs.readFileSync(file,'utf8'),tree=ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+ function visit(node){
+  if(ts.isClassDeclaration(node))for(const member of node.members){
+   if(!ts.isMethodDeclaration(member)||!member.body)continue;
+   const decorator=(ts.getDecorators(member)||[]).find(d=>ts.isCallExpression(d.expression)&&['Get','Post','Patch','Put','Delete'].includes(d.expression.expression.getText(tree)));
+   if(!decorator||!ts.isCallExpression(decorator.expression))continue;
+   const method=decorator.expression.expression.getText(tree).toUpperCase(),route=decorator.expression.arguments[0]?.text;if(!route)continue;
+   const id=node.name.text+'_'+member.name.getText(tree);
+   let body='z.undefined()',query='z.object({})';
+   function read(n){
+    if(ts.isCallExpression(n)&&ts.isPropertyAccessExpression(n.expression)&&n.expression.name.text==='parse'&&['body','input'].includes(n.arguments[0]?.getText(tree))){
+     const schema=n.expression.expression.getText(tree);const parameterNames=(decoratorName)=>member.parameters.filter(parameter=>(ts.getDecorators(parameter)||[]).some(decorator=>ts.isCallExpression(decorator.expression)&&decorator.expression.expression.getText(tree)===decoratorName)).map(parameter=>parameter.name.getText(tree));const argument=n.arguments[0].getText(tree);if(parameterNames('Query').includes(argument))query=schema;else if(parameterNames('Body').includes(argument))body=schema;
+    }
+    ts.forEachChild(n,read);
+   }read(member.body);
+   if(['DiscoveryController_market','GeographyController_records'].includes(id))query="z.object({city:z.string().min(1).max(100).optional()})";
+   if(['DiscoveryController_community','DiscoveryController_listing','DiscoveryController_development','DiscoveryController_developments','DiscoveryController_agents','DiscoveryController_providers'].includes(id))query="z.object({city:z.string().min(1).max(100).optional()})";
+   if(id==='DiscoveryController_estimate')body='mortgageSchema';
+   if(id==='MediaController_content')body='z.instanceof(Blob)';
+   if(id==='IdentityController_login')query="z.object({returnTo:z.string().optional(),prompt:z.literal('login').optional()})";
+   if(id==='IdentityController_callback')query="z.object({code:z.string(),state:z.string()})";
+   if(id==='DiscoveryController_suggestions')query="z.object({q:z.string().max(120).optional()})";
+   if(id==='MediaController_content')query="z.object({signature:z.string()})";
+   if(id==='MediaController_download')query="z.object({signature:z.string().optional()})";
+   operations.push({id,method,path:'/api/v1/'+(node.name.text==='HealthController'?'health/':'')+route,body,query});
+  }
+  ts.forEachChild(node,visit);
+ }visit(tree);
+}
+operations.sort((a,b)=>a.id.localeCompare(b.id));
+let output="// Generated from controller validation schemas; do not edit.\nimport {z} from 'zod';\nimport {money,listingFilters,inquirySchema,ownerSchema} from '../domain';\nimport {mortgageSchema} from '../mortgage';\nimport {draftCreate,draftUpdate} from '../inventory-drafts';\nimport {responses} from '../responses';\nimport {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';\nconst date=z.string().regex(/^\\d{4}-\\d{2}-\\d{2}$/).refine(v=>!Number.isNaN(Date.parse(v))&&new Date(v).toISOString().slice(0,10)===v,'Use a valid date');\nconst kind=z.enum(['photo','floor_plan','panorama','video']);\nconst metadata=z.object({hotspots:z.array(z.object({targetId:z.string().uuid(),label:z.string().min(2).max(80),yaw:z.number().min(-180).max(180),pitch:z.number().min(-80).max(80)})).max(20).default([]),caption:z.string().max(1000).default('')});\nexport const operations={\n";
+for(const op of operations){
+ const params=[...op.path.matchAll(/:(\w+)/g)].map(m=>m[1]);const parameterSchema=params.map(p=>JSON.stringify(p)+':'+(p==='kind'?'geographyKind':p==='resource'?"z.enum(['listings','developments'])":'z.string().min(1)')).join(',');
+ output+=JSON.stringify(op.id)+':{method:'+JSON.stringify(op.method)+',path:'+JSON.stringify(op.path)+',params:z.object({'+parameterSchema+'}),query:'+op.query+',body:'+op.body+',response:responses['+JSON.stringify(op.id)+']},\n';
+}
+output+='} as const;\n';
+function write(file,source){if(process.argv.includes('--check')){if(fs.readFileSync(file,'utf8')!==source)throw Error('Generated contract is stale: '+file);}else fs.writeFileSync(file,source);}
+write('packages/contracts/src/generated/operations.ts',output);
+const sdk="// Generated from API operations. Uses the canonical session transport.\nimport {operations} from './operations';\nimport {call} from '../transport';\nexport const sdk={\n"+operations.map(op=>JSON.stringify(op.id)+':call(operations['+JSON.stringify(op.id)+'])').join(',\n')+'\n};\n';
+write('packages/contracts/src/generated/client.ts',sdk);
+console.log('Generated '+operations.length+' typed API operations.');

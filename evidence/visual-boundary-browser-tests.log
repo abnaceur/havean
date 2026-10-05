@@ -1,0 +1,87 @@
+ Container haven-integration-tests-run-4ce01fa2e943 Creating 
+ Container haven-integration-tests-run-4ce01fa2e943 Created 
+
+Running 8 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/inventory-drafts.spec.ts:5:1 › I02 agent creates a new unit draft, edits it, refreshes and rejects stale and foreign edits (15.1s)
+  ✓  2 [desktop] › tests/e2e/inventory-drafts.spec.ts:14:1 › I02 owner edits only owned drafts and cannot bypass new-property ownership review (5.2s)
+  ✓  3 [desktop] › tests/e2e/visual-boundaries.spec.ts:4:1 › U06 actual twelve-pixel card shift fails the geometry comparison (2.8s)
+  ✓  4 [desktop] › tests/e2e/visual-boundaries.spec.ts:9:1 › U07 filter keyboard focus and axe scan, with missing-label/hidden-focus negative fixtures (5.4s)
+  ✘  5 [mobile] › tests/e2e/inventory-drafts.spec.ts:5:1 › I02 agent creates a new unit draft, edits it, refreshes and rejects stale and foreign edits (5.8s)
+  ✘  6 [mobile] › tests/e2e/inventory-drafts.spec.ts:14:1 › I02 owner edits only owned drafts and cannot bypass new-property ownership review (2.4s)
+  ✓  7 [mobile] › tests/e2e/visual-boundaries.spec.ts:4:1 › U06 actual twelve-pixel card shift fails the geometry comparison (3.3s)
+  ✓  8 [mobile] › tests/e2e/visual-boundaries.spec.ts:9:1 › U07 filter keyboard focus and axe scan, with missing-label/hidden-focus negative fixtures (6.3s)
+
+
+  1) [mobile] › tests/e2e/inventory-drafts.spec.ts:5:1 › I02 agent creates a new unit draft, edits it, refreshes and rejects stale and foreign edits 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: undefined
+
+       7 |  await page.getByRole('combobox',{name:'Community',exact:true}).selectOption('10000000-0000-4000-8000-000000000040');await page.getByLabel('Private unit address',{exact:true}).fill('PRIVATE_DRAFT_'+crypto.randomUUID());await page.getByLabel('Area (m²)',{exact:true}).fill('81.25');await page.getByLabel('Property title',{exact:true}).fill('Browser draft '+info.project.name+' '+crypto.randomUUID());const title=await page.getByLabel('Property title',{exact:true}).inputValue();await page.getByLabel('Property description',{exact:true}).fill(base.description);await page.getByLabel('Asking price (decimal amount)',{exact:true}).fill(base.price);await page.getByRole('button',{name:'Save property draft',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'Property draft saved'})).toBeVisible();
+       8 |  await page.reload();const row=page.locator('.draft-workbench .record-row').filter({hasText:title});await expect(row).toBeVisible();await row.getByRole('button',{name:'Edit draft',exact:true}).click();await expect(page.getByLabel('Asking price (decimal amount)',{exact:true})).toHaveValue(base.price);await page.getByLabel('Property title',{exact:true}).fill(title+' updated');await page.getByRole('button',{name:'Save property draft',exact:true}).click();
+    >  9 |  const records=(await (await page.request.get('http://localhost:8089/api/v1/ops/listings')).json()).data;const record=records.find((row:any)=>row.title===title+' updated');expect(record).toBeTruthy();
+         |                                                                                                                                                                                            ^
+      10 |  const detail=(await (await page.request.get('http://localhost:8089/api/v1/ops/listings/'+record.id+'/draft')).json()).data;const edit={...base,title:detail.title,version:detail.version-1};delete (edit as any).unitId;expect((await apiRequest(page,'/ops/listings/'+record.id+'/draft',edit,'PATCH')).status()).toBe(409);
+      11 |  const publicResponse=await page.request.get('http://localhost:8088/api/v1/listings/'+record.slug);expect(publicResponse.status()).toBe(404);expect(await publicResponse.text()).not.toContain('PRIVATE_DRAFT');
+      12 |  await page.screenshot({path:`evidence/draft-inventory-${info.project.name}.png`,fullPage:true});await login(page,'outsider','http://localhost:8089','/ops/listings');expect((await page.request.get('http://localhost:8089/api/v1/ops/listings/'+record.id+'/draft')).status()).toBe(404);expect((await apiRequest(page,'/ops/listings/'+record.id+'/draft',{...edit,version:detail.version},'PATCH')).status()).toBe(404);
+        at /workspace/tests/e2e/inventory-drafts.spec.ts:9:188
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/inventory-drafts-I02-agent-abbc3-cts-stale-and-foreign-edits-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/inventory-drafts-I02-agent-abbc3-cts-stale-and-foreign-edits-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/inventory-drafts-I02-agent-abbc3-cts-stale-and-foreign-edits-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/inventory-drafts-I02-agent-abbc3-cts-stale-and-foreign-edits-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/inventory-drafts.spec.ts:14:1 › I02 owner edits only owned drafts and cannot bypass new-property ownership review 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Owner edited their private property draft', exact: true })
+    Expected: visible
+    Error: strict mode violation: getByRole('heading', { name: 'Owner edited their private property draft', exact: true }) resolved to 2 elements:
+        1) <h3>Owner edited their private property draft</h3> aka getByRole('heading', { name: 'Owner edited their private' }).first()
+        2) <h3>Owner edited their private property draft</h3> aka getByRole('heading', { name: 'Owner edited their private' }).nth(1)
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Owner edited their private property draft', exact: true }) with timeout 15000ms
+      - waiting for getByRole('heading', { name: 'Owner edited their private property draft', exact: true })
+
+
+      14 | test('I02 owner edits only owned drafts and cannot bypass new-property ownership review',async({page})=>{
+      15 |  await login(page,'owner');let response=await page.request.post('/api/v1/ops/listings',{headers:{Origin:'http://localhost:8088','idempotency-key':crypto.randomUUID()},data:base});expect(response.status()).toBe(201);const row=(await response.json()).data;response=await page.request.patch('/api/v1/ops/listings/'+row.id+'/draft',{headers:{Origin:'http://localhost:8088'},data:{...base,title:'Owner edited their private property draft',version:row.version}});expect(response.status()).toBe(200);
+    > 16 |  await page.goto('/account/properties');await expect(page.getByRole('heading',{name:'Owner edited their private property draft',exact:true})).toBeVisible();
+         |                                                                                                                                               ^
+      17 |  const forged={...base,unitId:undefined,unit:{communityId:'10000000-0000-4000-8000-000000000040',area:'80',beds:2,livingRooms:1,baths:1,orientation:'South',floor:1,privateAddress:'Unverified owner address'}};expect((await page.request.post('/api/v1/ops/listings',{headers:{Origin:'http://localhost:8088','idempotency-key':crypto.randomUUID()},data:forged})).status()).toBe(403);
+      18 |  await login(page,'buyer');expect((await page.request.get('/api/v1/ops/listings/'+row.id+'/draft')).status()).toBe(403);
+      19 | });
+        at /workspace/tests/e2e/inventory-drafts.spec.ts:16:143
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/inventory-drafts-I02-owner-1e040-w-property-ownership-review-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/inventory-drafts-I02-owner-1e040-w-property-ownership-review-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/inventory-drafts-I02-owner-1e040-w-property-ownership-review-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/inventory-drafts-I02-owner-1e040-w-property-ownership-review-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [mobile] › tests/e2e/inventory-drafts.spec.ts:5:1 › I02 agent creates a new unit draft, edits it, refreshes and rejects stale and foreign edits 
+    [mobile] › tests/e2e/inventory-drafts.spec.ts:14:1 › I02 owner edits only owned drafts and cannot bypass new-property ownership review 
+  6 passed (49.6s)
+

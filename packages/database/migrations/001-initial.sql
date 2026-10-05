@@ -1,0 +1,97 @@
+CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+CREATE TABLE schema_migrations (name text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE profiles (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), subject text UNIQUE NOT NULL, display_name text NOT NULL, email text NOT NULL, locale text NOT NULL DEFAULT 'en-GB', state text NOT NULL DEFAULT 'active', created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE organizations (id uuid PRIMARY KEY, name text NOT NULL, type text NOT NULL);
+CREATE TABLE memberships (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid REFERENCES profiles, organization_id uuid REFERENCES organizations, role text NOT NULL, status text NOT NULL DEFAULT 'active', UNIQUE(user_id,organization_id,role));
+CREATE TABLE sessions (id text PRIMARY KEY, user_id uuid REFERENCES profiles, encrypted_tokens text NOT NULL, expires_at timestamptz NOT NULL, created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE cities (id uuid PRIMARY KEY, slug text UNIQUE NOT NULL, name text NOT NULL, country text NOT NULL, currency char(3) NOT NULL, timezone text NOT NULL);
+CREATE TABLE districts (id uuid PRIMARY KEY, city_id uuid NOT NULL REFERENCES cities, name text NOT NULL);
+CREATE TABLE communities (id uuid PRIMARY KEY, district_id uuid NOT NULL REFERENCES districts, slug text UNIQUE NOT NULL, name text NOT NULL, address text NOT NULL, built_year int, amenities text[] NOT NULL DEFAULT '{}', photos text[] NOT NULL DEFAULT '{}', location geography(Point,4326));
+CREATE TABLE units (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), community_id uuid NOT NULL REFERENCES communities, organization_id uuid NOT NULL REFERENCES organizations, private_address text NOT NULL, area numeric(10,2) NOT NULL CHECK(area>0), beds int NOT NULL CHECK(beds>=0), living_rooms int NOT NULL CHECK(living_rooms>=0), baths int NOT NULL CHECK(baths>=0), orientation text NOT NULL DEFAULT 'South', floor int NOT NULL DEFAULT 3, elevator boolean NOT NULL DEFAULT true);
+CREATE TABLE agents (id uuid PRIMARY KEY, user_id uuid REFERENCES profiles, organization_id uuid REFERENCES organizations, name text NOT NULL, slug text UNIQUE NOT NULL, biography text NOT NULL, languages text[] NOT NULL, districts text[] NOT NULL, verified_until date, photo text, public_email text, version int NOT NULL DEFAULT 1);
+CREATE TABLE listings (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), unit_id uuid NOT NULL REFERENCES units, organization_id uuid NOT NULL REFERENCES organizations, owner_id uuid REFERENCES profiles, agent_id uuid REFERENCES agents, slug text UNIQUE NOT NULL, title text NOT NULL, description text NOT NULL, transaction text NOT NULL CHECK(transaction IN ('sale','rent')), segment text NOT NULL CHECK(segment IN ('residential','commercial')), currency char(3) NOT NULL DEFAULT 'CNY', price numeric(18,2) CHECK(price>=0), rent_period text CHECK(rent_period IN ('month','year','day')), status text NOT NULL DEFAULT 'draft', features text[] NOT NULL DEFAULT '{}', photos text[] NOT NULL DEFAULT '{}', furnishing text NOT NULL DEFAULT 'Unfurnished', available_from date, version int NOT NULL DEFAULT 1, published_at timestamptz, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz NOT NULL DEFAULT now(), CHECK(transaction<>'rent' OR rent_period IS NOT NULL));
+CREATE INDEX listings_discovery ON listings(status,transaction,segment,price,published_at,id);
+CREATE INDEX communities_location ON communities USING gist(location);
+CREATE TABLE listing_revisions(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),listing_id uuid NOT NULL REFERENCES listings,actor_id uuid NOT NULL REFERENCES profiles,changes jsonb NOT NULL,status text NOT NULL DEFAULT 'pending',created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE media_assets(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),owner_id uuid REFERENCES profiles,listing_id uuid REFERENCES listings,object_key text UNIQUE NOT NULL,mime text NOT NULL,size bigint NOT NULL,rights text NOT NULL,visibility text NOT NULL CHECK(visibility IN ('private','public')),status text NOT NULL DEFAULT 'quarantined',width int,height int,variants jsonb NOT NULL DEFAULT '{}',created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE developments(id uuid PRIMARY KEY,organization_id uuid NOT NULL REFERENCES organizations,community_id uuid NOT NULL REFERENCES communities,slug text UNIQUE NOT NULL,name text NOT NULL,description text NOT NULL,status text NOT NULL,price_min numeric(18,2),price_max numeric(18,2),currency char(3) NOT NULL DEFAULT 'CNY',price_basis text NOT NULL DEFAULT 'per m²',completion_date date,photos text[] NOT NULL,features text[] NOT NULL,version int NOT NULL DEFAULT 1,inventory_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE floor_plans(id uuid PRIMARY KEY,development_id uuid REFERENCES developments,name text NOT NULL,beds int NOT NULL,living_rooms int NOT NULL,area numeric(10,2) NOT NULL CHECK(area>0),available int NOT NULL CHECK(available>=0),photo text);
+CREATE TABLE favorites(user_id uuid NOT NULL REFERENCES profiles,listing_id uuid NOT NULL REFERENCES listings,created_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(user_id,listing_id));
+CREATE TABLE saved_searches(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid NOT NULL REFERENCES profiles,name text NOT NULL,filters jsonb NOT NULL,cadence text NOT NULL DEFAULT 'weekly',created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE leads(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid REFERENCES profiles,organization_id uuid REFERENCES organizations,agent_id uuid REFERENCES agents,resource_id uuid NOT NULL,resource_type text NOT NULL,name text NOT NULL,email text NOT NULL,phone text NOT NULL,message text NOT NULL,status text NOT NULL DEFAULT 'new',version int NOT NULL DEFAULT 1,created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX leads_org_state ON leads(organization_id,status,created_at);
+CREATE TABLE viewings(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),listing_id uuid NOT NULL REFERENCES listings,user_id uuid NOT NULL REFERENCES profiles,agent_id uuid NOT NULL REFERENCES agents,start_at timestamptz NOT NULL,end_at timestamptz NOT NULL,status text NOT NULL DEFAULT 'requested',version int NOT NULL DEFAULT 1,CHECK(end_at>start_at),EXCLUDE USING gist(agent_id WITH =,tstzrange(start_at,end_at,'[)') WITH &&) WHERE(status IN ('requested','confirmed')));
+CREATE TABLE conversations(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid NOT NULL REFERENCES profiles,organization_id uuid REFERENCES organizations,agent_id uuid REFERENCES agents,resource_id uuid,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE messages(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),conversation_id uuid NOT NULL REFERENCES conversations,sender_id uuid NOT NULL REFERENCES profiles,client_id uuid NOT NULL,sequence bigint NOT NULL,body text NOT NULL CHECK(length(body)<=4000),created_at timestamptz NOT NULL DEFAULT now(),UNIQUE(conversation_id,sequence),UNIQUE(sender_id,client_id));
+CREATE TABLE notifications(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid NOT NULL REFERENCES profiles,title text NOT NULL,body text NOT NULL,read_at timestamptz,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE providers(id uuid PRIMARY KEY,organization_id uuid NOT NULL REFERENCES organizations,slug text UNIQUE NOT NULL,name text NOT NULL,description text NOT NULL,categories text[] NOT NULL,districts text[] NOT NULL,photos text[] NOT NULL,status text NOT NULL DEFAULT 'approved');
+CREATE TABLE quotes(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),provider_id uuid NOT NULL REFERENCES providers,user_id uuid NOT NULL REFERENCES profiles,organization_id uuid NOT NULL REFERENCES organizations,description text NOT NULL,budget numeric(18,2) CHECK(budget>=0),status text NOT NULL DEFAULT 'requested',version int NOT NULL DEFAULT 1,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE owner_submissions(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid NOT NULL REFERENCES profiles,data jsonb NOT NULL,status text NOT NULL DEFAULT 'draft',listing_id uuid REFERENCES listings,version int NOT NULL DEFAULT 1,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE management_grants(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),organization_id uuid NOT NULL REFERENCES organizations,unit_id uuid NOT NULL REFERENCES units,owner_id uuid NOT NULL REFERENCES profiles,expires_at timestamptz NOT NULL,UNIQUE(organization_id,unit_id));
+CREATE TABLE tenants(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),organization_id uuid NOT NULL REFERENCES organizations,user_id uuid NOT NULL REFERENCES profiles,name text NOT NULL,email text NOT NULL);
+CREATE TABLE leases(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),organization_id uuid NOT NULL REFERENCES organizations,unit_id uuid NOT NULL REFERENCES units,tenant_id uuid NOT NULL REFERENCES tenants,start_date date NOT NULL,end_date date NOT NULL,rent numeric(18,2) NOT NULL CHECK(rent>0),currency char(3) NOT NULL,status text NOT NULL DEFAULT 'draft',version int NOT NULL DEFAULT 1,CHECK(end_date>=start_date),EXCLUDE USING gist(unit_id WITH =,daterange(start_date,end_date,'[]') WITH &&) WHERE(status='active'));
+CREATE TABLE charges(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),lease_id uuid NOT NULL REFERENCES leases,organization_id uuid NOT NULL REFERENCES organizations,period date NOT NULL,due_date date NOT NULL,amount numeric(18,2) NOT NULL CHECK(amount>0),currency char(3) NOT NULL,kind text NOT NULL DEFAULT 'rent',status text NOT NULL DEFAULT 'posted',reverses_id uuid UNIQUE REFERENCES charges,created_at timestamptz NOT NULL DEFAULT now(),UNIQUE(lease_id,period,kind));
+CREATE TABLE payments(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),lease_id uuid NOT NULL REFERENCES leases,organization_id uuid NOT NULL REFERENCES organizations,amount numeric(18,2) NOT NULL CHECK(amount>0),currency char(3) NOT NULL,source text NOT NULL,reference text NOT NULL,actor_id uuid NOT NULL REFERENCES profiles,status text NOT NULL DEFAULT 'posted',reverses_id uuid UNIQUE REFERENCES payments,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE allocations(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),payment_id uuid NOT NULL REFERENCES payments,charge_id uuid NOT NULL REFERENCES charges,organization_id uuid NOT NULL REFERENCES organizations,amount numeric(18,2) NOT NULL CHECK(amount>0),reversed_at timestamptz,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE deposits(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),lease_id uuid NOT NULL REFERENCES leases,organization_id uuid NOT NULL REFERENCES organizations,kind text NOT NULL CHECK(kind IN ('received','released','adjusted')),amount numeric(18,2) NOT NULL CHECK(amount>0),currency char(3) NOT NULL,reason text NOT NULL,actor_id uuid NOT NULL REFERENCES profiles,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE maintenance(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),lease_id uuid NOT NULL REFERENCES leases,organization_id uuid NOT NULL REFERENCES organizations,user_id uuid NOT NULL REFERENCES profiles,title text NOT NULL,description text NOT NULL,category text NOT NULL,urgency text NOT NULL,status text NOT NULL DEFAULT 'open',assignee text,public_note text,internal_note text,version int NOT NULL DEFAULT 1,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE support_cases(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id uuid NOT NULL REFERENCES profiles,subject text NOT NULL,description text NOT NULL,category text NOT NULL,status text NOT NULL DEFAULT 'open',public_reply text,internal_note text,version int NOT NULL DEFAULT 1,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE content(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),city_id uuid REFERENCES cities,title text NOT NULL,position int NOT NULL,listing_ids uuid[] NOT NULL DEFAULT '{}',status text NOT NULL DEFAULT 'draft',version int NOT NULL DEFAULT 1);
+CREATE TABLE market_config(id text PRIMARY KEY,data jsonb NOT NULL,version int NOT NULL DEFAULT 1);
+CREATE TABLE audit_events(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),actor_id uuid REFERENCES profiles,resource_id uuid,action text NOT NULL,created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE outbox(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),aggregate_id uuid NOT NULL,kind text NOT NULL,payload jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT now(),dispatched_at timestamptz,processed_at timestamptz,attempts int NOT NULL DEFAULT 0);
+CREATE TABLE idempotency(actor_id uuid NOT NULL,key text NOT NULL,request_hash text NOT NULL,response jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(actor_id,key));
+CREATE FUNCTION immutable_posted() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'Posted financial records are immutable; create a reversal'; END $$;
+CREATE TRIGGER charges_immutable BEFORE UPDATE OR DELETE ON charges FOR EACH ROW EXECUTE FUNCTION immutable_posted();
+CREATE TRIGGER payments_immutable BEFORE UPDATE OR DELETE ON payments FOR EACH ROW EXECUTE FUNCTION immutable_posted();
+CREATE TRIGGER deposits_immutable BEFORE UPDATE OR DELETE ON deposits FOR EACH ROW EXECUTE FUNCTION immutable_posted();
+CREATE TRIGGER audit_immutable BEFORE UPDATE OR DELETE ON audit_events FOR EACH ROW EXECUTE FUNCTION immutable_posted();
+CREATE FUNCTION actor_id() RETURNS uuid LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('app.actor',true),'')::uuid $$;
+CREATE FUNCTION org_id() RETURNS uuid LANGUAGE sql STABLE AS $$ SELECT nullif(current_setting('app.org',true),'')::uuid $$;
+CREATE FUNCTION review_scope() RETURNS boolean LANGUAGE sql STABLE AS $$ SELECT coalesce(current_setting('app.review',true),'false')='true' $$;
+CREATE FUNCTION support_scope() RETURNS boolean LANGUAGE sql STABLE AS $$ SELECT coalesce(current_setting('app.support',true),'false')='true' $$;
+CREATE FUNCTION staff_scope() RETURNS boolean LANGUAGE sql STABLE AS $$ SELECT coalesce(current_setting('app.admin',true),'false')='true' $$;
+DO $$ DECLARE t text; BEGIN
+ FOREACH t IN ARRAY ARRAY['favorites','saved_searches','notifications','owner_submissions'] LOOP
+ EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY',t);
+ EXECUTE format('CREATE POLICY user_scope ON %I USING(user_id=actor_id() OR staff_scope()) WITH CHECK(user_id=actor_id() OR staff_scope())',t);
+ END LOOP;
+ FOREACH t IN ARRAY ARRAY['units','leads','conversations','quotes','management_grants','tenants','leases','charges','payments','allocations','deposits','maintenance'] LOOP
+ EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY',t);
+ IF t='units' THEN EXECUTE 'CREATE POLICY unit_public ON units FOR SELECT USING(true)'; END IF;
+ IF t IN ('leads','conversations','quotes','maintenance') THEN
+ EXECUTE format('CREATE POLICY resource_scope ON %I USING(organization_id=org_id() OR user_id=actor_id() OR staff_scope()) WITH CHECK(organization_id=org_id() OR user_id=actor_id() OR staff_scope())',t);
+ ELSIF t IN ('leases','charges','payments','allocations','deposits') THEN
+ EXECUTE format('CREATE POLICY org_scope ON %I USING(organization_id=org_id() OR staff_scope()) WITH CHECK(organization_id=org_id() OR staff_scope())',t);
+ ELSE EXECUTE format('CREATE POLICY org_scope ON %I USING(organization_id=org_id() OR staff_scope()) WITH CHECK(organization_id=org_id() OR staff_scope())',t); END IF;
+ END LOOP;
+END $$;
+CREATE POLICY tenant_leases ON leases FOR SELECT USING(tenant_id IN(SELECT id FROM tenants WHERE user_id=actor_id()));
+CREATE POLICY tenant_profiles ON tenants FOR SELECT USING(user_id=actor_id());
+CREATE POLICY tenant_charges ON charges FOR SELECT USING(lease_id IN(SELECT id FROM leases WHERE tenant_id IN(SELECT id FROM tenants WHERE user_id=actor_id())));
+CREATE POLICY tenant_payments ON payments FOR SELECT USING(lease_id IN(SELECT id FROM leases WHERE tenant_id IN(SELECT id FROM tenants WHERE user_id=actor_id())));
+CREATE POLICY tenant_deposits ON deposits FOR SELECT USING(lease_id IN(SELECT id FROM leases WHERE tenant_id IN(SELECT id FROM tenants WHERE user_id=actor_id())));
+CREATE POLICY tenant_allocations ON allocations FOR SELECT USING(payment_id IN(SELECT id FROM payments));
+ALTER TABLE listings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY public_listings ON listings FOR SELECT USING(status='published' OR organization_id=org_id() OR owner_id=actor_id() OR staff_scope());
+CREATE POLICY edit_listings ON listings FOR ALL USING(organization_id=org_id() OR owner_id=actor_id() OR staff_scope()) WITH CHECK(organization_id=org_id() OR owner_id=actor_id() OR staff_scope());
+ALTER TABLE viewings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY viewing_scope ON viewings USING(user_id=actor_id() OR agent_id IN(SELECT id FROM agents WHERE organization_id=org_id()) OR staff_scope());
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY message_scope ON messages USING(conversation_id IN(SELECT id FROM conversations));
+ALTER TABLE media_assets ENABLE ROW LEVEL SECURITY;
+CREATE POLICY media_scope ON media_assets USING(owner_id=actor_id() OR (visibility='public' AND status='approved') OR staff_scope());
+ALTER TABLE support_cases ENABLE ROW LEVEL SECURITY;
+CREATE POLICY support_scope ON support_cases USING(user_id=actor_id() OR staff_scope());
+CREATE VIEW public_listings WITH (security_invoker=true) AS SELECT l.id,l.slug,l.title,l.description,l.transaction,l.segment,l.price::text,l.currency,l.rent_period AS "rentPeriod",l.features,l.photos,l.furnishing,l.available_from AS "availableFrom",l.version,l.status,l.published_at AS "publishedAt",u.area::text,u.beds,u.living_rooms AS "livingRooms",u.baths,u.orientation,u.elevator,co.id AS "communityId",co.name AS community,d.name AS district,d.id AS "districtId",ci.slug AS city,l.agent_id AS "agentId",round(ST_Y(co.location::geometry)::numeric,3)::float8 AS latitude,round(ST_X(co.location::geometry)::numeric,3)::float8 AS longitude FROM listings l JOIN units u ON u.id=l.unit_id JOIN communities co ON co.id=u.community_id JOIN districts d ON d.id=co.district_id JOIN cities ci ON ci.id=d.city_id WHERE l.status='published';
+
+CREATE POLICY reviewer_submissions ON owner_submissions USING(review_scope());
+CREATE POLICY reviewer_listings ON listings USING(review_scope());
+CREATE POLICY support_staff ON support_cases USING(support_scope());
+
+CREATE POLICY reviewer_media ON media_assets USING(review_scope());
+
+CREATE POLICY manager_units ON units USING(id IN(SELECT unit_id FROM management_grants WHERE organization_id=org_id() AND expires_at>now()));
+CREATE POLICY manager_listing_availability ON listings USING(unit_id IN(SELECT unit_id FROM management_grants WHERE organization_id=org_id() AND expires_at>now()));
+CREATE FUNCTION unit_occupied(unit_uuid uuid) RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$ SELECT EXISTS(SELECT 1 FROM leases WHERE unit_id=unit_uuid AND status='active') $$;
