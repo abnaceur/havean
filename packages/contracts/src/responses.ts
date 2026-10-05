@@ -47,7 +47,7 @@ export const responses={
  InventoryController_submissions:z.array(owner),InventoryController_submit:owner,InventoryController_sendDraft:status,
  InventoryController_listings:z.array(m.listings.pick({id:true,title:true,slug:true,status:true,transaction:true,price:true,currency:true,version:true})),InventoryController_updateStatus:versioned,
  InventoryController_revise:z.union([status,versioned.extend({title:s,price:decimal.nullable()})]),
- InventoryController_reviews:z.object({submissions:z.array(owner.pick({id:true,user_id:true,data:true,status:true,version:true})),revisions:z.array(m.listing_revisions.pick({id:true,listing_id:true,changes:true,status:true}).extend({title:s}))}),
+ InventoryController_reviews:z.object({listings:z.array(m.listings.pick({id:true,title:true,description:true,status:true,price:true,currency:true,version:true,photos:true}).extend({area:decimal,beds:n,community:s})),submissions:z.array(owner.pick({id:true,user_id:true,data:true,status:true,version:true})),revisions:z.array(m.listing_revisions.pick({id:true,listing_id:true,changes:true,status:true}).extend({title:s}))}),
  InventoryController_approveRevision:z.object({approved:bool}),InventoryController_review:z.union([z.object({status:s,listingId:uuid,slug:s}),z.object({status:s})]),
  InventoryController_plans:z.array(m.floor_plans.extend({development_version:n})),InventoryController_editDevelopment:versioned,
  InventoryController_editPlan:m.floor_plans.pick({id:true,development_id:true,available:true}),InventoryController_assign:z.object({id:uuid,version:n}),InventoryController_developments:z.array(m.developments),

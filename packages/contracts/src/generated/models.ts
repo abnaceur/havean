@@ -30,6 +30,7 @@ export const models={
 "media_assets":z.object({"id":z.string().uuid(),"owner_id":z.string().uuid().nullable(),"listing_id":z.string().uuid().nullable(),"object_key":z.string(),"mime":z.string(),"size":z.string(),"rights":z.string(),"visibility":z.string(),"status":z.string(),"width":z.number().nullable(),"height":z.number().nullable(),"variants":z.json(),"created_at":z.string(),"purpose":z.string(),"duration":z.string().regex(/^-?\d+(\.\d+)?$/).nullable(),"scan_at":z.string().nullable()}),
 "memberships":z.object({"id":z.string().uuid(),"user_id":z.string().uuid().nullable(),"organization_id":z.string().uuid().nullable(),"role":z.string(),"status":z.string()}),
 "messages":z.object({"id":z.string().uuid(),"conversation_id":z.string().uuid(),"sender_id":z.string().uuid(),"client_id":z.string().uuid(),"sequence":z.string(),"body":z.string(),"created_at":z.string()}),
+"moderation_evidence_grants":z.object({"reviewer_id":z.string().uuid(),"submission_id":z.string().uuid(),"expires_at":z.string(),"created_at":z.string()}),
 "neighborhoods":z.object({"id":z.string().uuid(),"district_id":z.string().uuid(),"slug":z.string(),"name":z.string(),"aliases":z.array(z.string()),"version":z.number(),"status":z.string()}),
 "notifications":z.object({"id":z.string().uuid(),"user_id":z.string().uuid(),"title":z.string(),"body":z.string(),"read_at":z.string().nullable(),"created_at":z.string(),"source_event_id":z.string().uuid().nullable()}),
 "organizations":z.object({"id":z.string().uuid(),"name":z.string(),"type":z.string()}),

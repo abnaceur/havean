@@ -20096,11 +20096,18 @@
                   },
                   "verified": {
                     "type": "boolean"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
                   }
                 },
                 "required": [
                   "status",
-                  "reason"
+                  "reason",
+                  "version"
                 ]
               }
             }
@@ -20119,7 +20126,30 @@
         "tags": [
           "Inventory"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -20131,6 +20161,69 @@
                     "data": {
                       "type": "object",
                       "properties": {
+                        "listings": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "price": {
+                                "nullable": true,
+                                "type": "string",
+                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                              },
+                              "currency": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "number"
+                              },
+                              "photos": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "area": {
+                                "type": "string",
+                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                              },
+                              "beds": {
+                                "type": "number"
+                              },
+                              "community": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "title",
+                              "description",
+                              "status",
+                              "price",
+                              "currency",
+                              "version",
+                              "photos",
+                              "area",
+                              "beds",
+                              "community"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
                         "submissions": {
                           "type": "array",
                           "items": {
@@ -20291,6 +20384,7 @@
                         }
                       },
                       "required": [
+                        "listings",
                         "submissions",
                         "revisions"
                       ],
