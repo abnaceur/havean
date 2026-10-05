@@ -2,6 +2,9 @@
 import {z} from 'zod';
 export const models={
 "agents":z.object({"id":z.string().uuid(),"user_id":z.string().uuid().nullable(),"organization_id":z.string().uuid().nullable(),"name":z.string(),"slug":z.string(),"biography":z.string(),"languages":z.array(z.string()),"districts":z.array(z.string()),"verified_until":z.string().nullable(),"photo":z.string().nullable(),"public_email":z.string().nullable(),"version":z.number()}),
+"alert_digest_items":z.object({"search_id":z.string().uuid(),"listing_id":z.string().uuid(),"digest_id":z.string().uuid(),"listing_version":z.number()}),
+"alert_digests":z.object({"id":z.string().uuid(),"user_id":z.string().uuid(),"search_id":z.string().uuid(),"search_version":z.number(),"cadence":z.string(),"period_start":z.string(),"due_at":z.string(),"status":z.string(),"version":z.number(),"attempts":z.number(),"payload":z.json().nullable(),"provider_message_id":z.string().nullable(),"acceptance_recorded_at":z.string().nullable(),"error_code":z.string().nullable(),"created_at":z.string(),"updated_at":z.string()}),
+"alert_plan_events":z.object({"event_id":z.string().uuid(),"version":z.number(),"planned_count":z.number(),"created_at":z.string()}),
 "allocations":z.object({"id":z.string().uuid(),"payment_id":z.string().uuid(),"charge_id":z.string().uuid(),"organization_id":z.string().uuid(),"amount":z.string().regex(/^-?\d+(\.\d+)?$/),"reversed_at":z.string().nullable(),"created_at":z.string()}),
 "audit_events":z.object({"id":z.string().uuid(),"actor_id":z.string().uuid().nullable(),"resource_id":z.string().uuid().nullable(),"action":z.string(),"created_at":z.string()}),
 "browsing_history":z.object({"user_id":z.string().uuid(),"listing_id":z.string().uuid(),"viewed_at":z.string()}),
@@ -37,7 +40,8 @@ export const models={
 "messages":z.object({"id":z.string().uuid(),"conversation_id":z.string().uuid(),"sender_id":z.string().uuid(),"client_id":z.string().uuid(),"sequence":z.string(),"body":z.string(),"created_at":z.string()}),
 "moderation_evidence_grants":z.object({"reviewer_id":z.string().uuid(),"submission_id":z.string().uuid(),"expires_at":z.string(),"created_at":z.string()}),
 "neighborhoods":z.object({"id":z.string().uuid(),"district_id":z.string().uuid(),"slug":z.string(),"name":z.string(),"aliases":z.array(z.string()),"version":z.number(),"status":z.string()}),
-"notifications":z.object({"id":z.string().uuid(),"user_id":z.string().uuid(),"title":z.string(),"body":z.string(),"read_at":z.string().nullable(),"created_at":z.string(),"source_event_id":z.string().uuid().nullable()}),
+"notification_preferences":z.object({"user_id":z.string().uuid(),"email_enabled":z.boolean(),"in_app_enabled":z.boolean(),"version":z.number()}),
+"notifications":z.object({"id":z.string().uuid(),"user_id":z.string().uuid(),"title":z.string(),"body":z.string(),"read_at":z.string().nullable(),"created_at":z.string(),"source_event_id":z.string().uuid().nullable(),"version":z.number(),"alert_digest_id":z.string().uuid().nullable(),"email_status":z.string().nullable(),"provider_message_id":z.string().nullable(),"acceptance_recorded_at":z.string().nullable()}),
 "organizations":z.object({"id":z.string().uuid(),"name":z.string(),"type":z.string()}),
 "outbox":z.object({"id":z.string().uuid(),"aggregate_id":z.string().uuid(),"kind":z.string(),"payload":z.json(),"created_at":z.string(),"dispatched_at":z.string().nullable(),"processed_at":z.string().nullable(),"attempts":z.number()}),
 "outbox_effects":z.object({"event_id":z.string().uuid(),"consumer":z.string(),"source_version":z.number().nullable(),"completed_at":z.string()}),

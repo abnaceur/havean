@@ -1,0 +1,41 @@
+ Container haven-integration-tests-run-8d72acaa2bd7 Creating 
+ Container haven-integration-tests-run-8d72acaa2bd7 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/unit/notification-provider.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [31m❯[39m tests/integration/notifications.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 1661[2mms[22m[39m
+[31m   [31m×[31m A05 a real publication worker plans one daily digest; BullMQ delivers one provider-accepted email and one in-app notification; replay stays deduplicated[39m[33m 542[2mms[22m[39m
+   [33m[2m✓[22m[39m A05 opt-out and paused searches cancel queued optional email; unverified email cannot opt in[33m 373[2mms[22m[39m
+   [32m✓[39m A05 a crash after SMTP acceptance freezes the batch and reconciles the provider receipt without a second email[32m 255[2mms[22m[39m
+   [32m✓[39m A05 failed provider acceptance is truthful; own retry is versioned and scoped, other users and unsigned service calls are denied[32m 223[2mms[22m[39m
+   [32m✓[39m A05 necessary inquiry confirmations use the same provider receipt contract independently of optional opt-out[32m 74[2mms[22m[39m
+   [32m✓[39m A05 weekly UTC digests group current matches, reject currency leakage and deduplicate concurrent planning[32m 189[2mms[22m[39m
+ [32m✓[39m tests/integration/contracts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 404[2mms[22m[39m
+ [32m✓[39m tests/unit/fixtures.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m tests/unit/contracts.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/unit/spatial-media.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/unit/visual-policy.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/unit/tour-input.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/unit/observability.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/unit/reference.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/notifications.test.ts[2m > [22mA05 a real publication worker plans one daily digest; BullMQ delivers one provider-accepted email and one in-app notification; replay stays deduplicated
+[31m[1mTypeError[22m: fetch failed[39m
+[31m[1mCaused by: Error[22m: connect ECONNREFUSED 192.168.112.10:4000[39m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22m[39m
+[31m[1mSerialized Error:[22m[39m [90m{ errno: -111, code: 'ECONNREFUSED', syscall: 'connect', address: '192.168.112.10', port: 4000 }[39m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m9 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m42 passed[39m[22m[90m (43)[39m
+[2m   Start at [22m 21:06:56
+[2m   Duration [22m 5.78s[2m (tests 47%, import 39%, transform 14%, worker 1%)[22m
+
+[2m    Isolate [22m [33m10 workers spawned[39m[2m · ~105ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~942ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+

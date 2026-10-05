@@ -1,0 +1,96 @@
+ Container haven-integration-tests-run-d24c3980fe16 Creating 
+ Container haven-integration-tests-run-d24c3980fe16 Created 
+
+Running 8 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/notifications.spec.ts:9:1 › A05 optional preferences persist, real matching alert displays acceptance and can be read, opt-out prevents the next send (7.8s)
+  ✓  2 [desktop] › tests/e2e/notifications.spec.ts:22:1 › A05 preference outage rolls back optimism and a stale version reloads the current choice (4.1s)
+  ✓  3 [desktop] › tests/e2e/saved-searches.spec.ts:9:1 › A04 complex rental filters save/refresh/restore, edit through results, pause/resume and delete; another user cannot edit (27.5s)
+  ✓  4 [desktop] › tests/e2e/saved-searches.spec.ts:21:1 › A04 stale preference edit shows conflict/reload and invalid or mixed-currency criteria are rejected (8.2s)
+  ✘  5 [mobile] › tests/e2e/notifications.spec.ts:9:1 › A05 optional preferences persist, real matching alert displays acceptance and can be read, opt-out prevents the next send (6.4s)
+  ✓  6 [mobile] › tests/e2e/notifications.spec.ts:22:1 › A05 preference outage rolls back optimism and a stale version reloads the current choice (3.1s)
+  ✓  7 [mobile] › tests/e2e/saved-searches.spec.ts:9:1 › A04 complex rental filters save/refresh/restore, edit through results, pause/resume and delete; another user cannot edit (13.8s)
+  ✓  8 [mobile] › tests/e2e/saved-searches.spec.ts:21:1 › A04 stale preference edit shows conflict/reload and invalid or mixed-currency criteria are rejected (3.9s)
+
+
+  1) [desktop] › tests/e2e/notifications.spec.ts:9:1 › A05 optional preferences persist, real matching alert displays acceptance and can be read, opt-out prevents the next send 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('article').filter({ has: getByRole('heading', { name: 'New homes for Browser alert desktop', exact: true }) }).getByText('Read', { exact: true })
+    Expected: visible
+    Error: strict mode violation: locator('article').filter({ has: getByRole('heading', { name: 'New homes for Browser alert desktop', exact: true }) }).getByText('Read', { exact: true }) resolved to 2 elements:
+        1) <span class="badge">Read</span> aka getByText('Read').first()
+        2) <span class="badge">Read</span> aka getByText('Read').nth(4)
+
+    Call log:
+      - Expect "toBeVisible" locator('article').filter({ has: getByRole('heading', { name: 'New homes for Browser alert desktop', exact: true }) }).getByText('Read', { exact: true }) with timeout 15000ms
+      - waiting for locator('article').filter({ has: getByRole('heading', { name: 'New homes for Browser alert desktop', exact: true }) }).getByText('Read', { exact: true })
+
+
+      15 |  try{
+      16 |   await setOff();await page.goto('/account/notifications');await expect(page.getByLabel('Email alerts',{exact:true})).not.toBeChecked();await expect(page.getByLabel('In-app alerts',{exact:true})).not.toBeChecked();await page.getByLabel('Email alerts',{exact:true}).check();await expect(page.getByRole('status')).toContainText('preferences saved');await page.getByLabel('In-app alerts',{exact:true}).check();await expect.poll(async()=> (await(await page.request.get('/api/v1/me/notification-preferences')).json()).data.inAppEnabled).toBe(true);await page.reload();await expect(page.getByLabel('Email alerts',{exact:true})).toBeChecked();await expect(page.getByLabel('In-app alerts',{exact:true})).toBeChecked();
+    > 17 |   const created=await page.request.post('/api/v1/me/saved-searches',{headers:headers(),data:{version:0,name:'Browser alert '+info.project.name,filters:{city:'bj',currency:'CNY',transaction:'sale',text:label},cadence:'daily'}});expect(created.ok()).toBe(true);searchId=(await created.json()).data.id;const listing=await publish(),service={plan:(id:string,listingVersion:number)=>alertServiceCall('/plan/'+id,'POST',{version:0,listingVersion}),deliver:(id:string,version:number)=>alertServiceCall('/'+id+'/deliver','POST',{version})};await service.plan(listing.event,listing.version);const digest=(await transaction(workerActor,c=>c.query('SELECT * FROM alert_digests WHERE search_id=$1',[searchId]))).rows[0];await transaction(workerActor,c=>c.query("UPDATE alert_digests SET due_at=now()-interval '1 second' WHERE id=$1",[digest.id]));expect((await service.deliver(digest.id,digest.version)).status).toBe('accepted');await page.reload();await expect(page.getByRole('heading',{name:'Accepted by email provider',exact:true}).first()).toBeVisible();const notice=page.locator('article').filter({has:page.getByRole('heading',{name:'New homes for Browser alert '+info.project.name,exact:true})});await expect(notice.getByText('Unread',{exact:true})).toBeVisible();await notice.getByRole('button',{name:'Mark as read',exact:true}).click();await expect(notice.getByText('Read',{exact:true})).toBeVisible();await page.reload();await expect(notice.getByText('Read',{exact:true})).toBeVisible();
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ^
+      18 |   const axe=await new AxeBuilder({page}).include('main').analyze();expect(axe.violations.filter(row=>row.impact==='serious'||row.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:`evidence/a05-notifications-${info.project.name}.png`,scale:'css'});
+      19 |   const next=await publish();await service.plan(next.event,next.version);const queued=(await transaction(workerActor,c=>c.query("SELECT * FROM alert_digests WHERE search_id=$1 AND status='queued'",[searchId]))).rows[0];await page.getByLabel('Email alerts',{exact:true}).uncheck();await expect(page.getByRole('status')).toContainText('preferences saved');await page.getByLabel('In-app alerts',{exact:true}).uncheck();await expect.poll(async()=> (await(await page.request.get('/api/v1/me/notification-preferences')).json()).data.inAppEnabled).toBe(false);await transaction(workerActor,c=>c.query("UPDATE alert_digests SET due_at=now()-interval '1 second' WHERE id=$1",[queued.id]));expect((await service.deliver(queued.id,queued.version)).status).toBe('cancelled');const count=await fetch('http://mail:8025/api/v1/search?query='+encodeURIComponent('message-id:alert-'+queued.id+'@'+new URL(process.env.PUBLIC_WEB_URL!).hostname)).then(r=>r.json());expect(count.messages_count).toBe(0);
+      20 |  }finally{await setOff();if(searchId){const searches=(await(await page.request.get('/api/v1/me/saved-searches')).json()).data,row=searches.find((row:any)=>row.id===searchId);if(row)await page.request.delete('/api/v1/me/saved-searches/'+searchId,{headers:headers(),data:{version:row.version}});}await transaction(workerActor,c=>c.query('UPDATE profiles SET email_verified=false WHERE id=$1',[id]));}
+        at /workspace/tests/e2e/notifications.spec.ts:17:1471
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/notifications-A05-optional-16483--out-prevents-the-next-send-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/notifications-A05-optional-16483--out-prevents-the-next-send-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/notifications-A05-optional-16483--out-prevents-the-next-send-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/notifications-A05-optional-16483--out-prevents-the-next-send-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/notifications.spec.ts:9:1 › A05 optional preferences persist, real matching alert displays acceptance and can be read, opt-out prevents the next send 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('article').filter({ has: getByRole('heading', { name: 'New homes for Browser alert mobile', exact: true }) }).getByText('Read', { exact: true })
+    Expected: visible
+    Error: strict mode violation: locator('article').filter({ has: getByRole('heading', { name: 'New homes for Browser alert mobile', exact: true }) }).getByText('Read', { exact: true }) resolved to 2 elements:
+        1) <span class="badge">Read</span> aka getByText('Read').first()
+        2) <span class="badge">Read</span> aka getByText('Read').nth(4)
+
+    Call log:
+      - Expect "toBeVisible" locator('article').filter({ has: getByRole('heading', { name: 'New homes for Browser alert mobile', exact: true }) }).getByText('Read', { exact: true }) with timeout 15000ms
+      - waiting for locator('article').filter({ has: getByRole('heading', { name: 'New homes for Browser alert mobile', exact: true }) }).getByText('Read', { exact: true })
+
+
+      15 |  try{
+      16 |   await setOff();await page.goto('/account/notifications');await expect(page.getByLabel('Email alerts',{exact:true})).not.toBeChecked();await expect(page.getByLabel('In-app alerts',{exact:true})).not.toBeChecked();await page.getByLabel('Email alerts',{exact:true}).check();await expect(page.getByRole('status')).toContainText('preferences saved');await page.getByLabel('In-app alerts',{exact:true}).check();await expect.poll(async()=> (await(await page.request.get('/api/v1/me/notification-preferences')).json()).data.inAppEnabled).toBe(true);await page.reload();await expect(page.getByLabel('Email alerts',{exact:true})).toBeChecked();await expect(page.getByLabel('In-app alerts',{exact:true})).toBeChecked();
+    > 17 |   const created=await page.request.post('/api/v1/me/saved-searches',{headers:headers(),data:{version:0,name:'Browser alert '+info.project.name,filters:{city:'bj',currency:'CNY',transaction:'sale',text:label},cadence:'daily'}});expect(created.ok()).toBe(true);searchId=(await created.json()).data.id;const listing=await publish(),service={plan:(id:string,listingVersion:number)=>alertServiceCall('/plan/'+id,'POST',{version:0,listingVersion}),deliver:(id:string,version:number)=>alertServiceCall('/'+id+'/deliver','POST',{version})};await service.plan(listing.event,listing.version);const digest=(await transaction(workerActor,c=>c.query('SELECT * FROM alert_digests WHERE search_id=$1',[searchId]))).rows[0];await transaction(workerActor,c=>c.query("UPDATE alert_digests SET due_at=now()-interval '1 second' WHERE id=$1",[digest.id]));expect((await service.deliver(digest.id,digest.version)).status).toBe('accepted');await page.reload();await expect(page.getByRole('heading',{name:'Accepted by email provider',exact:true}).first()).toBeVisible();const notice=page.locator('article').filter({has:page.getByRole('heading',{name:'New homes for Browser alert '+info.project.name,exact:true})});await expect(notice.getByText('Unread',{exact:true})).toBeVisible();await notice.getByRole('button',{name:'Mark as read',exact:true}).click();await expect(notice.getByText('Read',{exact:true})).toBeVisible();await page.reload();await expect(notice.getByText('Read',{exact:true})).toBeVisible();
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ^
+      18 |   const axe=await new AxeBuilder({page}).include('main').analyze();expect(axe.violations.filter(row=>row.impact==='serious'||row.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:`evidence/a05-notifications-${info.project.name}.png`,scale:'css'});
+      19 |   const next=await publish();await service.plan(next.event,next.version);const queued=(await transaction(workerActor,c=>c.query("SELECT * FROM alert_digests WHERE search_id=$1 AND status='queued'",[searchId]))).rows[0];await page.getByLabel('Email alerts',{exact:true}).uncheck();await expect(page.getByRole('status')).toContainText('preferences saved');await page.getByLabel('In-app alerts',{exact:true}).uncheck();await expect.poll(async()=> (await(await page.request.get('/api/v1/me/notification-preferences')).json()).data.inAppEnabled).toBe(false);await transaction(workerActor,c=>c.query("UPDATE alert_digests SET due_at=now()-interval '1 second' WHERE id=$1",[queued.id]));expect((await service.deliver(queued.id,queued.version)).status).toBe('cancelled');const count=await fetch('http://mail:8025/api/v1/search?query='+encodeURIComponent('message-id:alert-'+queued.id+'@'+new URL(process.env.PUBLIC_WEB_URL!).hostname)).then(r=>r.json());expect(count.messages_count).toBe(0);
+      20 |  }finally{await setOff();if(searchId){const searches=(await(await page.request.get('/api/v1/me/saved-searches')).json()).data,row=searches.find((row:any)=>row.id===searchId);if(row)await page.request.delete('/api/v1/me/saved-searches/'+searchId,{headers:headers(),data:{version:row.version}});}await transaction(workerActor,c=>c.query('UPDATE profiles SET email_verified=false WHERE id=$1',[id]));}
+        at /workspace/tests/e2e/notifications.spec.ts:17:1471
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/notifications-A05-optional-16483--out-prevents-the-next-send-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/notifications-A05-optional-16483--out-prevents-the-next-send-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/notifications-A05-optional-16483--out-prevents-the-next-send-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/notifications-A05-optional-16483--out-prevents-the-next-send-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/notifications.spec.ts:9:1 › A05 optional preferences persist, real matching alert displays acceptance and can be read, opt-out prevents the next send 
+    [mobile] › tests/e2e/notifications.spec.ts:9:1 › A05 optional preferences persist, real matching alert displays acceptance and can be read, opt-out prevents the next send 
+  6 passed (1.4m)
+

@@ -2,6 +2,7 @@
 import {z} from 'zod';
 import {money,listingFilters,inquirySchema,ownerSchema} from '../domain';
 import {rankingFilters,viewSignal,boostCreate,boostUpdate} from '../discovery-ranking';
+import {notificationPreferenceUpdate,notificationVersion,notificationEventInput,notificationPlanInput} from '../notifications';
 import {savedSearchCreate,savedSearchUpdate,savedSearchDelete} from '../saved-searches';
 import {historyVersion,historyPreference,historyView} from '../browsing-history';
 import {favoriteMutation} from '../favorites';
@@ -68,7 +69,6 @@ export const operations={
 "EngagementController_leads":{method:"GET",path:"/api/v1/ops/leads",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_leads"]},
 "EngagementController_message":{method:"POST",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({body:z.string().trim().min(1).max(4000),clientId:z.string().uuid()}),response:responses["EngagementController_message"]},
 "EngagementController_messages":{method:"GET",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_messages"]},
-"EngagementController_notifications":{method:"GET",path:"/api/v1/me/notifications",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_notifications"]},
 "EngagementController_opsViewings":{method:"GET",path:"/api/v1/ops/viewings",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_opsViewings"]},
 "EngagementController_unfavorite":{method:"DELETE",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:favoriteMutation,response:responses["EngagementController_unfavorite"]},
 "EngagementController_viewings":{method:"GET",path:"/api/v1/me/viewings",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_viewings"]},
@@ -138,6 +138,17 @@ export const operations={
 "MediaController_status":{method:"GET",path:"/api/v1/media/:id/status",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MediaController_status"]},
 "MediaController_video":{method:"GET",path:"/api/v1/media/:id/video",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MediaController_video"]},
 "MediaController_view":{method:"GET",path:"/api/v1/media/:id/view",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MediaController_view"]},
+"NotificationsController_deliveries":{method:"GET",path:"/api/v1/me/alert-deliveries",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["NotificationsController_deliveries"]},
+"NotificationsController_markRead":{method:"PATCH",path:"/api/v1/me/notifications/:id/read",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationVersion,response:responses["NotificationsController_markRead"]},
+"NotificationsController_preferences":{method:"GET",path:"/api/v1/me/notification-preferences",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["NotificationsController_preferences"]},
+"NotificationsController_read":{method:"GET",path:"/api/v1/me/notifications",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["NotificationsController_read"]},
+"NotificationsController_retry":{method:"POST",path:"/api/v1/me/alert-deliveries/:id/retry",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationVersion,response:responses["NotificationsController_retry"]},
+"NotificationsController_update":{method:"PATCH",path:"/api/v1/me/notification-preferences",params:z.object({}),query:z.object({}),body:notificationPreferenceUpdate,response:responses["NotificationsController_update"]},
+"NotificationWorkerController_deliver":{method:"POST",path:"/api/v1/internal/alerts/:id/deliver",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationVersion,response:responses["NotificationWorkerController_deliver"]},
+"NotificationWorkerController_due":{method:"GET",path:"/api/v1/internal/alerts/due",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["NotificationWorkerController_due"]},
+"NotificationWorkerController_plan":{method:"POST",path:"/api/v1/internal/alerts/plan/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationPlanInput,response:responses["NotificationWorkerController_plan"]},
+"NotificationWorkerController_read":{method:"GET",path:"/api/v1/internal/alerts/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["NotificationWorkerController_read"]},
+"NotificationWorkerController_transactional":{method:"POST",path:"/api/v1/internal/alerts/transactional/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationEventInput,response:responses["NotificationWorkerController_transactional"]},
 "ProfileController_update":{method:"PATCH",path:"/api/v1/profiles/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:profileUpdate,response:responses["ProfileController_update"]},
 "RankingBoostsController_create":{method:"POST",path:"/api/v1/ops/ranking-boosts",params:z.object({}),query:z.object({}),body:boostCreate,response:responses["RankingBoostsController_create"]},
 "RankingBoostsController_read":{method:"GET",path:"/api/v1/ops/ranking-boosts",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj')}),body:z.undefined(),response:responses["RankingBoostsController_read"]},

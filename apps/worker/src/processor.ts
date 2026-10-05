@@ -1,3 +1,4 @@
+import {planPublicationAlerts,deliverAlertDigest,confirmInquiry} from './alerts.js';
 import nodemailer from 'nodemailer';
 import {pool,transaction} from '@haven/database';
 import {config} from '@haven/config';
@@ -28,7 +29,7 @@ export function createProcessor(options:ProcessorOptions={}){
  return async(job:{data:{id:string}})=>transaction(workerActor,async c=>{
   const id=job.data.id;
   await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',[id]);
-  const row=(await c.query('SELECT * FROM outbox WHERE id=$1 AND processed_at IS NULL FOR UPDATE',[id])).rows[0];if(!row)return;
+  const row=(await c.query('SELECT * FROM outbox WHERE id=$1 AND processed_at IS NULL FOR NO KEY UPDATE',[id])).rows[0];if(!row)return;
   // Serialize projections per aggregate across all worker processes, including replay.
   await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['aggregate:'+row.aggregate_id]);
   let version:number|undefined;
@@ -46,7 +47,10 @@ export function createProcessor(options:ProcessorOptions={}){
     }
    }
   }
-  if(row.kind==='inquiry.submitted'){
+  if(row.kind==='listing.published'&&version)await planPublicationAlerts(id,version);
+  if(row.kind==='notification.digest_ready')await deliverAlertDigest(row.aggregate_id);
+  if(row.kind==='inquiry.submitted'&&env.NODE_ENV==='production'){await confirmInquiry(id);await options.afterEffect?.('after-mail');}
+  if(row.kind==='inquiry.submitted'&&env.NODE_ENV!=='production'){
    const lead=(await c.query('SELECT user_id,email FROM leads WHERE id=$1',[row.aggregate_id])).rows[0];
    if(lead){
     // The development mail adapter reconciles delivery by stable Message-ID after a crash.

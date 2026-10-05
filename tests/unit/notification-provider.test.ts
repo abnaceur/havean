@@ -1,0 +1,14 @@
+import {it,expect,vi} from 'vitest';
+import {notificationWorkerHeaders,validNotificationWorker,environmentSchema} from '../../packages/config/src/index';
+import {createAlertMailSender} from '../../apps/api/src/engagement/mail-sender';
+it('A05 service signatures bind method, path, canonical body and freshness',()=>{
+ const key='1'.repeat(64),path='/api/v1/internal/alerts/id/deliver',body={version:2},headers=notificationWorkerHeaders('POST',path,body,key);
+ expect(validNotificationWorker('POST',path,body,headers,key)).toBe(true);expect(validNotificationWorker('GET',path,body,headers,key)).toBe(false);expect(validNotificationWorker('POST',path+'/other',body,headers,key)).toBe(false);expect(validNotificationWorker('POST',path,{version:3},headers,key)).toBe(false);expect(validNotificationWorker('POST',path,body,notificationWorkerHeaders('POST',path,body,key,String(Date.now()-61000)),key)).toBe(false);
+});
+it('A05 production denies development mail fallback and requires truthful idempotent provider receipts',async()=>{
+ const previous={...process.env};try{
+  Object.assign(process.env,{NODE_ENV:'production',DATABASE_URL:'postgres://unused',SESSION_KEY:'1'.repeat(64),OIDC_ISSUER:'https://identity.example.com/realms/haven',OIDC_INTERNAL_URL:'http://identity:8080/realms/haven',PUBLIC_WEB_URL:'https://www.example.com',PUBLIC_OPS_URL:'https://ops.example.com',SEARCH_KEY:'test-provider-key',S3_ACCESS_KEY:'fixture',S3_SECRET_KEY:'test-storage-key',MAP_STYLE_URL:'https://maps.example.com/style.json'});delete process.env.DEV_PASSWORD;delete process.env.MAIL_PROVIDER_URL;delete process.env.MAIL_PROVIDER_KEY;
+  expect(environmentSchema.safeParse(process.env).success).toBe(false);Object.assign(process.env,{MAIL_PROVIDER_URL:'https://provider.example.com',MAIL_PROVIDER_KEY:'isolated-fixture-key',MAIL_FROM:'notifications@example.com'});expect(environmentSchema.safeParse(process.env).success).toBe(true);
+  const request=vi.fn().mockResolvedValueOnce(new Response('',{status:404})).mockResolvedValueOnce(Response.json({status:'accepted',messageId:'provider-ref'})).mockResolvedValueOnce(Response.json({status:'accepted',messageId:'provider-ref'})).mockResolvedValueOnce(Response.json({status:'delivered',messageId:'invented'}));vi.stubGlobal('fetch',request);const sender=createAlertMailSender();expect(await sender.lookup('stable-message')).toBeNull();expect(await sender.send({messageId:'stable-message',to:'recipient@example.com',subject:'English template',text:'New matching homes.'})).toMatchObject({messageId:'provider-ref'});expect(request.mock.calls[1][1].headers['Idempotency-Key']).toBe('stable-message');expect(await sender.lookup('stable-message')).toMatchObject({messageId:'provider-ref'});await expect(sender.lookup('stable-message')).rejects.toMatchObject({name:'ZodError'});
+ }finally{vi.unstubAllGlobals();for(const key of Object.keys(process.env))if(!(key in previous))delete process.env[key];Object.assign(process.env,previous);}
+});

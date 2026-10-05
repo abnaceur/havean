@@ -1,0 +1,44 @@
+ Container haven-integration-tests-run-d1a407445720 Creating 
+ Container haven-integration-tests-run-d1a407445720 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/notifications.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 2436[2mms[22m[39m
+[31m   [31m×[31m A05 a real publication worker plans one daily digest; BullMQ delivers one provider-accepted email and one in-app notification; replay stays deduplicated[39m[33m 784[2mms[22m[39m
+   [33m[2m✓[22m[39m A05 opt-out and paused searches cancel queued optional email; unverified email cannot opt in[33m 513[2mms[22m[39m
+   [33m[2m✓[22m[39m A05 a crash after SMTP acceptance freezes the batch and reconciles the provider receipt without a second email[33m 357[2mms[22m[39m
+   [33m[2m✓[22m[39m A05 failed provider acceptance is truthful; own retry is versioned and scoped, other users and unsigned service calls are denied[33m 310[2mms[22m[39m
+   [32m✓[39m A05 necessary inquiry confirmations use the same provider receipt contract independently of optional opt-out[32m 145[2mms[22m[39m
+   [33m[2m✓[22m[39m A05 weekly UTC digests group current matches, reject currency leakage and deduplicate concurrent planning[33m 317[2mms[22m[39m
+ [32m✓[39m tests/integration/contracts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 524[2mms[22m[39m
+ [32m✓[39m tests/unit/fixtures.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m tests/unit/notification-provider.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m tests/unit/contracts.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m tests/unit/visual-policy.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/unit/spatial-media.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m tests/unit/observability.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/unit/reference.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/unit/tour-input.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/notifications.test.ts[2m > [22mA05 a real publication worker plans one daily digest; BullMQ delivers one provider-accepted email and one in-app notification; replay stays deduplicated
+[31m[1mError[22m: ALERT_SERVICE_409[39m
+[90m [2m❯[22m QueueEvents.onFailed node_modules/.pnpm/bullmq@6.3.11_ioredis@6.0.0_pg@8.23.1/node_modules/bullmq/dist/cjs/classes/job.js:[2m749:24[22m[39m
+[90m [2m❯[22m QueueEvents.emit node_modules/.pnpm/bullmq@6.3.11_ioredis@6.0.0_pg@8.23.1/node_modules/bullmq/dist/cjs/classes/queue-base.js:[2m81:26[22m[39m
+[90m [2m❯[22m QueueEvents.emit node_modules/.pnpm/bullmq@6.3.11_ioredis@6.0.0_pg@8.23.1/node_modules/bullmq/dist/cjs/classes/queue-events.js:[2m32:22[22m[39m
+[90m [2m❯[22m QueueEvents.consumeEvents node_modules/.pnpm/bullmq@6.3.11_ioredis@6.0.0_pg@8.23.1/node_modules/bullmq/dist/cjs/classes/queue-events.js:[2m102:34[22m[39m
+[90m [2m❯[22m QueueEvents.run node_modules/.pnpm/bullmq@6.3.11_ioredis@6.0.0_pg@8.23.1/node_modules/bullmq/dist/cjs/classes/queue-events.js:[2m56:17[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m9 passed[39m[22m[90m (10)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m42 passed[39m[22m[90m (43)[39m
+[2m   Start at [22m 21:07:31
+[2m   Duration [22m 7.52s[2m (tests 51%, import 39%, transform 9%, worker 1%)[22m
+
+[2m    Isolate [22m [33m10 workers spawned[39m[2m · ~131ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~1.18s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+

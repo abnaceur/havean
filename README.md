@@ -84,4 +84,6 @@ Browser tests use real Keycloak, API, database and storage. Test traces can cont
 
 `pnpm check:release` deliberately fails while any mandatory task or evidence is unfinished. See `BLOCKERS.md` for external reference and launch inputs, and `PROGRESS.md` for implementation gaps. The development Compose file is not a production deployment.
 
+Account alerts are available at `/account/notifications`. Optional email and in-app alerts start off; saved-search cadence uses UTC calendar boundaries. Local email is captured by Mailpit at `http://localhost:8091`. Production requires a real sender and an HTTPS idempotent mail provider; see [notification delivery](docs/adr/notification-delivery.md) for configuration and receipt semantics.
+
 For approved English pixel regression on clean synthetic data, use `./test.sh pnpm test:visual`. CI runs visual comparisons before browser mutations, then desktop/mobile business journeys. Baselines are hash checked, pinned to the declared renderer and never automatically refreshed.

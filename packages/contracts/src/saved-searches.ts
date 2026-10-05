@@ -5,7 +5,7 @@ export const savedSearchCriteria=z.record(z.string(),z.string().max(740)).superR
  for(const key of ['page','cursor','limit'])if(key in criteria)context.addIssue({code:'custom',path:[key],message:'Save search criteria without pagination.'});
  const result=listingFilters.strict().safeParse(criteria);if(!result.success)for(const issue of result.error.issues)context.addIssue({code:'custom',path:issue.path,message:issue.message});
 });
-export const savedSearchCreate=z.object({name:z.string().trim().min(2,'Enter a search name between 2 and 80 characters.').max(80,'Enter a search name between 2 and 80 characters.'),filters:savedSearchCriteria,cadence:z.enum(['daily','weekly']),version:z.literal(0)}).strict();
+export const savedSearchCreate=z.object({name:z.string().trim().min(2,'Enter a search name between 2 and 80 characters.').max(80,'Enter a search name between 2 and 80 characters.').refine(value=>![...value].some(character=>character.codePointAt(0)!<32||character.codePointAt(0)===127),'Remove control characters from the search name.'),filters:savedSearchCriteria,cadence:z.enum(['daily','weekly']),version:z.literal(0)}).strict();
 export const savedSearchUpdate=savedSearchCreate.omit({version:true}).extend({version:z.number().int().positive(),paused:z.boolean()}).strict();
 export const savedSearchDelete=z.object({version:z.number().int().positive()}).strict();
 export const savedSearchRecord=z.object({id:z.string().uuid(),name:z.string(),filters:z.record(z.string(),z.string()),cadence:z.enum(['daily','weekly']),version:z.number().int().positive(),criteriaVersion:z.number().int().nonnegative(),paused:z.boolean(),createdAt:z.string(),updatedAt:z.string(),restoreUrl:z.string(),alertEligible:z.boolean()});

@@ -1,3 +1,4 @@
+import {dueAlertDigests,deliverAlertDigest} from './alerts.js';
 import {createServer} from 'node:http';
 import {timingSafeEqual} from 'node:crypto';
 import {Queue,Worker} from 'bullmq';
@@ -10,12 +11,13 @@ const queue=new Queue('outbox',{connection});
 const metricsServer=createServer(async(req,res)=>{const expected=Buffer.from('Bearer '+env.SESSION_KEY),provided=Buffer.from(req.headers.authorization||'');if(req.url!=='/metrics'||provided.length!==expected.length||!timingSafeEqual(provided,expected)){res.writeHead(404).end();return;}try{const counts=await queue.getJobCounts('waiting','active','delayed','failed','completed');res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'}).end(JSON.stringify(counts));}catch{res.writeHead(503).end();}});metricsServer.listen(9001,'0.0.0.0');
 await initializeSearch();
 const project=createProcessor();
-const worker=new Worker('outbox',job=>job.name==='expiration'?expireScheduledListing(job.data.id,job.data.deadline):project(job),{connection,concurrency:4});
+const worker=new Worker('outbox',job=>job.name==='alert'?deliverAlertDigest(job.data.id):job.name==='expiration'?expireScheduledListing(job.data.id,job.data.deadline):project(job),{connection,concurrency:4});
 worker.on('failed',(job)=>console.error(JSON.stringify({event:'job.failed',jobId:job?.id,attempt:job?.attemptsMade})));
 let running=false;
 async function dispatch(){
  if(running)return;running=true;
  try{
+  try{for(const row of await dueAlertDigests()){const jobId='alert-'+row.id+'-'+row.version;const prior=await queue.getJob(jobId);if(prior&&(await prior.getState())==='failed')await prior.retry();await queue.add('alert',{id:row.id},{jobId,attempts:5,backoff:{type:'exponential',delay:1000},removeOnComplete:{age:86400}});}}catch{console.error(JSON.stringify({event:'alert_dispatcher.unavailable'}));}
   for(const row of await dueExpirations()){const jobId='expiration-'+row.id+'-'+row.version;const prior=await queue.getJob(jobId);if(prior&&(await prior.getState())==='failed')await prior.retry();await queue.add('expiration',{id:row.id,deadline:row.deadline},{jobId,attempts:5,backoff:{type:'exponential',delay:1000},removeOnComplete:{age:86400}});}
   const rows=(await pool.query("SELECT id FROM outbox WHERE processed_at IS NULL AND (dispatched_at IS NULL OR dispatched_at<now()-interval '60 seconds') ORDER BY created_at,id LIMIT 100")).rows;
   for(const row of rows){

@@ -1,3 +1,4 @@
+import {notificationPreferences,notificationRecord,alertSummary} from './notifications';
 import {savedSearchRecord} from './saved-searches';
 import {favoriteState} from './favorites';
 import {accountProfile} from './account-profile';
@@ -33,6 +34,7 @@ const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nul
 const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});
 const draft=m.listings.pick({id:true,unit_id:true,organization_id:true,owner_id:true,agent_id:true,title:true,description:true,transaction:true,segment:true,currency:true,price:true,rent_period:true,furnishing:true,available_from:true,features:true,status:true,version:true,slug:true});
 export const responses={
+ NotificationsController_preferences:notificationPreferences,NotificationsController_update:notificationPreferences,NotificationsController_read:z.array(notificationRecord),NotificationsController_markRead:z.object({read:bool}),NotificationsController_deliveries:z.array(alertSummary),NotificationsController_retry:alertSummary,NotificationWorkerController_transactional:z.object({accepted:bool}),NotificationWorkerController_plan:z.object({planned:n.int(),replayed:bool}),NotificationWorkerController_due:z.array(alertSummary),NotificationWorkerController_read:alertSummary,NotificationWorkerController_deliver:alertSummary,
  SavedSearchController_read:z.array(savedSearchRecord),SavedSearchController_create:savedSearchRecord,SavedSearchController_update:savedSearchRecord,SavedSearchController_remove:z.object({deleted:bool,version:n.int().positive()}),SavedSearchController_matches:z.object({eligible:bool,reason:s.nullable(),listings:z.array(z.object({id:uuid,slug:s,title:s,city:s,currency:s,price:decimal.nullable(),version:n.int().positive()}))}),
  BrowsingHistoryController_read:historyCollection,BrowsingHistoryController_preferences:historyCollection,BrowsingHistoryController_record:historyCollection,BrowsingHistoryController_remove:historyCollection,BrowsingHistoryController_clear:historyCollection,
  DiscoveryEventsController_view:z.object({recorded:bool,counted:bool}),
@@ -61,7 +63,6 @@ export const responses={
  EngagementController_leads:z.array(m.leads),EngagementController_lead:m.leads,
  EngagementController_viewings:z.array(m.viewings.extend({title:s})),EngagementController_opsViewings:z.array(m.viewings.extend({title:s})),EngagementController_book:m.viewings,EngagementController_cancel:m.viewings,EngagementController_confirm:m.viewings,
  EngagementController_conversations:z.array(m.conversations.pick({id:true,resource_id:true,created_at:true})),EngagementController_messages:z.array(message),EngagementController_message:message,
- EngagementController_notifications:z.array(m.notifications.pick({id:true,title:true,body:true,read_at:true,created_at:true})),
  InventoryController_submissions:z.array(owner),InventoryController_submit:owner,InventoryController_sendDraft:status,
  InventoryController_listings:z.array(m.listings.pick({id:true,title:true,slug:true,status:true,transaction:true,segment:true,price:true,currency:true,rent_period:true,version:true}).extend({community:s,city:s,...inventoryActions.shape})),InventoryController_workbench:m.listings.extend({area:decimal,beds:n,living_rooms:n,baths:n,floor:n,community:s,city:s,...inventoryActions.shape}),InventoryController_scheduleExpiration:versioned.extend({expires_at:s.nullable()}),InventoryController_updateStatus:versioned,
  InventoryController_revise:z.union([status,versioned.extend({title:s,price:decimal.nullable()})]),

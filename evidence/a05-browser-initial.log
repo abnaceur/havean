@@ -1,0 +1,90 @@
+ Container haven-integration-tests-run-58989a8610e2 Creating 
+ Container haven-integration-tests-run-58989a8610e2 Created 
+
+Running 4 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/notifications.spec.ts:9:1 › A05 optional preferences persist, real matching alert displays acceptance and can be read, opt-out prevents the next send (6.9s)
+  ✘  2 [desktop] › tests/e2e/notifications.spec.ts:22:1 › A05 preference outage rolls back optimism and a stale version reloads the current choice (2.8s)
+  ✓  3 [mobile] › tests/e2e/notifications.spec.ts:9:1 › A05 optional preferences persist, real matching alert displays acceptance and can be read, opt-out prevents the next send (6.5s)
+  ✘  4 [mobile] › tests/e2e/notifications.spec.ts:22:1 › A05 preference outage rolls back optimism and a stale version reloads the current choice (2.0s)
+
+
+  1) [desktop] › tests/e2e/notifications.spec.ts:22:1 › A05 preference outage rolls back optimism and a stale version reloads the current choice 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected substring: "Preferences temporarily unavailable"
+    Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+        1) <div role="alert" class="error-box">…</div> aka getByText('Preferences temporarily')
+        2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 15000ms
+      - waiting for getByRole('alert')
+
+
+      21 | });
+      22 | test('A05 preference outage rolls back optimism and a stale version reloads the current choice',async({page})=>{
+    > 23 |  await login(page,'owner');await page.goto('/account/notifications');const checkbox=page.getByLabel('In-app alerts',{exact:true}),before=await checkbox.isChecked();await page.route('**/api/v1/me/notification-preferences',async route=>{if(route.request().method()==='PATCH')await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:{code:'PROVIDER_UNAVAILABLE',message:'Preferences temporarily unavailable',requestId:'a05-fixture'}})});else await route.continue();});await checkbox.setChecked(!before);await expect(page.getByRole('alert')).toContainText('Preferences temporarily unavailable');await expect(checkbox).toBeChecked({checked:before});await page.unroute('**/api/v1/me/notification-preferences');const prefs=(await(await page.request.get('/api/v1/me/notification-preferences')).json()).data;await page.request.patch('/api/v1/me/notification-preferences',{headers:headers(),data:{...prefs,inAppEnabled:!before}});await checkbox.setChecked(!before);await expect(page.getByRole('alert')).toContainText('preferences changed');await expect(checkbox).toBeChecked({checked:!before});const fresh=(await(await page.request.get('/api/v1/me/notification-preferences')).json()).data;await page.request.patch('/api/v1/me/notification-preferences',{headers:headers(),data:{...fresh,inAppEnabled:before}});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ^
+      24 | });
+      25 |
+        at /workspace/tests/e2e/notifications.spec.ts:23:572
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/notifications-A05-preferen-5d555--reloads-the-current-choice-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/notifications-A05-preferen-5d555--reloads-the-current-choice-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/notifications-A05-preferen-5d555--reloads-the-current-choice-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/notifications-A05-preferen-5d555--reloads-the-current-choice-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/notifications.spec.ts:22:1 › A05 preference outage rolls back optimism and a stale version reloads the current choice 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected substring: "Preferences temporarily unavailable"
+    Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+        1) <div role="alert" class="error-box">…</div> aka getByText('Preferences temporarily')
+        2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 15000ms
+      - waiting for getByRole('alert')
+
+
+      21 | });
+      22 | test('A05 preference outage rolls back optimism and a stale version reloads the current choice',async({page})=>{
+    > 23 |  await login(page,'owner');await page.goto('/account/notifications');const checkbox=page.getByLabel('In-app alerts',{exact:true}),before=await checkbox.isChecked();await page.route('**/api/v1/me/notification-preferences',async route=>{if(route.request().method()==='PATCH')await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:{code:'PROVIDER_UNAVAILABLE',message:'Preferences temporarily unavailable',requestId:'a05-fixture'}})});else await route.continue();});await checkbox.setChecked(!before);await expect(page.getByRole('alert')).toContainText('Preferences temporarily unavailable');await expect(checkbox).toBeChecked({checked:before});await page.unroute('**/api/v1/me/notification-preferences');const prefs=(await(await page.request.get('/api/v1/me/notification-preferences')).json()).data;await page.request.patch('/api/v1/me/notification-preferences',{headers:headers(),data:{...prefs,inAppEnabled:!before}});await checkbox.setChecked(!before);await expect(page.getByRole('alert')).toContainText('preferences changed');await expect(checkbox).toBeChecked({checked:!before});const fresh=(await(await page.request.get('/api/v1/me/notification-preferences')).json()).data;await page.request.patch('/api/v1/me/notification-preferences',{headers:headers(),data:{...fresh,inAppEnabled:before}});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ^
+      24 | });
+      25 |
+        at /workspace/tests/e2e/notifications.spec.ts:23:572
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/notifications-A05-preferen-5d555--reloads-the-current-choice-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/notifications-A05-preferen-5d555--reloads-the-current-choice-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/notifications-A05-preferen-5d555--reloads-the-current-choice-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/notifications-A05-preferen-5d555--reloads-the-current-choice-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/notifications.spec.ts:22:1 › A05 preference outage rolls back optimism and a stale version reloads the current choice 
+    [mobile] › tests/e2e/notifications.spec.ts:22:1 › A05 preference outage rolls back optimism and a stale version reloads the current choice 
+  2 passed (21.8s)
+
