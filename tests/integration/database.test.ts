@@ -35,7 +35,7 @@ describe('F07 private unit details',()=>{
  });
  it('does not reveal private listing revisions owned by another actor',async()=>{
   await rollback(agent,async c=>{
-   const row=(await c.query("INSERT INTO listing_revisions(listing_id,actor_id,changes) VALUES($1,$2,'{\"title\":\"PRIVATE_REVISION_SENTINEL\"}') RETURNING id",[id(2000),agent.id])).rows[0];
+   const row=(await c.query("INSERT INTO listing_revisions(listing_id,actor_id,base_version,changes) SELECT $1,$2,version,'{\"title\":\"PRIVATE_REVISION_SENTINEL\"}' FROM listings WHERE id=$1 RETURNING id",[id(2000),agent.id])).rows[0];
    await c.query("SELECT set_config('app.actor',$1,true),set_config('app.org',$2,true)",[outsider.id,outsider.orgId]);
    expect((await c.query('SELECT * FROM listing_revisions WHERE id=$1',[row.id])).rowCount).toBe(0);
   });

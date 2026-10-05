@@ -1,0 +1,25 @@
+
+> haven-real-estate@0.1.0 test:integration /workspace
+> vitest run tests/integration
+
+
+ RUN  v5.0.3 /workspace
+
+ ✓ tests/integration/database.test.ts (15 tests) 127ms
+ ✓ tests/integration/listing-workflow.test.ts (6 tests) 161ms
+ ✓ tests/integration/outbox.test.ts (2 tests) 1589ms
+   ✓ F09 real queue replay and crash recovery (2)
+     ✓ crash after SMTP delivery retries without duplicating mail or notifications 1244ms
+     ✓ an old publish event cannot resurrect withdrawn inventory 342ms
+ ✓ tests/integration/inventory-schema.test.ts (6 tests) 61ms
+ ✓ tests/integration/contracts.test.ts (5 tests) 1244ms
+ ✓ tests/integration/geography.test.ts (4 tests) 42ms
+ ✓ tests/integration/readiness.test.ts (2 tests) 53ms
+
+ Test Files  7 passed (7)
+      Tests  40 passed (40)
+   Start at  07:35:53
+   Duration  7.21s (tests 51%, import 45%, transform 3%, worker 1%)
+
+    Isolate  7 workers spawned · ~105ms startup each (spawn + environment, per file)
+             at least ~630ms faster with isolate: false — reuses workers across files instead of one per file

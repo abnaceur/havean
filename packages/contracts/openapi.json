@@ -29935,6 +29935,12 @@
                           "type": "string",
                           "format": "uuid",
                           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "pending_submitted_by": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                         }
                       },
                       "required": [
@@ -29954,7 +29960,8 @@
                         "pending_title",
                         "pending_position",
                         "development_id",
-                        "floor_plan_id"
+                        "floor_plan_id",
+                        "pending_submitted_by"
                       ],
                       "additionalProperties": false
                     },
@@ -30261,6 +30268,136 @@
                         "default": "",
                         "type": "string",
                         "maxLength": 1000
+                      },
+                      "spatial": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "minLength": 2,
+                            "maxLength": 80
+                          },
+                          "level": {
+                            "type": "integer",
+                            "minimum": -10,
+                            "maximum": 100
+                          },
+                          "widthMetres": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 500
+                          },
+                          "depthMetres": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 500
+                          },
+                          "elevationMetres": {
+                            "type": "number",
+                            "minimum": -50,
+                            "maximum": 500
+                          },
+                          "northDegrees": {
+                            "type": "number",
+                            "minimum": -180,
+                            "maximum": 180
+                          },
+                          "rooms": {
+                            "minItems": 1,
+                            "maxItems": 60,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,50}$"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 2,
+                                  "maxLength": 80
+                                },
+                                "sceneId": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                },
+                                "polygon": {
+                                  "minItems": 3,
+                                  "maxItems": 24,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ]
+                                  }
+                                },
+                                "heightMetres": {
+                                  "default": 2.7,
+                                  "type": "number",
+                                  "minimum": 1,
+                                  "maximum": 12
+                                },
+                                "camera": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 1
+                                    },
+                                    "y": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 1
+                                    },
+                                    "headingDegrees": {
+                                      "type": "number",
+                                      "minimum": -180,
+                                      "maximum": 180
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y",
+                                    "headingDegrees"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "label",
+                                "sceneId",
+                                "polygon",
+                                "camera"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "level",
+                          "widthMetres",
+                          "depthMetres",
+                          "elevationMetres",
+                          "northDegrees",
+                          "rooms"
+                        ]
                       }
                     }
                   }
@@ -30382,10 +30519,9 @@
                               "metadata": {
                                 "type": "object",
                                 "properties": {
-                                  "caption": {
-                                    "type": "string"
-                                  },
                                   "hotspots": {
+                                    "default": [],
+                                    "maxItems": 20,
                                     "type": "array",
                                     "items": {
                                       "type": "object",
@@ -30396,13 +30532,19 @@
                                           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                                         },
                                         "label": {
-                                          "type": "string"
+                                          "type": "string",
+                                          "minLength": 2,
+                                          "maxLength": 80
                                         },
                                         "yaw": {
-                                          "type": "number"
+                                          "type": "number",
+                                          "minimum": -180,
+                                          "maximum": 180
                                         },
                                         "pitch": {
-                                          "type": "number"
+                                          "type": "number",
+                                          "minimum": -80,
+                                          "maximum": 80
                                         }
                                       },
                                       "required": [
@@ -30413,11 +30555,151 @@
                                       ],
                                       "additionalProperties": false
                                     }
+                                  },
+                                  "caption": {
+                                    "default": "",
+                                    "type": "string",
+                                    "maxLength": 1000
+                                  },
+                                  "spatial": {
+                                    "type": "object",
+                                    "properties": {
+                                      "name": {
+                                        "type": "string",
+                                        "minLength": 2,
+                                        "maxLength": 80
+                                      },
+                                      "level": {
+                                        "type": "integer",
+                                        "minimum": -10,
+                                        "maximum": 100
+                                      },
+                                      "widthMetres": {
+                                        "type": "number",
+                                        "minimum": 1,
+                                        "maximum": 500
+                                      },
+                                      "depthMetres": {
+                                        "type": "number",
+                                        "minimum": 1,
+                                        "maximum": 500
+                                      },
+                                      "elevationMetres": {
+                                        "type": "number",
+                                        "minimum": -50,
+                                        "maximum": 500
+                                      },
+                                      "northDegrees": {
+                                        "type": "number",
+                                        "minimum": -180,
+                                        "maximum": 180
+                                      },
+                                      "rooms": {
+                                        "minItems": 1,
+                                        "maxItems": 60,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "string",
+                                              "pattern": "^[a-zA-Z0-9_-]{1,50}$"
+                                            },
+                                            "label": {
+                                              "type": "string",
+                                              "minLength": 2,
+                                              "maxLength": 80
+                                            },
+                                            "sceneId": {
+                                              "type": "string",
+                                              "format": "uuid",
+                                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                            },
+                                            "polygon": {
+                                              "minItems": 3,
+                                              "maxItems": 24,
+                                              "type": "array",
+                                              "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "x": {
+                                                    "type": "number",
+                                                    "minimum": 0,
+                                                    "maximum": 1
+                                                  },
+                                                  "y": {
+                                                    "type": "number",
+                                                    "minimum": 0,
+                                                    "maximum": 1
+                                                  }
+                                                },
+                                                "required": [
+                                                  "x",
+                                                  "y"
+                                                ],
+                                                "additionalProperties": false
+                                              }
+                                            },
+                                            "heightMetres": {
+                                              "default": 2.7,
+                                              "type": "number",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            },
+                                            "camera": {
+                                              "type": "object",
+                                              "properties": {
+                                                "x": {
+                                                  "type": "number",
+                                                  "minimum": 0,
+                                                  "maximum": 1
+                                                },
+                                                "y": {
+                                                  "type": "number",
+                                                  "minimum": 0,
+                                                  "maximum": 1
+                                                },
+                                                "headingDegrees": {
+                                                  "type": "number",
+                                                  "minimum": -180,
+                                                  "maximum": 180
+                                                }
+                                              },
+                                              "required": [
+                                                "x",
+                                                "y",
+                                                "headingDegrees"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          },
+                                          "required": [
+                                            "id",
+                                            "label",
+                                            "sceneId",
+                                            "polygon",
+                                            "heightMetres",
+                                            "camera"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      }
+                                    },
+                                    "required": [
+                                      "name",
+                                      "level",
+                                      "widthMetres",
+                                      "depthMetres",
+                                      "elevationMetres",
+                                      "northDegrees",
+                                      "rooms"
+                                    ],
+                                    "additionalProperties": false
                                   }
                                 },
                                 "required": [
-                                  "caption",
-                                  "hotspots"
+                                  "hotspots",
+                                  "caption"
                                 ],
                                 "additionalProperties": false
                               },
@@ -30440,10 +30722,9 @@
                                 "nullable": true,
                                 "type": "object",
                                 "properties": {
-                                  "caption": {
-                                    "type": "string"
-                                  },
                                   "hotspots": {
+                                    "default": [],
+                                    "maxItems": 20,
                                     "type": "array",
                                     "items": {
                                       "type": "object",
@@ -30454,13 +30735,19 @@
                                           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                                         },
                                         "label": {
-                                          "type": "string"
+                                          "type": "string",
+                                          "minLength": 2,
+                                          "maxLength": 80
                                         },
                                         "yaw": {
-                                          "type": "number"
+                                          "type": "number",
+                                          "minimum": -180,
+                                          "maximum": 180
                                         },
                                         "pitch": {
-                                          "type": "number"
+                                          "type": "number",
+                                          "minimum": -80,
+                                          "maximum": 80
                                         }
                                       },
                                       "required": [
@@ -30471,11 +30758,151 @@
                                       ],
                                       "additionalProperties": false
                                     }
+                                  },
+                                  "caption": {
+                                    "default": "",
+                                    "type": "string",
+                                    "maxLength": 1000
+                                  },
+                                  "spatial": {
+                                    "type": "object",
+                                    "properties": {
+                                      "name": {
+                                        "type": "string",
+                                        "minLength": 2,
+                                        "maxLength": 80
+                                      },
+                                      "level": {
+                                        "type": "integer",
+                                        "minimum": -10,
+                                        "maximum": 100
+                                      },
+                                      "widthMetres": {
+                                        "type": "number",
+                                        "minimum": 1,
+                                        "maximum": 500
+                                      },
+                                      "depthMetres": {
+                                        "type": "number",
+                                        "minimum": 1,
+                                        "maximum": 500
+                                      },
+                                      "elevationMetres": {
+                                        "type": "number",
+                                        "minimum": -50,
+                                        "maximum": 500
+                                      },
+                                      "northDegrees": {
+                                        "type": "number",
+                                        "minimum": -180,
+                                        "maximum": 180
+                                      },
+                                      "rooms": {
+                                        "minItems": 1,
+                                        "maxItems": 60,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "id": {
+                                              "type": "string",
+                                              "pattern": "^[a-zA-Z0-9_-]{1,50}$"
+                                            },
+                                            "label": {
+                                              "type": "string",
+                                              "minLength": 2,
+                                              "maxLength": 80
+                                            },
+                                            "sceneId": {
+                                              "type": "string",
+                                              "format": "uuid",
+                                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                            },
+                                            "polygon": {
+                                              "minItems": 3,
+                                              "maxItems": 24,
+                                              "type": "array",
+                                              "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                  "x": {
+                                                    "type": "number",
+                                                    "minimum": 0,
+                                                    "maximum": 1
+                                                  },
+                                                  "y": {
+                                                    "type": "number",
+                                                    "minimum": 0,
+                                                    "maximum": 1
+                                                  }
+                                                },
+                                                "required": [
+                                                  "x",
+                                                  "y"
+                                                ],
+                                                "additionalProperties": false
+                                              }
+                                            },
+                                            "heightMetres": {
+                                              "default": 2.7,
+                                              "type": "number",
+                                              "minimum": 1,
+                                              "maximum": 12
+                                            },
+                                            "camera": {
+                                              "type": "object",
+                                              "properties": {
+                                                "x": {
+                                                  "type": "number",
+                                                  "minimum": 0,
+                                                  "maximum": 1
+                                                },
+                                                "y": {
+                                                  "type": "number",
+                                                  "minimum": 0,
+                                                  "maximum": 1
+                                                },
+                                                "headingDegrees": {
+                                                  "type": "number",
+                                                  "minimum": -180,
+                                                  "maximum": 180
+                                                }
+                                              },
+                                              "required": [
+                                                "x",
+                                                "y",
+                                                "headingDegrees"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          },
+                                          "required": [
+                                            "id",
+                                            "label",
+                                            "sceneId",
+                                            "polygon",
+                                            "heightMetres",
+                                            "camera"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      }
+                                    },
+                                    "required": [
+                                      "name",
+                                      "level",
+                                      "widthMetres",
+                                      "depthMetres",
+                                      "elevationMetres",
+                                      "northDegrees",
+                                      "rooms"
+                                    ],
+                                    "additionalProperties": false
                                   }
                                 },
                                 "required": [
-                                  "caption",
-                                  "hotspots"
+                                  "hotspots",
+                                  "caption"
                                 ],
                                 "additionalProperties": false
                               },
@@ -30494,6 +30921,12 @@
                                 "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                               },
                               "floor_plan_id": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "pending_submitted_by": {
                                 "nullable": true,
                                 "type": "string",
                                 "format": "uuid",
@@ -30541,6 +30974,7 @@
                               "pending_position",
                               "development_id",
                               "floor_plan_id",
+                              "pending_submitted_by",
                               "purpose",
                               "width",
                               "height",
@@ -31033,7 +31467,143 @@
                           "caption": {
                             "type": "string"
                           },
+                          "spatial": {
+                            "nullable": true,
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "minLength": 2,
+                                "maxLength": 80
+                              },
+                              "level": {
+                                "type": "integer",
+                                "minimum": -10,
+                                "maximum": 100
+                              },
+                              "widthMetres": {
+                                "type": "number",
+                                "minimum": 1,
+                                "maximum": 500
+                              },
+                              "depthMetres": {
+                                "type": "number",
+                                "minimum": 1,
+                                "maximum": 500
+                              },
+                              "elevationMetres": {
+                                "type": "number",
+                                "minimum": -50,
+                                "maximum": 500
+                              },
+                              "northDegrees": {
+                                "type": "number",
+                                "minimum": -180,
+                                "maximum": 180
+                              },
+                              "rooms": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "pattern": "^[a-zA-Z0-9_-]{1,50}$"
+                                    },
+                                    "label": {
+                                      "type": "string",
+                                      "minLength": 2,
+                                      "maxLength": 80
+                                    },
+                                    "sceneId": {
+                                      "type": "string",
+                                      "format": "uuid",
+                                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                    },
+                                    "polygon": {
+                                      "minItems": 3,
+                                      "maxItems": 24,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "x": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 1
+                                          },
+                                          "y": {
+                                            "type": "number",
+                                            "minimum": 0,
+                                            "maximum": 1
+                                          }
+                                        },
+                                        "required": [
+                                          "x",
+                                          "y"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "heightMetres": {
+                                      "default": 2.7,
+                                      "type": "number",
+                                      "minimum": 1,
+                                      "maximum": 12
+                                    },
+                                    "camera": {
+                                      "type": "object",
+                                      "properties": {
+                                        "x": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 1
+                                        },
+                                        "y": {
+                                          "type": "number",
+                                          "minimum": 0,
+                                          "maximum": 1
+                                        },
+                                        "headingDegrees": {
+                                          "type": "number",
+                                          "minimum": -180,
+                                          "maximum": 180
+                                        }
+                                      },
+                                      "required": [
+                                        "x",
+                                        "y",
+                                        "headingDegrees"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "label",
+                                    "sceneId",
+                                    "polygon",
+                                    "heightMetres",
+                                    "camera"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "level",
+                              "widthMetres",
+                              "depthMetres",
+                              "elevationMetres",
+                              "northDegrees",
+                              "rooms"
+                            ],
+                            "additionalProperties": false
+                          },
                           "hotspots": {
+                            "default": [],
+                            "maxItems": 20,
                             "type": "array",
                             "items": {
                               "type": "object",
@@ -31044,13 +31614,19 @@
                                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                                 },
                                 "label": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "minLength": 2,
+                                  "maxLength": 80
                                 },
                                 "yaw": {
-                                  "type": "number"
+                                  "type": "number",
+                                  "minimum": -180,
+                                  "maximum": 180
                                 },
                                 "pitch": {
-                                  "type": "number"
+                                  "type": "number",
+                                  "minimum": -80,
+                                  "maximum": 80
                                 }
                               },
                               "required": [
@@ -31075,6 +31651,7 @@
                           "height",
                           "duration",
                           "caption",
+                          "spatial",
                           "hotspots"
                         ],
                         "additionalProperties": false
@@ -31546,6 +32123,12 @@
                           "type": "string",
                           "format": "uuid",
                           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "pending_submitted_by": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                         }
                       },
                       "required": [
@@ -31565,7 +32148,8 @@
                         "pending_title",
                         "pending_position",
                         "development_id",
-                        "floor_plan_id"
+                        "floor_plan_id",
+                        "pending_submitted_by"
                       ],
                       "additionalProperties": false
                     },
@@ -31843,6 +32427,136 @@
                         "default": "",
                         "type": "string",
                         "maxLength": 1000
+                      },
+                      "spatial": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "minLength": 2,
+                            "maxLength": 80
+                          },
+                          "level": {
+                            "type": "integer",
+                            "minimum": -10,
+                            "maximum": 100
+                          },
+                          "widthMetres": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 500
+                          },
+                          "depthMetres": {
+                            "type": "number",
+                            "minimum": 1,
+                            "maximum": 500
+                          },
+                          "elevationMetres": {
+                            "type": "number",
+                            "minimum": -50,
+                            "maximum": 500
+                          },
+                          "northDegrees": {
+                            "type": "number",
+                            "minimum": -180,
+                            "maximum": 180
+                          },
+                          "rooms": {
+                            "minItems": 1,
+                            "maxItems": 60,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "pattern": "^[a-zA-Z0-9_-]{1,50}$"
+                                },
+                                "label": {
+                                  "type": "string",
+                                  "minLength": 2,
+                                  "maxLength": 80
+                                },
+                                "sceneId": {
+                                  "type": "string",
+                                  "format": "uuid",
+                                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                },
+                                "polygon": {
+                                  "minItems": 3,
+                                  "maxItems": 24,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "x": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      },
+                                      "y": {
+                                        "type": "number",
+                                        "minimum": 0,
+                                        "maximum": 1
+                                      }
+                                    },
+                                    "required": [
+                                      "x",
+                                      "y"
+                                    ]
+                                  }
+                                },
+                                "heightMetres": {
+                                  "default": 2.7,
+                                  "type": "number",
+                                  "minimum": 1,
+                                  "maximum": 12
+                                },
+                                "camera": {
+                                  "type": "object",
+                                  "properties": {
+                                    "x": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 1
+                                    },
+                                    "y": {
+                                      "type": "number",
+                                      "minimum": 0,
+                                      "maximum": 1
+                                    },
+                                    "headingDegrees": {
+                                      "type": "number",
+                                      "minimum": -180,
+                                      "maximum": 180
+                                    }
+                                  },
+                                  "required": [
+                                    "x",
+                                    "y",
+                                    "headingDegrees"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "label",
+                                "sceneId",
+                                "polygon",
+                                "camera"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "level",
+                          "widthMetres",
+                          "depthMetres",
+                          "elevationMetres",
+                          "northDegrees",
+                          "rooms"
+                        ]
                       }
                     }
                   },
@@ -32201,6 +32915,12 @@
                             "format": "uuid",
                             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                           },
+                          "pending_submitted_by": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
                           "property_title": {
                             "type": "string"
                           },
@@ -32230,6 +32950,7 @@
                           "pending_position",
                           "development_id",
                           "floor_plan_id",
+                          "pending_submitted_by",
                           "property_title",
                           "rights",
                           "scan_at"

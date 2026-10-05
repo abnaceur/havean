@@ -1,0 +1,13 @@
+import type {FloorLayout} from '@haven/contracts';
+export type ModelFloor={id:string;spatial:FloorLayout};
+export type ModelCamera={yaw:number;pitch:number;zoom:number};
+type Vertex={point:[number,number,number];color:[number,number,number]};
+export function modelVertices(floors:ModelFloor[]){const vertices:Vertex[]=[];
+ const triangle=(a:Vertex['point'],b:Vertex['point'],c:Vertex['point'],color:Vertex['color'])=>{for(const point of [a,b,c])vertices.push({point,color});};
+ for(const floor of floors){const layout=floor.spatial;for(const [index,room] of layout.rooms.entries()){const bottom=room.polygon.map(p=>[(p.x-0.5)*layout.widthMetres,layout.elevationMetres,(p.y-0.5)*layout.depthMetres] as Vertex['point']);const tint=(index%4)*0.045;for(let i=1;i<bottom.length-1;i++)triangle(bottom[0],bottom[i],bottom[i+1],[0.43+tint,0.68+tint,0.61+tint]);for(let i=0;i<bottom.length;i++){const a=bottom[i],b=bottom[(i+1)%bottom.length],c:[number,number,number]=[b[0],b[1]+room.heightMetres,b[2]],d:[number,number,number]=[a[0],a[1]+room.heightMetres,a[2]],shade=0.78+(i%2)*0.1;triangle(a,b,c,[shade,shade,shade-0.05]);triangle(a,c,d,[shade,shade,shade-0.05]);}}}
+ return vertices;
+}
+type Bounds={x:number;y:number;z:number;size:number;height:number};
+const cachedBounds=new WeakMap<ModelFloor[],Bounds>();
+function boundsFor(floors:ModelFloor[]):Bounds{const cached=cachedBounds.get(floors);if(cached)return cached;const points=floors.flatMap(floor=>floor.spatial.rooms.flatMap(room=>room.polygon.flatMap(p=>[[(p.x-0.5)*floor.spatial.widthMetres,floor.spatial.elevationMetres,(p.y-0.5)*floor.spatial.depthMetres],[(p.x-0.5)*floor.spatial.widthMetres,floor.spatial.elevationMetres+room.heightMetres,(p.y-0.5)*floor.spatial.depthMetres]])));if(!points.length)return{x:0,y:0,z:0,size:4,height:3};const min=[0,1,2].map(i=>Math.min(...points.map(p=>p[i]))),max=[0,1,2].map(i=>Math.max(...points.map(p=>p[i])));const result={x:(min[0]+max[0])/2,y:(min[1]+max[1])/2,z:(min[2]+max[2])/2,size:Math.max(4,max[0]-min[0],max[2]-min[2]),height:max[1]-min[1]};cachedBounds.set(floors,result);return result;}
+export function projectModel(point:[number,number,number],floors:ModelFloor[],camera:ModelCamera,aspect=1){const bounds=boundsFor(floors),radians=Math.PI/180,yaw=camera.yaw*radians,pitch=camera.pitch*radians;const [worldX,worldY,worldZ]=point,x=worldX-bounds.x,y=worldY-bounds.y,z=worldZ-bounds.z,rx=x*Math.cos(yaw)-z*Math.sin(yaw),rz=x*Math.sin(yaw)+z*Math.cos(yaw),ry=y*Math.cos(pitch)-rz*Math.sin(pitch),depth=y*Math.sin(pitch)+rz*Math.cos(pitch),distance=Math.max(bounds.size*2.2,bounds.height*2.5),denominator=Math.max(0.1,distance-depth);return [rx*camera.zoom*2.2/denominator/aspect,ry*camera.zoom*2.2/denominator,denominator/(distance*3)*2-1] as const;}

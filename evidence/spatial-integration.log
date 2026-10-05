@@ -1,0 +1,28 @@
+
+> haven-real-estate@0.1.0 test:integration /workspace
+> vitest run tests/integration
+
+
+ RUN  v5.0.3 /workspace
+
+ ✓ tests/integration/database.test.ts (15 tests) 126ms
+ ✓ tests/integration/outbox.test.ts (2 tests) 1965ms
+   ✓ F09 real queue replay and crash recovery (2)
+     ✓ crash after SMTP delivery retries without duplicating mail or notifications 1293ms
+     ✓ an old publish event cannot resurrect withdrawn inventory 665ms
+ ✓ tests/integration/contracts.test.ts (5 tests) 302ms
+ ✓ tests/integration/listing-workflow.test.ts (6 tests) 201ms
+ ✓ tests/integration/listing-revisions.test.ts (4 tests) 115ms
+ ✓ tests/integration/inventory-schema.test.ts (6 tests) 64ms
+ ✓ tests/integration/moderation-evidence.test.ts (4 tests) 48ms
+ ✓ tests/integration/geography.test.ts (4 tests) 45ms
+ ✓ tests/integration/readiness.test.ts (2 tests) 32ms
+
+ Test Files  9 passed (9)
+      Tests  48 passed (48)
+   Start at  09:03:59
+   Duration  8.47s (import 57%, tests 39%, transform 3%, worker 1%)
+
+     Import  37 modules were evaluated 51 times · 4.23s total, 57% of tracked time
+             ~1.16s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

@@ -1,0 +1,60 @@
+{
+  "checkedAt": "2026-10-05",
+  "evidenceLabel": "R",
+  "visualVerified": false,
+  "sources": [
+    {
+      "url": "https://m.ke.com/mas/ershoufang/103114800331.html",
+      "method": "First-party indexed listing excerpt; historical example, not a current Beijing capture",
+      "observations": [
+        "The listing gallery exposes VR, photographs and floor-plan categories and an image counter before property facts."
+      ]
+    },
+    {
+      "url": "https://www.realsee.com/book/mzY9kkdx/AdHkXdxa",
+      "method": "Readable official provider documentation",
+      "observations": [
+        "Documents panorama navigation, 3D model and floor-plan modes with floor selection."
+      ]
+    },
+    {
+      "url": "https://open-platform.realsee.com/developer/docs/dnalogel/floorplan/ModelFloorplanPlugin/",
+      "method": "Official SDK documentation returned by web search",
+      "observations": [
+        "Documents room labels, camera position and direction, north indication, multiple floors, and selecting a floor-plan room to enter its VR viewpoint."
+      ]
+    }
+  ],
+  "limits": "The current Beijing detail and provider documentation both timed out in direct mobile Chromium navigation. Provider capabilities do not prove that every listing enables them. No exact geometry, current Beijing interaction or visual-parity claim is made.",
+  "captureAttempts": "evidence/reference/media-display-attempts.json",
+  "initialImplementation": {
+    "files": [
+      "apps/web/src/property-media.tsx",
+      "apps/web/src/panorama.tsx"
+    ],
+    "implemented": [
+      "Linked equirectangular panoramas",
+      "Drag, keyboard, zoom, reset and full-screen controls",
+      "Floor-plan image dialog with zoom and fit controls"
+    ],
+    "differences": [
+      "Media categories are below the property gallery in a separate section",
+      "No spatial 3D model mode",
+      "Floor-plan image is not linked to tour viewpoints",
+      "No plan camera-position/direction overlay or floor selector"
+    ]
+  },
+  "implementedEnhancements": {
+    "evidenceLabel": "P",
+    "features": [
+      "Gallery VR / Photos / Floor plan / Videos categories",
+      "Interactive floor-plan rooms linked to approved panorama viewpoints",
+      "Current camera position and heading overlay plus north indication",
+      "Multiple floor selection and combined 3D floor display",
+      "Native WebGL model with actual room walls, supplied dimensions and elevations",
+      "Owner/agent spatial authoring with separate moderation and public scope filtering"
+    ],
+    "modelSource": "Model derived from supplied room geometry, not a scanned Realsee reconstruction",
+    "visualParityVerified": false
+  }
+}

@@ -1,11 +1,11 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
 type Hotspot={targetId:string;label:string;yaw:number;pitch:number};
-export function Panorama({scene,onScene}:{scene:{title:string;url:string;hotspots:Hotspot[]};onScene:(id:string)=>void}){
+export function Panorama({scene,onScene,onViewChange}:{scene:{title:string;url:string;hotspots:Hotspot[]};onScene:(id:string)=>void;onViewChange?:(view:{yaw:number;pitch:number;fov:number})=>void}){
  const canvas=useRef<HTMLCanvasElement>(null),frame=useRef<HTMLDivElement>(null),draw=useRef<()=>void>(()=>{});
  const [view,setView]=useState({yaw:0,pitch:0,fov:70}),[error,setError]=useState(''),[message,setMessage]=useState('');
  const camera=useRef(view),drag=useRef<{x:number;y:number}|null>(null);camera.current=view;
- useEffect(()=>{draw.current();},[view]);
+ useEffect(()=>{draw.current();onViewChange?.(view);},[view,onViewChange]);
  useEffect(()=>{
   const element=canvas.current;if(!element)return;
   setError('');setView({yaw:0,pitch:0,fov:70});

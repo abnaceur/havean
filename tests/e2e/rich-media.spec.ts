@@ -64,13 +64,14 @@ test('D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish t
  const invalidRange=await page.request.get('http://localhost:8089'+publicVideo.url,{headers:{Range:'bytes=999999999999-'}});expect(invalidRange.status()).toBe(416);
  await page.goto('http://localhost:8088/bj/buy/home-1');
  await page.getByRole('button',{name:/^Property videos/}).click();
+ if(await page.getByLabel('Property video',{exact:true}).count())await page.getByLabel('Property video',{exact:true}).selectOption(video.id);
  const player=page.getByLabel(video.title,{exact:true});await expect(player).toBeVisible();
  await expect.poll(()=>player.evaluate((v:HTMLVideoElement)=>v.readyState)).toBeGreaterThanOrEqual(1);
  await player.evaluate(async(v:HTMLVideoElement)=>{v.muted=true;await v.play();});
  await expect.poll(()=>player.evaluate((v:HTMLVideoElement)=>v.currentTime)).toBeGreaterThan(0);await player.evaluate((v:HTMLVideoElement)=>v.pause());
- await page.getByRole('button',{name:/^Floor plans/}).click();await page.getByRole('button',{name:'Open '+plan.title,exact:true}).click();
+ await page.getByRole('button',{name:/^Floor plans/}).click();if(await page.getByLabel('Property floor plan',{exact:true}).count())await page.getByLabel('Property floor plan',{exact:true}).selectOption(plan.id);await page.getByRole('button',{name:'Open '+plan.title,exact:true}).click();
  await page.getByRole('button',{name:'Zoom in',exact:true}).click();await expect(page.getByText('125%',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Close dialog',exact:true}).click();
- await page.getByRole('button',{name:/^360° tour/}).click();await page.getByRole('button',{name:living.title,exact:true}).click();
+ await page.getByRole('button',{name:/^360° tour/}).click();await page.getByLabel('Tour viewpoint',{exact:true}).selectOption(living.id);
  const canvas=page.getByRole('img',{name:'360 degree view: '+living.title,exact:true});await expect(canvas).toBeVisible();
  await page.getByRole('button',{name:'Turn right',exact:true}).click();await expect(page.getByText(/View 15° \/ 0°/)).toBeVisible();
  await page.getByRole('button',{name:'Go to Bedroom',exact:true}).click();await expect(page.getByRole('button',{name:bedroom.title,exact:true})).toHaveAttribute('aria-pressed','true');
@@ -114,7 +115,7 @@ test('development floor-plan drawings are uploaded, reviewed and displayed with 
   await expect(moderator.locator('#media-review-'+media.id)).toHaveCount(0);
  }finally{await context.close();}
  await page.goto('http://localhost:8088/bj/new-homes/garden-collection-1');
- await page.getByRole('button',{name:'Open '+title,exact:true}).click();
+ await page.getByRole('button',{name:/^Floor plans/}).click();if(await page.getByLabel('Property floor plan',{exact:true}).count())await page.getByLabel('Property floor plan',{exact:true}).selectOption(media.id);await page.getByRole('button',{name:'Open '+title,exact:true}).click();
  await expect(page.getByRole('dialog').getByRole('img',{name:title,exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Zoom in',exact:true}).click();await expect(page.getByText('125%',{exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Close dialog',exact:true}).click();

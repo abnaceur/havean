@@ -1,0 +1,84 @@
+{
+  "evidenceLabel": "P",
+  "date": "2026-10-05",
+  "functionalVerified": true,
+  "visualParityVerified": false,
+  "features": [
+    "Main gallery VR, Photos, Floor plan and Videos tabs",
+    "Panorama navigation with linked rooms and camera direction",
+    "Interactive floor plans with room entry, zoom, fit and north indication",
+    "Multiple floors with one selected variant per floor in combined models",
+    "Native WebGL 3D walls derived from supplied room geometry, orbit, zoom and room entry",
+    "Agent/owner spatial authoring, bounds and camera validation, independent moderation",
+    "Public room mappings exclude unapproved panorama references; pending layouts stay private",
+    "Direct tour and plan URLs with approved floor selection"
+  ],
+  "verification": {
+    "unit": {
+      "passed": 26,
+      "log": "evidence/spatial-unit.log"
+    },
+    "integration": {
+      "passed": 48,
+      "log": "evidence/spatial-integration.log"
+    },
+    "approvedVisualGate": {
+      "passed": 34,
+      "baselinesChanged": false,
+      "log": "evidence/spatial-visual.log"
+    },
+    "richMediaRegression": {
+      "passed": 8,
+      "viewports": [
+        1440,
+        390
+      ],
+      "log": "evidence/spatial-browser.log"
+    },
+    "cleanSpatialBrowser": {
+      "passed": 2,
+      "includes": [
+        "Authored camera positions",
+        "Room keyboard navigation",
+        "Floor switching",
+        "3D renderer readiness and orbit",
+        "One selected plan per floor",
+        "Public and pending metadata separation",
+        "Foreign panorama and invalid geometry denial",
+        "Uploader and revision editor self-approval denial",
+        "Axe serious/critical violations: zero",
+        "Direct VR and selected-plan links"
+      ],
+      "log": "evidence/spatial-clean-browser.log"
+    },
+    "productionBuild": {
+      "applications": [
+        "api",
+        "web",
+        "ops",
+        "worker"
+      ],
+      "log": "evidence/spatial-build.log"
+    },
+    "lint": "evidence/spatial-lint.log",
+    "types": "evidence/spatial-types.log",
+    "contracts": "evidence/spatial-contracts.log",
+    "demo": "evidence/spatial-demo.json"
+  },
+  "fixesDuringVerification": [
+    "Updated a privacy test fixture to supply the required listing base version without changing its isolation assertion",
+    "Added an image role to the labelled camera direction SVG",
+    "Kept unmapped panoramas accessible in the scene list",
+    "Avoided duplicate same-level geometry when alternative plans exist"
+  ],
+  "limits": [
+    "The 3D model uses supplied plan dimensions and convex room outlines. It is not a textured property scan.",
+    "The demo is synthetic and uses a repeated two-level schematic. Only mapped rooms appear in the model.",
+    "Current original-site visual parity remains unverified; reference navigation timed out.",
+    "The wider 120-task specification remains unfinished; D08/D09 are not marked done ahead of their prerequisites."
+  ],
+  "reference": "docs/reference/media-display-review.json",
+  "demoAuthoring": "evidence/spatial-demo-authoring.log",
+  "dockerRun": "evidence/spatial-docker.log",
+  "dockerContinuation": "evidence/spatial-clean-checks.log"
+}

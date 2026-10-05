@@ -4,10 +4,11 @@ import {money,listingFilters,inquirySchema,ownerSchema} from '../domain';
 import {mortgageSchema} from '../mortgage';
 import {draftCreate,draftUpdate} from '../inventory-drafts';
 import {responses} from '../responses';
+import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
 const date=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(v=>!Number.isNaN(Date.parse(v))&&new Date(v).toISOString().slice(0,10)===v,'Use a valid date');
 const kind=z.enum(['photo','floor_plan','panorama','video']);
-const metadata=z.object({hotspots:z.array(z.object({targetId:z.string().uuid(),label:z.string().min(2).max(80),yaw:z.number().min(-180).max(180),pitch:z.number().min(-80).max(80)})).max(20).default([]),caption:z.string().max(1000).default('')});
+const metadata=propertyMediaMetadata;
 export const operations={
 "AdministrationController_audit":{method:"GET",path:"/api/v1/ops/audit",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_audit"]},
 "AdministrationController_cases":{method:"GET",path:"/api/v1/support-cases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_cases"]},

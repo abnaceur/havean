@@ -1,5 +1,6 @@
 import {z} from 'zod';
 import {models as m} from './generated/models';
+import {floorLayout,propertyMediaMetadata} from './property-media';
 import {ownerSchema} from './domain';
 const s=z.string(),uuid=s.uuid(),n=z.number(),bool=z.boolean(),decimal=s.regex(/^-?\d+(\.\d+)?$/),status=z.object({id:uuid,status:s}),versioned=status.extend({version:n});
 const owner=m.owner_submissions.extend({data:ownerSchema.extend({photos:z.array(uuid).optional(),documents:z.array(uuid).optional(),reviewReason:s.optional()})});
@@ -13,9 +14,9 @@ const chargeSummary=m.charges.pick({id:true,period:true,due_date:true,amount:tru
 const paymentSummary=m.payments.pick({id:true,amount:true,currency:true,source:true,reference:true,reverses_id:true,created_at:true});
 const allocationSummary=m.allocations.pick({id:true,payment_id:true,charge_id:true,amount:true,reversed_at:true});
 const depositSummary=m.deposits.pick({id:true,kind:true,amount:true,currency:true,reason:true,created_at:true});
-const mediaMetadata=z.object({caption:s,hotspots:z.array(z.object({targetId:uuid,label:s,yaw:n,pitch:n}))});
+const mediaMetadata=propertyMediaMetadata;
 const studioMedia=m.listing_media.extend({metadata:mediaMetadata,pending_metadata:mediaMetadata.nullable(),purpose:s,width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),rights:s,scan_at:s.nullable()});
-const publicMedia=z.object({id:uuid,kind:z.enum(['photo','floor_plan','panorama','video']),title:s,position:n,floorPlanId:uuid.nullable(),url:s,poster:s.nullable(),width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),caption:s,hotspots:mediaMetadata.shape.hotspots});
+const publicMedia=z.object({id:uuid,kind:z.enum(['photo','floor_plan','panorama','video']),title:s,position:n,floorPlanId:uuid.nullable(),url:s,poster:s.nullable(),width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),caption:s,spatial:floorLayout.safeExtend({rooms:z.array(floorLayout.shape.rooms.element)}).nullable(),hotspots:mediaMetadata.shape.hotspots});
 const geographyRecord=z.union([m.transit_stations,m.communities.extend({latitude:n.nullable(),longitude:n.nullable()}),m.buildings,m.neighborhoods,m.cities,m.districts,m.transit_lines]);
 const market=z.object({name:s,currency:s,timezone:s,areaUnit:s,annualRate:decimal,rentPeriod:s,supportEmail:s,demo:bool});
 const support=m.support_cases.omit({user_id:true,internal_note:true});
