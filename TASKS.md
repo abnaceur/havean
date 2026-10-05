@@ -57,8 +57,8 @@
 - [x] **N01 Create developer organization and projects** — done; dependencies: D10, F07
 - [x] **N02 Create floor-plan types and inventory** — done; dependencies: N01, D10, F07
 - [x] **N03 Build development discovery** — done; dependencies: N02, D10, F07
-- [ ] **N04 Build development detail** — in_progress; dependencies: N03, D10, F07
-- [ ] **N05 Build developer inventory workspace** — todo; dependencies: N04, D10, F07
+- [x] **N04 Build development detail** — done; dependencies: N03, D10, F07
+- [ ] **N05 Build developer inventory workspace** — in_progress; dependencies: N04, D10, F07
 - [ ] **C01 Add commercial attributes and price bases** — todo; dependencies: D10, I08
 - [ ] **C02 Build commercial discovery** — todo; dependencies: C01, D10, I08
 - [ ] **C03 Build commercial detail and inquiry** — todo; dependencies: C02, D10, I08
