@@ -41,8 +41,8 @@
 - [x] **D05 Build map search** — done; dependencies: D04, I08, G05, U07
 - [x] **D06 Implement rankings and recommendations** — done; dependencies: D05, I08, G05, U07
 - [x] **D07 Build homepage sections** — done; dependencies: D06, I08, G05, U07
-- [ ] **D08 Build resale detail and gallery** — in_progress; dependencies: D07, I08, G05, U07
-- [ ] **D09 Add approved virtual tours** — todo; dependencies: D08, I08, G05, U07
+- [x] **D08 Build resale detail and gallery** — done; dependencies: D07, I08, G05, U07
+- [ ] **D09 Add approved virtual tours** — in_progress; dependencies: D08, I08, G05, U07
 - [ ] **D10 Implement search rebuild and recovery** — todo; dependencies: D09, I08, G05, U07
 - [ ] **A01 Build account profile** — todo; dependencies: F14, I08, U07
 - [ ] **A02 Implement persistent favorites** — todo; dependencies: A01, F14, I08, U07
