@@ -7,6 +7,7 @@ import {savedSearchCreate,savedSearchUpdate,savedSearchDelete} from '../saved-se
 import {historyVersion,historyPreference,historyView} from '../browsing-history';
 import {favoriteMutation} from '../favorites';
 import {rentalTermsUpdate} from '../rental-terms';
+import {projectCreate,projectUpdate,phaseCreate,phaseUpdate,projectBuildingCreate,projectBuildingUpdate} from '../development-projects';
 import {deletionRequest} from '../account-privacy';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
@@ -32,6 +33,13 @@ export const operations={
 "BrowsingHistoryController_read":{method:"GET",path:"/api/v1/me/history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["BrowsingHistoryController_read"]},
 "BrowsingHistoryController_record":{method:"POST",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyView,response:responses["BrowsingHistoryController_record"]},
 "BrowsingHistoryController_remove":{method:"DELETE",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyVersion,response:responses["BrowsingHistoryController_remove"]},
+"DevelopmentProjectsController_create":{method:"POST",path:"/api/v1/ops/developments",params:z.object({}),query:z.object({}),body:projectCreate,response:responses["DevelopmentProjectsController_create"]},
+"DevelopmentProjectsController_createBuilding":{method:"POST",path:"/api/v1/ops/developments/:id/buildings",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:projectBuildingCreate,response:responses["DevelopmentProjectsController_createBuilding"]},
+"DevelopmentProjectsController_createPhase":{method:"POST",path:"/api/v1/ops/developments/:id/phases",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:phaseCreate,response:responses["DevelopmentProjectsController_createPhase"]},
+"DevelopmentProjectsController_structure":{method:"GET",path:"/api/v1/ops/developments/:id/structure",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DevelopmentProjectsController_structure"]},
+"DevelopmentProjectsController_update":{method:"PATCH",path:"/api/v1/ops/developments/:id/project",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:projectUpdate,response:responses["DevelopmentProjectsController_update"]},
+"DevelopmentProjectsController_updateBuilding":{method:"PATCH",path:"/api/v1/ops/developments/:id/buildings/:buildingId",params:z.object({"id":z.string().min(1),"buildingId":z.string().min(1)}),query:z.object({}),body:projectBuildingUpdate,response:responses["DevelopmentProjectsController_updateBuilding"]},
+"DevelopmentProjectsController_updatePhase":{method:"PATCH",path:"/api/v1/ops/developments/:id/phases/:phaseId",params:z.object({"id":z.string().min(1),"phaseId":z.string().min(1)}),query:z.object({}),body:phaseUpdate,response:responses["DevelopmentProjectsController_updatePhase"]},
 "DiscoveryController_agent":{method:"GET",path:"/api/v1/agents/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_agent"]},
 "DiscoveryController_agents":{method:"GET",path:"/api/v1/agents",params:z.object({}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_agents"]},
 "DiscoveryController_cities":{method:"GET",path:"/api/v1/cities",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_cities"]},

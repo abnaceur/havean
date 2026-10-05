@@ -1,0 +1,30 @@
+ Container haven-integration-tests-run-b71f98af99b6 Creating 
+ Container haven-integration-tests-run-b71f98af99b6 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/contracts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 369[2mms[22m[39m
+ [31m❯[39m tests/integration/development-projects.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 140[2mms[22m[39m
+[31m   [31m×[31m N01 granted developer creates a valid project, phase and building; exact versions, idempotency and sales workflow preserve parent scope[39m[32m 64[2mms[22m[39m
+   [32m✓[39m N01 foreign developers cannot edit projects/buildings or attach a foreign phase; canonical database rejects cross-project and organization relinking[32m 60[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/development-projects.test.ts[2m > [22mN01 granted developer creates a valid project, phase and building; exact versions, idempotency and sales workflow preserve parent scope
+[31m[1merror[22m: duplicate key value violates unique constraint "buildings_community_id_slug_key"[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m apps/api/src/inventory/development-projects.ts:[2m18:446[22m[39m
+
+[90m [2m❯[22m idempotent apps/api/src/platform/core.ts:[2m21:1047[22m[39m
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1159[22m[39m
+[90m [2m❯[22m tests/integration/development-projects.test.ts:[2m15:533[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (7)[39m
+[2m   Start at [22m 22:04:36
+[2m   Duration [22m 2.18s[2m (import 58%, tests 26%, transform 15%, worker 1%)[22m
+
+

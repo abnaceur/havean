@@ -1,0 +1,11 @@
+import {z} from 'zod';
+const name=z.string().trim().min(2).max(120),slug=z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(100),version=z.number().int().positive();
+export const developmentSalesStatus=z.enum(['draft','coming_soon','on_sale','sold_out']);
+export const projectCreate=z.object({communityId:z.uuid(),slug,name,description:z.string().trim().min(20).max(5000)}).strict();
+export const projectUpdate=z.object({version,name,description:z.string().trim().min(20).max(5000),completionDate:z.string().date().nullable()}).strict();
+export const phaseCreate=z.object({projectVersion:version,name,slug}).strict();
+export const phaseUpdate=z.object({projectVersion:version,version,name,status:developmentSalesStatus}).strict();
+const buildingFields={phaseId:z.uuid().nullable(),name,floors:z.number().int().min(1).max(200).nullable(),completedYear:z.number().int().min(1800).max(2200).nullable()};
+export const projectBuildingCreate=z.object({projectVersion:version,slug,...buildingFields}).strict();
+export const projectBuildingUpdate=z.object({projectVersion:version,version,...buildingFields,status:z.enum(['active','archived'])}).strict();
+export const developmentSalesTransitions:Record<string,string[]>={draft:['coming_soon','on_sale'],coming_soon:['draft','on_sale'],on_sale:['sold_out'],sold_out:['on_sale']};
