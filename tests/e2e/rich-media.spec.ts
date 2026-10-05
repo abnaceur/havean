@@ -152,5 +152,6 @@ test('development floor-plan drawings are uploaded, reviewed and displayed with 
  await expect(page.getByRole('dialog').getByRole('img',{name:title,exact:true})).toBeVisible();
  await page.getByRole('dialog').getByRole('button',{name:'Zoom in',exact:true}).click();await expect(page.getByText('125%',{exact:true})).toBeVisible();
  await page.getByRole('button',{name:'Close dialog',exact:true}).click();
+ await page.getByRole('tab',{name:'Type A',exact:true}).click();
  await expect(page.getByRole('img',{name:'Type A floor-plan drawing',exact:true})).toBeVisible();
 });

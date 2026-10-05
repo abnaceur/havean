@@ -1,0 +1,11 @@
+# Development detail and type-linked sales inquiries
+
+Public development detail exposes project overview, publication status, exact declared price basis, published phases and types, approved type drawings, recorded area ranges, inventory timestamp and coarse community coordinates. Individual offered units, private labels, developer organization IDs and exact addresses are excluded. The detail gallery retains existing approved photographs/videos/plans/panoramas. No drawing or phase is invented when none is supplied.
+
+The selected published type is retained in general or available-unit inquiries through floor_plan_id, floor_plan_version and resource_version. Available-unit inquiries require on-sale project and positive current type availability. They create a lead/conversation only; no reservation, viewing or finance mutation occurs. Sold-out types remain visible and disable available-unit requests. General questions remain possible for a current published type/project.
+
+The API parses the canonical request, identifies the authenticated buyer, checks public destination and supplied versions, and deduplicates submissions. A narrow SECURITY DEFINER destination function acquires project/type SHARE locks for consumers whose public SELECT policy does not permit direct row locking. Authoring/inventory actions acquire project UPDATE locks first, serializing availability changes against contact. An insert trigger rechecks project/type ownership, publication, versions and availability; database checks reject incomplete typed requests. Existing leads remain valid when later inventory changes.
+
+Inventory dates are actual stored timestamps, displayed in UTC; synthetic fixtures do not claim real inventory. The community map uses recorded coarse coordinates with an OpenStreetMap embed and direct fallback link. No provider success or original-site parity is implied by having a fallback link.
+
+O: existing new-development navigation and media. R: SPECIFICATION.html N04 overview/phase/type/plan/map/inquiry and acceptance requirements. P: local English detail/form and synthetic project/type/inventory screenshots. V: original development pixel parity and actual inventory accuracy; pending visual review remains separate.
