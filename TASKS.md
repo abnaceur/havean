@@ -37,8 +37,8 @@
 - [x] **D01 Index approved public inventory** — done; dependencies: I08, G05, U07
 - [x] **D02 Implement typed search API** — done; dependencies: D01, I08, G05, U07
 - [x] **D03 Build autocomplete and recent searches** — done; dependencies: D02, I08, G05, U07
-- [ ] **D04 Build resale list and filter sheets** — in_progress; dependencies: D03, I08, G05, U07
-- [ ] **D05 Build map search** — todo; dependencies: D04, I08, G05, U07
+- [x] **D04 Build resale list and filter sheets** — done; dependencies: D03, I08, G05, U07
+- [ ] **D05 Build map search** — in_progress; dependencies: D04, I08, G05, U07
 - [ ] **D06 Implement rankings and recommendations** — todo; dependencies: D05, I08, G05, U07
 - [ ] **D07 Build homepage sections** — todo; dependencies: D06, I08, G05, U07
 - [ ] **D08 Build resale detail and gallery** — todo; dependencies: D07, I08, G05, U07
