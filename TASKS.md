@@ -35,8 +35,8 @@
 - [x] **U06 Establish visual regression fixtures** — done; dependencies: U05, F14
 - [x] **U07 Build accessibility interaction harness** — done; dependencies: U06, F14
 - [x] **D01 Index approved public inventory** — done; dependencies: I08, G05, U07
-- [ ] **D02 Implement typed search API** — in_progress; dependencies: D01, I08, G05, U07
-- [ ] **D03 Build autocomplete and recent searches** — todo; dependencies: D02, I08, G05, U07
+- [x] **D02 Implement typed search API** — done; dependencies: D01, I08, G05, U07
+- [ ] **D03 Build autocomplete and recent searches** — in_progress; dependencies: D02, I08, G05, U07
 - [ ] **D04 Build resale list and filter sheets** — todo; dependencies: D03, I08, G05, U07
 - [ ] **D05 Build map search** — todo; dependencies: D04, I08, G05, U07
 - [ ] **D06 Implement rankings and recommendations** — todo; dependencies: D05, I08, G05, U07
