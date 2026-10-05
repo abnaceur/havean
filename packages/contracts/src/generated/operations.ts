@@ -8,6 +8,7 @@ import {historyVersion,historyPreference,historyView} from '../browsing-history'
 import {favoriteMutation} from '../favorites';
 import {rentalTermsUpdate} from '../rental-terms';
 import {projectCreate,projectUpdate,phaseCreate,phaseUpdate,projectBuildingCreate,projectBuildingUpdate} from '../development-projects';
+import {floorTypeCreate,floorTypeUpdate,offeredUnitCreate,offeredUnitUpdate} from '../development-inventory';
 import {deletionRequest} from '../account-privacy';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
@@ -33,6 +34,11 @@ export const operations={
 "BrowsingHistoryController_read":{method:"GET",path:"/api/v1/me/history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["BrowsingHistoryController_read"]},
 "BrowsingHistoryController_record":{method:"POST",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyView,response:responses["BrowsingHistoryController_record"]},
 "BrowsingHistoryController_remove":{method:"DELETE",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyVersion,response:responses["BrowsingHistoryController_remove"]},
+"DevelopmentInventoryController_createType":{method:"POST",path:"/api/v1/ops/developments/:id/floor-types",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:floorTypeCreate,response:responses["DevelopmentInventoryController_createType"]},
+"DevelopmentInventoryController_createUnit":{method:"POST",path:"/api/v1/ops/developments/:id/offered-units",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:offeredUnitCreate,response:responses["DevelopmentInventoryController_createUnit"]},
+"DevelopmentInventoryController_units":{method:"GET",path:"/api/v1/ops/developments/:id/offered-units",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DevelopmentInventoryController_units"]},
+"DevelopmentInventoryController_updateType":{method:"PATCH",path:"/api/v1/ops/developments/:id/floor-types/:typeId",params:z.object({"id":z.string().min(1),"typeId":z.string().min(1)}),query:z.object({}),body:floorTypeUpdate,response:responses["DevelopmentInventoryController_updateType"]},
+"DevelopmentInventoryController_updateUnit":{method:"PATCH",path:"/api/v1/ops/developments/:id/offered-units/:unitId",params:z.object({"id":z.string().min(1),"unitId":z.string().min(1)}),query:z.object({}),body:offeredUnitUpdate,response:responses["DevelopmentInventoryController_updateUnit"]},
 "DevelopmentProjectsController_create":{method:"POST",path:"/api/v1/ops/developments",params:z.object({}),query:z.object({}),body:projectCreate,response:responses["DevelopmentProjectsController_create"]},
 "DevelopmentProjectsController_createBuilding":{method:"POST",path:"/api/v1/ops/developments/:id/buildings",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:projectBuildingCreate,response:responses["DevelopmentProjectsController_createBuilding"]},
 "DevelopmentProjectsController_createPhase":{method:"POST",path:"/api/v1/ops/developments/:id/phases",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:phaseCreate,response:responses["DevelopmentProjectsController_createPhase"]},

@@ -1,0 +1,833 @@
+Local environment and identity fixtures ready. Account credentials: infra/generated/integration/personas.md
+ Container haven-integration-proxy-1 Stopping 
+ Container haven-integration-worker-1 Stopping 
+ Container haven-integration-proxy-1 Stopped 
+ Container haven-integration-proxy-1 Removing 
+ Container haven-integration-worker-1 Stopped 
+ Container haven-integration-worker-1 Removing 
+ Container haven-integration-proxy-1 Removed 
+ Container haven-integration-web-1 Stopping 
+ Container haven-integration-ops-1 Stopping 
+ Container haven-integration-worker-1 Removed 
+ Container haven-integration-mail-1 Stopping 
+ Container haven-integration-cache-1 Stopping 
+ Container haven-integration-search-1 Stopping 
+ Container haven-integration-ops-1 Stopped 
+ Container haven-integration-ops-1 Removing 
+ Container haven-integration-web-1 Stopped 
+ Container haven-integration-web-1 Removing 
+ Container haven-integration-cache-1 Stopped 
+ Container haven-integration-cache-1 Removing 
+ Container haven-integration-ops-1 Removed 
+ Container haven-integration-web-1 Removed 
+ Container haven-integration-api-1 Stopping 
+ Container haven-integration-search-1 Stopped 
+ Container haven-integration-search-1 Removing 
+ Container haven-integration-mail-1 Stopped 
+ Container haven-integration-mail-1 Removing 
+ Container haven-integration-cache-1 Removed 
+ Container haven-integration-api-1 Stopped 
+ Container haven-integration-api-1 Removing 
+ Container haven-integration-search-1 Removed 
+ Container haven-integration-mail-1 Removed 
+ Container haven-integration-api-1 Removed 
+ Container haven-integration-migrate-1 Stopping 
+ Container haven-integration-identity-1 Stopping 
+ Container haven-integration-storage-1 Stopping 
+ Container haven-integration-scanner-1 Stopping 
+ Container haven-integration-migrate-1 Stopped 
+ Container haven-integration-migrate-1 Removing 
+ Container haven-integration-migrate-1 Removed 
+ Container haven-integration-install-1 Stopping 
+ Container haven-integration-install-1 Stopped 
+ Container haven-integration-install-1 Removing 
+ Container haven-integration-scanner-1 Stopped 
+ Container haven-integration-scanner-1 Removing 
+ Container haven-integration-install-1 Removed 
+ Container haven-integration-identity-1 Stopped 
+ Container haven-integration-identity-1 Removing 
+ Container haven-integration-scanner-1 Removed 
+ Container haven-integration-identity-1 Removed 
+ Container haven-integration-db-1 Stopping 
+ Container haven-integration-db-1 Stopped 
+ Container haven-integration-db-1 Removing 
+ Container haven-integration-db-1 Removed 
+ Container haven-integration-storage-1 Stopped 
+ Container haven-integration-storage-1 Removing 
+ Container haven-integration-storage-1 Removed 
+ Volume haven-integration_packages-ui-dependencies Removing 
+ Volume haven-integration_apps-api-dependencies Removing 
+ Volume haven-integration_packages-contracts-dependencies Removing 
+ Volume haven-integration_packages-test-support-dependencies Removing 
+ Volume haven-integration_cache Removing 
+ Volume haven-integration_virus-signatures Removing 
+ Volume haven-integration_database Removing 
+ Volume haven-integration_dependencies Removing 
+ Volume haven-integration_packages-config-dependencies Removing 
+ Volume haven-integration_apps-web-dependencies Removing 
+ Volume haven-integration_apps-worker-dependencies Removing 
+ Volume haven-integration_mail-data Removing 
+ Volume haven-integration_packages-database-dependencies Removing 
+ Volume haven-integration_apps-ops-dependencies Removing 
+ Network haven-integration_private Removing 
+ Volume haven-integration_packages-test-support-dependencies Removed 
+ Volume haven-integration_objects Removing 
+ Volume haven-integration_search Removing 
+ Volume haven-integration_virus-signatures Removed 
+ Volume haven-integration_cache Removed 
+ Volume haven-integration_packages-contracts-dependencies Removed 
+ Volume haven-integration_apps-worker-dependencies Removed 
+ Volume haven-integration_mail-data Removed 
+ Volume haven-integration_apps-web-dependencies Removed 
+ Volume haven-integration_packages-database-dependencies Removed 
+ Volume haven-integration_database Removed 
+ Volume haven-integration_packages-config-dependencies Removed 
+ Volume haven-integration_apps-ops-dependencies Removed 
+ Volume haven-integration_apps-api-dependencies Removed 
+ Volume haven-integration_packages-ui-dependencies Removed 
+ Network haven-integration_private Removed 
+ Volume haven-integration_dependencies Removed 
+ Volume haven-integration_search Removed 
+ Volume haven-integration_objects Removed 
+ Image haven-integration-api Building 
+ Image haven-integration-tests Building 
+ Image haven-integration-worker Building 
+ Image haven-integration-web Building 
+ Image haven-integration-migrate Building 
+ Image haven-integration-install Building 
+ Image haven-integration-ops Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 3.56kB done
+#1 DONE 0.0s
+
+#2 [install internal] load build definition from Dockerfile.dev
+#2 transferring dockerfile: 1.33kB done
+#2 DONE 0.0s
+
+#3 [ops internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#3 ...
+
+#4 [auth] library/node:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [ops internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#3 DONE 2.6s
+
+#5 [ops internal] load .dockerignore
+#5 transferring context: 192B done
+#5 DONE 0.0s
+
+#6 [ops dependencies  1/15] FROM docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#6 resolve docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 0.0s done
+#6 DONE 0.0s
+
+#7 [ops internal] load build context
+#7 ...
+
+#8 [tests dependencies  2/15] RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg=7:5.1.9-0+deb12u1 && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [tests dependencies  3/15] RUN npm install --global pnpm@10.32.1
+#9 CACHED
+
+#10 [tests dependencies  4/15] WORKDIR /workspace
+#10 CACHED
+
+#7 [tests internal] load build context
+#7 transferring context: 41.61MB 0.3s done
+#7 ...
+
+#11 [tests dependencies  5/15] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#11 DONE 0.1s
+
+#12 [ops dependencies  6/15] COPY apps/api/package.json ./apps/api/package.json
+#12 DONE 0.1s
+
+#13 [web dependencies  7/15] COPY apps/web/package.json ./apps/web/package.json
+#13 DONE 0.1s
+
+#14 [install dependencies  8/15] COPY apps/ops/package.json ./apps/ops/package.json
+#14 DONE 0.1s
+
+#15 [migrate dependencies  9/15] COPY apps/worker/package.json ./apps/worker/package.json
+#15 DONE 0.1s
+
+#16 [web dependencies 10/15] COPY packages/config/package.json ./packages/config/package.json
+#16 DONE 0.1s
+
+#17 [worker dependencies 11/15] COPY packages/contracts/package.json ./packages/contracts/package.json
+#17 DONE 0.2s
+
+#18 [migrate dependencies 12/15] COPY packages/database/package.json ./packages/database/package.json
+#18 DONE 0.1s
+
+#19 [api dependencies 13/15] COPY packages/ui/package.json ./packages/ui/package.json
+#19 DONE 0.1s
+
+#20 [api dependencies 14/15] COPY packages/test-support/package.json ./packages/test-support/package.json
+#20 DONE 0.1s
+
+#21 [install dependencies 15/15] RUN --mount=type=cache,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
+#21 0.794 Scope: all 10 workspace projects
+#21 0.848 Lockfile is up to date, resolution step is skipped
+#21 0.888 Progress: resolved 1, reused 0, downloaded 0, added 0
+#21 0.968 Packages: +325
+#21 0.968 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#21 1.889 Progress: resolved 325, reused 325, downloaded 0, added 259
+#21 2.889 Progress: resolved 325, reused 325, downloaded 0, added 321
+#21 3.160 
+#21 3.160    ╭─────────────────────────────────────────╮
+#21 3.160    │                                         │
+#21 3.160    │   Update available! 10.32.1 → 12.9.1.   │
+#21 3.160    │   Changelog: https://pnpm.io/v/12.9.1   │
+#21 3.160    │    To update, run: pnpm add -g pnpm     │
+#21 3.160    │                                         │
+#21 3.160    ╰─────────────────────────────────────────╯
+#21 3.160 
+#21 3.890 Progress: resolved 325, reused 325, downloaded 0, added 324
+#21 4.065 Progress: resolved 325, reused 325, downloaded 0, added 325, done
+#21 4.535 
+#21 4.535 devDependencies:
+#21 4.535 + @axe-core/playwright 4.13.0
+#21 4.535 + @eslint/js 10.0.1
+#21 4.535 + @playwright/test 1.63.0
+#21 4.535 + @types/node 26.6.4
+#21 4.535 + @types/nodemailer 8.0.2
+#21 4.535 + @types/pg 8.23.1
+#21 4.535 + @types/react 19.3.0
+#21 4.535 + @types/react-dom 19.3.0
+#21 4.535 + eslint 10.12.0
+#21 4.535 + tsx 4.23.15
+#21 4.535 + typescript 6.0.2
+#21 4.535 + typescript-eslint 8.71.0
+#21 4.535 + vitest 5.0.3
+#21 4.535 
+#21 4.559 ╭ Warning ─────────────────────────────────────────────────────────────────────╮
+#21 4.559 │                                                                              │
+#21 4.559 │   Ignored build scripts: @scarf/scarf@1.4.0, msgpackr-extract@3.0.4.         │
+#21 4.559 │   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+#21 4.559 │   to run scripts.                                                            │
+#21 4.559 │                                                                              │
+#21 4.559 ╰──────────────────────────────────────────────────────────────────────────────╯
+#21 4.579 Done in 4.3s using pnpm v10.32.1
+#21 DONE 4.7s
+
+#22 [api development 1/1] COPY . .
+#22 DONE 0.5s
+
+#23 [install] exporting to image
+#23 exporting layers
+#23 ...
+
+#24 [tests browser 1/1] RUN pnpm exec playwright install --with-deps --only-shell chromium
+#24 1.414 Installing dependencies...
+#24 2.022 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#24 2.801 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#24 3.078 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+#24 3.343 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8790 kB]
+#24 6.539 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+#24 6.756 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [349 kB]
+#24 7.513 Fetched 9387 kB in 6s (1546 kB/s)
+#24 7.513 Reading package lists...
+#24 8.021 Reading package lists...
+#24 8.470 Building dependency tree...
+#24 8.577 Reading state information...
+#24 8.684 libasound2 is already the newest version (1.2.8-1+b1).
+#24 8.684 libasound2 set to manually installed.
+#24 8.684 libcairo2 is already the newest version (1.16.0-7).
+#24 8.684 libcairo2 set to manually installed.
+#24 8.684 libdbus-1-3 is already the newest version (1.14.10-1~deb12u1).
+#24 8.684 libdbus-1-3 set to manually installed.
+#24 8.684 libdrm2 is already the newest version (2.4.114-1+b1).
+#24 8.684 libdrm2 set to manually installed.
+#24 8.684 libgbm1 is already the newest version (22.3.6-1+deb12u2).
+#24 8.684 libgbm1 set to manually installed.
+#24 8.684 libglib2.0-0 is already the newest version (2.74.6-2+deb12u9).
+#24 8.684 libglib2.0-0 set to manually installed.
+#24 8.684 libpango-1.0-0 is already the newest version (1.50.12+ds-1).
+#24 8.684 libpango-1.0-0 set to manually installed.
+#24 8.684 libx11-6 is already the newest version (2:1.8.4-2+deb12u2).
+#24 8.684 libx11-6 set to manually installed.
+#24 8.684 libxcb1 is already the newest version (1.15-1).
+#24 8.684 libxcb1 set to manually installed.
+#24 8.684 libxext6 is already the newest version (2:1.3.4-1+b1).
+#24 8.684 libxext6 set to manually installed.
+#24 8.684 libxfixes3 is already the newest version (1:6.0.0-2).
+#24 8.684 libxfixes3 set to manually installed.
+#24 8.684 libxkbcommon0 is already the newest version (1.5.0-1).
+#24 8.684 libxkbcommon0 set to manually installed.
+#24 8.684 libxrandr2 is already the newest version (2:1.5.2-2+b1).
+#24 8.684 libxrandr2 set to manually installed.
+#24 8.684 libfontconfig1 is already the newest version (2.14.1-4).
+#24 8.684 libfontconfig1 set to manually installed.
+#24 8.684 libfreetype6 is already the newest version (2.12.1+dfsg-5+deb12u4).
+#24 8.684 libfreetype6 set to manually installed.
+#24 8.684 The following additional packages will be installed:
+#24 8.684   at-spi2-common libavahi-client3 libavahi-common-data libavahi-common3
+#24 8.685   libfontenc1 libice6 libsm6 libsqlite3-0 libunwind8 libxaw7 libxfont2
+#24 8.685   libxkbfile1 libxmu6 libxpm4 libxt6 x11-xkb-utils xfonts-encodings
+#24 8.685   xfonts-utils xserver-common
+#24 8.686 Suggested packages:
+#24 8.686   cups-common
+#24 8.686 Recommended packages:
+#24 8.686   fonts-ipafont-mincho fonts-tlwg-loma at-spi2-core xfonts-base xauth
+#24 8.799 The following NEW packages will be installed:
+#24 8.799   at-spi2-common fonts-freefont-ttf fonts-ipafont-gothic fonts-liberation
+#24 8.800   fonts-noto-color-emoji fonts-tlwg-loma-otf fonts-unifont fonts-wqy-zenhei
+#24 8.800   libatk-bridge2.0-0 libatk1.0-0 libatspi2.0-0 libavahi-client3
+#24 8.800   libavahi-common-data libavahi-common3 libcups2 libfontenc1 libice6 libnspr4
+#24 8.800   libnss3 libsm6 libsqlite3-0 libunwind8 libxaw7 libxcomposite1 libxdamage1
+#24 8.801   libxfont2 libxkbfile1 libxmu6 libxpm4 libxt6 x11-xkb-utils xfonts-encodings
+#24 8.801   xfonts-scalable xfonts-utils xserver-common xvfb
+#24 9.385 0 upgraded, 36 newly installed, 0 to remove and 4 not upgraded.
+#24 9.385 Need to get 37.1 MB of archives.
+#24 9.385 After this operation, 85.4 MB of additional disk space will be used.
+#24 9.385 Get:1 http://deb.debian.org/debian bookworm/main amd64 fonts-ipafont-gothic all 00303-23 [3515 kB]
+#24 ...
+
+#25 [worker] exporting to image
+#25 ...
+
+#26 [api] exporting to image
+#26 ...
+
+#27 [ops] exporting to image
+#27 ...
+
+#28 [web] exporting to image
+#28 ...
+
+#29 [migrate] exporting to image
+#29 ...
+
+#24 [tests browser 1/1] RUN pnpm exec playwright install --with-deps --only-shell chromium
+#24 11.65 Get:2 http://deb.debian.org/debian bookworm/main amd64 at-spi2-common all 2.46.0-5 [162 kB]
+#24 11.99 Get:3 http://deb.debian.org/debian bookworm/main amd64 fonts-freefont-ttf all 20120503-10 [2552 kB]
+#24 12.30 Get:4 http://deb.debian.org/debian bookworm/main amd64 fonts-liberation all 1:1.07.4-11 [828 kB]
+#24 12.91 Get:5 http://deb.debian.org/debian bookworm/main amd64 fonts-noto-color-emoji all 2.042-0+deb12u1 [9894 kB]
+#24 14.98 Get:6 http://deb.debian.org/debian bookworm/main amd64 fonts-tlwg-loma-otf all 1:0.7.3-1 [147 kB]
+#24 15.09 Get:7 http://deb.debian.org/debian bookworm/main amd64 fonts-unifont all 1:15.0.01-2 [2019 kB]
+#24 15.25 Get:8 http://deb.debian.org/debian bookworm/main amd64 fonts-wqy-zenhei all 0.9.45-8 [7479 kB]
+#24 16.26 Get:9 http://deb.debian.org/debian bookworm/main amd64 libatk1.0-0 amd64 2.46.0-5 [49.6 kB]
+#24 16.31 Get:10 http://deb.debian.org/debian bookworm/main amd64 libatspi2.0-0 amd64 2.46.0-5 [75.4 kB]
+#24 16.31 Get:11 http://deb.debian.org/debian bookworm/main amd64 libatk-bridge2.0-0 amd64 2.46.0-5 [64.6 kB]
+#24 16.32 Get:12 http://deb.debian.org/debian bookworm/main amd64 libavahi-common-data amd64 0.8-10+deb12u1 [107 kB]
+#24 16.33 Get:13 http://deb.debian.org/debian bookworm/main amd64 libavahi-common3 amd64 0.8-10+deb12u1 [42.1 kB]
+#24 16.34 Get:14 http://deb.debian.org/debian bookworm/main amd64 libavahi-client3 amd64 0.8-10+deb12u1 [45.8 kB]
+#24 16.34 Get:15 http://deb.debian.org/debian bookworm/main amd64 libcups2 amd64 2.4.2-3+deb12u9 [245 kB]
+#24 16.71 Get:16 http://deb.debian.org/debian bookworm/main amd64 libfontenc1 amd64 1:1.1.4-1 [24.3 kB]
+#24 16.71 Get:17 http://deb.debian.org/debian bookworm/main amd64 libice6 amd64 2:1.0.10-1 [58.5 kB]
+#24 16.71 Get:18 http://deb.debian.org/debian bookworm/main amd64 libnspr4 amd64 2:4.35-1 [113 kB]
+#24 17.04 Get:19 http://deb.debian.org/debian bookworm/main amd64 libsqlite3-0 amd64 3.40.1-2+deb12u2 [839 kB]
+#24 17.04 Get:20 http://deb.debian.org/debian-security bookworm-security/main amd64 libnss3 amd64 2:3.87.1-1+deb12u4 [1331 kB]
+#24 17.05 Get:21 http://deb.debian.org/debian bookworm/main amd64 libsm6 amd64 2:1.2.3-1 [35.1 kB]
+#24 17.05 Get:22 http://deb.debian.org/debian bookworm/main amd64 libunwind8 amd64 1.6.2-3 [51.2 kB]
+#24 17.05 Get:23 http://deb.debian.org/debian bookworm/main amd64 libxt6 amd64 1:1.2.1-1.1 [186 kB]
+#24 17.05 Get:24 http://deb.debian.org/debian bookworm/main amd64 libxmu6 amd64 2:1.1.3-3 [60.1 kB]
+#24 17.13 Get:25 http://deb.debian.org/debian bookworm/main amd64 libxpm4 amd64 1:3.5.12-1.1+deb12u1 [48.6 kB]
+#24 17.14 Get:26 http://deb.debian.org/debian bookworm/main amd64 libxaw7 amd64 2:1.0.14-1 [201 kB]
+#24 17.21 Get:27 http://deb.debian.org/debian bookworm/main amd64 libxcomposite1 amd64 1:0.4.5-1 [16.6 kB]
+#24 17.31 Get:28 http://deb.debian.org/debian bookworm/main amd64 libxdamage1 amd64 1:1.1.6-1 [15.1 kB]
+#24 17.31 Get:29 http://deb.debian.org/debian-security bookworm-security/main amd64 libxfont2 amd64 1:2.0.6-1+deb12u1 [132 kB]
+#24 17.33 Get:30 http://deb.debian.org/debian bookworm/main amd64 libxkbfile1 amd64 1:1.1.0-1 [75.2 kB]
+#24 17.33 Get:31 http://deb.debian.org/debian bookworm/main amd64 x11-xkb-utils amd64 7.7+7 [165 kB]
+#24 17.39 Get:32 http://deb.debian.org/debian bookworm/main amd64 xfonts-encodings all 1:1.0.4-2.2 [577 kB]
+#24 17.43 Get:33 http://deb.debian.org/debian bookworm/main amd64 xfonts-utils amd64 1:7.7+6 [93.0 kB]
+#24 17.48 Get:34 http://deb.debian.org/debian bookworm/main amd64 xfonts-scalable all 1:1.0.3-1.3 [306 kB]
+#24 17.51 Get:35 http://deb.debian.org/debian-security bookworm-security/main amd64 xserver-common all 2:21.1.7-3+deb12u13 [2384 kB]
+#24 17.94 Get:36 http://deb.debian.org/debian-security bookworm-security/main amd64 xvfb amd64 2:21.1.7-3+deb12u13 [3154 kB]
+#24 18.54 debconf: delaying package configuration, since apt-utils is not installed
+#24 18.57 Fetched 37.1 MB in 10s (3861 kB/s)
+#24 18.62 Selecting previously unselected package fonts-ipafont-gothic.
+#24 18.62 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 8698 files and directories currently installed.)
+#24 18.64 Preparing to unpack .../00-fonts-ipafont-gothic_00303-23_all.deb ...
+#24 18.66 Unpacking fonts-ipafont-gothic (00303-23) ...
+#24 18.96 Selecting previously unselected package at-spi2-common.
+#24 18.96 Preparing to unpack .../01-at-spi2-common_2.46.0-5_all.deb ...
+#24 18.97 Unpacking at-spi2-common (2.46.0-5) ...
+#24 19.05 Selecting previously unselected package fonts-freefont-ttf.
+#24 19.05 Preparing to unpack .../02-fonts-freefont-ttf_20120503-10_all.deb ...
+#24 19.06 Unpacking fonts-freefont-ttf (20120503-10) ...
+#24 19.32 Selecting previously unselected package fonts-liberation.
+#24 19.32 Preparing to unpack .../03-fonts-liberation_1%3a1.07.4-11_all.deb ...
+#24 19.34 Unpacking fonts-liberation (1:1.07.4-11) ...
+#24 19.46 Selecting previously unselected package fonts-noto-color-emoji.
+#24 19.46 Preparing to unpack .../04-fonts-noto-color-emoji_2.042-0+deb12u1_all.deb ...
+#24 19.47 Unpacking fonts-noto-color-emoji (2.042-0+deb12u1) ...
+#24 20.18 Selecting previously unselected package fonts-tlwg-loma-otf.
+#24 20.18 Preparing to unpack .../05-fonts-tlwg-loma-otf_1%3a0.7.3-1_all.deb ...
+#24 20.19 Unpacking fonts-tlwg-loma-otf (1:0.7.3-1) ...
+#24 20.28 Selecting previously unselected package fonts-unifont.
+#24 20.28 Preparing to unpack .../06-fonts-unifont_1%3a15.0.01-2_all.deb ...
+#24 20.29 Unpacking fonts-unifont (1:15.0.01-2) ...
+#24 20.55 Selecting previously unselected package fonts-wqy-zenhei.
+#24 20.55 Preparing to unpack .../07-fonts-wqy-zenhei_0.9.45-8_all.deb ...
+#24 20.57 Unpacking fonts-wqy-zenhei (0.9.45-8) ...
+#24 21.18 Selecting previously unselected package libatk1.0-0:amd64.
+#24 21.18 Preparing to unpack .../08-libatk1.0-0_2.46.0-5_amd64.deb ...
+#24 21.21 Unpacking libatk1.0-0:amd64 (2.46.0-5) ...
+#24 21.29 Selecting previously unselected package libatspi2.0-0:amd64.
+#24 21.29 Preparing to unpack .../09-libatspi2.0-0_2.46.0-5_amd64.deb ...
+#24 21.31 Unpacking libatspi2.0-0:amd64 (2.46.0-5) ...
+#24 21.41 Selecting previously unselected package libatk-bridge2.0-0:amd64.
+#24 21.42 Preparing to unpack .../10-libatk-bridge2.0-0_2.46.0-5_amd64.deb ...
+#24 21.43 Unpacking libatk-bridge2.0-0:amd64 (2.46.0-5) ...
+#24 21.50 Selecting previously unselected package libavahi-common-data:amd64.
+#24 21.50 Preparing to unpack .../11-libavahi-common-data_0.8-10+deb12u1_amd64.deb ...
+#24 21.52 Unpacking libavahi-common-data:amd64 (0.8-10+deb12u1) ...
+#24 21.61 Selecting previously unselected package libavahi-common3:amd64.
+#24 21.61 Preparing to unpack .../12-libavahi-common3_0.8-10+deb12u1_amd64.deb ...
+#24 21.63 Unpacking libavahi-common3:amd64 (0.8-10+deb12u1) ...
+#24 21.72 Selecting previously unselected package libavahi-client3:amd64.
+#24 21.72 Preparing to unpack .../13-libavahi-client3_0.8-10+deb12u1_amd64.deb ...
+#24 21.73 Unpacking libavahi-client3:amd64 (0.8-10+deb12u1) ...
+#24 21.82 Selecting previously unselected package libcups2:amd64.
+#24 21.82 Preparing to unpack .../14-libcups2_2.4.2-3+deb12u9_amd64.deb ...
+#24 21.84 Unpacking libcups2:amd64 (2.4.2-3+deb12u9) ...
+#24 21.94 Selecting previously unselected package libfontenc1:amd64.
+#24 21.94 Preparing to unpack .../15-libfontenc1_1%3a1.1.4-1_amd64.deb ...
+#24 21.96 Unpacking libfontenc1:amd64 (1:1.1.4-1) ...
+#24 22.04 Selecting previously unselected package libice6:amd64.
+#24 22.04 Preparing to unpack .../16-libice6_2%3a1.0.10-1_amd64.deb ...
+#24 22.05 Unpacking libice6:amd64 (2:1.0.10-1) ...
+#24 22.13 Selecting previously unselected package libnspr4:amd64.
+#24 22.14 Preparing to unpack .../17-libnspr4_2%3a4.35-1_amd64.deb ...
+#24 22.15 Unpacking libnspr4:amd64 (2:4.35-1) ...
+#24 22.25 Selecting previously unselected package libsqlite3-0:amd64.
+#24 22.25 Preparing to unpack .../18-libsqlite3-0_3.40.1-2+deb12u2_amd64.deb ...
+#24 22.26 Unpacking libsqlite3-0:amd64 (3.40.1-2+deb12u2) ...
+#24 22.39 Selecting previously unselected package libnss3:amd64.
+#24 22.39 Preparing to unpack .../19-libnss3_2%3a3.87.1-1+deb12u4_amd64.deb ...
+#24 22.41 Unpacking libnss3:amd64 (2:3.87.1-1+deb12u4) ...
+#24 22.58 Selecting previously unselected package libsm6:amd64.
+#24 22.58 Preparing to unpack .../20-libsm6_2%3a1.2.3-1_amd64.deb ...
+#24 22.59 Unpacking libsm6:amd64 (2:1.2.3-1) ...
+#24 22.68 Selecting previously unselected package libunwind8:amd64.
+#24 22.68 Preparing to unpack .../21-libunwind8_1.6.2-3_amd64.deb ...
+#24 22.69 Unpacking libunwind8:amd64 (1.6.2-3) ...
+#24 22.78 Selecting previously unselected package libxt6:amd64.
+#24 22.78 Preparing to unpack .../22-libxt6_1%3a1.2.1-1.1_amd64.deb ...
+#24 22.80 Unpacking libxt6:amd64 (1:1.2.1-1.1) ...
+#24 22.89 Selecting previously unselected package libxmu6:amd64.
+#24 22.90 Preparing to unpack .../23-libxmu6_2%3a1.1.3-3_amd64.deb ...
+#24 22.91 Unpacking libxmu6:amd64 (2:1.1.3-3) ...
+#24 22.99 Selecting previously unselected package libxpm4:amd64.
+#24 23.00 Preparing to unpack .../24-libxpm4_1%3a3.5.12-1.1+deb12u1_amd64.deb ...
+#24 23.01 Unpacking libxpm4:amd64 (1:3.5.12-1.1+deb12u1) ...
+#24 23.10 Selecting previously unselected package libxaw7:amd64.
+#24 23.10 Preparing to unpack .../25-libxaw7_2%3a1.0.14-1_amd64.deb ...
+#24 23.11 Unpacking libxaw7:amd64 (2:1.0.14-1) ...
+#24 23.21 Selecting previously unselected package libxcomposite1:amd64.
+#24 23.21 Preparing to unpack .../26-libxcomposite1_1%3a0.4.5-1_amd64.deb ...
+#24 23.22 Unpacking libxcomposite1:amd64 (1:0.4.5-1) ...
+#24 23.31 Selecting previously unselected package libxdamage1:amd64.
+#24 23.31 Preparing to unpack .../27-libxdamage1_1%3a1.1.6-1_amd64.deb ...
+#24 23.32 Unpacking libxdamage1:amd64 (1:1.1.6-1) ...
+#24 23.41 Selecting previously unselected package libxfont2:amd64.
+#24 23.41 Preparing to unpack .../28-libxfont2_1%3a2.0.6-1+deb12u1_amd64.deb ...
+#24 23.43 Unpacking libxfont2:amd64 (1:2.0.6-1+deb12u1) ...
+#24 23.52 Selecting previously unselected package libxkbfile1:amd64.
+#24 23.52 Preparing to unpack .../29-libxkbfile1_1%3a1.1.0-1_amd64.deb ...
+#24 23.54 Unpacking libxkbfile1:amd64 (1:1.1.0-1) ...
+#24 23.61 Selecting previously unselected package x11-xkb-utils.
+#24 23.61 Preparing to unpack .../30-x11-xkb-utils_7.7+7_amd64.deb ...
+#24 23.62 Unpacking x11-xkb-utils (7.7+7) ...
+#24 23.71 Selecting previously unselected package xfonts-encodings.
+#24 23.71 Preparing to unpack .../31-xfonts-encodings_1%3a1.0.4-2.2_all.deb ...
+#24 23.72 Unpacking xfonts-encodings (1:1.0.4-2.2) ...
+#24 23.84 Selecting previously unselected package xfonts-utils.
+#24 23.84 Preparing to unpack .../32-xfonts-utils_1%3a7.7+6_amd64.deb ...
+#24 23.86 Unpacking xfonts-utils (1:7.7+6) ...
+#24 23.95 Selecting previously unselected package xfonts-scalable.
+#24 23.95 Preparing to unpack .../33-xfonts-scalable_1%3a1.0.3-1.3_all.deb ...
+#24 23.97 Unpacking xfonts-scalable (1:1.0.3-1.3) ...
+#24 24.05 Selecting previously unselected package xserver-common.
+#24 24.05 Preparing to unpack .../34-xserver-common_2%3a21.1.7-3+deb12u13_all.deb ...
+#24 24.07 Unpacking xserver-common (2:21.1.7-3+deb12u13) ...
+#24 24.15 Selecting previously unselected package xvfb.
+#24 24.15 Preparing to unpack .../35-xvfb_2%3a21.1.7-3+deb12u13_amd64.deb ...
+#24 24.17 Unpacking xvfb (2:21.1.7-3+deb12u13) ...
+#24 24.31 Setting up libice6:amd64 (2:1.0.10-1) ...
+#24 24.36 Setting up libxdamage1:amd64 (1:1.1.6-1) ...
+#24 24.40 Setting up libxpm4:amd64 (1:3.5.12-1.1+deb12u1) ...
+#24 24.44 Setting up fonts-noto-color-emoji (2.042-0+deb12u1) ...
+#24 24.49 Setting up libsqlite3-0:amd64 (3.40.1-2+deb12u2) ...
+#24 24.52 Setting up fonts-wqy-zenhei (0.9.45-8) ...
+#24 24.64 Setting up fonts-freefont-ttf (20120503-10) ...
+#24 24.68 Setting up libatspi2.0-0:amd64 (2.46.0-5) ...
+#24 24.72 Setting up libunwind8:amd64 (1.6.2-3) ...
+#24 24.76 Setting up libfontenc1:amd64 (1:1.1.4-1) ...
+#24 24.81 Setting up fonts-tlwg-loma-otf (1:0.7.3-1) ...
+#24 24.87 Setting up libnspr4:amd64 (2:4.35-1) ...
+#24 ...
+
+#23 [install] exporting to image
+#23 exporting layers 24.2s done
+#23 exporting manifest sha256:c86fb5de24f49d1e6d0c14fa5c5d6fe0df8d1ccc9e0640c066e1339f129a53b4
+#23 exporting manifest sha256:c86fb5de24f49d1e6d0c14fa5c5d6fe0df8d1ccc9e0640c066e1339f129a53b4 0.3s done
+#23 exporting config sha256:9266f88e9d23caf0ebb006729913f7a00f6e97576efb3fc3948ea37514416981
+#23 exporting config sha256:9266f88e9d23caf0ebb006729913f7a00f6e97576efb3fc3948ea37514416981 0.3s done
+#23 exporting attestation manifest sha256:9c078952440c0b92085e8bcd0dc6f163aa9de0b5272a00ac96ad65137138ba35
+#23 exporting attestation manifest sha256:9c078952440c0b92085e8bcd0dc6f163aa9de0b5272a00ac96ad65137138ba35 0.6s done
+#23 exporting manifest list sha256:64e3d39675ff898bc398819bef0384d58bfc48a65a30a48002421e1269e2d903
+#23 exporting manifest list sha256:64e3d39675ff898bc398819bef0384d58bfc48a65a30a48002421e1269e2d903 0.3s done
+#23 naming to docker.io/library/haven-integration-install:latest 0.0s done
+#23 unpacking to docker.io/library/haven-integration-install:latest
+#23 ...
+
+#24 [tests browser 1/1] RUN pnpm exec playwright install --with-deps --only-shell chromium
+#24 24.94 Setting up libavahi-common-data:amd64 (0.8-10+deb12u1) ...
+#24 24.99 Setting up xfonts-encodings (1:1.0.4-2.2) ...
+#24 25.04 Setting up fonts-ipafont-gothic (00303-23) ...
+#24 25.09 update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+#24 25.12 Setting up at-spi2-common (2.46.0-5) ...
+#24 25.18 Setting up fonts-liberation (1:1.07.4-11) ...
+#24 25.24 Setting up libatk1.0-0:amd64 (2.46.0-5) ...
+#24 25.30 Setting up libxkbfile1:amd64 (1:1.1.0-1) ...
+#24 25.35 Setting up libxcomposite1:amd64 (1:0.4.5-1) ...
+#24 25.41 Setting up libsm6:amd64 (2:1.2.3-1) ...
+#24 25.47 Setting up libxfont2:amd64 (1:2.0.6-1+deb12u1) ...
+#24 25.53 Setting up fonts-unifont (1:15.0.01-2) ...
+#24 25.58 Setting up libavahi-common3:amd64 (0.8-10+deb12u1) ...
+#24 25.63 Setting up libnss3:amd64 (2:3.87.1-1+deb12u4) ...
+#24 25.68 Setting up xfonts-utils (1:7.7+6) ...
+#24 25.74 Setting up libatk-bridge2.0-0:amd64 (2.46.0-5) ...
+#24 25.81 Setting up libxt6:amd64 (1:1.2.1-1.1) ...
+#24 25.87 Setting up libavahi-client3:amd64 (0.8-10+deb12u1) ...
+#24 25.93 Setting up xfonts-scalable (1:1.0.3-1.3) ...
+#24 26.02 Setting up libxmu6:amd64 (2:1.1.3-3) ...
+#24 26.08 Setting up libxaw7:amd64 (2:1.0.14-1) ...
+#24 26.14 Setting up libcups2:amd64 (2.4.2-3+deb12u9) ...
+#24 26.19 Setting up x11-xkb-utils (7.7+7) ...
+#24 26.24 Setting up xserver-common (2:21.1.7-3+deb12u13) ...
+#24 26.30 Setting up xvfb (2:21.1.7-3+deb12u13) ...
+#24 26.37 Processing triggers for fontconfig (2.14.1-4) ...
+#24 26.47 Processing triggers for libc-bin (2.36-9+deb12u14) ...
+#24 26.57 Downloading Chrome Headless Shell 153.0.8010.12 (playwright chromium-headless-shell v1243) from https://cdn.playwright.dev/builds/cft/153.0.8010.12/linux64/chrome-headless-shell-linux64.zip
+#24 29.01 |                                                                                |   0% of 114.3 MiB
+#24 32.82 |■■■■■■■■                                                                        |  10% of 114.3 MiB
+#24 ...
+
+#25 [worker] exporting to image
+#25 exporting layers 24.2s done
+#25 exporting manifest sha256:2ce92ca9c717a1383caaee7b936ad516a7ae2f6df61e0803e25c3c3f8b6dfe1b 0.2s done
+#25 exporting config sha256:c6d7de826fcb022d1c4212fa18f0655a0f8db56a3e9fc34f6c41dc6d8cbcb8d4 0.3s done
+#25 exporting attestation manifest sha256:9d51dec75ea03d04694d11a8d803f6ab907720ededf3c5293a560dedc59cde5a 0.6s done
+#25 exporting manifest list sha256:fdc9ecc917509004f6379db280e1f75321ad1ea4b5c2a8651d68cc984dfff69d 0.3s done
+#25 naming to docker.io/library/haven-integration-worker:latest 0.1s done
+#25 unpacking to docker.io/library/haven-integration-worker:latest
+#25 ...
+
+#28 [web] exporting to image
+#28 exporting layers 24.2s done
+#28 exporting manifest sha256:85184803f09b64ab39026e782912a22894c54a5904481549560c44d210b133ba 0.2s done
+#28 exporting config sha256:82e8000c919b939e1c2ab86c0e1b767d5076ca6f768da851ca4713f1c61930fd 0.3s done
+#28 exporting attestation manifest sha256:94b94ab066634c93ad43a2a38d7a185394255be00c830cd30add32a82dbdcbd0 0.6s done
+#28 exporting manifest list sha256:a7ae216abf03c9e020deb09c55d1f3222bb2f2f8fd5461fb5f3be81b87f6432d 0.3s done
+#28 naming to docker.io/library/haven-integration-web:latest 0.1s done
+#28 unpacking to docker.io/library/haven-integration-web:latest
+#28 ...
+
+#26 [api] exporting to image
+#26 exporting layers 24.2s done
+#26 exporting manifest sha256:12918ebc768384a5d80eb6617fe539b2006fc5c19989e4f991aa845d00ec9dbb 0.3s done
+#26 exporting config sha256:1b79ad16d8b0393b6cc6ec9b6a0905cb0e21aa33c896e0f5e16a2b3d81e0f89f 0.3s done
+#26 exporting attestation manifest sha256:7f543086da8d4b0513bd0cdad14bf0b09306596914fd34ba319903b86182f4bb 0.6s done
+#26 exporting manifest list sha256:8d73835b2c8404a8d908d7fe28ba94f9408946e4d0d10b31e3d6c20699478256 0.3s done
+#26 naming to docker.io/library/haven-integration-api:latest 0.1s done
+#26 unpacking to docker.io/library/haven-integration-api:latest
+#26 ...
+
+#29 [migrate] exporting to image
+#29 exporting layers 24.2s done
+#29 exporting manifest sha256:350bcf83e85db9a1d5f634a172322236baab9480430bc59c3984d394130d4a1f 0.3s done
+#29 exporting config sha256:b137421cb434a6a52a5653685951d7240397292ddd2aeb3923ef4e28c0164b3c 0.3s done
+#29 exporting attestation manifest sha256:6f6c668ce9745dac3260817ae2f34e2e3796c852413edee162a2e39924a8fad6 0.6s done
+#29 exporting manifest list sha256:a6b42685f966099cc3d3ad1472029df585289bc7a1c17018b97316fa7fc1a38b 0.3s done
+#29 naming to docker.io/library/haven-integration-migrate:latest 0.0s done
+#29 unpacking to docker.io/library/haven-integration-migrate:latest
+#29 ...
+
+#27 [ops] exporting to image
+#27 exporting layers 24.2s done
+#27 exporting manifest sha256:968eaab8e63e81e375428008aecf050f8ba93123fd64501df67f9ded66d3e851 0.3s done
+#27 exporting config sha256:1714dba9991bffca15bbe37df834b99b019d924195d369ddb3015aed1c32bd99 0.3s done
+#27 exporting attestation manifest sha256:8cc835832997298ccaf4a86bca1bbc76f956a176534a6671ffe46d335b6b6f58 0.6s done
+#27 exporting manifest list sha256:790634f60837019a67b230106048c8fd39a4cd68f9b14399b3d23acd46cc1306 0.3s done
+#27 naming to docker.io/library/haven-integration-ops:latest 0.0s done
+#27 unpacking to docker.io/library/haven-integration-ops:latest
+#27 ...
+
+#24 [tests browser 1/1] RUN pnpm exec playwright install --with-deps --only-shell chromium
+#24 34.79 |■■■■■■■■■■■■■■■■                                                                |  20% of 114.3 MiB
+#24 37.42 |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 114.3 MiB
+#24 ...
+
+#27 [ops] exporting to image
+#27 unpacking to docker.io/library/haven-integration-ops:latest 12.3s done
+#27 DONE 38.3s
+
+#28 [web] exporting to image
+#28 unpacking to docker.io/library/haven-integration-web:latest 12.4s done
+#28 DONE 38.3s
+
+#26 [api] exporting to image
+#26 unpacking to docker.io/library/haven-integration-api:latest 12.4s done
+#26 DONE 38.4s
+
+#23 [install] exporting to image
+#23 unpacking to docker.io/library/haven-integration-install:latest 12.4s done
+#23 DONE 38.4s
+
+#29 [migrate] exporting to image
+#29 unpacking to docker.io/library/haven-integration-migrate:latest 12.4s done
+#29 DONE 38.4s
+
+#25 [worker] exporting to image
+#25 unpacking to docker.io/library/haven-integration-worker:latest 12.4s done
+#25 DONE 38.4s
+
+#7 [tests internal] load build context
+#7 ...
+
+#30 [ops] resolving provenance for metadata file
+#30 DONE 0.4s
+
+#31 [api] resolving provenance for metadata file
+#31 DONE 0.4s
+
+#32 [worker] resolving provenance for metadata file
+#32 DONE 0.2s
+
+#33 [migrate] resolving provenance for metadata file
+#33 DONE 0.1s
+
+#34 [web] resolving provenance for metadata file
+#34 DONE 0.3s
+
+#35 [install] resolving provenance for metadata file
+#35 DONE 0.0s
+
+#24 [tests browser 1/1] RUN pnpm exec playwright install --with-deps --only-shell chromium
+#24 40.16 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 114.3 MiB
+#24 41.94 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 114.3 MiB
+#24 45.32 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 114.3 MiB
+#24 50.30 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 114.3 MiB
+#24 54.36 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 114.3 MiB
+#24 60.31 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 114.3 MiB
+#24 62.73 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 114.3 MiB
+#24 64.23 Chrome Headless Shell 153.0.8010.12 (playwright chromium-headless-shell v1243) downloaded to /ms-playwright/chromium_headless_shell-1243
+#24 64.23 Downloading FFmpeg (playwright ffmpeg v1011) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1011/ffmpeg-linux.zip
+#24 66.53 |                                                                                |   0% of 2.3 MiB
+#24 67.17 |■■■■■■■■                                                                        |  10% of 2.3 MiB
+#24 67.39 |■■■■■■■■■■■■■■■■                                                                |  20% of 2.3 MiB
+#24 67.57 |■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.3 MiB
+#24 67.70 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.3 MiB
+#24 67.84 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.3 MiB
+#24 67.87 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.3 MiB
+#24 67.95 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.3 MiB
+#24 68.02 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.3 MiB
+#24 68.06 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.3 MiB
+#24 68.47 |■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.3 MiB
+#24 68.53 FFmpeg (playwright ffmpeg v1011) downloaded to /ms-playwright/ffmpeg-1011
+#24 DONE 68.8s
+
+#7 [tests internal] load build context
+#7 ...
+
+#36 [tests tests 1/1] COPY . .
+#36 DONE 0.3s
+
+#7 [tests internal] load build context
+#7 ...
+
+#37 [tests] exporting to image
+#37 exporting layers
+#37 exporting layers 15.4s done
+#37 exporting manifest sha256:81d89d9b1bb76894d54222e04c64520ff4a5e9cc7c2bc9becc4fc7e3bf7bce81 0.0s done
+#37 exporting config sha256:0f66951da89e632b37fb83ea11f1806ff8f9b153d0cc15547057fdc03383ae8c 0.0s done
+#37 exporting attestation manifest sha256:f5cc3057a8ae6886c0a160fd9cbde2d4a747f8beadd50cc37f9141d62cfdf275
+#37 exporting attestation manifest sha256:f5cc3057a8ae6886c0a160fd9cbde2d4a747f8beadd50cc37f9141d62cfdf275 0.1s done
+#37 exporting manifest list sha256:8652fd92e6b2f1922df42a234819416bb32461076f5af443df13bbb3ab9c91bb 0.0s done
+#37 naming to docker.io/library/haven-integration-tests:latest
+#37 naming to docker.io/library/haven-integration-tests:latest done
+#37 unpacking to docker.io/library/haven-integration-tests:latest
+#37 unpacking to docker.io/library/haven-integration-tests:latest 2.6s done
+#37 DONE 18.2s
+
+#7 [tests internal] load build context
+#7 ...
+
+#38 [tests] resolving provenance for metadata file
+#38 DONE 0.0s
+
+#7 [tests internal] load build context
+ Image haven-integration-api Built 
+ Image haven-integration-tests Built 
+ Image haven-integration-worker Built 
+ Image haven-integration-migrate Built 
+ Image haven-integration-install Built 
+ Image haven-integration-web Built 
+ Image haven-integration-ops Built 
+ Network haven-integration_private Creating 
+ Network haven-integration_private Created 
+ Volume haven-integration_packages-contracts-dependencies Creating 
+ Volume haven-integration_packages-contracts-dependencies Created 
+ Volume haven-integration_packages-test-support-dependencies Creating 
+ Volume haven-integration_packages-test-support-dependencies Created 
+ Volume haven-integration_apps-ops-dependencies Creating 
+ Volume haven-integration_apps-ops-dependencies Created 
+ Volume haven-integration_packages-ui-dependencies Creating 
+ Volume haven-integration_packages-ui-dependencies Created 
+ Volume haven-integration_apps-worker-dependencies Creating 
+ Volume haven-integration_apps-worker-dependencies Created 
+ Volume haven-integration_apps-api-dependencies Creating 
+ Volume haven-integration_apps-api-dependencies Created 
+ Volume haven-integration_mail-data Creating 
+ Volume haven-integration_mail-data Created 
+ Volume haven-integration_search Creating 
+ Volume haven-integration_search Created 
+ Volume haven-integration_packages-config-dependencies Creating 
+ Volume haven-integration_packages-config-dependencies Created 
+ Volume haven-integration_objects Creating 
+ Volume haven-integration_objects Created 
+ Volume haven-integration_cache Creating 
+ Volume haven-integration_cache Created 
+ Volume haven-integration_virus-signatures Creating 
+ Volume haven-integration_virus-signatures Created 
+ Volume haven-integration_apps-web-dependencies Creating 
+ Volume haven-integration_apps-web-dependencies Created 
+ Volume haven-integration_packages-database-dependencies Creating 
+ Volume haven-integration_packages-database-dependencies Created 
+ Volume haven-integration_dependencies Creating 
+ Volume haven-integration_dependencies Created 
+ Volume haven-integration_database Creating 
+ Volume haven-integration_database Created 
+ Container haven-integration-cache-1 Creating 
+ Container haven-integration-storage-1 Creating 
+ Container haven-integration-search-1 Creating 
+ Container haven-integration-install-1 Creating 
+ Container haven-integration-mail-1 Creating 
+ Container haven-integration-db-1 Creating 
+ Container haven-integration-scanner-1 Creating 
+ Container haven-integration-cache-1 Created 
+ Container haven-integration-mail-1 Created 
+ Container haven-integration-search-1 Created 
+ Container haven-integration-storage-1 Created 
+ Container haven-integration-db-1 Created 
+ Container haven-integration-identity-1 Creating 
+ Container haven-integration-scanner-1 Created 
+ Container haven-integration-identity-1 Created 
+ Container haven-integration-install-1 Created 
+ Container haven-integration-migrate-1 Creating 
+ Container haven-integration-migrate-1 Created 
+ Container haven-integration-worker-1 Creating 
+ Container haven-integration-api-1 Creating 
+ Container haven-integration-api-1 Created 
+ Container haven-integration-ops-1 Creating 
+ Container haven-integration-web-1 Creating 
+ Container haven-integration-worker-1 Created 
+ Container haven-integration-web-1 Created 
+ Container haven-integration-ops-1 Created 
+ Container haven-integration-proxy-1 Creating 
+ Container haven-integration-proxy-1 Created 
+ Container haven-integration-install-1 Starting 
+ Container haven-integration-cache-1 Starting 
+ Container haven-integration-scanner-1 Starting 
+ Container haven-integration-mail-1 Starting 
+ Container haven-integration-search-1 Starting 
+ Container haven-integration-db-1 Starting 
+ Container haven-integration-storage-1 Starting 
+ Container haven-integration-cache-1 Started 
+ Container haven-integration-scanner-1 Started 
+ Container haven-integration-db-1 Started 
+ Container haven-integration-db-1 Waiting 
+ Container haven-integration-install-1 Started 
+ Container haven-integration-install-1 Waiting 
+ Container haven-integration-db-1 Waiting 
+ Container haven-integration-mail-1 Started 
+ Container haven-integration-search-1 Started 
+ Container haven-integration-storage-1 Started 
+ Container haven-integration-install-1 Exited 
+ Container haven-integration-db-1 Healthy 
+ Container haven-integration-identity-1 Starting 
+ Container haven-integration-db-1 Healthy 
+ Container haven-integration-migrate-1 Starting 
+ Container haven-integration-identity-1 Started 
+ Container haven-integration-migrate-1 Started 
+ Container haven-integration-search-1 Waiting 
+ Container haven-integration-mail-1 Waiting 
+ Container haven-integration-migrate-1 Waiting 
+ Container haven-integration-cache-1 Waiting 
+ Container haven-integration-scanner-1 Waiting 
+ Container haven-integration-storage-1 Waiting 
+ Container haven-integration-migrate-1 Waiting 
+ Container haven-integration-identity-1 Waiting 
+ Container haven-integration-cache-1 Healthy 
+ Container haven-integration-search-1 Healthy 
+ Container haven-integration-mail-1 Healthy 
+ Container haven-integration-migrate-1 Exited 
+ Container haven-integration-worker-1 Starting 
+ Container haven-integration-migrate-1 Exited 
+ Container haven-integration-worker-1 Started 
+ Container haven-integration-storage-1 Healthy 
+ Container haven-integration-scanner-1 Healthy 
+ Container haven-integration-identity-1 Healthy 
+ Container haven-integration-api-1 Starting 
+ Container haven-integration-api-1 Started 
+ Container haven-integration-api-1 Waiting 
+ Container haven-integration-api-1 Waiting 
+ Container haven-integration-api-1 Healthy 
+ Container haven-integration-api-1 Healthy 
+ Container haven-integration-web-1 Starting 
+ Container haven-integration-ops-1 Starting 
+ Container haven-integration-ops-1 Started 
+ Container haven-integration-web-1 Started 
+ Container haven-integration-proxy-1 Starting 
+ Container haven-integration-proxy-1 Started 
+ Container haven-integration-install-1 Waiting 
+ Container haven-integration-mail-1 Waiting 
+ Container haven-integration-proxy-1 Waiting 
+ Container haven-integration-web-1 Waiting 
+ Container haven-integration-scanner-1 Waiting 
+ Container haven-integration-cache-1 Waiting 
+ Container haven-integration-storage-1 Waiting 
+ Container haven-integration-ops-1 Waiting 
+ Container haven-integration-identity-1 Waiting 
+ Container haven-integration-db-1 Waiting 
+ Container haven-integration-search-1 Waiting 
+ Container haven-integration-api-1 Waiting 
+ Container haven-integration-migrate-1 Waiting 
+ Container haven-integration-worker-1 Waiting 
+ Container haven-integration-install-1 Exited 
+ Container haven-integration-cache-1 Healthy 
+ Container haven-integration-search-1 Healthy 
+ Container haven-integration-scanner-1 Healthy 
+ Container haven-integration-api-1 Healthy 
+ Container haven-integration-db-1 Healthy 
+ Container haven-integration-worker-1 Healthy 
+ Container haven-integration-mail-1 Healthy 
+ Container haven-integration-identity-1 Healthy 
+ Container haven-integration-migrate-1 Exited 
+ Container haven-integration-storage-1 Healthy 
+ Container haven-integration-proxy-1 Healthy 
+ Container haven-integration-web-1 Healthy 
+ Container haven-integration-ops-1 Healthy 
+Synthetic fixture fingerprint: ecf2a11dce9a5779af5a7c2d1dd632bbc80a8bf40b1ddc28d698e011829bc823
+Identity staff OTP and verified level-2 policy configured.
+ Container haven-integration-tests-run-1244b684b4bd Creating 
+ Container haven-integration-tests-run-1244b684b4bd Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/development-inventory.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1923[2mms[22m[39m
+   [33m[2m✓[22m[39m N02 publishes exact decimal range with an approved drawing, keeps types distinct from individual offered units and derives nonnegative availability with timestamps[33m 1453[2mms[22m[39m
+   [33m[2m✓[22m[39m N02 invalid ranges, foreign/unapproved drawing, wrong building/area, stale versions and incompatible type changes are denied; draft types are private[33m 432[2mms[22m[39m
+ [32m✓[39m tests/integration/development-projects.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 184[2mms[22m[39m
+ [32m✓[39m tests/integration/contracts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 374[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m   Start at [22m 22:20:06
+[2m   Duration [22m 4.69s[2m (tests 57%, import 37%, transform 6%)[22m
+

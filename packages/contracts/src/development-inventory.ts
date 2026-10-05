@@ -1,0 +1,10 @@
+import {z} from 'zod';
+import Decimal from 'decimal.js';
+const version=z.number().int().positive(),area=z.string().regex(/^\d+(\.\d{1,2})?$/).refine(value=>new Decimal(value).gt(0)&&new Decimal(value).lte('99999999.99'));
+const facts={projectVersion:version,name:z.string().trim().min(2).max(120),beds:z.number().int().min(0).max(20),livingRooms:z.number().int().min(0).max(20),baths:z.number().int().min(0).max(20).nullable(),areaMin:area,areaMax:area,mediaId:z.uuid().nullable(),mediaVersion:version.nullable()};
+const validate=(row:{areaMin:string;areaMax:string;mediaId:string|null;mediaVersion:number|null},ctx:z.RefinementCtx)=>{if(new Decimal(row.areaMin).gt(row.areaMax))ctx.addIssue({code:'custom',path:['areaMax'],message:'Maximum area must be at least the minimum area'});if((row.mediaId===null)!==(row.mediaVersion===null))ctx.addIssue({code:'custom',path:['mediaId'],message:'Drawing and its current version must be supplied together'});};
+export const floorTypeCreate=z.object(facts).strict().superRefine(validate);
+export const floorTypeUpdate=z.object({...facts,version,status:z.enum(['draft','published','withdrawn'])}).strict().superRefine(validate);
+export const offeredUnitCreate=z.object({projectVersion:version,typeVersion:version,floorPlanId:z.uuid(),buildingId:z.uuid(),unitLabel:z.string().trim().min(1).max(80),area,status:z.enum(['available','reserved','sold','withdrawn'])}).strict();
+export const offeredUnitUpdate=z.object({projectVersion:version,version,status:z.enum(['available','reserved','sold','withdrawn'])}).strict();
+export const offeredUnitTransitions:Record<string,string[]>={available:['reserved','sold','withdrawn'],reserved:['available','sold','withdrawn'],sold:['withdrawn'],withdrawn:['available']};
