@@ -16,7 +16,7 @@ try{
   else if(['json','jsonb'].includes(row.data_type))schema='z.json()';
   else if(row.data_type==='numeric')schema="z.string().regex(/^-?\\d+(\\.\\d+)?$/)";
   else schema='z.string()';
-  if(row.is_nullable==='YES'&&(row.table_name!=='public_listings'||['price','rentPeriod','availableFrom','agentId','latitude','longitude','publishedAt','neighborhoodId','builtYear','floorCategory','buildingType','finishing','heating'].includes(row.column_name)))schema+='.nullable()';
+  if(row.is_nullable==='YES'&&(row.table_name!=='public_listings'||['price','rentPeriod','rentalMode','availableFrom','agentId','latitude','longitude','publishedAt','neighborhoodId','builtYear','floorCategory','buildingType','finishing','heating'].includes(row.column_name)))schema+='.nullable()';
   if(!tables.has(row.table_name))tables.set(row.table_name,[]);
   tables.get(row.table_name).push(JSON.stringify(row.column_name)+':'+schema);
  }

@@ -2145,6 +2145,14 @@
                                       "tourAvailable": {
                                         "type": "boolean"
                                       },
+                                      "rentalMode": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "enum": [
+                                          "entire",
+                                          "shared"
+                                        ]
+                                      },
                                       "rankingScore": {
                                         "type": "number"
                                       },
@@ -2205,6 +2213,7 @@
                                       "ownership",
                                       "holdingPeriod",
                                       "tourAvailable",
+                                      "rentalMode",
                                       "available"
                                     ],
                                     "additionalProperties": false
@@ -2627,6 +2636,14 @@
                                       "tourAvailable": {
                                         "type": "boolean"
                                       },
+                                      "rentalMode": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "enum": [
+                                          "entire",
+                                          "shared"
+                                        ]
+                                      },
                                       "rankingScore": {
                                         "type": "number"
                                       },
@@ -2687,6 +2704,7 @@
                                       "ownership",
                                       "holdingPeriod",
                                       "tourAvailable",
+                                      "rentalMode",
                                       "available"
                                     ],
                                     "additionalProperties": false
@@ -3090,6 +3108,14 @@
                                       "tourAvailable": {
                                         "type": "boolean"
                                       },
+                                      "rentalMode": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "enum": [
+                                          "entire",
+                                          "shared"
+                                        ]
+                                      },
                                       "rankingScore": {
                                         "type": "number"
                                       },
@@ -3150,6 +3176,7 @@
                                       "ownership",
                                       "holdingPeriod",
                                       "tourAvailable",
+                                      "rentalMode",
                                       "available"
                                     ],
                                     "additionalProperties": false
@@ -3588,6 +3615,14 @@
                                       "tourAvailable": {
                                         "type": "boolean"
                                       },
+                                      "rentalMode": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "enum": [
+                                          "entire",
+                                          "shared"
+                                        ]
+                                      },
                                       "rankingScore": {
                                         "type": "number"
                                       },
@@ -3648,6 +3683,7 @@
                                       "ownership",
                                       "holdingPeriod",
                                       "tourAvailable",
+                                      "rentalMode",
                                       "available"
                                     ],
                                     "additionalProperties": false
@@ -4087,6 +4123,14 @@
                                       "tourAvailable": {
                                         "type": "boolean"
                                       },
+                                      "rentalMode": {
+                                        "nullable": true,
+                                        "type": "string",
+                                        "enum": [
+                                          "entire",
+                                          "shared"
+                                        ]
+                                      },
                                       "rankingScore": {
                                         "type": "number"
                                       },
@@ -4147,6 +4191,7 @@
                                       "ownership",
                                       "holdingPeriod",
                                       "tourAvailable",
+                                      "rentalMode",
                                       "available"
                                     ],
                                     "additionalProperties": false
@@ -7161,6 +7206,14 @@
                         "tourAvailable": {
                           "type": "boolean"
                         },
+                        "rentalMode": {
+                          "nullable": true,
+                          "type": "string",
+                          "enum": [
+                            "entire",
+                            "shared"
+                          ]
+                        },
                         "rankingScore": {
                           "type": "number"
                         },
@@ -7214,7 +7267,8 @@
                         "heating",
                         "ownership",
                         "holdingPeriod",
-                        "tourAvailable"
+                        "tourAvailable",
+                        "rentalMode"
                       ],
                       "additionalProperties": false
                     },
@@ -7755,6 +7809,28 @@
             }
           },
           {
+            "name": "rentalMode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "entire",
+                "shared"
+              ]
+            }
+          },
+          {
+            "name": "availableBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
             "name": "minPrice",
             "in": "query",
             "required": false,
@@ -8203,6 +8279,14 @@
                           "tourAvailable": {
                             "type": "boolean"
                           },
+                          "rentalMode": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "entire",
+                              "shared"
+                            ]
+                          },
                           "rankingScore": {
                             "type": "number"
                           },
@@ -8256,7 +8340,8 @@
                           "heating",
                           "ownership",
                           "holdingPeriod",
-                          "tourAvailable"
+                          "tourAvailable",
+                          "rentalMode"
                         ],
                         "additionalProperties": false
                       }
@@ -8735,6 +8820,28 @@
                 "month",
                 "year"
               ]
+            }
+          },
+          {
+            "name": "rentalMode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "entire",
+                "shared"
+              ]
+            }
+          },
+          {
+            "name": "availableBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
             }
           },
           {
@@ -10180,6 +10287,14 @@
                           "tourAvailable": {
                             "type": "boolean"
                           },
+                          "rentalMode": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "entire",
+                              "shared"
+                            ]
+                          },
                           "rankingScore": {
                             "type": "number"
                           },
@@ -10233,7 +10348,8 @@
                           "heating",
                           "ownership",
                           "holdingPeriod",
-                          "tourAvailable"
+                          "tourAvailable",
+                          "rentalMode"
                         ],
                         "additionalProperties": false
                       }
@@ -14502,6 +14618,14 @@
                               "tourAvailable": {
                                 "type": "boolean"
                               },
+                              "rentalMode": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "entire",
+                                  "shared"
+                                ]
+                              },
                               "rankingScore": {
                                 "type": "number"
                               },
@@ -14562,6 +14686,7 @@
                               "ownership",
                               "holdingPeriod",
                               "tourAvailable",
+                              "rentalMode",
                               "available"
                             ],
                             "additionalProperties": false
@@ -20758,6 +20883,14 @@
                           "tourAvailable": {
                             "type": "boolean"
                           },
+                          "rentalMode": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "entire",
+                              "shared"
+                            ]
+                          },
                           "rankingScore": {
                             "type": "number"
                           },
@@ -20811,7 +20944,8 @@
                           "heating",
                           "ownership",
                           "holdingPeriod",
-                          "tourAvailable"
+                          "tourAvailable",
+                          "rentalMode"
                         ],
                         "additionalProperties": false
                       }
@@ -22416,6 +22550,14 @@
                               "tourAvailable": {
                                 "type": "boolean"
                               },
+                              "rentalMode": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "entire",
+                                  "shared"
+                                ]
+                              },
                               "rankingScore": {
                                 "type": "number"
                               },
@@ -22469,7 +22611,8 @@
                               "heating",
                               "ownership",
                               "holdingPeriod",
-                              "tourAvailable"
+                              "tourAvailable",
+                              "rentalMode"
                             ],
                             "additionalProperties": false
                           }
@@ -22639,6 +22782,14 @@
                               "tourAvailable": {
                                 "type": "boolean"
                               },
+                              "rentalMode": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "entire",
+                                  "shared"
+                                ]
+                              },
                               "rankingScore": {
                                 "type": "number"
                               },
@@ -22692,7 +22843,8 @@
                               "heating",
                               "ownership",
                               "holdingPeriod",
-                              "tourAvailable"
+                              "tourAvailable",
+                              "rentalMode"
                             ],
                             "additionalProperties": false
                           }
@@ -22963,6 +23115,14 @@
                               "tourAvailable": {
                                 "type": "boolean"
                               },
+                              "rentalMode": {
+                                "nullable": true,
+                                "type": "string",
+                                "enum": [
+                                  "entire",
+                                  "shared"
+                                ]
+                              },
                               "rankingScore": {
                                 "type": "number"
                               },
@@ -23016,7 +23176,8 @@
                               "heating",
                               "ownership",
                               "holdingPeriod",
-                              "tourAvailable"
+                              "tourAvailable",
+                              "rentalMode"
                             ],
                             "additionalProperties": false
                           }
@@ -40869,6 +41030,28 @@
             }
           },
           {
+            "name": "rentalMode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "entire",
+                "shared"
+              ]
+            }
+          },
+          {
+            "name": "availableBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          {
             "name": "minPrice",
             "in": "query",
             "required": false,
@@ -41326,6 +41509,14 @@
                           "tourAvailable": {
                             "type": "boolean"
                           },
+                          "rentalMode": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "entire",
+                              "shared"
+                            ]
+                          },
                           "rankingScore": {
                             "type": "number"
                           },
@@ -41379,7 +41570,8 @@
                           "heating",
                           "ownership",
                           "holdingPeriod",
-                          "tourAvailable"
+                          "tourAvailable",
+                          "rentalMode"
                         ],
                         "additionalProperties": false
                       }
@@ -41676,6 +41868,28 @@
                 "month",
                 "year"
               ]
+            }
+          },
+          {
+            "name": "rentalMode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "entire",
+                "shared"
+              ]
+            }
+          },
+          {
+            "name": "availableBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
             }
           },
           {
@@ -42127,6 +42341,14 @@
                           "tourAvailable": {
                             "type": "boolean"
                           },
+                          "rentalMode": {
+                            "nullable": true,
+                            "type": "string",
+                            "enum": [
+                              "entire",
+                              "shared"
+                            ]
+                          },
                           "rankingScore": {
                             "type": "number"
                           },
@@ -42180,7 +42402,8 @@
                           "heating",
                           "ownership",
                           "holdingPeriod",
-                          "tourAvailable"
+                          "tourAvailable",
+                          "rentalMode"
                         ],
                         "additionalProperties": false
                       }

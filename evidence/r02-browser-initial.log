@@ -1,0 +1,77 @@
+ Container haven-integration-tests-run-93dae89c53cc Creating 
+ Container haven-integration-tests-run-93dae89c53cc Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing (1.5m)
+  ✘  2 [mobile] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing (1.5m)
+
+
+  1) [desktop] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('dialog').getByLabel('Furnishing', { exact: true })
+
+
+       7 |  const fixtures=await transaction(workerActor,async c=>{const rows=[];for(const period of ['month','year']){const row=(await c.query("INSERT INTO listings(unit_id,organization_id,owner_id,agent_id,slug,title,description,transaction,segment,currency,price,rent_period,available_from,furnishing,photos,features,status,published_at) SELECT l.unit_id,l.organization_id,l.owner_id,l.agent_id,$1,$2,l.description,'rent','residential','CNY','6421.75',$3,'2026-11-01','Furnished',l.photos,ARRAY['Near metro'],'published',now() FROM listings l JOIN units u ON u.id=l.unit_id WHERE l.status='published' AND l.transaction='rent' AND u.unit_kind='property' ORDER BY l.id LIMIT 1 RETURNING id",['r02-browser-'+crypto.randomUUID(),'R02 '+period+' '+info.project.name+' '+crypto.randomUUID(),period])).rows[0];await c.query("INSERT INTO rental_terms(listing_id,rental_mode,currency,billing_period,deposit_amount,move_in_date) VALUES($1,'entire','CNY',$2,'6421.75','2026-11-01')",[row.id,period]);rows.push(row);}return rows;});
+       8 |  try{
+    >  9 |   await page.goto('/bj/rent');await expect(page.getByText('Rental amounts in CNY per month. Change the billing period in All filters.',{exact:true})).toBeVisible();await page.getByRole('button',{name:/^All filters/}).click();let dialog=page.getByRole('dialog');await dialog.getByLabel('Rental mode',{exact:true}).selectOption('entire');await dialog.getByLabel('Billing period',{exact:true}).selectOption('month');await dialog.getByLabel('Furnishing',{exact:true}).selectOption('Furnished');await dialog.getByLabel('Available by',{exact:true}).fill('2026-11-01');await dialog.getByLabel('Minimum price (CNY)',{exact:true}).fill('6421.75');await dialog.getByLabel('Maximum price (CNY)',{exact:true}).fill('6421.75');await dialog.getByRole('button',{name:'Apply filters',exact:true}).click();await expect.poll(()=>new URL(page.url()).searchParams.get('rentalMode')).toBe('entire');const expected={rentalMode:'entire',rentPeriod:'month',furnishing:'Furnished',availableBy:'2026-11-01',minPrice:'6421.75',maxPrice:'6421.75'};for(const [key,value] of Object.entries(expected))expect(new URL(page.url()).searchParams.get(key)).toBe(value);await page.reload();const monthly=page.locator('[data-listing-id="'+fixtures[0].id+'"]');await expect(monthly).toBeVisible();await expect(monthly.getByText('Entire property',{exact:true})).toBeVisible();await expect(monthly.locator('.card-bottom')).toContainText('/ month');await expect(page.locator('[data-listing-id="'+fixtures[1].id+'"]')).toHaveCount(0);await page.getByRole('button',{name:/^All filters/}).click();dialog=page.getByRole('dialog');await expect(dialog.getByLabel('Rental mode',{exact:true})).toHaveValue('entire');await expect(dialog.getByLabel('Billing period',{exact:true})).toHaveValue('month');await expect(dialog.getByLabel('Available by',{exact:true})).toHaveValue('2026-11-01');const axe=await new AxeBuilder({page}).include('dialog').analyze();expect(axe.violations.filter(row=>row.impact==='serious'||row.impact==='critical')).toEqual([]);await page.screenshot({path:`evidence/r02-filters-${info.project.name}.png`,scale:'css'});await dialog.getByLabel('Billing period',{exact:true}).selectOption('year');await dialog.getByRole('button',{name:'Apply filters',exact:true}).click();await expect.poll(()=>new URL(page.url()).searchParams.get('rentPeriod')).toBe('year');const yearly=page.locator('[data-listing-id="'+fixtures[1].id+'"]');await expect(yearly).toBeVisible();await expect(yearly.locator('.card-bottom')).toContainText('/ year');await expect(page.locator('[data-listing-id="'+fixtures[0].id+'"]')).toHaveCount(0);await page.reload();await expect(yearly).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:`evidence/r02-cards-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      10 |  }finally{await transaction(workerActor,c=>c.query("UPDATE listings SET status='archived',version=version+1 WHERE id=ANY($1::uuid[])",[fixtures.map(row=>row.id)]));}
+      11 | });
+      12 |
+        at /workspace/tests/e2e/rental-discovery.spec.ts:9:465
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('dialog').getByLabel('Furnishing', { exact: true })
+
+
+       7 |  const fixtures=await transaction(workerActor,async c=>{const rows=[];for(const period of ['month','year']){const row=(await c.query("INSERT INTO listings(unit_id,organization_id,owner_id,agent_id,slug,title,description,transaction,segment,currency,price,rent_period,available_from,furnishing,photos,features,status,published_at) SELECT l.unit_id,l.organization_id,l.owner_id,l.agent_id,$1,$2,l.description,'rent','residential','CNY','6421.75',$3,'2026-11-01','Furnished',l.photos,ARRAY['Near metro'],'published',now() FROM listings l JOIN units u ON u.id=l.unit_id WHERE l.status='published' AND l.transaction='rent' AND u.unit_kind='property' ORDER BY l.id LIMIT 1 RETURNING id",['r02-browser-'+crypto.randomUUID(),'R02 '+period+' '+info.project.name+' '+crypto.randomUUID(),period])).rows[0];await c.query("INSERT INTO rental_terms(listing_id,rental_mode,currency,billing_period,deposit_amount,move_in_date) VALUES($1,'entire','CNY',$2,'6421.75','2026-11-01')",[row.id,period]);rows.push(row);}return rows;});
+       8 |  try{
+    >  9 |   await page.goto('/bj/rent');await expect(page.getByText('Rental amounts in CNY per month. Change the billing period in All filters.',{exact:true})).toBeVisible();await page.getByRole('button',{name:/^All filters/}).click();let dialog=page.getByRole('dialog');await dialog.getByLabel('Rental mode',{exact:true}).selectOption('entire');await dialog.getByLabel('Billing period',{exact:true}).selectOption('month');await dialog.getByLabel('Furnishing',{exact:true}).selectOption('Furnished');await dialog.getByLabel('Available by',{exact:true}).fill('2026-11-01');await dialog.getByLabel('Minimum price (CNY)',{exact:true}).fill('6421.75');await dialog.getByLabel('Maximum price (CNY)',{exact:true}).fill('6421.75');await dialog.getByRole('button',{name:'Apply filters',exact:true}).click();await expect.poll(()=>new URL(page.url()).searchParams.get('rentalMode')).toBe('entire');const expected={rentalMode:'entire',rentPeriod:'month',furnishing:'Furnished',availableBy:'2026-11-01',minPrice:'6421.75',maxPrice:'6421.75'};for(const [key,value] of Object.entries(expected))expect(new URL(page.url()).searchParams.get(key)).toBe(value);await page.reload();const monthly=page.locator('[data-listing-id="'+fixtures[0].id+'"]');await expect(monthly).toBeVisible();await expect(monthly.getByText('Entire property',{exact:true})).toBeVisible();await expect(monthly.locator('.card-bottom')).toContainText('/ month');await expect(page.locator('[data-listing-id="'+fixtures[1].id+'"]')).toHaveCount(0);await page.getByRole('button',{name:/^All filters/}).click();dialog=page.getByRole('dialog');await expect(dialog.getByLabel('Rental mode',{exact:true})).toHaveValue('entire');await expect(dialog.getByLabel('Billing period',{exact:true})).toHaveValue('month');await expect(dialog.getByLabel('Available by',{exact:true})).toHaveValue('2026-11-01');const axe=await new AxeBuilder({page}).include('dialog').analyze();expect(axe.violations.filter(row=>row.impact==='serious'||row.impact==='critical')).toEqual([]);await page.screenshot({path:`evidence/r02-filters-${info.project.name}.png`,scale:'css'});await dialog.getByLabel('Billing period',{exact:true}).selectOption('year');await dialog.getByRole('button',{name:'Apply filters',exact:true}).click();await expect.poll(()=>new URL(page.url()).searchParams.get('rentPeriod')).toBe('year');const yearly=page.locator('[data-listing-id="'+fixtures[1].id+'"]');await expect(yearly).toBeVisible();await expect(yearly.locator('.card-bottom')).toContainText('/ year');await expect(page.locator('[data-listing-id="'+fixtures[0].id+'"]')).toHaveCount(0);await page.reload();await expect(yearly).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:`evidence/r02-cards-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      10 |  }finally{await transaction(workerActor,c=>c.query("UPDATE listings SET status='archived',version=version+1 WHERE id=ANY($1::uuid[])",[fixtures.map(row=>row.id)]));}
+      11 | });
+      12 |
+        at /workspace/tests/e2e/rental-discovery.spec.ts:9:465
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing 
+    [mobile] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing 
+

@@ -11,7 +11,7 @@ import {floorLayout,propertyMediaMetadata} from './property-media';
 import {ownerSchema} from './domain';
 const s=z.string(),uuid=s.uuid(),n=z.number(),bool=z.boolean(),decimal=s.regex(/^-?\d+(\.\d+)?$/),status=z.object({id:uuid,status:s}),versioned=status.extend({version:n});
 const owner=m.owner_submissions.extend({data:ownerSchema.extend({photos:z.array(uuid).optional(),documents:z.array(uuid).optional(),reviewReason:s.optional()})});
-export const publicListing=m.public_listings.extend({transaction:z.enum(['sale','rent']),segment:z.enum(['residential','commercial']),rankingScore:n.optional(),viewCount:n.optional(),sponsored:bool.optional(),curationLabel:s.nullable().optional()});
+export const publicListing=m.public_listings.extend({rentalMode:z.enum(['entire','shared']).nullable(),transaction:z.enum(['sale','rent']),segment:z.enum(['residential','commercial']),rankingScore:n.optional(),viewCount:n.optional(),sponsored:bool.optional(),curationLabel:s.nullable().optional()});
 const unavailableProperty=z.object({id:uuid,available:z.literal(false),title:s});
 export const savedProperty=z.union([publicListing.extend({available:z.literal(true)}),unavailableProperty]);
 export const historyCollection=z.object({enabled:bool,version:n.int().nonnegative(),entries:z.array(z.object({listing:savedProperty,viewedAt:s}))});

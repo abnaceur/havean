@@ -1,4 +1,5 @@
 import {createHash} from 'node:crypto';
+import type pg from 'pg';
 import type {z} from 'zod';
 import {listingFilters,exactPriceMinor,listingSearchSchemaVersion} from '@haven/contracts';
 import {data,env,transaction,fail,encrypt,decrypt} from '../platform/core.js';
@@ -10,11 +11,12 @@ export function compileListingSearch(q:Filters){
  const values:unknown[]=[],sql:string[]=[],search:string[]=[];
  const add=(column:string,operator:string,value:unknown,indexColumn=column,indexValue=value)=>{values.push(value);sql.push(`${column}${operator}$${values.length}`);search.push(`${indexColumn} ${operator} ${JSON.stringify(indexValue)}`);};
  add('city','=',q.city);add('currency','=',q.currency||'CNY');
- for(const key of ['transaction','segment','rentPeriod'] as const)if(q[key]!==undefined)add('"'+key+'"','=',q[key],key);
+ for(const key of ['transaction','segment','rentPeriod','rentalMode'] as const)if(q[key]!==undefined)add('"'+key+'"','=',q[key],key);
  for(const key of ['beds','livingRooms'] as const)if(q[key]!==undefined){const list=String(q[key]).split(',').map(Number);values.push(list);sql.push(`"${key}"=ANY($${values.length}::int[])`);search.push('('+list.map(v=>`${key} = ${v}`).join(' OR ')+')');}
  for(const key of ['district','districtId','communityId','neighborhoodId','orientation','furnishing','floorCategory','buildingType','finishing','heating'] as const)if(q[key]){const list=q[key]!.split(',');values.push(list);const column=['districtId','communityId','neighborhoodId'].includes(key)?`"${key}"::text`:`"${key}"`;sql.push(`${column}=ANY($${values.length}::text[])`);search.push('('+list.map(v=>`${key} = ${JSON.stringify(v)}`).join(' OR ')+')');}
  for(const key of ['features','ownership','holdingPeriod'] as const)if(q[key]){const list=q[key]!.split(',');values.push(list);sql.push(`"${key}" && $${values.length}::text[]`);search.push('('+list.map(v=>`${key} = ${JSON.stringify(v)}`).join(' OR ')+')');}
  for(const key of ['lineId','stationId'] as const)if(q[key]){values.push(q[key]!.split(','));sql.push(`"communityId" IN(SELECT co.id FROM communities co JOIN transit_stations s ON ST_DWithin(co.location,ST_SetSRID(ST_MakePoint(s.longitude::float8,s.latitude::float8),4326)::geography,1000) WHERE s.${key==='lineId'?'line_id':'id'}=ANY($${values.length}::uuid[]) AND s.status='active' AND s.city_id=(SELECT id FROM cities WHERE slug=$1))`);}
+ if(q.availableBy){add('"availableFrom"::date','<=',q.availableBy,'availableOrder',Date.parse(q.availableBy+'T00:00:00Z'));search.push('availableKnown = true');}
  if(q.bounds){const [west,south,east,north]=q.bounds.split(',').map(Number);values.push(west,south,east,north);const start=values.length-3;sql.push(`longitude BETWEEN $${start} AND $${start+2} AND latitude BETWEEN $${start+1} AND $${start+3}`);}
  if(q.tourAvailable)add('"tourAvailable"','=',q.tourAvailable==='true','tourAvailable');
  const year=new Date().getUTCFullYear();
@@ -39,9 +41,11 @@ function pageFor(q:Filters){
  if((page-1)*q.limit>10000)fail(400,'Search page exceeds the bounded pagination limit','PAGE_LIMIT');
  return {page,fingerprint};
 }
+async function rentalPeriod(c:pg.PoolClient,q:Filters){if(q.transaction!=='rent'||q.rentPeriod)return q;const row=(await c.query('SELECT data FROM market_config WHERE id=$1',[q.city])).rows[0],period=row?.data?.rentPeriod;if(!['day','month','year'].includes(period))fail(503,'Choose an explicit rental billing period; the market default is unavailable.','RENT_PERIOD_UNAVAILABLE');return {...q,rentPeriod:period} as Filters;}
 export async function searchListings(q:Filters,searchUrl=env.SEARCH_URL){
  return transaction(null,async c=>{
   const market=(await c.query('SELECT currency FROM cities WHERE slug=$1',[q.city])).rows[0];
+  const requestedPeriod=q.rentPeriod;q=await rentalPeriod(c,q);
   q={...q,currency:q.currency||market?.currency||'CNY'};
   const compiled=compileListingSearch(q),{page,fingerprint}=pageFor(q),offset=(page-1)*q.limit;
   const total=Number((await c.query(`SELECT count(*) FROM public_listings WHERE ${compiled.where}`,compiled.values)).rows[0].count);
@@ -60,14 +64,14 @@ export async function searchListings(q:Filters,searchUrl=env.SEARCH_URL){
   }catch{degradedReason='search-unavailable';}
   // Hydrate from current public SQL eligibility: queued withdrawal can never leak a document.
   const next=offset+rows.length<total&&page<500&&page*q.limit<=10000?encrypt({page:page+1,fingerprint,expires:Date.now()+3600000}):null;
-  return data(rows,{total,page,limit:q.limit,searchMode,degraded:!!degradedReason,...(degradedReason?{degradedReason}:{}),pagination:'bounded-offset',maxOffset:10000,nextCursor:next,...(ranking?{ranking:rankingMetadata('30d',rankingAsOf),queryPlan:'ranking-v1'}:{})});
+  return data(rows,{total,page,limit:q.limit,...(q.transaction==='rent'?{rentalPeriod:q.rentPeriod,billingPeriodSource:requestedPeriod?'requested':'market'}:{}),searchMode,degraded:!!degradedReason,...(degradedReason?{degradedReason}:{}),pagination:'bounded-offset',maxOffset:10000,nextCursor:next,...(ranking?{ranking:rankingMetadata('30d',rankingAsOf),queryPlan:'ranking-v1'}:{})});
  });
 }
 
 export async function mapListings(q:Filters){
  return transaction(null,async c=>{
   const market=(await c.query('SELECT currency FROM cities WHERE slug=$1',[q.city])).rows[0];
-  const compiled=compileListingSearch({...q,currency:q.currency||market?.currency||'CNY'});
+  q=await rentalPeriod(c,q);const compiled=compileListingSearch({...q,currency:q.currency||market?.currency||'CNY'});
   const totals=(await c.query(`SELECT count(*)::int AS total,count(*) FILTER(WHERE latitude IS NOT NULL AND longitude IS NOT NULL)::int AS located FROM public_listings WHERE ${compiled.where}`,compiled.values)).rows[0];
   const rows=(await c.query(`SELECT id,slug,title,transaction,segment,price,currency,"rentPeriod",area,beds,"livingRooms",community,district,city,latitude,longitude,${rankingExpressions().disclosure} FROM public_listings WHERE ${compiled.where} AND latitude IS NOT NULL AND longitude IS NOT NULL ORDER BY ${compiled.order} LIMIT 500`,compiled.values)).rows;
   return data(rows,{...totals,limit:500,truncated:totals.located>500,coordinatePrecision:'community-rounded-3-decimals',searchMode:'sql'});

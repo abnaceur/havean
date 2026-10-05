@@ -1,0 +1,43 @@
+
+> haven-real-estate@0.1.0 typecheck /home/abn/project/real-estate-solution
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: Done
+apps/worker typecheck$ tsc --noEmit
+apps/api typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+packages/ui typecheck: Done
+apps/api typecheck: Done
+apps/ops typecheck$ tsc --noEmit
+apps/web typecheck$ tsc --noEmit
+apps/ops typecheck: Done
+apps/web typecheck: src/browsing-history.tsx(13,340): error TS2345: Argument of type '{ id: string; slug: string; title: string; description: string; price: string | null; currency: string; rentPeriod: string | null; features: string[]; photos: string[]; furnishing: string; availableFrom: string | null; ... 33 more ...; curationLabel?: string | ... 1 more ... | undefined; }' is not assignable to parameter of type 'Listing'.
+apps/web typecheck:   Types of property 'rentalMode' are incompatible.
+apps/web typecheck:     Type 'string | null' is not assignable to type '"entire" | "shared" | null | undefined'.
+apps/web typecheck:       Type 'string' is not assignable to type '"entire" | "shared" | null | undefined'.
+apps/web typecheck: src/map-discovery.tsx(21,2651): error TS2345: Argument of type '{ id: string; slug: string; title: string; description: string; price: string | null; currency: string; rentPeriod: string | null; features: string[]; photos: string[]; furnishing: string; availableFrom: string | null; ... 32 more ...; curationLabel?: string | ... 1 more ... | undefined; }' is not assignable to parameter of type 'Listing'.
+apps/web typecheck:   Types of property 'rentalMode' are incompatible.
+apps/web typecheck:     Type 'string | null' is not assignable to type '"entire" | "shared" | null | undefined'.
+apps/web typecheck:       Type 'string' is not assignable to type '"entire" | "shared" | null | undefined'.
+apps/web typecheck: src/map-discovery.tsx(21,3788): error TS2345: Argument of type '{ id: string; slug: string; title: string; description: string; price: string | null; currency: string; rentPeriod: string | null; features: string[]; photos: string[]; furnishing: string; availableFrom: string | null; ... 32 more ...; curationLabel?: string | ... 1 more ... | undefined; }' is not assignable to parameter of type 'Listing'.
+apps/web typecheck:   Types of property 'rentalMode' are incompatible.
+apps/web typecheck:     Type 'string | null' is not assignable to type '"entire" | "shared" | null | undefined'.
+apps/web typecheck:       Type 'string' is not assignable to type '"entire" | "shared" | null | undefined'.
+apps/web typecheck: src/rankings.tsx(12,2436): error TS2345: Argument of type '{ id: string; slug: string; title: string; description: string; price: string | null; currency: string; rentPeriod: string | null; features: string[]; photos: string[]; furnishing: string; availableFrom: string | null; ... 32 more ...; curationLabel?: string | ... 1 more ... | undefined; }' is not assignable to parameter of type 'Listing'.
+apps/web typecheck:   Types of property 'rentalMode' are incompatible.
+apps/web typecheck:     Type 'string | null' is not assignable to type '"entire" | "shared" | null | undefined'.
+apps/web typecheck:       Type 'string' is not assignable to type '"entire" | "shared" | null | undefined'.
+apps/web typecheck: Failed
+/home/abn/project/real-estate-solution/apps/web:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @haven/web@0.1.0 typecheck: `tsc --noEmit`
+Exit status 2
+ ELIFECYCLE  Command failed with exit code 2.
