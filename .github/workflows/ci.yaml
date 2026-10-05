@@ -17,7 +17,10 @@ jobs:
         with:
           persist-credentials: false
       - name: Clean Docker seed and required gates
-        run: ./ci.sh
+        run: |
+          sudo rm -rf evidence/ci test-results
+          rm -f evidence/latest-fixture-fingerprint.json evidence/visual/layout-shift-pixel-result.json
+          ./ci.sh
       - name: Retain sanitized reports and failure screenshots
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

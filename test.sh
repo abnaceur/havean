@@ -1,9 +1,7 @@
 #!/bin/sh
 set -eu
 # Remove reports from previous runs before any operation can fail.
-mkdir -p evidence/ci
-rm -f evidence/ci/*.log evidence/ci/report-upload.json evidence/latest-fixture-fingerprint.json evidence/visual/layout-shift-pixel-result.json
-rm -rf test-results
+docker run --rm -e HAVEN_HOST_UID="$(id -u)" -e HAVEN_HOST_GID="$(id -g)" -v "$PWD:/workspace" -w /workspace node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 node scripts/reset-ci-evidence.mjs
 # Only haven-integration resources are reset. The development project is separate.
 docker run --rm --user "$(id -u):$(id -g)" -e SETUP_ENV_FILE=.env.integration -e SETUP_GENERATED_DIR=infra/generated/integration -e SETUP_PROJECT_NAME=haven-integration -v "$PWD:/workspace" -w /workspace node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 node scripts/setup.mjs
 sh scripts/prepare-container-config.sh infra/generated/integration

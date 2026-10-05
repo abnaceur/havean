@@ -1,6 +1,7 @@
 import {chromium} from '@playwright/test';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
+import {screenshotReady} from './screenshot-ready';
 // An explicit authoring command creates review candidates. CI never invokes this command.
 const folder='evidence/visual/candidates';
 if(fs.existsSync(folder+'/manifest.json'))throw Error('Candidates already exist. Review them; creation cannot overwrite a baseline.');
@@ -10,7 +11,7 @@ const screens=[['home','/bj'],['resale','/bj/buy'],['rent','/bj/rent'],['commerc
 const manifest:any[]=[];
 try{const probe=await browser.newPage();const communities=await (await probe.request.get('http://localhost:8088/api/v1/communities?city=bj&limit=50')).json();await probe.close();if(communities.meta.total!==6)throw Error('Visual candidates require the six canonical communities. Run capture on a fresh isolated stack before browser mutations.');for(const [width,height] of [[390,844],[375,812],[1440,900]])for(const [id,route] of screens){
  const context=await browser.newContext({viewport:{width,height},locale:'en-GB',timezoneId:'Asia/Shanghai',reducedMotion:'reduce'});const page=await context.newPage();
- await page.goto('http://localhost:8088'+route);await page.waitForLoadState('networkidle');await page.evaluate(()=>document.fonts.ready);
+ await page.goto('http://localhost:8088'+route);await page.waitForLoadState('networkidle');await screenshotReady(page,route==='/bj');
  if(id==='filters')await page.getByRole('button',{name:'All filters',exact:true}).click();
  if(id==='city'){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}
  const file=`${id}-${width}.png`,bytes=await page.screenshot({path:folder+'/'+file,fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});
