@@ -1,0 +1,76 @@
+ Container haven-integration-tests-run-48feed0bb7a3 Creating 
+ Container haven-integration-tests-run-48feed0bb7a3 Created 
+
+Running 4 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/rental-detail.spec.ts:7:1 › R03 rental detail shows exact amounts and recorded utility terms; missing terms are explicit and leased property has no booking action (5.9s)
+  ✘  2 [desktop] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing (189ms)
+  ✓  3 [mobile] › tests/e2e/rental-detail.spec.ts:7:1 › R03 rental detail shows exact amounts and recorded utility terms; missing terms are explicit and leased property has no booking action (5.9s)
+  ✘  4 [mobile] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing (179ms)
+
+
+  1) [desktop] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing 
+
+    Error: Cannot use a pool after calling end on the pool
+
+       at ../../packages/database/src/index.ts:7
+
+      5 | export const orm=drizzle(pool);
+      6 | export type Actor={id:string;orgId:string|null;roles:string[]};
+    > 7 | export async function transaction<T>(actor:Actor|null,work:(client:pg.PoolClient)=>Promise<T>,database:pg.Pool=pool):Promise<T>{const client=await database.connect();try{await client.query('BEGIN');await client.query("SELECT set_config('app.actor',$1,true),set_config('app.org',$2,true),set_config('app.admin',$3,true)",[actor?.id||'',actor?.roles.some(r=>['admin','agent','agency_manager','property_manager','finance','developer','vendor'].includes(r))?actor.orgId||'':'',actor?.roles.some(r=>['admin'].includes(r))?'true':'false']);await client.query("SELECT set_config('app.review',$1,true),set_config('app.support',$2,true),set_config('app.editor',$3,true)",[actor?.roles.includes('moderator')?'true':'false',actor?.roles.includes('support')?'true':'false',actor?.roles.includes('editor')?'true':'false']);await client.query("SELECT set_config('app.agent_only',$1,true)",[actor?.roles.includes('agent')&&!actor.roles.some(r=>['admin','agency_manager'].includes(r))?'true':'false']);await client.query("SELECT set_config('app.manager_only',$1,true)",[actor?.roles.includes('property_manager')&&!actor.roles.includes('admin')?'true':'false']);const result=await work(client);await client.query('COMMIT');return result;}catch(e){await client.query('ROLLBACK');throw e;}finally{client.release();}}
+        |                                                                                                                                                             ^
+      8 | export async function event(c:pg.PoolClient,actor:Actor|null,resourceId:string,kind:string,payload:unknown={}){await c.query('INSERT INTO audit_events(actor_id,resource_id,action) VALUES($1,$2,$3)',[actor?.id,resourceId,kind]);await c.query('INSERT INTO outbox(aggregate_id,kind,payload) VALUES($1,$2,$3)',[resourceId,kind,JSON.stringify(payload)]);}
+      9 |
+        at BoundPool.connect (/workspace/node_modules/.pnpm/pg-pool@3.14.0_pg@8.23.1/node_modules/pg-pool/index.js:192:19)
+        at transaction (/workspace/packages/database/src/index.ts:7:157)
+        at /workspace/tests/e2e/rental-discovery.spec.ts:7:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing 
+
+    Error: Cannot use a pool after calling end on the pool
+
+       at ../../packages/database/src/index.ts:7
+
+      5 | export const orm=drizzle(pool);
+      6 | export type Actor={id:string;orgId:string|null;roles:string[]};
+    > 7 | export async function transaction<T>(actor:Actor|null,work:(client:pg.PoolClient)=>Promise<T>,database:pg.Pool=pool):Promise<T>{const client=await database.connect();try{await client.query('BEGIN');await client.query("SELECT set_config('app.actor',$1,true),set_config('app.org',$2,true),set_config('app.admin',$3,true)",[actor?.id||'',actor?.roles.some(r=>['admin','agent','agency_manager','property_manager','finance','developer','vendor'].includes(r))?actor.orgId||'':'',actor?.roles.some(r=>['admin'].includes(r))?'true':'false']);await client.query("SELECT set_config('app.review',$1,true),set_config('app.support',$2,true),set_config('app.editor',$3,true)",[actor?.roles.includes('moderator')?'true':'false',actor?.roles.includes('support')?'true':'false',actor?.roles.includes('editor')?'true':'false']);await client.query("SELECT set_config('app.agent_only',$1,true)",[actor?.roles.includes('agent')&&!actor.roles.some(r=>['admin','agency_manager'].includes(r))?'true':'false']);await client.query("SELECT set_config('app.manager_only',$1,true)",[actor?.roles.includes('property_manager')&&!actor.roles.includes('admin')?'true':'false']);const result=await work(client);await client.query('COMMIT');return result;}catch(e){await client.query('ROLLBACK');throw e;}finally{client.release();}}
+        |                                                                                                                                                             ^
+      8 | export async function event(c:pg.PoolClient,actor:Actor|null,resourceId:string,kind:string,payload:unknown={}){await c.query('INSERT INTO audit_events(actor_id,resource_id,action) VALUES($1,$2,$3)',[actor?.id,resourceId,kind]);await c.query('INSERT INTO outbox(aggregate_id,kind,payload) VALUES($1,$2,$3)',[resourceId,kind,JSON.stringify(payload)]);}
+      9 |
+        at BoundPool.connect (/workspace/node_modules/.pnpm/pg-pool@3.14.0_pg@8.23.1/node_modules/pg-pool/index.js:192:19)
+        at transaction (/workspace/packages/database/src/index.ts:7:157)
+        at /workspace/tests/e2e/rental-discovery.spec.ts:7:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/rental-discovery-R02-entir-2c581-se-identical-yearly-listing-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing 
+    [mobile] › tests/e2e/rental-discovery.spec.ts:6:1 › R02 entire furnished rental filters persist and monthly cards exclude an otherwise identical yearly listing 
+  2 passed (17.4s)
+
