@@ -1,0 +1,91 @@
+ Container haven-tests-run-45457d716586 Creating 
+ Container haven-tests-run-45457d716586 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/provider-discovery.spec.ts:10:1 › V02 native category/area search restores filters, opens the supplied portfolio, and broken media keeps the quote form usable (32.6s)
+  ✘  2 [mobile] › tests/e2e/provider-discovery.spec.ts:10:1 › V02 native category/area search restores filters, opens the supplied portfolio, and broken media keeps the quote form usable (55.6s)
+
+
+  1) [desktop] › tests/e2e/provider-discovery.spec.ts:10:1 › V02 native category/area search restores filters, opens the supplied portfolio, and broken media keeps the quote form usable 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Portfolio image unavailable', { exact: true }).first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Portfolio image unavailable', { exact: true }).first() with timeout 15000ms
+      - waiting for getByText('Portfolio image unavailable', { exact: true }).first()
+
+
+      13 |  const area=await staff(async c=>(await c.query("SELECT d.id FROM districts d JOIN cities ci ON ci.id=d.city_id WHERE ci.slug='bj' AND d.name='Chaoyang'")).rows[0].id);const draft=await page.request.post('http://localhost:8089/api/v1/me/providers',{headers:{Origin:'http://localhost:8089','idempotency-key':crypto.randomUUID()},data:{version:0,name,description:'A supplied synthetic painting and renovation profile for discovery acceptance.',city:'bj',categories:['Painting'],districtIds:[area],portfolio}});expect(draft.ok()).toBe(true);const created=(await draft.json()).data;id=created.id;expect((await page.request.post('http://localhost:8089/api/v1/me/providers/'+id+'/submit',{headers:{Origin:'http://localhost:8089','idempotency-key':crypto.randomUUID()},data:{version:1}})).ok()).toBe(true);await login(page,'moderator','http://localhost:8089','/ops/provider-reviews');expect((await page.request.patch('http://localhost:8089/api/v1/ops/provider-reviews/'+id,{headers:{Origin:'http://localhost:8089','idempotency-key':crypto.randomUUID()},data:{version:2,decision:'approved',verified:true,reason:'Independent synthetic catalog fixture review.'}})).ok()).toBe(true);
+      14 |  await login(page,'buyer','http://localhost:8088','/bj/renovation');await page.getByLabel('Provider name or service',{exact:true}).fill(name);await page.getByLabel('Service category',{exact:true}).selectOption('Painting');await page.getByLabel('Provider service area',{exact:true}).selectOption(area);await page.getByRole('button',{name:'Search providers',exact:true}).click();await expect(page).toHaveURL(new RegExp('category=Painting'));const card=page.locator('[data-provider-id="'+id+'"]');await expect(card).toHaveCount(1);await expect(page.locator('.directory-card')).toHaveCount(1);await page.reload();await expect(page.getByLabel('Provider name or service',{exact:true})).toHaveValue(name);await expect(page.getByLabel('Service category',{exact:true})).toHaveValue('Painting');await expect(page.getByLabel('Provider service area',{exact:true})).toHaveValue(area);await card.getByRole('link',{name,exact:true}).click();await expect(page.getByRole('heading',{name,exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Service details',exact:true})).toBeVisible();const gallery=page.getByLabel('Service provider portfolio',{exact:true});await expect(gallery).toContainText('Synthetic project example 1');await gallery.getByRole('button',{name:'Open portfolio photo 1',exact:true}).click();const viewer=page.getByRole('dialog',{name:name+' portfolio',exact:true});await expect(viewer).toContainText('Photo 1 of 2');await viewer.getByRole('button',{name:'Next portfolio photo',exact:true}).click();await expect(viewer).toContainText('Photo 2 of 2');await expect(viewer).toContainText('Synthetic project example 2');await viewer.press('ArrowLeft');await expect(viewer).toContainText('Photo 1 of 2');await viewer.getByRole('button',{name:'Close dialog',exact:true}).click();await expect(gallery.getByRole('button',{name:'Open portfolio photo 1',exact:true})).toBeFocused();expect((await new AxeBuilder({page}).include('main#main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/v02-provider-${info.project.name}.png`,scale:'css'});
+    > 15 |  await page.route('**/api/v1/media/*/view',route=>route.abort());await page.reload();await expect(page.getByText('Portfolio image unavailable',{exact:true}).first()).toBeVisible();await page.getByRole('button',{name:'Request a quote',exact:true}).click();const quote=page.getByRole('dialog',{name:'Tell us about your project',exact:true});await expect(quote.getByLabel('Project description',{exact:true})).toBeEnabled();await quote.getByLabel('Project description',{exact:true}).fill('A synthetic project discussion remains available despite broken images.');await expect(quote.getByRole('button',{name:'Request a quote',exact:true})).toBeEnabled();await expect(quote).toContainText('does not create a contract');expect((await new AxeBuilder({page}).include('dialog').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);await quote.getByRole('button',{name:'Close dialog',exact:true}).click();await page.goto('/bj/renovation?category=Painting&text=NoSuchProvider-'+crypto.randomUUID());await expect(page.getByRole('heading',{name:'No matches just yet',exact:true})).toBeVisible();await expect(page.getByRole('link',{name:'Clear filters',exact:true})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                                                                                       ^
+      16 |  }finally{if(id)await staff(c=>c.query("UPDATE providers SET status='draft',version=version+1 WHERE id=$1",[id]));}
+      17 | });
+      18 |
+        at /workspace/tests/e2e/provider-discovery.spec.ts:15:167
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/provider-discovery-V02-nat-d0b66-keeps-the-quote-form-usable-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/provider-discovery-V02-nat-d0b66-keeps-the-quote-form-usable-desktop/error-context.md
+
+    Error Context: test-results/provider-discovery-V02-nat-d0b66-keeps-the-quote-form-usable-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/provider-discovery-V02-nat-d0b66-keeps-the-quote-form-usable-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/provider-discovery-V02-nat-d0b66-keeps-the-quote-form-usable-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/provider-discovery.spec.ts:10:1 › V02 native category/area search restores filters, opens the supplied portfolio, and broken media keeps the quote form usable 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Portfolio image unavailable', { exact: true }).first()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Portfolio image unavailable', { exact: true }).first() with timeout 15000ms
+      - waiting for getByText('Portfolio image unavailable', { exact: true }).first()
+
+
+      13 |  const area=await staff(async c=>(await c.query("SELECT d.id FROM districts d JOIN cities ci ON ci.id=d.city_id WHERE ci.slug='bj' AND d.name='Chaoyang'")).rows[0].id);const draft=await page.request.post('http://localhost:8089/api/v1/me/providers',{headers:{Origin:'http://localhost:8089','idempotency-key':crypto.randomUUID()},data:{version:0,name,description:'A supplied synthetic painting and renovation profile for discovery acceptance.',city:'bj',categories:['Painting'],districtIds:[area],portfolio}});expect(draft.ok()).toBe(true);const created=(await draft.json()).data;id=created.id;expect((await page.request.post('http://localhost:8089/api/v1/me/providers/'+id+'/submit',{headers:{Origin:'http://localhost:8089','idempotency-key':crypto.randomUUID()},data:{version:1}})).ok()).toBe(true);await login(page,'moderator','http://localhost:8089','/ops/provider-reviews');expect((await page.request.patch('http://localhost:8089/api/v1/ops/provider-reviews/'+id,{headers:{Origin:'http://localhost:8089','idempotency-key':crypto.randomUUID()},data:{version:2,decision:'approved',verified:true,reason:'Independent synthetic catalog fixture review.'}})).ok()).toBe(true);
+      14 |  await login(page,'buyer','http://localhost:8088','/bj/renovation');await page.getByLabel('Provider name or service',{exact:true}).fill(name);await page.getByLabel('Service category',{exact:true}).selectOption('Painting');await page.getByLabel('Provider service area',{exact:true}).selectOption(area);await page.getByRole('button',{name:'Search providers',exact:true}).click();await expect(page).toHaveURL(new RegExp('category=Painting'));const card=page.locator('[data-provider-id="'+id+'"]');await expect(card).toHaveCount(1);await expect(page.locator('.directory-card')).toHaveCount(1);await page.reload();await expect(page.getByLabel('Provider name or service',{exact:true})).toHaveValue(name);await expect(page.getByLabel('Service category',{exact:true})).toHaveValue('Painting');await expect(page.getByLabel('Provider service area',{exact:true})).toHaveValue(area);await card.getByRole('link',{name,exact:true}).click();await expect(page.getByRole('heading',{name,exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Service details',exact:true})).toBeVisible();const gallery=page.getByLabel('Service provider portfolio',{exact:true});await expect(gallery).toContainText('Synthetic project example 1');await gallery.getByRole('button',{name:'Open portfolio photo 1',exact:true}).click();const viewer=page.getByRole('dialog',{name:name+' portfolio',exact:true});await expect(viewer).toContainText('Photo 1 of 2');await viewer.getByRole('button',{name:'Next portfolio photo',exact:true}).click();await expect(viewer).toContainText('Photo 2 of 2');await expect(viewer).toContainText('Synthetic project example 2');await viewer.press('ArrowLeft');await expect(viewer).toContainText('Photo 1 of 2');await viewer.getByRole('button',{name:'Close dialog',exact:true}).click();await expect(gallery.getByRole('button',{name:'Open portfolio photo 1',exact:true})).toBeFocused();expect((await new AxeBuilder({page}).include('main#main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/v02-provider-${info.project.name}.png`,scale:'css'});
+    > 15 |  await page.route('**/api/v1/media/*/view',route=>route.abort());await page.reload();await expect(page.getByText('Portfolio image unavailable',{exact:true}).first()).toBeVisible();await page.getByRole('button',{name:'Request a quote',exact:true}).click();const quote=page.getByRole('dialog',{name:'Tell us about your project',exact:true});await expect(quote.getByLabel('Project description',{exact:true})).toBeEnabled();await quote.getByLabel('Project description',{exact:true}).fill('A synthetic project discussion remains available despite broken images.');await expect(quote.getByRole('button',{name:'Request a quote',exact:true})).toBeEnabled();await expect(quote).toContainText('does not create a contract');expect((await new AxeBuilder({page}).include('dialog').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);await quote.getByRole('button',{name:'Close dialog',exact:true}).click();await page.goto('/bj/renovation?category=Painting&text=NoSuchProvider-'+crypto.randomUUID());await expect(page.getByRole('heading',{name:'No matches just yet',exact:true})).toBeVisible();await expect(page.getByRole('link',{name:'Clear filters',exact:true})).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+         |                                                                                                                                                                       ^
+      16 |  }finally{if(id)await staff(c=>c.query("UPDATE providers SET status='draft',version=version+1 WHERE id=$1",[id]));}
+      17 | });
+      18 |
+        at /workspace/tests/e2e/provider-discovery.spec.ts:15:167
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/provider-discovery-V02-nat-d0b66-keeps-the-quote-form-usable-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/provider-discovery-V02-nat-d0b66-keeps-the-quote-form-usable-mobile/error-context.md
+
+    Error Context: test-results/provider-discovery-V02-nat-d0b66-keeps-the-quote-form-usable-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/provider-discovery-V02-nat-d0b66-keeps-the-quote-form-usable-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/provider-discovery-V02-nat-d0b66-keeps-the-quote-form-usable-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/provider-discovery.spec.ts:10:1 › V02 native category/area search restores filters, opens the supplied portfolio, and broken media keeps the quote form usable 
+    [mobile] › tests/e2e/provider-discovery.spec.ts:10:1 › V02 native category/area search restores filters, opens the supplied portfolio, and broken media keeps the quote form usable 
+

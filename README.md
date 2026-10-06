@@ -99,3 +99,5 @@ Inbox selection survives refresh, unread counts use own committed read cursors, 
 Native inboxes recover persisted messages after socket reconnect and stop live access after session or assignment revocation; see [realtime recovery](docs/adr/realtime-conversation-recovery.md).
 
 Vendors author services at `/ops/providers`; independent reviewers use `/ops/provider-reviews`. Only approved profiles and current scanned portfolio images publish. See [provider catalog](docs/adr/provider-catalog-and-portfolio.md).
+
+Public renovation discovery supports category, service area and text filters with portfolio navigation and image fallback; see [provider discovery](docs/adr/provider-discovery-and-portfolio.md).

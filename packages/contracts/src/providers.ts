@@ -10,7 +10,7 @@ export const providerFilters=z.object({city:z.string().regex(/^[a-z0-9-]{1,50}$/
 export const providerReviewFilters=z.object({status:z.enum(['submitted','approved','rejected','revoked']).default('submitted'),page:z.coerce.number().int().min(1).max(10000).default(1)}).strict();
 export const ownedProvider=z.object({id:z.uuid(),slug:z.string(),name:z.string(),description:z.string(),city:z.string().nullable(),categories:z.array(z.string()),districts:z.array(z.string()),districtIds:z.array(z.uuid()),portfolio:z.array(portfolio),status:z.enum(['draft','submitted','approved','rejected','revoked']),version:z.number().int().positive(),reviewNote:z.string().nullable(),provenance:z.string(),publicUrl:z.string().nullable()});
 export const providerReviewRow=ownedProvider.extend({canReview:z.boolean(),organizationName:z.string()});
-export const publicProvider=z.object({id:z.uuid(),slug:z.string(),name:z.string(),description:z.string(),categories:z.array(z.string()),districts:z.array(z.string()),photos:z.array(z.string()),version:z.number().int().positive(),city:z.string(),portfolio:z.array(z.object({url:z.string(),alt:z.string(),caption:z.string()}))});
+export const publicProvider=z.object({id:z.uuid(),slug:z.string(),name:z.string(),description:z.string(),categories:z.array(z.string()),districts:z.array(z.string()),photos:z.array(z.string()),districtIds:z.array(z.uuid()),version:z.number().int().positive(),city:z.string(),portfolio:z.array(z.object({url:z.string(),alt:z.string(),caption:z.string()}))});
 export type ProviderInput=z.input<typeof providerCreate>;
 
 export const providerPage=z.object({page:z.coerce.number().int().min(1).max(10000).default(1)}).strict();
