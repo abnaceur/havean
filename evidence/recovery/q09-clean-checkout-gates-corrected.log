@@ -1,0 +1,60 @@
+ Container tmp-tests-run-a441b1cfad9f Creating
+ Container tmp-tests-run-a441b1cfad9f Created
+
+> haven-real-estate@0.1.0 lint /workspace
+> eslint . && node scripts/boundaries.mjs
+
+Application import boundaries passed
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+packages/ui typecheck: Done
+apps/api typecheck: Done
+apps/ops typecheck$ tsc --noEmit
+apps/web typecheck$ tsc --noEmit
+apps/ops typecheck: Done
+apps/web typecheck: Done
+
+ RUN  v5.0.3 /workspace
+
+ ✓ tests/unit/mortgage-engine.test.ts (4 tests) 148ms
+ ✓ tests/unit/recovery-envelope.test.ts (2 tests) 237ms
+ ✓ tests/unit/credential-scan.test.ts (1 test) 82ms
+ ✓ tests/unit/ci-visual-order.test.ts (3 tests) 51ms
+ ✓ tests/unit/fixtures.test.ts (3 tests) 41ms
+ ✓ tests/unit/mortgage-csv.test.ts (2 tests) 32ms
+ ✓ tests/unit/contracts.test.ts (11 tests) 27ms
+ ✓ tests/unit/notification-provider.test.ts (2 tests) 19ms
+ ✓ tests/unit/spatial-media.test.ts (6 tests) 14ms
+ ✓ tests/unit/money-inputs.test.ts (2 tests) 12ms
+ ✓ tests/unit/inquiry-client.test.ts (1 test) 10ms
+ ✓ tests/unit/exact-parity.test.ts (2 tests) 7ms
+ ✓ tests/unit/reference.test.ts (3 tests) 5ms
+ ✓ tests/unit/gateway-rate-address.test.ts (2 tests) 4ms
+ ✓ tests/unit/visual-policy.test.ts (2 tests) 14ms
+ ✓ tests/unit/observability.test.ts (2 tests) 5ms
+ ✓ tests/unit/public-query.test.ts (2 tests) 6ms
+ ✓ tests/unit/staff-mfa-flow.test.ts (1 test) 5ms
+ ✓ tests/unit/tour-input.test.ts (3 tests) 4ms
+
+ Test Files  19 passed (19)
+      Tests  54 passed (54)
+   Start at  23:33:20
+   Duration  4.18s (import 42%, tests 33%, transform 20%, worker 4%)
+
+    Isolate  19 workers spawned · ~99ms startup each (spawn + environment, per file)
+             at least ~1.78s faster with isolate: false — reuses workers across files instead of one per file
