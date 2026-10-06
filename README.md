@@ -97,3 +97,5 @@ Messages commit before acknowledgement, retain drafts for receipt retries and sh
 Inbox selection survives refresh, unread counts use own committed read cursors, and older messages remain accessible; see [conversation read state](docs/adr/conversation-read-state.md).
 
 Native inboxes recover persisted messages after socket reconnect and stop live access after session or assignment revocation; see [realtime recovery](docs/adr/realtime-conversation-recovery.md).
+
+Vendors author services at `/ops/providers`; independent reviewers use `/ops/provider-reviews`. Only approved profiles and current scanned portfolio images publish. See [provider catalog](docs/adr/provider-catalog-and-portfolio.md).

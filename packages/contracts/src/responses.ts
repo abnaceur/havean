@@ -1,3 +1,4 @@
+import {ownedProvider,providerReviewRow,publicProvider} from './providers';
 import {chatMessage,readCursor,conversationSummary} from './chat';
 import {csvExport,viewingReminderSummary} from './crm-exports';
 import {calendarViewing} from './viewing-calendar';
@@ -34,7 +35,7 @@ const community=z.object({id:uuid,slug:s,name:s,address:s,builtYear:n.nullable()
 const agent=z.object({id:uuid,name:s,slug:s,biography:s,languages:z.array(s),districts:z.array(s),verifiedUntil:s.nullable(),credentialStatus:credentialBadge.optional(),version:n.int().positive().optional(),city:s.optional(),canContact:bool.optional(),photo:s.nullable(),publicEmail:s.nullable()});
 const development=m.developments.omit({organization_id:true}).extend({community:s,district:s,sponsored:bool.optional(),curationLabel:s.nullable().optional()});
 const recommendedDevelopment=development.omit({community_id:true,version:true}).extend({rankingScore:n,sponsored:bool,curationLabel:s.nullable()});
-const provider=m.providers.omit({organization_id:true,status:true});
+const provider=publicProvider;
 const message=chatMessage;
 const leaseSummary=m.leases.pick({id:true,start_date:true,end_date:true,rent:true,currency:true,status:true}).extend({community:s});
 const chargeSummary=m.charges.pick({id:true,period:true,due_date:true,amount:true,currency:true,kind:true,reverses_id:true});
@@ -81,6 +82,7 @@ export const responses={
  DiscoveryController_suggestions:z.array(z.object({id:uuid,name:s,slug:s,kind:z.enum(['community','district','neighborhood']),city:s})),DiscoveryController_communities:z.array(community),DiscoveryController_community:community,
  DiscoveryController_listingAgents:z.array(agent),DiscoveryController_agents:z.array(agent),DiscoveryController_agent:agent.extend({statistics:agentStatistics}),DiscoveryController_agentListings:z.array(publicListing),DiscoveryController_developments:z.array(development.extend({availableTypes:n.int().nonnegative()})),
  DiscoveryController_development:development.extend({latitude:n.nullable(),longitude:n.nullable(),floorPlans:z.array(m.floor_plans),phases:z.array(z.object({id:uuid,name:s,status:z.enum(['coming_soon','on_sale','sold_out'])}))}),
+ ProviderCatalogController_categories:z.array(z.string()),ProviderCatalogController_list:z.array(ownedProvider),ProviderCatalogController_create:ownedProvider,ProviderCatalogController_update:ownedProvider,ProviderCatalogController_submit:ownedProvider,ProviderCatalogController_withdraw:ownedProvider,ProviderCatalogController_queue:z.array(providerReviewRow),ProviderCatalogController_review:ownedProvider,
  DiscoveryController_providers:z.array(provider),DiscoveryController_provider:provider,
  DiscoveryController_estimate:z.object({principal:decimal,monthlyPayment:decimal,totalInterest:decimal,totalRepaid:decimal,schedule:z.array(z.object({month:n,principal:decimal,interest:decimal,payment:decimal,balance:decimal})),assumptions:s}),
  EngagementController_favorites:z.array(savedProperty),EngagementController_favoriteState:favoriteState,EngagementController_favorite:favoriteState,EngagementController_unfavorite:favoriteState,

@@ -28,6 +28,7 @@ import {viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel} from '.
 import {viewingCalendarQuery,viewingRescheduleQuery,viewingReschedule,viewingTerminalAction} from '../viewing-calendar';
 import {leadExportQuery,viewingExportQuery} from '../crm-exports';
 import {messageCreate,chatUploadIntent,messageHistoryQuery,conversationListQuery,readCursorUpdate} from '../chat';
+import {providerCreate,providerUpdate,providerVersion,providerReview,providerFilters,providerReviewFilters,providerPage} from '../providers';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -113,8 +114,8 @@ export const operations={
 "DiscoveryController_mapConfiguration":{method:"GET",path:"/api/v1/map/config",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_mapConfiguration"]},
 "DiscoveryController_mapListings":{method:"GET",path:"/api/v1/listings/map",params:z.object({}),query:listingFilters,body:z.undefined(),response:responses["DiscoveryController_mapListings"]},
 "DiscoveryController_market":{method:"GET",path:"/api/v1/config",params:z.object({}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_market"]},
-"DiscoveryController_provider":{method:"GET",path:"/api/v1/renovation/providers/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_provider"]},
-"DiscoveryController_providers":{method:"GET",path:"/api/v1/renovation/providers",params:z.object({}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_providers"]},
+"DiscoveryController_provider":{method:"GET",path:"/api/v1/renovation/providers/:id",params:z.object({"id":z.string().min(1)}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_provider"]},
+"DiscoveryController_providers":{method:"GET",path:"/api/v1/renovation/providers",params:z.object({}),query:providerFilters,body:z.undefined(),response:responses["DiscoveryController_providers"]},
 "DiscoveryController_similar":{method:"GET",path:"/api/v1/listings/:id/similar",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_similar"]},
 "DiscoveryController_suggestions":{method:"GET",path:"/api/v1/search/suggest",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj'),q:z.string().trim().max(120).default('')}),body:z.undefined(),response:responses["DiscoveryController_suggestions"]},
 "DiscoveryEventsController_view":{method:"POST",path:"/api/v1/listings/:id/view",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewSignal,response:responses["DiscoveryEventsController_view"]},
@@ -236,6 +237,14 @@ export const operations={
 "PrivacyController_policy":{method:"GET",path:"/api/v1/me/privacy",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["PrivacyController_policy"]},
 "PrivacyController_requestDeletion":{method:"POST",path:"/api/v1/me/deletion-requests",params:z.object({}),query:z.object({}),body:deletionRequest,response:responses["PrivacyController_requestDeletion"]},
 "ProfileController_update":{method:"PATCH",path:"/api/v1/profiles/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:profileUpdate,response:responses["ProfileController_update"]},
+"ProviderCatalogController_categories":{method:"GET",path:"/api/v1/renovation/categories",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ProviderCatalogController_categories"]},
+"ProviderCatalogController_create":{method:"POST",path:"/api/v1/me/providers",params:z.object({}),query:z.object({}),body:providerCreate,response:responses["ProviderCatalogController_create"]},
+"ProviderCatalogController_list":{method:"GET",path:"/api/v1/me/providers",params:z.object({}),query:providerPage,body:z.undefined(),response:responses["ProviderCatalogController_list"]},
+"ProviderCatalogController_queue":{method:"GET",path:"/api/v1/ops/provider-reviews",params:z.object({}),query:providerReviewFilters,body:z.undefined(),response:responses["ProviderCatalogController_queue"]},
+"ProviderCatalogController_review":{method:"PATCH",path:"/api/v1/ops/provider-reviews/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:providerReview,response:responses["ProviderCatalogController_review"]},
+"ProviderCatalogController_submit":{method:"POST",path:"/api/v1/me/providers/:id/submit",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:providerVersion,response:responses["ProviderCatalogController_submit"]},
+"ProviderCatalogController_update":{method:"PATCH",path:"/api/v1/me/providers/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:providerUpdate,response:responses["ProviderCatalogController_update"]},
+"ProviderCatalogController_withdraw":{method:"POST",path:"/api/v1/me/providers/:id/withdraw",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:providerVersion,response:responses["ProviderCatalogController_withdraw"]},
 "RankingBoostsController_create":{method:"POST",path:"/api/v1/ops/ranking-boosts",params:z.object({}),query:z.object({}),body:boostCreate,response:responses["RankingBoostsController_create"]},
 "RankingBoostsController_read":{method:"GET",path:"/api/v1/ops/ranking-boosts",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj')}),body:z.undefined(),response:responses["RankingBoostsController_read"]},
 "RankingBoostsController_update":{method:"PATCH",path:"/api/v1/ops/ranking-boosts/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:boostUpdate,response:responses["RankingBoostsController_update"]},

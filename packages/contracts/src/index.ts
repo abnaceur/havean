@@ -65,3 +65,5 @@ export * from './viewing-bookings';
 export * from './viewing-calendar';
 export * from './crm-exports';
 export * from './chat';
+
+export * from './providers';
