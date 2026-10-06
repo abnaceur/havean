@@ -13,7 +13,7 @@ export const accountRetention={version:1 as const,exportRecordLimit:2000,classes
 // Explicit personal-data projections. Organization access never broadens a personal export.
 const datasets:Record<string,string>={
  memberships:'SELECT id,organization_id,role,status FROM memberships WHERE user_id=$1 ORDER BY id',
- ownerSubmissions:`SELECT id,status,listing_id,version,created_at,(SELECT coalesce(jsonb_object_agg(key,value),'{}'::jsonb) FROM jsonb_each(data) WHERE key IN('title','transaction','districtId','communityId','area','beds','livingRooms','price','description','contact','consent','photos','documents')) data FROM owner_submissions WHERE user_id=$1 ORDER BY id`,
+ ownerSubmissions:`SELECT id,status,listing_id,version,wizard_step,asking_price::text,currency,rent_period,created_at,(SELECT coalesce(jsonb_object_agg(key,value),'{}'::jsonb) FROM jsonb_each(data) WHERE key IN('title','transaction','districtId','communityId','area','beds','livingRooms','price','description','contact','contactAudience','city','currency','rentPeriod','consent','photos','documents')) data FROM owner_submissions WHERE user_id=$1 ORDER BY id`,
  ownedListings:'SELECT id,unit_id,slug,title,description,transaction,segment,currency,price::text,status,version FROM listings WHERE owner_id=$1 ORDER BY id',
  ownedPrivateUnits:'SELECT d.unit_id,d.private_address,d.version,d.private_latitude::text,d.private_longitude::text FROM unit_private_details d WHERE EXISTS(SELECT 1 FROM listings l WHERE l.unit_id=d.unit_id AND l.owner_id=$1) ORDER BY d.unit_id',
  ownedUnits:'SELECT u.id,u.area::text,u.beds,u.living_rooms,u.baths,u.orientation,u.floor,u.elevator FROM units u WHERE EXISTS(SELECT 1 FROM listings l WHERE l.unit_id=u.id AND l.owner_id=$1) ORDER BY u.id',

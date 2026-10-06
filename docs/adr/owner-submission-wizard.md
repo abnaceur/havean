@@ -1,0 +1,11 @@
+# Owner submission wizard
+
+Inventory persists a private five-step request: location/facts, terms, approved media, contact and review. Draft fields are bounded raw strings so invalid in-progress inputs survive autosave/refresh without becoming posted domain facts. Server step advancement validates canonical fields, active city/district/community, positive exact price, transaction period, approved owned JPEG/PNG photos and private PDF evidence. Submitted amounts/currency/period are stored in canonical NUMERIC/typed columns, with SQL consistency checks against the request snapshot. Submission repeats all validations, checks actor/root version/draft state and requires explicit consent. A partial/invalid/stale/foreign request cannot submit. Raw media identifiers/currency/city cannot be overwritten by autosave.
+
+Autosaves are serialized and use the latest version; changed inputs remain dirty while a previous save finishes. A failed save leaves inputs visible. The URL retains the private draft UUID, and the existing safe sign-in return retains its query. An expired session can sign in and resume saved progress. Submission is a review request, not inventory publication/ownership approval.
+
+Media uses the existing scanned/decoded upload pipeline and refreshes the draft version after attachment. Private contact defaults to reviewers. Approved ownership review transfers only the owner's requested contact/audience through a narrow SQL port that requires the matching reviewer-attributed ownership grant. Published inventory retains the request's server-selected currency and explicit rental period.
+
+The legacy full-fields create endpoint remains for private drafts; it rejects immediate consent/submission without the media-review progression. Both the wizard and legacy draft review action use a current version and explicit consent. O03 will extend configured document categories/expiry/download evidence; O04/O05 will extend safe review timelines and lifecycle controls.
+
+O: owner property entry. R: O02 step, autosave, validation and login-return requirements. P: local English wizard and synthetic owner requests. V: original private owner forms, real legal ownership and new human visual approval. Historical approved screens are preserved; no original-site parity claim.

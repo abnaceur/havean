@@ -9,9 +9,9 @@ import {z} from 'zod';
 import {pricePreset} from './geography';
 import {models as m} from './generated/models';
 import {floorLayout,propertyMediaMetadata} from './property-media';
-import {ownerSchema} from './domain';
+import {ownerWizardFields} from './owner-wizard';
 const s=z.string(),uuid=s.uuid(),n=z.number(),bool=z.boolean(),decimal=s.regex(/^-?\d+(\.\d+)?$/),status=z.object({id:uuid,status:s}),versioned=status.extend({version:n});
-const owner=m.owner_submissions.extend({data:ownerSchema.extend({photos:z.array(uuid).optional(),documents:z.array(uuid).optional(),reviewReason:s.optional()})});
+const owner=m.owner_submissions.extend({data:ownerWizardFields.extend({beds:z.union([s,n]).optional(),livingRooms:z.union([s,n]).optional(),city:s.optional(),currency:s.optional(),photos:z.array(uuid).optional(),documents:z.array(uuid).optional(),reviewReason:s.optional()})});
 export const publicListing=m.public_listings.extend({propertyType:z.enum(['office','retail','warehouse']).nullable(),areaBasis:z.enum(['gross','usable']).nullable(),priceBasis:z.enum(['total','per_area']).nullable(),rentalMode:z.enum(['entire','shared']).nullable(),transaction:z.enum(['sale','rent']),segment:z.enum(['residential','commercial']),rankingScore:n.optional(),viewCount:n.optional(),sponsored:bool.optional(),curationLabel:s.nullable().optional()});
 export const publicRentalTerms=z.object({mode:z.enum(['entire','shared']).nullable(),billingPeriod:z.enum(['day','month','year']).nullable(),depositAmount:decimal.nullable(),currency:s.nullable(),minimumMonths:n.int().nullable(),utilities:z.array(s),moveInDate:s.nullable(),roomAttributes:z.array(s),unitKind:z.enum(['property','room']),roomLabel:s.nullable()});
 export type PublicRentalTerms=z.infer<typeof publicRentalTerms>;
@@ -74,7 +74,7 @@ export const responses={
  EngagementController_leads:z.array(m.leads),EngagementController_lead:m.leads,
  EngagementController_viewings:z.array(m.viewings.extend({title:s})),EngagementController_opsViewings:z.array(m.viewings.extend({title:s})),EngagementController_book:m.viewings,EngagementController_cancel:m.viewings,EngagementController_confirm:m.viewings,
  EngagementController_conversations:z.array(m.conversations.pick({id:true,resource_id:true,created_at:true})),EngagementController_messages:z.array(message),EngagementController_message:message,
- InventoryController_submissions:z.array(owner),InventoryController_submit:owner,InventoryController_sendDraft:status,
+ InventoryController_submissions:z.array(owner),InventoryController_submit:owner,InventoryController_createOwnerDraft:owner,InventoryController_ownerDraft:owner,InventoryController_saveOwnerDraft:owner,InventoryController_sendDraft:owner,
  InventoryController_listings:z.array(m.listings.pick({id:true,title:true,slug:true,status:true,transaction:true,segment:true,price:true,currency:true,rent_period:true,version:true}).extend({community:s,city:s,...inventoryActions.shape})),InventoryController_workbench:m.listings.extend({area:decimal,beds:n,living_rooms:n,baths:n,floor:n,community:s,city:s,...inventoryActions.shape}),InventoryController_scheduleExpiration:versioned.extend({expires_at:s.nullable()}),InventoryController_updateStatus:versioned,
  InventoryController_revise:z.union([status,versioned.extend({title:s,price:decimal.nullable()})]),
  InventoryController_reviews:z.object({listings:z.array(m.listings.pick({id:true,title:true,description:true,status:true,price:true,currency:true,version:true,photos:true}).extend({area:decimal,beds:n,community:s})),submissions:z.array(owner.pick({id:true,user_id:true,data:true,status:true,version:true})),revisions:z.array(m.listing_revisions.pick({id:true,listing_id:true,changes:true,status:true,version:true,base_version:true}).extend({title:s}))}),
