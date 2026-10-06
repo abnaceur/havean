@@ -1,3 +1,4 @@
+import {leadActivity} from './crm';
 import {inquirySessionRecord,guestInquiryReceipt} from './inquiries';
 import {agentDashboard} from './agent-dashboard';
 import {assignmentAgent,assignmentResult} from './assignments';
@@ -81,6 +82,7 @@ export const responses={
  EngagementController_favorites:z.array(savedProperty),EngagementController_favoriteState:favoriteState,EngagementController_favorite:favoriteState,EngagementController_unfavorite:favoriteState,
  InquirySessionsController_create:inquirySessionRecord,GuestInquiriesController_submit:guestInquiryReceipt,
  EngagementController_inquiry:status.extend({created_at:s,conversationId:uuid}),EngagementController_inquiries:z.array(m.leads.pick({id:true,resource_id:true,status:true,created_at:true,message:true})),
+ CrmController_queue:z.object({organizationId:uuid,scope:z.enum(['team','assigned']),page:n,hasMore:z.boolean(),records:z.array(m.leads)}),CrmController_detail:m.leads.extend({resourceLabel:s.nullable()}),CrmController_timeline:z.array(leadActivity),CrmController_note:z.object({lead:m.leads,note:leadActivity}),
  EngagementController_leads:z.array(m.leads),EngagementController_lead:m.leads,
  EngagementController_viewings:z.array(m.viewings.extend({title:s})),EngagementController_opsViewings:z.array(m.viewings.extend({title:s})),EngagementController_book:m.viewings,EngagementController_cancel:m.viewings,EngagementController_confirm:m.viewings,
  EngagementController_conversations:z.array(m.conversations.pick({id:true,resource_id:true,created_at:true})),EngagementController_messages:z.array(message),EngagementController_message:message,

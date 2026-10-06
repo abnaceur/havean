@@ -22,6 +22,7 @@ import {agentProfileCreate,agentProfileUpdate,agentCredentialSubmit,agentCredent
 import {ownerPriceChange,ownerLifecycleAction} from '../owner-lifecycle';
 import {ownerWizardCreate,ownerWizardUpdate,ownerWizardSubmit} from '../owner-wizard';
 import {inquirySessionCreate,guestInquiry} from '../inquiries';
+import {leadQueueFilters,leadStageUpdate,leadNoteCreate} from '../crm';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -60,6 +61,10 @@ export const operations={
 "BrowsingHistoryController_read":{method:"GET",path:"/api/v1/me/history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["BrowsingHistoryController_read"]},
 "BrowsingHistoryController_record":{method:"POST",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyView,response:responses["BrowsingHistoryController_record"]},
 "BrowsingHistoryController_remove":{method:"DELETE",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyVersion,response:responses["BrowsingHistoryController_remove"]},
+"CrmController_detail":{method:"GET",path:"/api/v1/ops/leads/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["CrmController_detail"]},
+"CrmController_note":{method:"POST",path:"/api/v1/ops/leads/:id/notes",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leadNoteCreate,response:responses["CrmController_note"]},
+"CrmController_queue":{method:"GET",path:"/api/v1/ops/lead-queue",params:z.object({}),query:leadQueueFilters,body:z.undefined(),response:responses["CrmController_queue"]},
+"CrmController_timeline":{method:"GET",path:"/api/v1/ops/leads/:id/timeline",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["CrmController_timeline"]},
 "DevelopmentInventoryController_createType":{method:"POST",path:"/api/v1/ops/developments/:id/floor-types",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:floorTypeCreate,response:responses["DevelopmentInventoryController_createType"]},
 "DevelopmentInventoryController_createUnit":{method:"POST",path:"/api/v1/ops/developments/:id/offered-units",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:offeredUnitCreate,response:responses["DevelopmentInventoryController_createUnit"]},
 "DevelopmentInventoryController_units":{method:"GET",path:"/api/v1/ops/developments/:id/offered-units",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DevelopmentInventoryController_units"]},
@@ -116,7 +121,7 @@ export const operations={
 "EngagementController_favoriteState":{method:"GET",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_favoriteState"]},
 "EngagementController_inquiries":{method:"GET",path:"/api/v1/me/inquiries",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_inquiries"]},
 "EngagementController_inquiry":{method:"POST",path:"/api/v1/inquiries",params:z.object({}),query:z.object({}),body:inquirySchema,response:responses["EngagementController_inquiry"]},
-"EngagementController_lead":{method:"PATCH",path:"/api/v1/ops/leads/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.string(),version:z.number().int()}),response:responses["EngagementController_lead"]},
+"EngagementController_lead":{method:"PATCH",path:"/api/v1/ops/leads/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leadStageUpdate,response:responses["EngagementController_lead"]},
 "EngagementController_leads":{method:"GET",path:"/api/v1/ops/leads",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_leads"]},
 "EngagementController_message":{method:"POST",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({body:z.string().trim().min(1).max(4000),clientId:z.string().uuid()}),response:responses["EngagementController_message"]},
 "EngagementController_messages":{method:"GET",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_messages"]},

@@ -55,3 +55,5 @@ export * from './assignments';
 export * from './agent-dashboard';
 
 export * from './inquiries';
+
+export * from './crm';
