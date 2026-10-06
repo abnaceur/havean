@@ -1,0 +1,37 @@
+ Container haven-p02-api-run-bceb08470e52 Creating 
+ Container haven-p02-api-run-bceb08470e52 Created 
+
+> haven-real-estate@0.1.0 db:migrate /workspace
+> tsx packages/database/src/migrate.ts
+
+Applied 118-lease-ending-workflow-state-guard.sql
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/lease-lifecycle.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 9289[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 valid next term retains original terms, links history and replays one renewal draft[33m 2256[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 overlapping next terms and stale/currency versions deny renewal without partial linked drafts[33m 2456[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 ending records termination reason and original history, never republishes, and revoked authority denies receipt replay[33m 1308[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 concurrent renewal requests yield one retained successor and concurrent endings yield one record[33m 2032[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 historical lease ending retains unknown provenance and new renewal uses current native authority[33m 1187[2mms[22m[39m
+ [32m✓[39m tests/integration/lease-activation.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 5777[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 atomic activation withdraws the public rental offer with exact history, audit and matching receipts[33m 964[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 simultaneous overlapping draft activations yield exactly one success and one current-state conflict[33m 1409[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 property occupation conflicts with child rooms while sibling rooms can hold separate exclusive terms[33m 2423[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 stale versions, missing confirmation and expired terms deny activation without withdrawing publication[33m 933[2mms[22m[39m
+ [32m✓[39m tests/integration/lease-drafts.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 3384[2mms[22m[39m
+   [33m[2m✓[22m[39m P03 creates one permitted canonical lease draft with exact decimals, monthly due terms and private attachment on retry[33m 323[2mms[22m[39m
+   [33m[2m✓[22m[39m P03 updates only current draft versions, retains original history and denies ended lease term edits[33m 1249[2mms[22m[39m
+   [33m[2m✓[22m[39m P03 another real manager retains an existing team PDF while foreign and tenant document access are denied[33m 952[2mms[22m[39m
+ [32m✓[39m tests/integration/tenant-links.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 923[2mms[22m[39m
+   [33m[2m✓[22m[39m P02 verified recipient accepts exact grant invitation once and reads own linked profile without enumerating others[33m 645[2mms[22m[39m
+ [32m✓[39m tests/integration/database.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 536[2mms[22m[39m
+ [32m✓[39m tests/integration/account-privacy.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 672[2mms[22m[39m
+   [33m[2m✓[22m[39m A06 one-snapshot personal export excludes another persona even for an administrator and keeps money as decimal strings[33m 315[2mms[22m[39m
+ [32m✓[39m tests/integration/management-grants.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 582[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+[2m      Tests [22m [1m[32m40 passed[39m[22m[90m (40)[39m
+[2m   Start at [22m 09:14:14
+[2m   Duration [22m 28.81s[2m (tests 76%, import 23%, transform 2%)[22m
+
