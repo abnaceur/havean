@@ -1,3 +1,4 @@
+import {canReadAgentCredentialDocument} from '../services/agent-credentials.js';
 import type pg from 'pg';
 import {event,type Actor} from '@haven/database';
 export async function grantReviewEvidence(c:pg.PoolClient,a:Actor,submissionId:string){
@@ -11,6 +12,7 @@ export async function grantReviewEvidence(c:pg.PoolClient,a:Actor,submissionId:s
 export async function canReadPrivateEvidence(c:pg.PoolClient,a:Actor,id:string,ownerId:string){
  if(ownerId===a.id)return true;
  if(!a.roles.some(role=>['admin','moderator'].includes(role)))return false;
+ if(await canReadAgentCredentialDocument(c,a,id,ownerId))return true;
  return Boolean((await c.query(`SELECT 1 FROM moderation_evidence_grants g JOIN owner_submissions s ON s.id=g.submission_id
  WHERE g.reviewer_id=$1 AND g.expires_at>now() AND s.status='submitted' AND s.user_id=$2
  AND coalesce(s.data->'documents','[]'::jsonb) ? $3`,[a.id,ownerId,id])).rowCount);

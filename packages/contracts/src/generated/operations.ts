@@ -15,6 +15,7 @@ import {deletionRequest} from '../account-privacy';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
 import {draftCreate,draftUpdate} from '../inventory-drafts';
+import {agentProfileCreate,agentProfileUpdate,agentCredentialSubmit,agentCredentialReview,agentCredentialFilters} from '../agent-credentials';
 import {ownerPriceChange,ownerLifecycleAction} from '../owner-lifecycle';
 import {ownerWizardCreate,ownerWizardUpdate,ownerWizardSubmit} from '../owner-wizard';
 import {responses} from '../responses';
@@ -33,6 +34,13 @@ export const operations={
 "AdministrationController_suspend":{method:"POST",path:"/api/v1/ops/users/:id/suspend",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_suspend"]},
 "AdministrationController_updateSupport":{method:"PATCH",path:"/api/v1/ops/support-cases/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.enum(['triaged','escalated','resolved']),publicReply:z.string().min(5).max(2000),internalNote:z.string().max(2000).optional(),version:z.number().int()}),response:responses["AdministrationController_updateSupport"]},
 "AdministrationController_users":{method:"GET",path:"/api/v1/ops/users",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_users"]},
+"AgentCredentialsController_create":{method:"POST",path:"/api/v1/me/agent-profiles",params:z.object({}),query:z.object({}),body:agentProfileCreate,response:responses["AgentCredentialsController_create"]},
+"AgentCredentialsController_credentials":{method:"GET",path:"/api/v1/me/agent-profiles/:id/credentials",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AgentCredentialsController_credentials"]},
+"AgentCredentialsController_queue":{method:"GET",path:"/api/v1/ops/agent-credentials",params:z.object({}),query:agentCredentialFilters,body:z.undefined(),response:responses["AgentCredentialsController_queue"]},
+"AgentCredentialsController_read":{method:"GET",path:"/api/v1/me/agent-profiles",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AgentCredentialsController_read"]},
+"AgentCredentialsController_review":{method:"PATCH",path:"/api/v1/ops/agent-credentials/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:agentCredentialReview,response:responses["AgentCredentialsController_review"]},
+"AgentCredentialsController_submit":{method:"POST",path:"/api/v1/me/agent-profiles/:id/credentials",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:agentCredentialSubmit,response:responses["AgentCredentialsController_submit"]},
+"AgentCredentialsController_update":{method:"PATCH",path:"/api/v1/me/agent-profiles/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:agentProfileUpdate,response:responses["AgentCredentialsController_update"]},
 "BrowsingHistoryController_clear":{method:"DELETE",path:"/api/v1/me/history",params:z.object({}),query:z.object({}),body:historyVersion,response:responses["BrowsingHistoryController_clear"]},
 "BrowsingHistoryController_preferences":{method:"PATCH",path:"/api/v1/me/history/preferences",params:z.object({}),query:z.object({}),body:historyPreference,response:responses["BrowsingHistoryController_preferences"]},
 "BrowsingHistoryController_read":{method:"GET",path:"/api/v1/me/history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["BrowsingHistoryController_read"]},
@@ -57,7 +65,7 @@ export const operations={
 "DevelopmentReviewController_queue":{method:"GET",path:"/api/v1/ops/development-reviews",params:z.object({}),query:developmentReviewQuery,body:z.undefined(),response:responses["DevelopmentReviewController_queue"]},
 "DevelopmentReviewController_read":{method:"GET",path:"/api/v1/ops/developments/:id/publication",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DevelopmentReviewController_read"]},
 "DevelopmentReviewController_submit":{method:"POST",path:"/api/v1/ops/developments/:id/submit",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:developmentReviewSubmit,response:responses["DevelopmentReviewController_submit"]},
-"DiscoveryController_agent":{method:"GET",path:"/api/v1/agents/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_agent"]},
+"DiscoveryController_agent":{method:"GET",path:"/api/v1/agents/:id",params:z.object({"id":z.string().min(1)}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_agent"]},
 "DiscoveryController_agents":{method:"GET",path:"/api/v1/agents",params:z.object({}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_agents"]},
 "DiscoveryController_cities":{method:"GET",path:"/api/v1/cities",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_cities"]},
 "DiscoveryController_communities":{method:"GET",path:"/api/v1/communities",params:z.object({}),query:geographyFilters,body:z.undefined(),response:responses["DiscoveryController_communities"]},

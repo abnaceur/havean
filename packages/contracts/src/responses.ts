@@ -1,3 +1,4 @@
+import {ownedAgentProfile,ownedAgentCredential,credentialReviewRow,credentialBadge} from './agent-credentials';
 import {ownerListingRecord} from './owner-lifecycle';
 import {commercialRecord} from './commercial';
 import {rentalTermsRecord} from './rental-terms';
@@ -20,7 +21,7 @@ const unavailableProperty=z.object({id:uuid,available:z.literal(false),title:s})
 export const savedProperty=z.union([publicListing.extend({available:z.literal(true)}),unavailableProperty]);
 export const historyCollection=z.object({enabled:bool,version:n.int().nonnegative(),entries:z.array(z.object({listing:savedProperty,viewedAt:s}))});
 const community=z.object({id:uuid,slug:s,name:s,address:s,builtYear:n.nullable(),amenities:z.array(s),photos:z.array(s),district:s,districtId:uuid,city:s,latitude:n.nullable(),longitude:n.nullable()});
-const agent=z.object({id:uuid,name:s,slug:s,biography:s,languages:z.array(s),districts:z.array(s),verifiedUntil:s.nullable(),photo:s.nullable(),publicEmail:s.nullable()});
+const agent=z.object({id:uuid,name:s,slug:s,biography:s,languages:z.array(s),districts:z.array(s),verifiedUntil:s.nullable(),credentialStatus:credentialBadge.optional(),photo:s.nullable(),publicEmail:s.nullable()});
 const development=m.developments.omit({organization_id:true}).extend({community:s,district:s,sponsored:bool.optional(),curationLabel:s.nullable().optional()});
 const recommendedDevelopment=development.omit({community_id:true,version:true}).extend({rankingScore:n,sponsored:bool,curationLabel:s.nullable()});
 const provider=m.providers.omit({organization_id:true,status:true});
@@ -40,6 +41,7 @@ const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nul
 const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});
 const draft=m.listings.pick({id:true,unit_id:true,organization_id:true,owner_id:true,agent_id:true,title:true,description:true,transaction:true,segment:true,currency:true,price:true,rent_period:true,furnishing:true,available_from:true,features:true,status:true,version:true,slug:true});
 export const responses={
+ AgentCredentialsController_read:z.array(ownedAgentProfile),AgentCredentialsController_create:ownedAgentProfile,AgentCredentialsController_update:ownedAgentProfile,AgentCredentialsController_credentials:z.array(ownedAgentCredential),AgentCredentialsController_submit:ownedAgentCredential,AgentCredentialsController_queue:z.array(credentialReviewRow),AgentCredentialsController_review:ownedAgentCredential,
  DevelopmentReviewController_read:z.object({project:m.developments,review:m.development_publication}),DevelopmentReviewController_submit:z.object({project:m.developments,review:m.development_publication}),DevelopmentReviewController_decision:z.object({project:m.developments,review:m.development_publication}),DevelopmentReviewController_queue:z.array(m.developments.extend({review:m.development_publication})),DevelopmentReviewController_detail:z.object({project:m.developments,review:m.development_publication,types:z.array(m.floor_plans),phases:z.array(m.development_phases)}),DevelopmentReviewController_leads:z.array(m.leads.extend({type_name:s.nullable(),project_name:s})),
  DevelopmentPricingController_update:m.developments,
  DevelopmentInventoryController_units:z.array(m.development_offered_units.extend({area:decimal,building_id:uuid,building:s,floor_plan_name:s})),DevelopmentInventoryController_createType:m.floor_plans.extend({projectVersion:n}),DevelopmentInventoryController_updateType:m.floor_plans.extend({projectVersion:n}),DevelopmentInventoryController_createUnit:m.development_offered_units.extend({projectVersion:n}),DevelopmentInventoryController_updateUnit:m.development_offered_units.extend({projectVersion:n}),

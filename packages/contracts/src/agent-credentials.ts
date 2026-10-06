@@ -1,0 +1,13 @@
+import {z} from 'zod';
+const version=z.number().int().positive(),city=z.string().regex(/^[a-z0-9-]+$/).max(100);
+const profileFields={city,name:z.string().trim().min(2).max(120),biography:z.string().trim().min(20).max(3000),languages:z.array(z.string().trim().min(2).max(40)).min(1).max(8),districtIds:z.array(z.uuid()).min(1).max(10),publicEmail:z.email().nullable(),contactConsent:z.boolean()};
+export const agentProfileCreate=z.object({version:z.literal(0),...profileFields}).strict();
+export const agentProfileUpdate=z.object({version,...profileFields}).strict();
+const date=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(value=>!Number.isNaN(Date.parse(value))&&new Date(value).toISOString().slice(0,10)===value,'Use a valid calendar date');
+export const agentCredentialSubmit=z.object({version:z.literal(0),profileVersion:version,holderName:z.string().trim().min(2).max(120),registrationReference:z.string().trim().min(3).max(120),issuer:z.string().trim().min(2).max(160),expiresOn:date,documentId:z.uuid()}).strict();
+export const agentCredentialReview=z.object({version,decision:z.enum(['approved','rejected','revoked']),reason:z.string().trim().min(5).max(1000),verified:z.boolean().default(false)}).strict();
+export const agentCredentialFilters=z.object({status:z.enum(['submitted','approved','rejected','revoked','superseded']).default('submitted'),page:z.coerce.number().int().min(1).max(10000).default(1),limit:z.coerce.number().int().min(1).max(50).default(20)}).strict();
+export const credentialBadge=z.enum(['approved','expired','revoked','unverified']);
+export const ownedAgentProfile=z.object({id:z.uuid(),name:z.string(),slug:z.string(),biography:z.string(),languages:z.array(z.string()),districts:z.array(z.string()),districtIds:z.array(z.uuid()),city:z.string().nullable(),publicEmail:z.string().nullable(),version,identityVersion:version,credentialStatus:credentialBadge,credentialExpiresOn:z.string().nullable()});
+export const ownedAgentCredential=z.object({id:z.uuid(),agentId:z.uuid(),city:z.string(),holderName:z.string(),registrationReference:z.string(),issuer:z.string(),expiresOn:z.string(),documentId:z.uuid(),status:z.enum(['submitted','approved','rejected','revoked','superseded']),version,createdAt:z.string(),reviewedAt:z.string().nullable()});
+export const credentialReviewRow=ownedAgentCredential.extend({agentName:z.string(),organizationName:z.string(),canReview:z.boolean()});
