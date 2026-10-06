@@ -23,6 +23,7 @@ import {ownerPriceChange,ownerLifecycleAction} from '../owner-lifecycle';
 import {ownerWizardCreate,ownerWizardUpdate,ownerWizardSubmit} from '../owner-wizard';
 import {inquirySessionCreate,guestInquiry} from '../inquiries';
 import {leadQueueFilters,leadStageUpdate,leadNoteCreate} from '../crm';
+import {availabilityUpdate,availabilityBlockCreate,availabilityBlockCancel,viewingSlotQuery} from '../viewing-availability';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -251,4 +252,10 @@ export const operations={
 "ServicesController_changeQuote":{method:"PATCH",path:"/api/v1/ops/quotes/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.enum(['assigned','contacted','quoted','closed']),version:z.number().int()}),response:responses["ServicesController_changeQuote"]},
 "ServicesController_quote":{method:"POST",path:"/api/v1/quote-requests",params:z.object({}),query:z.object({}),body:z.object({providerId:z.string().uuid(),description:z.string().min(10).max(3000),budget:z.string().regex(/^\d+(\.\d{1,2})?$/)}),response:responses["ServicesController_quote"]},
 "ServicesController_quotes":{method:"GET",path:"/api/v1/ops/quotes",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ServicesController_quotes"]},
+"ViewingAvailabilityController_block":{method:"POST",path:"/api/v1/ops/viewing-availability/:id/blocks",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:availabilityBlockCreate,response:responses["ViewingAvailabilityController_block"]},
+"ViewingAvailabilityController_cancelBlock":{method:"DELETE",path:"/api/v1/ops/viewing-availability/:id/blocks/:blockId",params:z.object({"id":z.string().min(1),"blockId":z.string().min(1)}),query:z.object({}),body:availabilityBlockCancel,response:responses["ViewingAvailabilityController_cancelBlock"]},
+"ViewingAvailabilityController_listings":{method:"GET",path:"/api/v1/ops/viewing-availability",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ViewingAvailabilityController_listings"]},
+"ViewingAvailabilityController_read":{method:"GET",path:"/api/v1/ops/viewing-availability/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ViewingAvailabilityController_read"]},
+"ViewingAvailabilityController_save":{method:"PUT",path:"/api/v1/ops/viewing-availability/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:availabilityUpdate,response:responses["ViewingAvailabilityController_save"]},
+"ViewingAvailabilityController_slots":{method:"GET",path:"/api/v1/viewing-slots",params:z.object({}),query:viewingSlotQuery,body:z.undefined(),response:responses["ViewingAvailabilityController_slots"]},
 } as const;

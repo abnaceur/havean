@@ -9,7 +9,7 @@ try{
  for(const row of rows){
   if(row.udt_name==='geography'||row.udt_name==='geometry')continue;
   let schema;
-  if(row.data_type==='ARRAY')schema='z.array('+(row.udt_name==='_uuid'?'z.string().uuid()':'z.string()')+')';
+  if(row.data_type==='ARRAY')schema='z.array('+(row.udt_name==='_uuid'?'z.string().uuid()':['_int2','_int4','_float4','_float8'].includes(row.udt_name)?'z.number()':row.udt_name==='_bool'?'z.boolean()':'z.string()')+')';
   else if(row.data_type==='uuid')schema='z.string().uuid()';
   else if(['integer','smallint','real','double precision'].includes(row.data_type))schema='z.number()';
   else if(row.data_type==='boolean')schema='z.boolean()';

@@ -1,0 +1,95 @@
+ Container haven-tests-run-724bfe6550c3 Creating 
+ Container haven-tests-run-724bfe6550c3 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/viewing-availability.spec.ts:9:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state (44.0s)
+  ✘  2 [mobile] › tests/e2e/viewing-availability.spec.ts:9:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state (57.4s)
+
+
+  1) [desktop] › tests/e2e/viewing-availability.spec.ts:9:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog').getByRole('status')
+    Expected substring: "No viewing times"
+    Received string:    "The assigned agent has not published viewing availability."
+    Timeout: 15000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('dialog').getByRole('status') with timeout 15000ms
+      - waiting for getByRole('dialog').getByRole('status')
+        34 × locator resolved to <p role="status">The assigned agent has not published viewing avai…</p>
+           - unexpected value "The assigned agent has not published viewing availability."
+
+
+      17 |  await login(page,'buyer','http://localhost:8088','/bj/buy/'+slug);await page.getByRole('button',{name:'Request a viewing',exact:true}).click();const dialog=page.getByRole('dialog');await expect(dialog).toContainText('Asia/Shanghai');await dialog.getByLabel('Viewing date',{exact:true}).fill(date);await expect(dialog.getByLabel('Available viewing time',{exact:true})).toContainText('11:15');await dialog.getByLabel('Available viewing time',{exact:true}).selectOption(date+'T03:15:00.000Z');await expect(dialog.getByLabel('Available viewing time',{exact:true}).locator('option:checked')).toContainText('GMT+8');expect((await new AxeBuilder({page}).include('dialog').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/l03-viewing-times-${info.project.name}.png`,scale:'css'});
+      18 |  await login(page,'agent','http://localhost:8089','/ops/availability?property='+id);await page.getByRole('button',{name:'Cancel unavailable interval',exact:true}).click();await expect(page.locator('.review-card')).toContainText('cancelled');const restored=(await (await page.request.get('http://localhost:8088/api/v1/viewing-slots?listingId='+id+'&date='+date+'&days=1')).json()).data;expect(restored.slots.some((s:any)=>s.startAt===date+'T01:00:00.000Z')).toBe(true);await page.getByLabel('Availability status',{exact:true}).selectOption('paused');await page.getByRole('button',{name:'Save working hours',exact:true}).click();await expect(page.getByRole('heading',{name:'Unavailable interval',exact:true})).toHaveCount(0);
+    > 19 |  await login(page,'buyer','http://localhost:8088','/bj/buy/'+slug);await page.getByRole('button',{name:'Request a viewing',exact:true}).click();await expect(dialog.getByLabel('Available viewing time',{exact:true})).toHaveCount(0);await expect(dialog.getByRole('button',{name:'Request viewing',exact:true})).toBeDisabled();await expect(dialog.getByRole('status')).toContainText('No viewing times');
+         |                                                                                                                                                                                                                                                                                                                                                                            ^
+      20 |  }finally{await staff(async c=>{await c.query("UPDATE listings SET status='archived',version=version+1 WHERE id=$1",[id]);await c.query("UPDATE agents SET verified_until=NULL,version=version+1 WHERE id=$1",[agent]);});}
+      21 | });
+      22 |
+        at /workspace/tests/e2e/viewing-availability.spec.ts:19:364
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-desktop/error-context.md
+
+    Error Context: test-results/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/viewing-availability.spec.ts:9:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog').getByRole('status')
+    Expected substring: "No viewing times"
+    Received string:    "The assigned agent has not published viewing availability."
+    Timeout: 15000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('dialog').getByRole('status') with timeout 15000ms
+      - waiting for getByRole('dialog').getByRole('status')
+        34 × locator resolved to <p role="status">The assigned agent has not published viewing avai…</p>
+           - unexpected value "The assigned agent has not published viewing availability."
+
+
+      17 |  await login(page,'buyer','http://localhost:8088','/bj/buy/'+slug);await page.getByRole('button',{name:'Request a viewing',exact:true}).click();const dialog=page.getByRole('dialog');await expect(dialog).toContainText('Asia/Shanghai');await dialog.getByLabel('Viewing date',{exact:true}).fill(date);await expect(dialog.getByLabel('Available viewing time',{exact:true})).toContainText('11:15');await dialog.getByLabel('Available viewing time',{exact:true}).selectOption(date+'T03:15:00.000Z');await expect(dialog.getByLabel('Available viewing time',{exact:true}).locator('option:checked')).toContainText('GMT+8');expect((await new AxeBuilder({page}).include('dialog').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/l03-viewing-times-${info.project.name}.png`,scale:'css'});
+      18 |  await login(page,'agent','http://localhost:8089','/ops/availability?property='+id);await page.getByRole('button',{name:'Cancel unavailable interval',exact:true}).click();await expect(page.locator('.review-card')).toContainText('cancelled');const restored=(await (await page.request.get('http://localhost:8088/api/v1/viewing-slots?listingId='+id+'&date='+date+'&days=1')).json()).data;expect(restored.slots.some((s:any)=>s.startAt===date+'T01:00:00.000Z')).toBe(true);await page.getByLabel('Availability status',{exact:true}).selectOption('paused');await page.getByRole('button',{name:'Save working hours',exact:true}).click();await expect(page.getByRole('heading',{name:'Unavailable interval',exact:true})).toHaveCount(0);
+    > 19 |  await login(page,'buyer','http://localhost:8088','/bj/buy/'+slug);await page.getByRole('button',{name:'Request a viewing',exact:true}).click();await expect(dialog.getByLabel('Available viewing time',{exact:true})).toHaveCount(0);await expect(dialog.getByRole('button',{name:'Request viewing',exact:true})).toBeDisabled();await expect(dialog.getByRole('status')).toContainText('No viewing times');
+         |                                                                                                                                                                                                                                                                                                                                                                            ^
+      20 |  }finally{await staff(async c=>{await c.query("UPDATE listings SET status='archived',version=version+1 WHERE id=$1",[id]);await c.query("UPDATE agents SET verified_until=NULL,version=version+1 WHERE id=$1",[agent]);});}
+      21 | });
+      22 |
+        at /workspace/tests/e2e/viewing-availability.spec.ts:19:364
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-mobile/error-context.md
+
+    Error Context: test-results/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/viewing-availability.spec.ts:9:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state 
+    [mobile] › tests/e2e/viewing-availability.spec.ts:9:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state 
+

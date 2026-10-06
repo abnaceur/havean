@@ -222,5 +222,11 @@ export const sdk={
 "SearchHistoryController_record":call(operations["SearchHistoryController_record"]),
 "ServicesController_changeQuote":call(operations["ServicesController_changeQuote"]),
 "ServicesController_quote":call(operations["ServicesController_quote"]),
-"ServicesController_quotes":call(operations["ServicesController_quotes"])
+"ServicesController_quotes":call(operations["ServicesController_quotes"]),
+"ViewingAvailabilityController_block":call(operations["ViewingAvailabilityController_block"]),
+"ViewingAvailabilityController_cancelBlock":call(operations["ViewingAvailabilityController_cancelBlock"]),
+"ViewingAvailabilityController_listings":call(operations["ViewingAvailabilityController_listings"]),
+"ViewingAvailabilityController_read":call(operations["ViewingAvailabilityController_read"]),
+"ViewingAvailabilityController_save":call(operations["ViewingAvailabilityController_save"]),
+"ViewingAvailabilityController_slots":call(operations["ViewingAvailabilityController_slots"])
 };
