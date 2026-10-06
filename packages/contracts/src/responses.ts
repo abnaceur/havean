@@ -1,3 +1,4 @@
+import {agencyInvitationRecord,agencyMemberRecord} from './agency-memberships';
 import {agentStatistics} from './agent-directory';
 import {ownedAgentProfile,ownedAgentCredential,credentialReviewRow,credentialBadge} from './agent-credentials';
 import {ownerListingRecord} from './owner-lifecycle';
@@ -42,6 +43,7 @@ const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nul
 const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});
 const draft=m.listings.pick({id:true,unit_id:true,organization_id:true,owner_id:true,agent_id:true,title:true,description:true,transaction:true,segment:true,currency:true,price:true,rent_period:true,furnishing:true,available_from:true,features:true,status:true,version:true,slug:true});
 export const responses={
+ AgencyMembershipsController_invitations:z.array(agencyInvitationRecord),AgencyMembershipsController_invite:agencyInvitationRecord,AgencyMembershipsController_own:z.array(agencyInvitationRecord),AgencyMembershipsController_decision:agencyInvitationRecord,AgencyMembershipsController_update:agencyMemberRecord,AgencyMembershipsController_history:z.array(z.object({id:uuid,membership_id:uuid,target_user_id:uuid,actor_id:uuid.nullable(),role:s,status:s,previous_role:s.nullable(),previous_status:s.nullable(),version:n.int().positive(),reason:s,created_at:s})),
  AgentCredentialsController_read:z.array(ownedAgentProfile),AgentCredentialsController_create:ownedAgentProfile,AgentCredentialsController_update:ownedAgentProfile,AgentCredentialsController_credentials:z.array(ownedAgentCredential),AgentCredentialsController_submit:ownedAgentCredential,AgentCredentialsController_queue:z.array(credentialReviewRow),AgentCredentialsController_review:ownedAgentCredential,
  DevelopmentReviewController_read:z.object({project:m.developments,review:m.development_publication}),DevelopmentReviewController_submit:z.object({project:m.developments,review:m.development_publication}),DevelopmentReviewController_decision:z.object({project:m.developments,review:m.development_publication}),DevelopmentReviewController_queue:z.array(m.developments.extend({review:m.development_publication})),DevelopmentReviewController_detail:z.object({project:m.developments,review:m.development_publication,types:z.array(m.floor_plans),phases:z.array(m.development_phases)}),DevelopmentReviewController_leads:z.array(m.leads.extend({type_name:s.nullable(),project_name:s})),
  DevelopmentPricingController_update:m.developments,
@@ -101,5 +103,5 @@ export const responses={
  ServicesController_quote:status,ServicesController_quotes:z.array(m.quotes),ServicesController_changeQuote:versioned,
  AdministrationController_cases:z.array(support),AdministrationController_support:status,AdministrationController_supportQueue:z.array(m.support_cases),AdministrationController_updateSupport:versioned,
  AdministrationController_audit:z.array(m.audit_events),AdministrationController_users:z.array(m.profiles.pick({id:true,display_name:true,email:true,state:true})),AdministrationController_suspend:m.profiles.pick({id:true,state:true}),
- AdministrationController_memberships:z.array(m.memberships.pick({id:true,user_id:true,role:true,status:true}).extend({display_name:s})),AdministrationController_dashboard:z.object({listings:n,leads:n,leases:n,maintenance:n,asOf:s,definition:s})
+ AdministrationController_memberships:z.array(agencyMemberRecord),AdministrationController_dashboard:z.object({listings:n,leads:n,leases:n,maintenance:n,asOf:s,definition:s})
 } as const;

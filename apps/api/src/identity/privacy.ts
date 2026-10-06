@@ -14,6 +14,8 @@ export const accountRetention={version:1 as const,exportRecordLimit:2000,classes
 const datasets:Record<string,string>={
  agentProfiles:'SELECT id,name,slug,biography,languages,districts,city,public_email,version FROM agents WHERE user_id=$1 ORDER BY id',
  agentCredentials:'SELECT c.id,c.agent_id,c.city,c.holder_name,c.registration_reference,c.issuer,c.expires_on,c.document_id,c.status,c.version,c.created_at,c.reviewed_at FROM agent_credentials c JOIN agents a ON a.id=c.agent_id WHERE a.user_id=$1 ORDER BY c.id',
+ agencyInvitations:'SELECT id,organization_id,role,status,version,expires_at,created_at FROM agency_invitations WHERE email=(SELECT lower(email) FROM profiles WHERE id=$1 AND email_verified=true) ORDER BY id',
+ agencyMembershipHistory:'SELECT id,membership_id,organization_id,role,status,previous_role,previous_status,version,created_at FROM agency_membership_history WHERE target_user_id=$1 ORDER BY id',
  memberships:'SELECT id,organization_id,role,status FROM memberships WHERE user_id=$1 ORDER BY id',
  ownerProgress:'SELECT p.id,p.submission_id,p.version,p.kind,p.agent_name,p.created_at FROM owner_submission_progress p JOIN owner_submissions s ON s.id=p.submission_id WHERE s.user_id=$1 ORDER BY p.created_at,p.id',
  ownerSubmissions:`SELECT id,status,listing_id,organization_id,assigned_agent_id,version,wizard_step,asking_price::text,currency,rent_period,created_at,(SELECT coalesce(jsonb_object_agg(key,value),'{}'::jsonb) FROM jsonb_each(data) WHERE key IN('title','transaction','districtId','communityId','area','beds','livingRooms','price','description','contact','contactAudience','city','currency','rentPeriod','consent','photos','documents','documentTypes')) data FROM owner_submissions WHERE user_id=$1 ORDER BY id`,

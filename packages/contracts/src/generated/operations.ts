@@ -15,6 +15,7 @@ import {deletionRequest} from '../account-privacy';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
 import {draftCreate,draftUpdate} from '../inventory-drafts';
+import {agencyInvite,agencyInviteDecision,agencyMembershipUpdate} from '../agency-memberships';
 import {agentDirectoryFilters} from '../agent-directory';
 import {agentProfileCreate,agentProfileUpdate,agentCredentialSubmit,agentCredentialReview,agentCredentialFilters} from '../agent-credentials';
 import {ownerPriceChange,ownerLifecycleAction} from '../owner-lifecycle';
@@ -35,6 +36,12 @@ export const operations={
 "AdministrationController_suspend":{method:"POST",path:"/api/v1/ops/users/:id/suspend",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_suspend"]},
 "AdministrationController_updateSupport":{method:"PATCH",path:"/api/v1/ops/support-cases/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.enum(['triaged','escalated','resolved']),publicReply:z.string().min(5).max(2000),internalNote:z.string().max(2000).optional(),version:z.number().int()}),response:responses["AdministrationController_updateSupport"]},
 "AdministrationController_users":{method:"GET",path:"/api/v1/ops/users",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_users"]},
+"AgencyMembershipsController_decision":{method:"PATCH",path:"/api/v1/agency-invitations/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:agencyInviteDecision,response:responses["AgencyMembershipsController_decision"]},
+"AgencyMembershipsController_history":{method:"GET",path:"/api/v1/ops/membership-history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AgencyMembershipsController_history"]},
+"AgencyMembershipsController_invitations":{method:"GET",path:"/api/v1/ops/agency-invitations",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AgencyMembershipsController_invitations"]},
+"AgencyMembershipsController_invite":{method:"POST",path:"/api/v1/ops/agency-invitations",params:z.object({}),query:z.object({}),body:agencyInvite,response:responses["AgencyMembershipsController_invite"]},
+"AgencyMembershipsController_own":{method:"GET",path:"/api/v1/me/agency-invitations",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AgencyMembershipsController_own"]},
+"AgencyMembershipsController_update":{method:"PATCH",path:"/api/v1/ops/memberships/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:agencyMembershipUpdate,response:responses["AgencyMembershipsController_update"]},
 "AgentCredentialsController_create":{method:"POST",path:"/api/v1/me/agent-profiles",params:z.object({}),query:z.object({}),body:agentProfileCreate,response:responses["AgentCredentialsController_create"]},
 "AgentCredentialsController_credentials":{method:"GET",path:"/api/v1/me/agent-profiles/:id/credentials",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AgentCredentialsController_credentials"]},
 "AgentCredentialsController_queue":{method:"GET",path:"/api/v1/ops/agent-credentials",params:z.object({}),query:agentCredentialFilters,body:z.undefined(),response:responses["AgentCredentialsController_queue"]},

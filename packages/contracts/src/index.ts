@@ -47,3 +47,5 @@ export * from './owner-lifecycle';
 export * from './agent-credentials';
 
 export * from './agent-directory';
+
+export * from './agency-memberships';
