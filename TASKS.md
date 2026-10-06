@@ -96,8 +96,8 @@
 - [x] **P06 Generate recurring charges** — done; dependencies: P05, R04, O05, B05, F12
 - [x] **P07 Record payment evidence** — done; dependencies: P06, R04, O05, B05, F12
 - [x] **P08 Allocate payments and credit balances** — done; dependencies: P07, R04, O05, B05, F12
-- [ ] **P09 Reverse charges and payments** — in_progress; dependencies: P08, R04, O05, B05, F12
-- [ ] **P10 Track deposits separately** — todo; dependencies: P09, R04, O05, B05, F12
+- [x] **P09 Reverse charges and payments** — done; dependencies: P08, R04, O05, B05, F12
+- [ ] **P10 Track deposits separately** — in_progress; dependencies: P09, R04, O05, B05, F12
 - [ ] **P11 Build tenant lease and balance portal** — todo; dependencies: P10, R04, O05, B05, F12
 - [ ] **P12 Create maintenance requests** — todo; dependencies: P11, R04, O05, B05, F12
 - [ ] **P13 Build maintenance workbench and timeline** — todo; dependencies: P12, R04, O05, B05, F12

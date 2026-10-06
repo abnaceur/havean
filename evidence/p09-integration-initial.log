@@ -1,0 +1,138 @@
+ Container haven-p02-api-run-3efc35aa35b6 Creating
+ Container haven-p02-api-run-3efc35aa35b6 Created
+
+ RUN  v5.0.3 /workspace
+
+ ❯ tests/integration/financial-reversals.test.ts (5 tests | 1 failed) 120194ms
+   × P09 payment reversal preserves original, restores balance and retains one attributed undo across receipt and fresh retries 27844ms
+   ✓ P09 charge reversal preserves original and restores payment credit without reversing a reversal 29150ms
+   ✓ P09 simultaneous payment reversals and an allocation settle once under the shared finance lock 24210ms
+   ✓ P09 stale versions, confirmation, foreign actual finance and revoked grants deny reversal or receipt without evidence 15265ms
+   ✓ P09 SQL requires exact linked evidence and commit-time allocation undo atomically 23652ms
+ ✓ tests/integration/payment-allocations.test.ts (7 tests) 165888ms
+   ✓ P08 partial allocation leaves exact outstanding and credit, matching receipt creates one root, and settlement retains overpayment 40128ms
+   ✓ P08 concurrent allocations respect payment 100.10 and charge 200.20 caps 22922ms
+   ✓ P08 concurrent allocations respect payment 200.20 and charge 100.10 caps 24824ms
+   ✓ P08 cross-lease, currency, stale versions, confirmation and over-allocation deny without changing balances 25972ms
+   ✓ P08 PostgreSQL independently serializes direct allocations and prevents immutable amount edits 16902ms
+   ✓ P08 actual finance-only staff can allocate, manager-only and guessed foreign staff cannot, and revoked grants deny receipts 11699ms
+   ✓ P08 allocation and existing linked reversal share lock order and retained undo versions 23339ms
+ ❯ tests/integration/payment-evidence.test.ts (5 tests | 1 failed) 43182ms
+   × P07 native draft stays out of balances and tenant reads; posting exact evidence retains history and audit once 4375ms
+   ✓ P07 edits only current drafts, retains original amount snapshots and denies posted amount changes at API and database 16363ms
+   ✓ P07 negative/float/scientific money, foreign currency and stale authority deny creation with no payment roots 2728ms
+   ✓ P07 posting requires current saved versions and confirmation, concurrent attempts create one post, and revoked grants deny receipts 12262ms
+   ✓ P07 drafts cannot be allocated or reversed before posting and actual manager-only authority cannot record payments 7379ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/financial-reversals.test.ts > P09 payment reversal preserves original, restores balance and retains one attributed undo across receipt and fresh retries
+AssertionError: promise resolved "Result{ command: 'UPDATE', …(9) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ Result {
++   "RowCtor": null,
++   "_parsers": undefined,
++   "_prebuiltEmptyResultObject": null,
++   "_types": TypeOverrides {
++     "_types": {
++       "arrayParser": {
++         "create": [Function create],
++       },
++       "builtins": {
++         "ABSTIME": 702,
++         "ACLITEM": 1033,
++         "BIT": 1560,
++         "BOOL": 16,
++         "BPCHAR": 1042,
++         "BYTEA": 17,
++         "CHAR": 18,
++         "CID": 29,
++         "CIDR": 650,
++         "CIRCLE": 718,
++         "DATE": 1082,
++         "FLOAT4": 700,
++         "FLOAT8": 701,
++         "GTSVECTOR": 3642,
++         "INET": 869,
++         "INT2": 21,
++         "INT4": 23,
++         "INT8": 20,
++         "INTERVAL": 1186,
++         "JSON": 114,
++         "JSONB": 3802,
++         "MACADDR": 829,
++         "MACADDR8": 774,
++         "MONEY": 790,
++         "NUMERIC": 1700,
++         "OID": 26,
++         "PATH": 602,
++         "PG_DEPENDENCIES": 3402,
++         "PG_LSN": 3220,
++         "PG_NDISTINCT": 3361,
++         "PG_NODE_TREE": 194,
++         "POLYGON": 604,
++         "REFCURSOR": 1790,
++         "REGCLASS": 2205,
++         "REGCONFIG": 3734,
++         "REGDICTIONARY": 3769,
++         "REGNAMESPACE": 4089,
++         "REGOPER": 2203,
++         "REGOPERATOR": 2204,
++         "REGPROC": 24,
++         "REGPROCEDURE": 2202,
++         "REGROLE": 4096,
++         "REGTYPE": 2206,
++         "RELTIME": 703,
++         "SMGR": 210,
++         "TEXT": 25,
++         "TID": 27,
++         "TIME": 1083,
++         "TIMESTAMP": 1114,
++         "TIMESTAMPTZ": 1184,
++         "TIMETZ": 1266,
++         "TINTERVAL": 704,
++         "TSQUERY": 3615,
++         "TSVECTOR": 3614,
++         "TXID_SNAPSHOT": 2970,
++         "UUID": 2950,
++         "VARBIT": 1562,
++         "VARCHAR": 1043,
++         "XID": 28,
++         "XML": 142,
++       },
++       "getTypeParser": [Function getTypeParser],
++       "setTypeParser": [Function setTypeParser],
++     },
++     "binary": {},
++     "text": {},
++   },
++   "command": "UPDATE",
++   "fields": [],
++   "oid": null,
++   "rowAsArray": false,
++   "rowCount": 0,
++   "rows": [],
+  }
+
+ ❯ tests/integration/financial-reversals.test.ts:30:2095
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/integration/payment-evidence.test.ts > P07 native draft stays out of balances and tenant reads; posting exact evidence retains history and audit once
+ReferenceError: ManagementController is not defined
+ ❯ tests/integration/payment-evidence.test.ts:24:550
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  2 failed | 15 passed (17)
+   Start at  10:39:09
+   Duration  335.58s (tests 98%, import 1%)

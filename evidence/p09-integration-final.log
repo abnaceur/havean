@@ -1,0 +1,22 @@
+ Container haven-p02-api-run-a55731259bd6 Creating
+ Container haven-p02-api-run-a55731259bd6 Created
+
+ RUN  v5.0.3 /workspace
+
+ ✓ tests/integration/financial-reversals.test.ts (5 tests) 105524ms
+   ✓ P09 payment reversal preserves original, restores balance and retains one attributed undo across receipt and fresh retries 27074ms
+   ✓ P09 charge reversal preserves original and restores payment credit without reversing a reversal 21227ms
+   ✓ P09 simultaneous payment reversals and an allocation settle once under the shared finance lock 22213ms
+   ✓ P09 stale versions, confirmation, foreign actual finance and revoked grants deny reversal or receipt without evidence 15479ms
+   ✓ P09 SQL requires exact linked evidence and commit-time allocation undo atomically 19446ms
+ ✓ tests/integration/payment-evidence.test.ts (5 tests) 52473ms
+   ✓ P07 native draft stays out of balances and tenant reads; posting exact evidence retains history and audit once 10809ms
+   ✓ P07 edits only current drafts, retains original amount snapshots and denies posted amount changes at API and database 15822ms
+   ✓ P07 negative/float/scientific money, foreign currency and stale authority deny creation with no payment roots 3015ms
+   ✓ P07 posting requires current saved versions and confirmation, concurrent attempts create one post, and revoked grants deny receipts 13863ms
+   ✓ P07 drafts cannot be allocated or reversed before posting and actual manager-only authority cannot record payments 8864ms
+
+ Test Files  2 passed (2)
+      Tests  10 passed (10)
+   Start at  10:47:15
+   Duration  162.91s (tests 97%, import 2%, transform 1%)
