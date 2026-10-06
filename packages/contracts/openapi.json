@@ -22716,7 +22716,18 @@
         "tags": [
           "Discovery"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "bj",
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,50}$"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Successful response",
@@ -22765,6 +22776,7 @@
                           "maximum": 9007199254740991
                         },
                         "schedule": {
+                          "maxItems": 480,
                           "type": "array",
                           "items": {
                             "type": "object",
@@ -22804,6 +22816,24 @@
                         },
                         "assumptions": {
                           "type": "string"
+                        },
+                        "city": {
+                          "type": "string"
+                        },
+                        "currency": {
+                          "type": "string",
+                          "pattern": "^[A-Z]{3}$"
+                        },
+                        "marketVersion": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "estimateNotes": {
+                          "type": "string",
+                          "minLength": 10,
+                          "maxLength": 1000
                         }
                       },
                       "required": [
@@ -22816,7 +22846,11 @@
                         "annualRate",
                         "months",
                         "schedule",
-                        "assumptions"
+                        "assumptions",
+                        "city",
+                        "currency",
+                        "marketVersion",
+                        "estimateNotes"
                       ],
                       "additionalProperties": false
                     },
@@ -26015,6 +26049,10 @@
                               "type": "string",
                               "pattern": "^-?\\d+(\\.\\d+)?$"
                             },
+                            "mortgageEstimateNotes": {
+                              "default": "Planning estimate only. Taxes and lender fees are excluded. Contact a lender for actual terms.",
+                              "type": "string"
+                            },
                             "rentPeriod": {
                               "type": "string"
                             },
@@ -26078,6 +26116,7 @@
                             "timezone",
                             "areaUnit",
                             "annualRate",
+                            "mortgageEstimateNotes",
                             "rentPeriod",
                             "supportEmail",
                             "demo",
@@ -39265,6 +39304,10 @@
                               "type": "string",
                               "pattern": "^-?\\d+(\\.\\d+)?$"
                             },
+                            "mortgageEstimateNotes": {
+                              "default": "Planning estimate only. Taxes and lender fees are excluded. Contact a lender for actual terms.",
+                              "type": "string"
+                            },
                             "rentPeriod": {
                               "type": "string"
                             },
@@ -39328,6 +39371,7 @@
                             "timezone",
                             "areaUnit",
                             "annualRate",
+                            "mortgageEstimateNotes",
                             "rentPeriod",
                             "supportEmail",
                             "demo",
@@ -39532,6 +39576,11 @@
                     "type": "string",
                     "format": "email",
                     "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                  },
+                  "mortgageEstimateNotes": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 1000
                   },
                   "demo": {
                     "type": "boolean"

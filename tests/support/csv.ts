@@ -1,0 +1,3 @@
+// Small independent RFC 4180 reader for downloaded acceptance artifacts.
+export function readCsv(source:string){const text=source.replace(/^\uFEFF/,''),rows:string[][]=[];let row:string[]=[],cell='',quoted=false;for(let i=0;i<text.length;i++){const ch=text[i];if(ch==='"'){if(quoted&&text[i+1]==='"'){cell+='"';i++;}else quoted=!quoted;}else if(ch===','&&!quoted){row.push(cell);cell='';}else if((ch==='\r'||ch==='\n')&&!quoted){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(cell);rows.push(row);row=[];cell='';}else cell+=ch;}if(quoted)throw new Error('Unclosed CSV field');if(row.length||cell){row.push(cell);rows.push(row);}return rows;}
+export const csvCents=(value:string)=>BigInt(value.replace('.',''));

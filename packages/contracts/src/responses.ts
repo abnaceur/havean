@@ -1,4 +1,4 @@
-import {mortgageResult} from './mortgage';
+import {mortgageResult,defaultMortgageEstimateNotes} from './mortgage';
 import {quoteRecord} from './quotes';
 import {ownedProvider,providerReviewRow,publicProvider} from './providers';
 import {chatMessage,readCursor,conversationSummary} from './chat';
@@ -48,7 +48,7 @@ const mediaMetadata=propertyMediaMetadata;
 const studioMedia=m.listing_media.extend({metadata:mediaMetadata,pending_metadata:mediaMetadata.nullable(),purpose:s,width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),rights:s,scan_at:s.nullable()});
 const publicMedia=z.object({id:uuid,kind:z.enum(['photo','floor_plan','panorama','video']),title:s,position:n,floorPlanId:uuid.nullable(),url:s,poster:s.nullable(),width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),caption:s,spatial:floorLayout.safeExtend({rooms:z.array(floorLayout.shape.rooms.element)}).nullable(),hotspots:mediaMetadata.shape.hotspots});
 const geographyRecord=z.union([m.transit_stations,m.communities.extend({latitude:n.nullable(),longitude:n.nullable()}),m.buildings,m.neighborhoods,m.cities,m.districts,m.transit_lines]);
-const market=z.object({name:s,currency:s,timezone:s,areaUnit:s,annualRate:decimal,rentPeriod:s,supportEmail:s,demo:bool,pricePresets:z.array(pricePreset).default([]),requiredOwnerEvidenceTypes:z.array(z.enum(['ownership','authorization'])).default(['ownership'])});
+const market=z.object({name:s,currency:s,timezone:s,areaUnit:s,annualRate:decimal,mortgageEstimateNotes:z.string().default(defaultMortgageEstimateNotes),rentPeriod:s,supportEmail:s,demo:bool,pricePresets:z.array(pricePreset).default([]),requiredOwnerEvidenceTypes:z.array(z.enum(['ownership','authorization'])).default(['ownership'])});
 const support=m.support_cases.omit({user_id:true,internal_note:true});
 const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nullable(),currency:s});
 const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});

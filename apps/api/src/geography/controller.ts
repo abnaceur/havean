@@ -14,6 +14,7 @@ import {rankedListings} from './rankings.js';
 import {rankingFilters} from '@haven/contracts';
 import {searchListings,mapListings} from './search.js';
 import {mortgage} from './mortgage-engine.js';
+import {defaultMortgageEstimateNotes} from '@haven/contracts/mortgage';
 import {pool,data,fail,transaction,env} from '../platform/core.js';
 @Controller('api/v1')
 export class DiscoveryController{
@@ -42,5 +43,5 @@ export class DiscoveryController{
  @Get('developments/:id') async development(@Param('id') id:string,@Query('city') selected?:string){const r=await pool.query(`SELECT de.id,de.version,de.community_id,de.slug,de.name,de.description,de.status,de.price_min,de.price_max,de.currency,de.price_basis,de.completion_date,de.photos,de.features,de.inventory_at,round(ST_Y(co.location::geometry)::numeric,3)::float8 AS latitude,round(ST_X(co.location::geometry)::numeric,3)::float8 AS longitude,co.name AS community,d.name AS district,COALESCE((public_curated_boost('development',de.id)->>'sponsored')::boolean,false) AS sponsored,public_curated_boost('development',de.id)->>'label' AS "curationLabel" FROM developments de JOIN communities co ON co.id=de.community_id JOIN districts d ON d.id=co.district_id WHERE (de.id::text=$1 OR de.slug=$1) AND de.status IN ($2,$3,$4) AND ($5::text IS NULL OR d.city_id=(SELECT id FROM cities WHERE slug=$5))`,[id,'on_sale','coming_soon','sold_out',selected||null]);if(!r.rowCount)fail(404,'Development not found');const plans=(await pool.query("SELECT * FROM floor_plans WHERE development_id=$1 AND publication_status='published' ORDER BY name,id",[r.rows[0].id])).rows;const phases=(await pool.query("SELECT id,name,status FROM development_phases WHERE development_id=$1 AND status IN ('coming_soon','on_sale','sold_out') ORDER BY name,id",[r.rows[0].id])).rows;return data({...r.rows[0],floorPlans:plans,phases});}
  @Get('renovation/providers') async providers(@Query() input:unknown){const x=providerFilters.parse(input);return publicProviders(x);}
  @Get('renovation/providers/:id') async provider(@Param('id') id:string,@Query('city') selected?:string){return publicProvider(id,selected);}
- @Post('tools/mortgage-estimate') estimate(@Body() input:unknown){return data(mortgage(input));}
+ @Post('tools/mortgage-estimate') async estimate(@Body() input:unknown,@Query('city') selected='bj'){const calculated=mortgage(input);const market=(await pool.query("SELECT c.slug,c.currency,m.version,m.data FROM cities c JOIN market_config m ON m.id=c.slug WHERE c.slug=$1 AND c.status='active'",[z.string().regex(/^[a-z0-9-]{1,50}$/).parse(selected)])).rows[0];if(!market)fail(404,'Active market settings are not available');return data({...calculated,city:market.slug,currency:market.currency,marketVersion:market.version,estimateNotes:market.data.mortgageEstimateNotes||defaultMortgageEstimateNotes});}
 }

@@ -22,3 +22,19 @@ rounding); unit reconciliation uses integer cents. Zero rate repays 1000 each mo
 for both methods. Tiny and large long-term loans reconcile without negative rows
 or an increasing balance. Invalid amount types, zero principal/term, negative or
 nonfinite rate, excessive amounts and unknown fields are rejected.
+
+## Market notes and export snapshot
+
+The estimate API resolves the selected active city and public market configuration
+in one query, returning actual currency, configuration version and configured
+planning notes alongside its calculation. SQL 105 and seed defaults record proposed
+English fee-exclusion copy; administrators can edit that note with the existing
+versioned city settings flow. Omitting the new optional setting preserves it.
+
+CSV formatting uses the frozen typed API result, not a recalculation. The file
+includes first/final payment, totals, currency, method/rate/term, assumptions,
+market notes/version and every schedule row. The consumer view shows the planning
+notes; configuration version remains export provenance. An optional title is
+length bounded, quoted and formula-neutralized, including whitespace prefixes.
+UTF-8 BOM preserves Unicode interoperability. No account identity/contact fields
+are included by default. This formatter makes no financial decisions.

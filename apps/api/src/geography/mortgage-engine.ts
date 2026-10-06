@@ -1,11 +1,11 @@
 import Decimal from 'decimal.js';
-import {mortgageSchema,type MortgageResult} from '@haven/contracts/mortgage';
+import {mortgageSchema,type MortgageCalculation} from '@haven/contracts/mortgage';
 // Local precision/rounding avoids changing arithmetic in unrelated API modules.
 const D=Decimal.clone({precision:60,rounding:Decimal.ROUND_HALF_UP});
-export function mortgage(input:unknown):MortgageResult{
+export function mortgage(input:unknown):MortgageCalculation{
  const x=mortgageSchema.parse(input),principal=new D(x.price).minus(x.downPayment),rate=new D(x.annualRate).div(1200),months=x.years*12;
  const payment=(rate.isZero()?principal.div(months):principal.mul(rate).div(new D(1).minus(new D(1).plus(rate).pow(-months)))).toDecimalPlaces(2),principalStep=principal.div(months).toDecimalPlaces(2);
- let balance=principal,totalInterest=new D(0);const schedule:MortgageResult['schedule']=[];
+ let balance=principal,totalInterest=new D(0);const schedule:MortgageCalculation['schedule']=[];
  for(let month=1;month<=months;month++){
   const interest=balance.mul(rate).toDecimalPlaces(2),repaid=month===months?balance:D.min(balance,D.max(0,x.method==='equal_principal'?principalStep:payment.minus(interest)));
   balance=balance.minus(repaid);totalInterest=totalInterest.plus(interest);
