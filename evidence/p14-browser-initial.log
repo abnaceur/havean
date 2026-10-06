@@ -1,0 +1,76 @@
+ Container haven-p09-runtime-tests-run-6fe134b88e74 Creating
+ Container haven-p09-runtime-tests-run-6fe134b88e74 Created
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/statements.spec.ts:9:1 › P14 native owner and tenant period statements export actual reconciled ledger sources (34.6s)
+  ✘  2 [mobile] › tests/e2e/statements.spec.ts:9:1 › P14 native owner and tenant period statements export actual reconciled ledger sources (54.5s)
+
+
+  1) [desktop] › tests/e2e/statements.spec.ts:9:1 › P14 native owner and tenant period statements export actual reconciled ledger sources
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      12 |  await login(page,'manager',OPS,'/ops/management');const options=(await (await page.request.get(OPS+'/api/v1/ops/lease-draft-options/'+unit)).json()).data,create=await page.request.post(OPS+'/api/v1/ops/leases',{headers:{Origin:OPS,'Idempotency-Key':crypto.randomUUID()},data:{version:0,unitId:unit,tenantId,unitVersion:options.unitVersion,grantVersion:options.grantVersion,tenantVersion:options.tenants.find((t:any)=>t.id===tenantId).version,startDate:'2026-01-01',endDate:'2028-12-31',rent:'1234.56',currency:'CNY',rentPeriod:'month',dueDay:5,documents:[]}});expect(create.ok()).toBe(true);const lease=(await create.json()).data;const headers={Origin:OPS,'Idempotency-Key':crypto.randomUUID()},activation=await page.request.post(OPS+'/api/v1/ops/leases/'+lease.id+'/activate',{headers,data:{version:lease.version,unitVersion:lease.unitVersion,grantVersion:lease.grantVersion,tenantVersion:lease.tenantVersion,confirm:true}});expect(activation.ok()).toBe(true);
+      13 |  const charge=(await fixtures.query("INSERT INTO charges(lease_id,organization_id,period,due_date,amount,currency) VALUES($1,'10000000-0000-4000-8000-000000000002','2026-10-01','2026-10-05','200.20','CNY') RETURNING id,version",[lease.id])).rows[0];
+    > 14 |  const source=(await (await page.request.get(OPS+'/api/v1/ops/payment-evidence-options/'+lease.id)).json()).data,sentinel='P14 PRIVATE FINANCE SOURCE '+crypto.randomUUID(),draft=await page.request.post(OPS+'/api/v1/ops/payment-records',{headers,data:{...source,version:0,amount:'250.25',source:'bank_statement',reference:sentinel}});expect(draft.ok()).toBe(true);const payment=(await draft.json()).data,posting=await page.request.post(OPS+'/api/v1/ops/payment-records/'+payment.id+'/post',{headers:{Origin:OPS,'Idempotency-Key':crypto.randomUUID()},data:{version:payment.version,leaseVersion:payment.leaseVersion,unitVersion:payment.unitVersion,grantVersion:payment.grantVersion,confirm:true}});expect(posting.ok()).toBe(true);const posted=(await posting.json()).data;
+         |                                                                                                                                                                                                                                                                                                                                                                 ^
+      15 |  const ledger=(await (await page.request.get(OPS+'/api/v1/ops/leases/'+lease.id+'/allocation-ledger')).json()).data,allocation=await page.request.post(OPS+'/api/v1/ops/allocations',{headers:{Origin:OPS,'Idempotency-Key':crypto.randomUUID()},data:{version:0,leaseId:lease.id,leaseVersion:ledger.leaseVersion,unitVersion:ledger.unitVersion,grantVersion:ledger.grantVersion,paymentId:posted.id,paymentVersion:posted.version,chargeId:charge.id,chargeVersion:charge.version,amount:'50.05',currency:'CNY',confirm:true}});expect(allocation.ok()).toBe(true);
+      16 |  const liability=(await (await page.request.get(OPS+'/api/v1/ops/leases/'+lease.id+'/deposit-ledger')).json()).data,deposited=await page.request.post(OPS+'/api/v1/ops/deposits',{headers:{Origin:OPS,'Idempotency-Key':crypto.randomUUID()},data:{version:0,leaseId:lease.id,leaseVersion:liability.leaseVersion,unitVersion:liability.unitVersion,grantVersion:liability.grantVersion,liabilityVersion:liability.liabilityVersion,kind:'received',direction:'increase',amount:'100.10',currency:'CNY',reason:sentinel,confirm:true}});expect(deposited.ok()).toBe(true);
+      17 |  await login(page,'owner',WEB,'/account/statements?lease='+lease.id);const report=page.getByRole('region',{name:'Recorded lease statement',exact:true});await expect(report.getByRole('heading',{name:/CNY/})).toBeVisible();const balance=report.getByRole('region',{name:'Statement balances',exact:true});await expect(balance.getByRole('row',{name:'Outstanding balance 0.00 150.15 150.15',exact:true})).toBeVisible();await expect(balance.getByRole('row',{name:'Deposit liability 0.00 100.10 100.10',exact:true})).toBeVisible();await expect(report).not.toContainText(sentinel);
+        at /workspace/tests/e2e/statements.spec.ts:14:353
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/statements-native/statements-P14-native-owne-6cd17-l-reconciled-ledger-sources-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/statements-native/statements-P14-native-owne-6cd17-l-reconciled-ledger-sources-desktop/error-context.md
+
+    Error Context: ../artifacts/statements-native/statements-P14-native-owne-6cd17-l-reconciled-ledger-sources-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/statements-native/statements-P14-native-owne-6cd17-l-reconciled-ledger-sources-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/statements-native/statements-P14-native-owne-6cd17-l-reconciled-ledger-sources-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/statements.spec.ts:9:1 › P14 native owner and tenant period statements export actual reconciled ledger sources
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      12 |  await login(page,'manager',OPS,'/ops/management');const options=(await (await page.request.get(OPS+'/api/v1/ops/lease-draft-options/'+unit)).json()).data,create=await page.request.post(OPS+'/api/v1/ops/leases',{headers:{Origin:OPS,'Idempotency-Key':crypto.randomUUID()},data:{version:0,unitId:unit,tenantId,unitVersion:options.unitVersion,grantVersion:options.grantVersion,tenantVersion:options.tenants.find((t:any)=>t.id===tenantId).version,startDate:'2026-01-01',endDate:'2028-12-31',rent:'1234.56',currency:'CNY',rentPeriod:'month',dueDay:5,documents:[]}});expect(create.ok()).toBe(true);const lease=(await create.json()).data;const headers={Origin:OPS,'Idempotency-Key':crypto.randomUUID()},activation=await page.request.post(OPS+'/api/v1/ops/leases/'+lease.id+'/activate',{headers,data:{version:lease.version,unitVersion:lease.unitVersion,grantVersion:lease.grantVersion,tenantVersion:lease.tenantVersion,confirm:true}});expect(activation.ok()).toBe(true);
+      13 |  const charge=(await fixtures.query("INSERT INTO charges(lease_id,organization_id,period,due_date,amount,currency) VALUES($1,'10000000-0000-4000-8000-000000000002','2026-10-01','2026-10-05','200.20','CNY') RETURNING id,version",[lease.id])).rows[0];
+    > 14 |  const source=(await (await page.request.get(OPS+'/api/v1/ops/payment-evidence-options/'+lease.id)).json()).data,sentinel='P14 PRIVATE FINANCE SOURCE '+crypto.randomUUID(),draft=await page.request.post(OPS+'/api/v1/ops/payment-records',{headers,data:{...source,version:0,amount:'250.25',source:'bank_statement',reference:sentinel}});expect(draft.ok()).toBe(true);const payment=(await draft.json()).data,posting=await page.request.post(OPS+'/api/v1/ops/payment-records/'+payment.id+'/post',{headers:{Origin:OPS,'Idempotency-Key':crypto.randomUUID()},data:{version:payment.version,leaseVersion:payment.leaseVersion,unitVersion:payment.unitVersion,grantVersion:payment.grantVersion,confirm:true}});expect(posting.ok()).toBe(true);const posted=(await posting.json()).data;
+         |                                                                                                                                                                                                                                                                                                                                                                 ^
+      15 |  const ledger=(await (await page.request.get(OPS+'/api/v1/ops/leases/'+lease.id+'/allocation-ledger')).json()).data,allocation=await page.request.post(OPS+'/api/v1/ops/allocations',{headers:{Origin:OPS,'Idempotency-Key':crypto.randomUUID()},data:{version:0,leaseId:lease.id,leaseVersion:ledger.leaseVersion,unitVersion:ledger.unitVersion,grantVersion:ledger.grantVersion,paymentId:posted.id,paymentVersion:posted.version,chargeId:charge.id,chargeVersion:charge.version,amount:'50.05',currency:'CNY',confirm:true}});expect(allocation.ok()).toBe(true);
+      16 |  const liability=(await (await page.request.get(OPS+'/api/v1/ops/leases/'+lease.id+'/deposit-ledger')).json()).data,deposited=await page.request.post(OPS+'/api/v1/ops/deposits',{headers:{Origin:OPS,'Idempotency-Key':crypto.randomUUID()},data:{version:0,leaseId:lease.id,leaseVersion:liability.leaseVersion,unitVersion:liability.unitVersion,grantVersion:liability.grantVersion,liabilityVersion:liability.liabilityVersion,kind:'received',direction:'increase',amount:'100.10',currency:'CNY',reason:sentinel,confirm:true}});expect(deposited.ok()).toBe(true);
+      17 |  await login(page,'owner',WEB,'/account/statements?lease='+lease.id);const report=page.getByRole('region',{name:'Recorded lease statement',exact:true});await expect(report.getByRole('heading',{name:/CNY/})).toBeVisible();const balance=report.getByRole('region',{name:'Statement balances',exact:true});await expect(balance.getByRole('row',{name:'Outstanding balance 0.00 150.15 150.15',exact:true})).toBeVisible();await expect(balance.getByRole('row',{name:'Deposit liability 0.00 100.10 100.10',exact:true})).toBeVisible();await expect(report).not.toContainText(sentinel);
+        at /workspace/tests/e2e/statements.spec.ts:14:353
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/statements-native/statements-P14-native-owne-6cd17-l-reconciled-ledger-sources-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/statements-native/statements-P14-native-owne-6cd17-l-reconciled-ledger-sources-mobile/error-context.md
+
+    Error Context: ../artifacts/statements-native/statements-P14-native-owne-6cd17-l-reconciled-ledger-sources-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/statements-native/statements-P14-native-owne-6cd17-l-reconciled-ledger-sources-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/statements-native/statements-P14-native-owne-6cd17-l-reconciled-ledger-sources-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/statements.spec.ts:9:1 › P14 native owner and tenant period statements export actual reconciled ledger sources
+    [mobile] › tests/e2e/statements.spec.ts:9:1 › P14 native owner and tenant period statements export actual reconciled ledger sources
