@@ -1,0 +1,9 @@
+# Private owner evidence policy
+
+Inventory owns the owner submission and attachment workflow. Geography owns the market configuration, including `requiredOwnerEvidenceTypes` (ownership/authorization, either or neither). Admins edit the policy through versioned market settings; submission and approval recheck it. Approved property photography remains required. Categories are owner declarations, never legal verification. Migration 067 labels historical private attachments by their existing ownership-upload purpose, without assigning verification or changing a decision.
+
+Attachments require an authenticated owner, editable draft/submitted root, matching root version, approved owned photo or private PDF, bounded attachment count and idempotency key. The server writes media identifiers/category metadata; autosaved fields cannot overwrite them. The consumer reads policy with loading/retry states and selects the document type before upload. Private documents stay in quarantine storage; existing content validation checks PDF signature/end marker, excludes encrypted/active content and scans for malware. No extra PDF structural decoder is claimed.
+
+Only the owner or an independently authorized current reviewer can read evidence. Reviewer grants are temporary and tied to a submitted request; completed decisions revoke access. Signed download links last 60 seconds and bind the asset and actor. The download rechecks access and appends an audit event; responses are attachment/no-store. Signed tickets and private object keys are not public projection fields. Public property HTML uses published serializers only.
+
+O: original owner entry only. R: supplied O03 requirements and privacy architecture. P: configured document types, synthetic upload fixtures and local reviewer workflows. V: original private ownership workflow, actual legal rights and new screen approval. No production launch or original-site parity claim.

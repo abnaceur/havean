@@ -3,7 +3,7 @@ import type {FastifyRequest,FastifyReply} from 'fastify';
 import {z} from 'zod';
 import sharp from 'sharp';
 import {S3Client,CreateBucketCommand,PutObjectCommand,GetObjectCommand,HeadObjectCommand} from '@aws-sdk/client-s3';
-import {Identity,env,transaction,data,fail,encrypt,decrypt} from '../platform/core.js';
+import {Identity,env,transaction,data,fail,encrypt,decrypt,idempotent} from '../platform/core.js';
 import {event} from '@haven/database';
 import {canReadPrivateEvidence} from './moderation-evidence.js';
 import {scanFile} from './scanner.js';
@@ -68,5 +68,18 @@ export class MediaController{
  });}
  @Post('documents/:id/download-link') async downloadLink(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);return transaction(a,async c=>{const m=(await c.query("SELECT owner_id FROM media_assets WHERE id=$1 AND visibility='private' AND status='approved'",[id])).rows[0];if(!m||!(await canReadPrivateEvidence(c,a,id,m.owner_id)))fail(404,'Document not found');return data({url:'/api/v1/documents/'+id+'/download?signature='+encrypt({assetId:id,actorId:a.id,expires:Date.now()+60000}),expiresIn:60});});}
  @Get('documents/:id/download') async download(@Req() req:FastifyRequest,@Param('id') id:string,@Res() reply:FastifyReply){const a=await this.identity.actor(req);const ticket=(req.query as any).signature;if(ticket){let signature;try{signature=decrypt<{assetId:string;actorId:string;expires:number}>(ticket);}catch{fail(403,'Download link is invalid');}if(signature.assetId!==id||signature.actorId!==a.id||signature.expires<Date.now())fail(403,'Download link is invalid or expired');}return transaction(a,async c=>{const m=(await c.query("SELECT * FROM media_assets WHERE id=$1 AND visibility='private' AND status='approved'",[id])).rows[0];if(!m||!(await canReadPrivateEvidence(c,a,id,m.owner_id)))fail(404,'Document not found');const result=await s3.send(new GetObjectCommand({Bucket:bucket,Key:'quarantine/'+m.object_key}));await event(c,a,id,'document.downloaded');reply.header('Content-Type',m.mime);reply.header('Content-Disposition','attachment; filename="ownership-evidence.pdf"');reply.header('Cache-Control','no-store');return reply.send(Buffer.from(await result.Body!.transformToByteArray()));});}
- @Post('owner-submissions/:id/documents') async attach(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req);const x=z.object({mediaId:z.string().uuid()}).parse(body);return transaction(a,async c=>{const submission=(await c.query("SELECT * FROM owner_submissions WHERE id=$1 AND user_id=$2 AND status IN ('draft','submitted') FOR UPDATE",[id,a.id])).rows[0];if(!submission)fail(404,'Editable property request not found');const m=(await c.query("SELECT * FROM media_assets WHERE id=$1 AND owner_id=$2 AND status='approved'",[x.mediaId,a.id])).rows[0];if(!m)fail(404,'Approved owned upload not found');if(!['photo','document'].includes(m.purpose))fail(400,'Attach tours, videos and floor plans in the property media workspace');const field=m.visibility==='public'?'photos':'documents';const values=Array.from(new Set([...(submission.data[field]||[]),x.mediaId]));await c.query('UPDATE owner_submissions SET data=data||$2::jsonb,version=version+1 WHERE id=$1',[id,JSON.stringify({[field]:values})]);await event(c,a,id,'owner.media_attached');return data({attached:true});});}
+ @Post('owner-submissions/:id/documents') async attach(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){
+ const a=await this.identity.actor(req);const x=z.object({mediaId:z.string().uuid(),version:z.number().int().positive(),documentType:z.enum(['ownership','authorization']).optional()}).strict().parse(body);z.uuid().parse(id);
+ return transaction(a,c=>idempotent(c,a,req,x,async()=>{
+ const submission=(await c.query("SELECT * FROM owner_submissions WHERE id=$1 AND user_id=$2 AND status IN ('draft','submitted') FOR UPDATE",[id,a.id])).rows[0];
+ if(!submission)fail(404,'Editable property request not found');if(submission.version!==x.version)fail(409,'Property request changed; reload before attaching.');
+ const m=(await c.query("SELECT * FROM media_assets WHERE id=$1 AND owner_id=$2 AND status='approved'",[x.mediaId,a.id])).rows[0];
+ if(!m)fail(404,'Approved owned upload not found');
+ const photo=m.purpose==='photo'&&m.visibility==='public'&&['image/jpeg','image/png'].includes(m.mime),document=m.purpose==='document'&&m.visibility==='private'&&m.mime==='application/pdf';
+ if(!photo&&!document)fail(400,'Attach approved property photos or private PDF evidence.');if(photo&&x.documentType)fail(400,'Only private documents have an evidence type.');
+ const field=photo?'photos':'documents',values=Array.from(new Set([...(submission.data[field]||[]),x.mediaId]));if(values.length>10)fail(400,'Each property request allows up to ten photos and ten documents.');
+ const patch:any={[field]:values};if(document)patch.documentTypes={...(submission.data.documentTypes||{}),[x.mediaId]:x.documentType||'ownership'};
+ await c.query('UPDATE owner_submissions SET data=data||$2::jsonb,version=version+1 WHERE id=$1',[id,JSON.stringify(patch)]);await event(c,a,id,'owner.media_attached',{version:x.version+1,kind:document?patch.documentTypes[x.mediaId]:'photo'});return data({attached:true});
+ }));
+ }
 }

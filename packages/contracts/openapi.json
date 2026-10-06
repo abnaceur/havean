@@ -16857,6 +16857,19 @@
                                 ],
                                 "additionalProperties": false
                               }
+                            },
+                            "requiredOwnerEvidenceTypes": {
+                              "default": [
+                                "ownership"
+                              ],
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "ownership",
+                                  "authorization"
+                                ]
+                              }
                             }
                           },
                           "required": [
@@ -16868,7 +16881,8 @@
                             "rentPeriod",
                             "supportEmail",
                             "demo",
-                            "pricePresets"
+                            "pricePresets",
+                            "requiredOwnerEvidenceTypes"
                           ],
                           "additionalProperties": false
                         },
@@ -29709,6 +29723,19 @@
                                 ],
                                 "additionalProperties": false
                               }
+                            },
+                            "requiredOwnerEvidenceTypes": {
+                              "default": [
+                                "ownership"
+                              ],
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "ownership",
+                                  "authorization"
+                                ]
+                              }
                             }
                           },
                           "required": [
@@ -29720,7 +29747,8 @@
                             "rentPeriod",
                             "supportEmail",
                             "demo",
-                            "pricePresets"
+                            "pricePresets",
+                            "requiredOwnerEvidenceTypes"
                           ],
                           "additionalProperties": false
                         },
@@ -29955,6 +29983,20 @@
                       "required": [
                         "label",
                         "transaction"
+                      ]
+                    }
+                  },
+                  "requiredOwnerEvidenceTypes": {
+                    "default": [
+                      "ownership"
+                    ],
+                    "maxItems": 2,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "ownership",
+                        "authorization"
                       ]
                     }
                   }
@@ -33427,6 +33469,16 @@
                                 "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                               }
                             },
+                            "documentTypes": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "string",
+                                "enum": [
+                                  "ownership",
+                                  "authorization"
+                                ]
+                              }
+                            },
                             "reviewReason": {
                               "type": "string"
                             }
@@ -34287,6 +34339,16 @@
                                 "type": "string",
                                 "format": "uuid",
                                 "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              }
+                            },
+                            "documentTypes": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "string",
+                                "enum": [
+                                  "ownership",
+                                  "authorization"
+                                ]
                               }
                             },
                             "reviewReason": {
@@ -35742,6 +35804,16 @@
                                       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                                     }
                                   },
+                                  "documentTypes": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                      "type": "string",
+                                      "enum": [
+                                        "ownership",
+                                        "authorization"
+                                      ]
+                                    }
+                                  },
                                   "reviewReason": {
                                     "type": "string"
                                   }
@@ -36457,6 +36529,16 @@
                                 "type": "string",
                                 "format": "uuid",
                                 "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              }
+                            },
+                            "documentTypes": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "string",
+                                "enum": [
+                                  "ownership",
+                                  "authorization"
+                                ]
                               }
                             },
                             "reviewReason": {
@@ -37182,6 +37264,16 @@
                                 "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                               }
                             },
+                            "documentTypes": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "string",
+                                "enum": [
+                                  "ownership",
+                                  "authorization"
+                                ]
+                              }
+                            },
                             "reviewReason": {
                               "type": "string"
                             }
@@ -37571,6 +37663,16 @@
                                   "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                                 }
                               },
+                              "documentTypes": {
+                                "type": "object",
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "enum": [
+                                    "ownership",
+                                    "authorization"
+                                  ]
+                                }
+                              },
                               "reviewReason": {
                                 "type": "string"
                               }
@@ -37928,6 +38030,16 @@
                                 "type": "string",
                                 "format": "uuid",
                                 "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              }
+                            },
+                            "documentTypes": {
+                              "type": "object",
+                              "additionalProperties": {
+                                "type": "string",
+                                "enum": [
+                                  "ownership",
+                                  "authorization"
+                                ]
                               }
                             },
                             "reviewReason": {
@@ -44753,11 +44865,26 @@
                     "type": "string",
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "documentType": {
+                    "type": "string",
+                    "enum": [
+                      "ownership",
+                      "authorization"
+                    ]
                   }
                 },
                 "required": [
-                  "mediaId"
-                ]
+                  "mediaId",
+                  "version"
+                ],
+                "additionalProperties": false
               }
             }
           }
