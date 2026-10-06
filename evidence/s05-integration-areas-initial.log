@@ -1,0 +1,25 @@
+ Container haven-p02-api-run-473c4737edd6 Creating
+ Container haven-p02-api-run-473c4737edd6 Created
+
+ RUN  v5.0.3 /workspace
+
+ ❯ tests/integration/market-policy.test.ts (2 tests | 1 failed) 159ms
+   × S05 native new-market config activation validates ISO/zone, retains exact attributed history and historical money/currency/areas 132ms
+   ✓ S05 actual admin permission and strict field validation deny forged updates/history, duplicate tags and unknown finance rules 24ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/market-policy.test.ts > S05 native new-market config activation validates ISO/zone, retains exact attributed history and historical money/currency/areas
+error: column "area" does not exist
+ ❯ node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+ ❯ transaction packages/database/src/index.ts:7:1159
+
+ ❯ tests/integration/market-policy.test.ts:11:434
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  17:27:41
+   Duration  2.32s (import 59%, transform 33%, tests 7%)

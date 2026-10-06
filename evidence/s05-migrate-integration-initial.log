@@ -1,0 +1,35 @@
+ Container haven-p02-api-run-416fe9a0f91a Creating
+ Container haven-p02-api-run-416fe9a0f91a Created
+
+> haven-real-estate@0.1.0 db:migrate /workspace
+> tsx packages/database/src/migrate.ts
+
+/workspace/node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694
+          Error.captureStackTrace(err)
+                ^
+
+error: insert or update on table "market_configuration_history" violates foreign key constraint "market_configuration_history_city_fkey"
+    at /workspace/node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async <anonymous> (/workspace/packages/database/src/migrate.ts:5:355) {
+  length: 372,
+  severity: 'ERROR',
+  code: '23503',
+  detail: 'Key (city)=(p06-market-cfe0c914-13e1-48d4-86c1-5f0be8b8acb2) is not present in table "cities".',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: 'public',
+  table: 'market_configuration_history',
+  column: undefined,
+  dataType: undefined,
+  constraint: 'market_configuration_history_city_fkey',
+  file: 'ri_triggers.c',
+  line: '2599',
+  routine: 'ri_ReportViolation'
+}
+
+Node.js v24.21.0
+ ELIFECYCLE  Command failed with exit code 1.

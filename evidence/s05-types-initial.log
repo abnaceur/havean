@@ -1,0 +1,30 @@
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+packages/ui typecheck: Done
+apps/api typecheck: Done
+apps/ops typecheck$ tsc --noEmit
+apps/web typecheck$ tsc --noEmit
+apps/ops typecheck: Done
+apps/web typecheck: src/market-area.tsx(4,176): error TS2322: Type 'string' is not assignable to type 'never'.
+apps/web typecheck: src/market-area.tsx(4,213): error TS2345: Argument of type 'string' is not assignable to parameter of type '"m²" | "sq ft" | undefined'.
+apps/web typecheck: src/market-policy-info.tsx(5,165): error TS2322: Type 'string' is not assignable to type 'never'.
+apps/web typecheck: Failed
+/workspace/apps/web:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @haven/web@0.1.0 typecheck: `tsc --noEmit`
+Exit status 2
+ ELIFECYCLE  Command failed with exit code 2.
