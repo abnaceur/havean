@@ -102,8 +102,8 @@
 - [x] **P12 Create maintenance requests** — done; dependencies: P11, R04, O05, B05, F12
 - [x] **P13 Build maintenance workbench and timeline** — done; dependencies: P12, R04, O05, B05, F12
 - [x] **P14 Generate owner and tenant statements** — done; dependencies: P13, R04, O05, B05, F12
-- [ ] **P15 Build management dashboards** — in_progress; dependencies: P14, R04, O05, B05, F12
-- [ ] **S01 Create support cases and complaints** — todo; dependencies: L06, M04, V03, I08
+- [x] **P15 Build management dashboards** — done; dependencies: P14, R04, O05, B05, F12
+- [ ] **S01 Create support cases and complaints** — in_progress; dependencies: L06, M04, V03, I08
 - [ ] **S02 Build support workbench** — todo; dependencies: S01, L06, M04, V03, I08
 - [ ] **S03 Manage home curation and taxonomy** — todo; dependencies: S02, L06, M04, V03, I08
 - [ ] **S04 Manage platform users and verification** — todo; dependencies: S03, L06, M04, V03, I08
