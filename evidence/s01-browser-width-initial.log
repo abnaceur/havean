@@ -1,0 +1,44 @@
+ Container haven-p09-runtime-tests-run-5bc1667cce23 Creating
+ Container haven-p09-runtime-tests-run-5bc1667cce23 Created
+
+Running 2 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/support-cases.spec.ts:9:1 › S01 native property complaint private upload receipt recovery and current support triage (21.5s)
+  ✘  2 [mobile] › tests/e2e/support-cases.spec.ts:9:1 › S01 native property complaint private upload receipt recovery and current support triage (12.6s)
+
+
+  1) [mobile] › tests/e2e/support-cases.spec.ts:9:1 › S01 native property complaint private upload receipt recovery and current support triage
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 390
+    Received:    456
+
+      11 |  await login(page,'buyer',WEB,'/bj/buy/'+listing.slug);await page.getByRole('link',{name:'Report a listing concern',exact:true}).click();let dialog=page.getByRole('dialog',{name:'Support request',exact:true});await expect(dialog).toContainText('Selected: S01 native synthetic complaint property');await expect(dialog.getByLabel('Support category',{exact:true})).toHaveValue('Listing complaint');const title='S01 actual complaint '+crypto.randomUUID();await dialog.getByLabel('Support subject',{exact:true}).fill(title);await dialog.getByLabel('Support description',{exact:true}).fill('Please review the synthetic recorded property description and the attached private photo.');await dialog.getByLabel('Attachment sharing rights',{exact:true}).fill('I created and may share this synthetic test image.');
+      12 |  const sharp=createRequire(new URL('../../apps/api/package.json',import.meta.url))('sharp'),photo=await sharp({create:{width:96,height:96,channels:3,background:{r:90,g:140,b:120}}}).png().toBuffer();await dialog.getByLabel('Upload a private support attachment',{exact:true}).setInputFiles({name:'support-photo.png',mimeType:'image/png',buffer:photo});await expect(dialog.getByLabel('Attachment label 1',{exact:true})).toHaveValue('support-photo.png');await dialog.getByLabel('Upload a private support attachment',{exact:true}).setInputFiles({name:'support-document.pdf',mimeType:'application/pdf',buffer:pdf});await expect(dialog.getByLabel('Attachment label 2',{exact:true})).toHaveValue('support-document.pdf');await dialog.getByLabel('Confirm support case sharing',{exact:true}).check();let lost=false,caseId='';await page.route('**/api/v1/support-cases',async route=>{if(route.request().method()==='POST'&&!lost){lost=true;const response=await route.fetch();expect(response.ok(),await response.text()).toBe(true);caseId=(await response.json()).data.id;await route.abort();}else await route.continue();});await dialog.getByRole('button',{name:'Send request',exact:true}).click();await expect(dialog.getByRole('alert')).toBeVisible();await expect(dialog.getByLabel('Support subject',{exact:true})).toHaveValue(title);await dialog.getByRole('button',{name:'Send request',exact:true}).click();dialog=page.getByRole('dialog',{name:'Support case',exact:true});await expect(dialog).toContainText(title);await expect(dialog).toContainText('version 1');expect(caseId).toBeTruthy();await page.unroute('**/api/v1/support-cases');await page.reload();await expect(dialog).toContainText(title);await expect(page.getByRole('dialog',{name:'Support request',exact:true})).toHaveCount(0);const record=(await (await page.request.get(WEB+'/api/v1/support-cases/'+caseId)).json()).data;expect(record.activity).toHaveLength(1);expect(record.attachments).toHaveLength(2);const attachment=record.attachments.find((a:any)=>a.mime==='image/png'),document=record.attachments.find((a:any)=>a.mime==='application/pdf');const ownDocument=await page.request.get(WEB+document.url);expect(ownDocument.ok()).toBe(true);expect(ownDocument.headers()['content-type']).toContain('application/pdf');expect((await ownDocument.body()).equals(pdf)).toBe(true);const ownFile=await page.request.get(WEB+attachment.url);expect(ownFile.ok()).toBe(true);expect(ownFile.headers()['content-type']).toContain('image/webp');expect((await ownFile.body()).subarray(0,4).toString()).toBe('RIFF');expect((await fixtures.query('SELECT status,version FROM listings WHERE id=$1',[listing.id])).rows[0]).toEqual({status:'published',version:listing.version});expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width);expect((await new AxeBuilder({page}).analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);await page.screenshot({path:`evidence/s01-reporter-${info.project.name}.png`,scale:'css'});
+    > 13 |  await login(page,'support',OPS,'/ops/support?case='+caseId);dialog=page.getByRole('dialog',{name:'Support case',exact:true});await expect(dialog).toContainText(title);await dialog.getByLabel('Support assignee',{exact:true}).selectOption('00000000-0000-4000-8000-000000000009');await dialog.getByLabel('Public support reply',{exact:true}).fill('The current authorized support team will inspect this property concern.');await dialog.getByRole('button',{name:'Triage case',exact:true}).click();await expect(dialog).toContainText('version 2');await expect(dialog).toContainText('triaged');expect((await page.request.get(OPS+attachment.url)).ok()).toBe(true);expect((await page.request.get(OPS+document.url)).ok()).toBe(true);expect((await new AxeBuilder({page}).analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width);await page.screenshot({path:`evidence/s01-support-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ^
+      14 |  await login(page,'buyer',WEB,'/bj/support?case='+caseId);dialog=page.getByRole('dialog',{name:'Support case',exact:true});await expect(dialog).toContainText('The current authorized support team will inspect this property concern.');await expect(dialog).toContainText('version 2');await login(page,'owner',WEB,'/account');expect((await page.request.get(WEB+'/api/v1/support-cases/'+caseId)).status()).toBe(404);expect((await page.request.get(WEB+attachment.url)).status()).toBe(404);expect((await page.request.get(WEB+document.url)).status()).toBe(404);
+      15 | });
+      16 |
+        at /workspace/tests/e2e/support-cases.spec.ts:13:920
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/support-cases-pdf-final/support-cases-S01-native-p-e542a--and-current-support-triage-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/support-cases-pdf-final/support-cases-S01-native-p-e542a--and-current-support-triage-mobile/error-context.md
+
+    Error Context: ../artifacts/support-cases-pdf-final/support-cases-S01-native-p-e542a--and-current-support-triage-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/support-cases-pdf-final/support-cases-S01-native-p-e542a--and-current-support-triage-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/support-cases-pdf-final/support-cases-S01-native-p-e542a--and-current-support-triage-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile] › tests/e2e/support-cases.spec.ts:9:1 › S01 native property complaint private upload receipt recovery and current support triage
+  1 passed (36.0s)

@@ -1,0 +1,41 @@
+ Container haven-p02-api-run-03740e77471b Creating
+ Container haven-p02-api-run-03740e77471b Created
+
+ RUN  v5.0.3 /workspace
+
+ ❯ tests/integration/support-cases.test.ts (3 tests | 2 failed) 255ms
+   × S01 reporter creates and retrieves its versioned complaint while original listing and immutable public history remain intact 15ms
+   × S01 current owned scanned private attachments bind exact versions and other actors or invalid sources cannot access them 46ms
+   ✓ S01 current support triages to actual platform staff with a visible reply; stale, forged, foreign and invalid assignment writes deny 144ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/support-cases.test.ts > S01 reporter creates and retrieves its versioned complaint while original listing and immutable public history remain intact
+HttpException: Currently published listing not found
+ ❯ fail apps/api/src/platform/core.ts:10:87
+
+ ❯ supportListingSource apps/api/src/inventory/support-source.ts:4:496
+ ❯ apps/api/src/administration/support-cases.ts:13:192
+ ❯ idempotent apps/api/src/platform/core.ts:22:1047
+ ❯ transaction packages/database/src/index.ts:7:1159
+ ❯ tests/integration/support-cases.test.ts:14:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/integration/support-cases.test.ts > S01 current owned scanned private attachments bind exact versions and other actors or invalid sources cannot access them
+HttpException: Currently published listing not found
+ ❯ fail apps/api/src/platform/core.ts:10:87
+
+ ❯ supportListingSource apps/api/src/inventory/support-source.ts:4:496
+ ❯ apps/api/src/administration/support-cases.ts:13:192
+ ❯ idempotent apps/api/src/platform/core.ts:22:1047
+ ❯ transaction packages/database/src/index.ts:7:1159
+ ❯ tests/integration/support-cases.test.ts:19:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  15:55:43
+   Duration  1.69s (import 57%, transform 27%, tests 16%)
