@@ -40,6 +40,7 @@ import {paymentAllocation,allocationLedgerQuery} from '../payment-allocations';
 import {financialReversal} from '../financial-reversals';
 import {depositMovement,depositLedgerQuery} from '../deposits';
 import {tenantLeaseQuery} from '../tenant-leases';
+import {statementQuery} from '../statements';
 import {maintenanceCreate,maintenanceWorkflow,maintenancePageQuery,maintenanceOptionsQuery,maintenanceTenantAction} from '../maintenance';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
@@ -229,10 +230,12 @@ export const operations={
 "MaintenanceController_tenantRead":{method:"GET",path:"/api/v1/me/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MaintenanceController_tenantRead"]},
 "ManagementController_charges":{method:"GET",path:"/api/v1/ops/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_charges"]},
 "ManagementController_leases":{method:"GET",path:"/api/v1/ops/leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_leases"]},
-"ManagementController_ownerLeases":{method:"GET",path:"/api/v1/me/owner-leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_ownerLeases"]},
+"ManagementController_ownerLeases":{method:"GET",path:"/api/v1/me/owner-leases",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["ManagementController_ownerLeases"]},
 "ManagementController_payments":{method:"GET",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_payments"]},
 "ManagementController_properties":{method:"GET",path:"/api/v1/ops/managed-properties",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["ManagementController_properties"]},
-"ManagementController_statement":{method:"GET",path:"/api/v1/leases/:id/statement",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_statement"]},
+"ManagementController_statement":{method:"GET",path:"/api/v1/leases/:id/statement",params:z.object({"id":z.string().min(1)}),query:statementQuery,body:z.undefined(),response:responses["ManagementController_statement"]},
+"ManagementController_statementCSV":{method:"GET",path:"/api/v1/leases/:id/statement.csv",params:z.object({"id":z.string().min(1)}),query:statementQuery,body:z.undefined(),response:responses["ManagementController_statementCSV"]},
+"ManagementController_statementPrint":{method:"GET",path:"/api/v1/leases/:id/statement/print",params:z.object({"id":z.string().min(1)}),query:statementQuery,body:z.undefined(),response:responses["ManagementController_statementPrint"]},
 "ManagementController_tenantCharges":{method:"GET",path:"/api/v1/me/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenantCharges"]},
 "ManagementController_tenantLeases":{method:"GET",path:"/api/v1/me/leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenantLeases"]},
 "ManagementController_tenants":{method:"GET",path:"/api/v1/ops/tenants",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenants"]},

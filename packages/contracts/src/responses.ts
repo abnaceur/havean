@@ -1,3 +1,4 @@
+import {statementRecord} from './statements';
 import {maintenanceRecord,maintenancePage,maintenanceSource} from './maintenance';
 import {tenantLeasePage,tenantLeaseRecord} from './tenant-leases';
 import {depositRecord,depositLedgerRecord} from './deposits';
@@ -52,9 +53,6 @@ const provider=publicProvider;
 const message=chatMessage;
 const leaseSummary=m.leases.pick({id:true,start_date:true,end_date:true,rent:true,currency:true,status:true}).extend({community:s});
 const chargeSummary=m.charges.pick({id:true,period:true,due_date:true,amount:true,currency:true,kind:true,reverses_id:true});
-const paymentSummary=m.payments.pick({id:true,amount:true,currency:true,source:true,reference:true,reverses_id:true,created_at:true});
-const allocationSummary=m.allocations.pick({id:true,payment_id:true,charge_id:true,amount:true,reversed_at:true});
-const depositSummary=m.deposits.pick({id:true,kind:true,direction:true,amount:true,currency:true,reason:true,created_at:true});
 const mediaMetadata=propertyMediaMetadata;
 const studioMedia=m.listing_media.extend({metadata:mediaMetadata,pending_metadata:mediaMetadata.nullable(),purpose:s,width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),rights:s,scan_at:s.nullable()});
 const publicMedia=z.object({id:uuid,kind:z.enum(['photo','floor_plan','panorama','video']),title:s,position:n,floorPlanId:uuid.nullable(),url:s,poster:s.nullable(),width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),caption:s,spatial:floorLayout.safeExtend({rooms:z.array(floorLayout.shape.rooms.element)}).nullable(),hotspots:mediaMetadata.shape.hotspots});
@@ -132,7 +130,7 @@ export const responses={
  FinancialReversalsController_reverseCharge:financialReversalRecord,FinancialReversalsController_read:financialReversalRecord,ManagementController_ownerLeases:z.array(leaseSummary),RecurringChargesController_preview:chargePreviewRecord,RecurringChargesController_generate:chargeGenerationRecord,ManagementController_charges:z.array(m.charges.extend({community:s})),
  ManagementController_payments:z.array(m.payments),PaymentEvidenceController_options:paymentEvidenceSource,PaymentEvidenceController_read:paymentEvidenceRecord,PaymentEvidenceController_create:paymentEvidenceRecord,PaymentEvidenceController_update:paymentEvidenceRecord,PaymentEvidenceController_post:paymentEvidenceRecord,PaymentAllocationsController_create:allocationRecord,PaymentAllocationsController_ledger:allocationLedgerRecord,FinancialReversalsController_reversePayment:financialReversalRecord,DepositsController_create:depositRecord,DepositsController_ledger:depositLedgerRecord,
  ManagementController_tenantLeases:z.array(leaseSummary),ManagementController_tenantCharges:z.array(chargeSummary.extend({lease_id:uuid})),
- ManagementController_statement:z.object({lease:z.object({id:uuid,currency:s,rent:decimal,startDate:s,endDate:s,status:s}),charges:z.array(chargeSummary),payments:z.array(paymentSummary),allocations:z.array(allocationSummary),deposits:z.array(depositSummary),totals:z.object({charges:decimal,recordedPayments:decimal,allocated:decimal,outstanding:decimal,credit:decimal,depositHeld:decimal}),note:s}),
+ ManagementController_statement:statementRecord,ManagementController_statementCSV:z.instanceof(Blob),ManagementController_statementPrint:z.instanceof(Blob),
  ManagementGrantsController_units:z.array(managementUnit),ManagementGrantsController_unit:managementUnit,ManagementGrantsController_organizations:z.array(z.object({id:z.uuid(),name:z.string()})),ManagementGrantsController_list:z.array(managementGrantRecord),ManagementGrantsController_detail:managementGrantRecord,ManagementGrantsController_professional:managementGrantRecord,ManagementGrantsController_create:managementGrantRecord,ManagementGrantsController_update:managementGrantRecord,
  ServicesController_quote:quoteRecord,ServicesController_quotes:z.array(quoteRecord),ServicesController_own:z.array(quoteRecord),ServicesController_detail:quoteRecord,ServicesController_ownDetail:quoteRecord,ServicesController_changeQuote:quoteRecord,
  AssignmentDirectoryController_listings:z.array(m.listings.pick({id:true,title:true,status:true,agent_id:true,version:true})),LeadAssignmentsController_leads:z.array(m.leads.pick({id:true,name:true,status:true,agent_id:true,version:true})),AssignmentDirectoryController_agents:z.array(assignmentAgent),AssignmentDirectoryController_history:z.array(m.listing_assignment_history),LeadAssignmentsController_assign:assignmentResult,LeadAssignmentsController_history:z.array(m.lead_assignment_history),

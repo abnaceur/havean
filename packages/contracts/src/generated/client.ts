@@ -188,6 +188,8 @@ export const sdk={
 "ManagementController_payments":call(operations["ManagementController_payments"]),
 "ManagementController_properties":call(operations["ManagementController_properties"]),
 "ManagementController_statement":call(operations["ManagementController_statement"]),
+"ManagementController_statementCSV":call(operations["ManagementController_statementCSV"]),
+"ManagementController_statementPrint":call(operations["ManagementController_statementPrint"]),
 "ManagementController_tenantCharges":call(operations["ManagementController_tenantCharges"]),
 "ManagementController_tenantLeases":call(operations["ManagementController_tenantLeases"]),
 "ManagementController_tenants":call(operations["ManagementController_tenants"]),

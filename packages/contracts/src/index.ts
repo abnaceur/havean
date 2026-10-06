@@ -79,3 +79,5 @@ export * from './financial-reversals';
 export * from './deposits';
 export * from './tenant-leases';
 export * from './maintenance';
+
+export * from './statements';

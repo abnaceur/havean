@@ -61660,7 +61660,19 @@
         "tags": [
           "Management"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -62837,6 +62849,36 @@
               "type": "string",
               "minLength": 1
             }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "1970-01-01",
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
           }
         ],
         "responses": {
@@ -62858,12 +62900,21 @@
                               "format": "uuid",
                               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                             },
+                            "version": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true,
+                              "maximum": 9007199254740991
+                            },
+                            "community": {
+                              "type": "string"
+                            },
                             "currency": {
                               "type": "string"
                             },
                             "rent": {
                               "type": "string",
-                              "pattern": "^-?\\d+(\\.\\d+)?$"
+                              "pattern": "^-?\\d+\\.\\d{2}$"
                             },
                             "startDate": {
                               "type": "string"
@@ -62872,11 +62923,17 @@
                               "type": "string"
                             },
                             "status": {
-                              "type": "string"
+                              "type": "string",
+                              "enum": [
+                                "active",
+                                "ended"
+                              ]
                             }
                           },
                           "required": [
                             "id",
+                            "version",
+                            "community",
                             "currency",
                             "rent",
                             "startDate",
@@ -62884,6 +62941,280 @@
                             "status"
                           ],
                           "additionalProperties": false
+                        },
+                        "scope": {
+                          "type": "string",
+                          "enum": [
+                            "owner",
+                            "tenant",
+                            "professional"
+                          ]
+                        },
+                        "asOf": {
+                          "type": "string"
+                        },
+                        "period": {
+                          "type": "object",
+                          "properties": {
+                            "from": {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "to": {
+                              "type": "string",
+                              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                            },
+                            "timeZone": {
+                              "type": "string",
+                              "enum": [
+                                "UTC"
+                              ]
+                            },
+                            "basis": {
+                              "type": "string",
+                              "enum": [
+                                "recorded_ledger_time"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "from",
+                            "to",
+                            "timeZone",
+                            "basis"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "page": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "total": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "opening": {
+                          "type": "object",
+                          "properties": {
+                            "charges": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "recordedPayments": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "allocated": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "outstanding": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "credit": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "depositHeld": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            }
+                          },
+                          "required": [
+                            "charges",
+                            "recordedPayments",
+                            "allocated",
+                            "outstanding",
+                            "credit",
+                            "depositHeld"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "movements": {
+                          "type": "object",
+                          "properties": {
+                            "charges": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "recordedPayments": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "allocated": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "outstanding": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "credit": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "depositHeld": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            }
+                          },
+                          "required": [
+                            "charges",
+                            "recordedPayments",
+                            "allocated",
+                            "outstanding",
+                            "credit",
+                            "depositHeld"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "totals": {
+                          "type": "object",
+                          "properties": {
+                            "charges": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "recordedPayments": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "allocated": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "outstanding": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "credit": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            },
+                            "depositHeld": {
+                              "type": "string",
+                              "pattern": "^-?\\d+\\.\\d{2}$"
+                            }
+                          },
+                          "required": [
+                            "charges",
+                            "recordedPayments",
+                            "allocated",
+                            "outstanding",
+                            "credit",
+                            "depositHeld"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "entries": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "kind": {
+                                "type": "string",
+                                "enum": [
+                                  "charge",
+                                  "charge_reversal",
+                                  "payment",
+                                  "payment_reversal",
+                                  "allocation",
+                                  "allocation_undo",
+                                  "deposit"
+                                ]
+                              },
+                              "recordedAt": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "amount": {
+                                "type": "string",
+                                "pattern": "^-?\\d+\\.\\d{2}$"
+                              },
+                              "currency": {
+                                "type": "string"
+                              },
+                              "paymentId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "chargeId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "reversesId": {
+                                "nullable": true,
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "rentPeriod": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "dueDate": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "reversedAt": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "depositKind": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "direction": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "historical": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "kind",
+                              "recordedAt",
+                              "version",
+                              "amount",
+                              "currency",
+                              "paymentId",
+                              "chargeId",
+                              "reversesId",
+                              "rentPeriod",
+                              "dueDate",
+                              "reversedAt",
+                              "depositKind",
+                              "direction",
+                              "historical"
+                            ],
+                            "additionalProperties": false
+                          }
                         },
                         "charges": {
                           "type": "array",
@@ -62903,7 +63234,7 @@
                               },
                               "amount": {
                                 "type": "string",
-                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                                "pattern": "^-?\\d+\\.\\d{2}$"
                               },
                               "currency": {
                                 "type": "string"
@@ -62942,7 +63273,7 @@
                               },
                               "amount": {
                                 "type": "string",
-                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                                "pattern": "^-?\\d+\\.\\d{2}$"
                               },
                               "currency": {
                                 "type": "string"
@@ -62997,7 +63328,7 @@
                               },
                               "amount": {
                                 "type": "string",
-                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                                "pattern": "^-?\\d+\\.\\d{2}$"
                               },
                               "reversed_at": {
                                 "nullable": true,
@@ -63033,7 +63364,7 @@
                               },
                               "amount": {
                                 "type": "string",
-                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                                "pattern": "^-?\\d+\\.\\d{2}$"
                               },
                               "currency": {
                                 "type": "string"
@@ -63057,55 +63388,26 @@
                             "additionalProperties": false
                           }
                         },
-                        "totals": {
-                          "type": "object",
-                          "properties": {
-                            "charges": {
-                              "type": "string",
-                              "pattern": "^-?\\d+(\\.\\d+)?$"
-                            },
-                            "recordedPayments": {
-                              "type": "string",
-                              "pattern": "^-?\\d+(\\.\\d+)?$"
-                            },
-                            "allocated": {
-                              "type": "string",
-                              "pattern": "^-?\\d+(\\.\\d+)?$"
-                            },
-                            "outstanding": {
-                              "type": "string",
-                              "pattern": "^-?\\d+(\\.\\d+)?$"
-                            },
-                            "credit": {
-                              "type": "string",
-                              "pattern": "^-?\\d+(\\.\\d+)?$"
-                            },
-                            "depositHeld": {
-                              "type": "string",
-                              "pattern": "^-?\\d+(\\.\\d+)?$"
-                            }
-                          },
-                          "required": [
-                            "charges",
-                            "recordedPayments",
-                            "allocated",
-                            "outstanding",
-                            "credit",
-                            "depositHeld"
-                          ],
-                          "additionalProperties": false
-                        },
                         "note": {
                           "type": "string"
                         }
                       },
                       "required": [
                         "lease",
+                        "scope",
+                        "asOf",
+                        "period",
+                        "page",
+                        "limit",
+                        "total",
+                        "opening",
+                        "movements",
+                        "totals",
+                        "entries",
                         "charges",
                         "payments",
                         "allocations",
                         "deposits",
-                        "totals",
                         "note"
                       ],
                       "additionalProperties": false
@@ -63155,6 +63457,340 @@
                       ]
                     }
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/leases/{id}/statement.csv": {
+      "get": {
+        "operationId": "ManagementController_statementCSV",
+        "tags": [
+          "Management"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "1970-01-01",
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/leases/{id}/statement/print": {
+      "get": {
+        "operationId": "ManagementController_statementPrint",
+        "tags": [
+          "Management"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "1970-01-01",
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }

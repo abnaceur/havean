@@ -33,3 +33,5 @@ export {FinancialReversalForm} from './financial-reversal-form';
 export {DepositLedgerForm} from './deposit-ledger-form';
 
 export {MaintenanceRequests} from './maintenance-requests';
+
+export {LeaseStatement} from './lease-statement';
