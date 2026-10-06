@@ -1,0 +1,97 @@
+
+Running 10 tests using 1 worker
+
+  ✓   1 [desktop] › tests/e2e/agency-assignments.spec.ts:10:1 › B04 manager assigns property/lead with explicit policy; actual agents gain and lose private editing and thread access immediately (17.0s)
+  ✓   2 [desktop] › tests/e2e/agency-memberships.spec.ts:13:1 › B03 manager invites new MFA-enrolled consumer, actual acceptance grants listing edit and removal denies the same session (12.5s)
+  ✓   3 [desktop] › tests/e2e/agency-memberships.spec.ts:14:1 › B03 actual foreign agency manager cannot invite into or remove permissions from the main agency (3.2s)
+  ✓   4 [desktop] › tests/e2e/inventory-workbench.spec.ts:7:1 › I07 agent creates, uploads, orders media, edits facts, filters and submits through the workbench (21.0s)
+  ✘   5 [desktop] › tests/e2e/inventory-workbench.spec.ts:24:1 › I07 unassigned edit buttons, direct edit links and all private mutation APIs deny access (19.0s)
+  ✓   6 [mobile] › tests/e2e/agency-assignments.spec.ts:10:1 › B04 manager assigns property/lead with explicit policy; actual agents gain and lose private editing and thread access immediately (9.9s)
+  ✓   7 [mobile] › tests/e2e/agency-memberships.spec.ts:13:1 › B03 manager invites new MFA-enrolled consumer, actual acceptance grants listing edit and removal denies the same session (8.8s)
+  ✓   8 [mobile] › tests/e2e/agency-memberships.spec.ts:14:1 › B03 actual foreign agency manager cannot invite into or remove permissions from the main agency (15.3s)
+  ✓   9 [mobile] › tests/e2e/inventory-workbench.spec.ts:7:1 › I07 agent creates, uploads, orders media, edits facts, filters and submits through the workbench (10.2s)
+  ✘  10 [mobile] › tests/e2e/inventory-workbench.spec.ts:24:1 › I07 unassigned edit buttons, direct edit links and all private mutation APIs deny access (35.6s)
+
+
+  1) [desktop] › tests/e2e/inventory-workbench.spec.ts:24:1 › I07 unassigned edit buttons, direct edit links and all private mutation APIs deny access 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('tr[data-record-id="0c575336-e0e4-4c5f-9748-ae339ac4c2d0"]')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('tr[data-record-id="0c575336-e0e4-4c5f-9748-ae339ac4c2d0"]') with timeout 15000ms
+      - waiting for locator('tr[data-record-id="0c575336-e0e4-4c5f-9748-ae339ac4c2d0"]')
+
+
+      25 |  const title='Unassigned workbench '+info.project.name+' '+crypto.randomUUID(),c=await fixtures.connect();let id:string;
+      26 |  try{await c.query('BEGIN');await c.query("SELECT set_config('app.admin','true',true),set_config('app.actor','00000000-0000-4000-8000-000000000010',true)");id=(await c.query(`INSERT INTO listings(unit_id,organization_id,slug,title,description,transaction,segment,currency,price,status) SELECT unit_id,organization_id,$1,$2,description,transaction,segment,currency,price,'published' FROM listings WHERE id='10000000-0000-4000-8000-000000002000' RETURNING id`,['unassigned-'+crypto.randomUUID(),title])).rows[0].id;await c.query('COMMIT');}catch(error){await c.query('ROLLBACK');throw error;}finally{c.release();}
+    > 27 |  await login(page,'agent','http://localhost:8089','/ops/listings');await page.getByLabel('Search records',{exact:true}).fill(title);await page.getByRole('button',{name:'Apply inventory filters',exact:true}).click();const row=page.locator('tr[data-record-id="'+id+'"]');await expect(row).toBeVisible();await expect(row.getByRole('button')).toHaveCount(0);await expect(page.locator('.draft-workbench')).not.toContainText(title);
+         |                                                                                                                                                                                                                                                                                                ^
+      28 |  for(const suffix of ['/draft','/workbench','/media'])expect((await page.request.get('http://localhost:8089/api/v1/ops/listings/'+id+suffix)).status()).toBe(404);
+      29 |  expect((await apiRequest(page,'/ops/listings/'+id,{title,price:'100.25',version:1},'PATCH')).status()).toBe(404);
+      30 |  await page.goto('http://localhost:8089/ops/listings?edit='+id);await expect(page.locator('.inventory-workbench .error-box')).toContainText('Assigned property not found');await expect(page.getByRole('dialog')).toHaveCount(0);
+        at /workspace/tests/e2e/inventory-workbench.spec.ts:27:288
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/inventory-workbench-I07-un-073f0-e-mutation-APIs-deny-access-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/inventory-workbench-I07-un-073f0-e-mutation-APIs-deny-access-desktop/error-context.md
+
+    Error Context: test-results/inventory-workbench-I07-un-073f0-e-mutation-APIs-deny-access-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/inventory-workbench-I07-un-073f0-e-mutation-APIs-deny-access-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/inventory-workbench-I07-un-073f0-e-mutation-APIs-deny-access-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/inventory-workbench.spec.ts:24:1 › I07 unassigned edit buttons, direct edit links and all private mutation APIs deny access 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('tr[data-record-id="855e8256-1ead-4ce6-8682-e475dcd093f8"]')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('tr[data-record-id="855e8256-1ead-4ce6-8682-e475dcd093f8"]') with timeout 15000ms
+      - waiting for locator('tr[data-record-id="855e8256-1ead-4ce6-8682-e475dcd093f8"]')
+
+
+      25 |  const title='Unassigned workbench '+info.project.name+' '+crypto.randomUUID(),c=await fixtures.connect();let id:string;
+      26 |  try{await c.query('BEGIN');await c.query("SELECT set_config('app.admin','true',true),set_config('app.actor','00000000-0000-4000-8000-000000000010',true)");id=(await c.query(`INSERT INTO listings(unit_id,organization_id,slug,title,description,transaction,segment,currency,price,status) SELECT unit_id,organization_id,$1,$2,description,transaction,segment,currency,price,'published' FROM listings WHERE id='10000000-0000-4000-8000-000000002000' RETURNING id`,['unassigned-'+crypto.randomUUID(),title])).rows[0].id;await c.query('COMMIT');}catch(error){await c.query('ROLLBACK');throw error;}finally{c.release();}
+    > 27 |  await login(page,'agent','http://localhost:8089','/ops/listings');await page.getByLabel('Search records',{exact:true}).fill(title);await page.getByRole('button',{name:'Apply inventory filters',exact:true}).click();const row=page.locator('tr[data-record-id="'+id+'"]');await expect(row).toBeVisible();await expect(row.getByRole('button')).toHaveCount(0);await expect(page.locator('.draft-workbench')).not.toContainText(title);
+         |                                                                                                                                                                                                                                                                                                ^
+      28 |  for(const suffix of ['/draft','/workbench','/media'])expect((await page.request.get('http://localhost:8089/api/v1/ops/listings/'+id+suffix)).status()).toBe(404);
+      29 |  expect((await apiRequest(page,'/ops/listings/'+id,{title,price:'100.25',version:1},'PATCH')).status()).toBe(404);
+      30 |  await page.goto('http://localhost:8089/ops/listings?edit='+id);await expect(page.locator('.inventory-workbench .error-box')).toContainText('Assigned property not found');await expect(page.getByRole('dialog')).toHaveCount(0);
+        at /workspace/tests/e2e/inventory-workbench.spec.ts:27:288
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/inventory-workbench-I07-un-073f0-e-mutation-APIs-deny-access-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/inventory-workbench-I07-un-073f0-e-mutation-APIs-deny-access-mobile/error-context.md
+
+    Error Context: test-results/inventory-workbench-I07-un-073f0-e-mutation-APIs-deny-access-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/inventory-workbench-I07-un-073f0-e-mutation-APIs-deny-access-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/inventory-workbench-I07-un-073f0-e-mutation-APIs-deny-access-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/inventory-workbench.spec.ts:24:1 › I07 unassigned edit buttons, direct edit links and all private mutation APIs deny access 
+    [mobile] › tests/e2e/inventory-workbench.spec.ts:24:1 › I07 unassigned edit buttons, direct edit links and all private mutation APIs deny access 
+  8 passed (2.6m)

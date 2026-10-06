@@ -16,6 +16,7 @@ import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
 import {draftCreate,draftUpdate} from '../inventory-drafts';
 import {agencyInvite,agencyInviteDecision,agencyMembershipUpdate} from '../agency-memberships';
+import {listingAssignment,leadAssignment} from '../assignments';
 import {agentDirectoryFilters} from '../agent-directory';
 import {agentProfileCreate,agentProfileUpdate,agentCredentialSubmit,agentCredentialReview,agentCredentialFilters} from '../agent-credentials';
 import {ownerPriceChange,ownerLifecycleAction} from '../owner-lifecycle';
@@ -49,6 +50,9 @@ export const operations={
 "AgentCredentialsController_review":{method:"PATCH",path:"/api/v1/ops/agent-credentials/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:agentCredentialReview,response:responses["AgentCredentialsController_review"]},
 "AgentCredentialsController_submit":{method:"POST",path:"/api/v1/me/agent-profiles/:id/credentials",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:agentCredentialSubmit,response:responses["AgentCredentialsController_submit"]},
 "AgentCredentialsController_update":{method:"PATCH",path:"/api/v1/me/agent-profiles/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:agentProfileUpdate,response:responses["AgentCredentialsController_update"]},
+"AssignmentDirectoryController_agents":{method:"GET",path:"/api/v1/ops/assignment-agents",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AssignmentDirectoryController_agents"]},
+"AssignmentDirectoryController_history":{method:"GET",path:"/api/v1/ops/listing-assignment-history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AssignmentDirectoryController_history"]},
+"AssignmentDirectoryController_listings":{method:"GET",path:"/api/v1/ops/assignment-listings",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AssignmentDirectoryController_listings"]},
 "BrowsingHistoryController_clear":{method:"DELETE",path:"/api/v1/me/history",params:z.object({}),query:z.object({}),body:historyVersion,response:responses["BrowsingHistoryController_clear"]},
 "BrowsingHistoryController_preferences":{method:"PATCH",path:"/api/v1/me/history/preferences",params:z.object({}),query:z.object({}),body:historyPreference,response:responses["BrowsingHistoryController_preferences"]},
 "BrowsingHistoryController_read":{method:"GET",path:"/api/v1/me/history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["BrowsingHistoryController_read"]},
@@ -135,7 +139,7 @@ export const operations={
 "IdentityController_logout":{method:"POST",path:"/api/v1/auth/logout",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["IdentityController_logout"]},
 "IdentityController_me":{method:"GET",path:"/api/v1/me",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["IdentityController_me"]},
 "InventoryController_approveRevision":{method:"POST",path:"/api/v1/ops/revisions/:id/approve",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({version:z.number().int().positive(),reason:z.string().trim().min(5).max(1000),verified:z.boolean()}),response:responses["InventoryController_approveRevision"]},
-"InventoryController_assign":{method:"POST",path:"/api/v1/ops/assignments",params:z.object({}),query:z.object({}),body:z.object({listingId:z.string().uuid(),agentId:z.string().uuid(),version:z.number().int()}),response:responses["InventoryController_assign"]},
+"InventoryController_assign":{method:"POST",path:"/api/v1/ops/assignments",params:z.object({}),query:z.object({}),body:listingAssignment,response:responses["InventoryController_assign"]},
 "InventoryController_assignOwnerAgent":{method:"PATCH",path:"/api/v1/ops/owner-submissions/:id/assignment",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({version:z.number().int().positive(),agentId:z.uuid()}).strict(),response:responses["InventoryController_assignOwnerAgent"]},
 "InventoryController_createOwnerDraft":{method:"POST",path:"/api/v1/owner-submissions/drafts",params:z.object({}),query:z.object({}),body:ownerWizardCreate,response:responses["InventoryController_createOwnerDraft"]},
 "InventoryController_developments":{method:"GET",path:"/api/v1/ops/developments",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["InventoryController_developments"]},
@@ -162,6 +166,9 @@ export const operations={
 "InventoryController_submit":{method:"POST",path:"/api/v1/owner-submissions",params:z.object({}),query:z.object({}),body:ownerSchema,response:responses["InventoryController_submit"]},
 "InventoryController_updateStatus":{method:"POST",path:"/api/v1/ops/listings/:id/transition",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.enum(['submitted','under_review','published','rejected','paused','sold','leased','expired','archived']),version:z.number().int().positive(),reason:z.string().trim().min(5).max(1000).optional(),verified:z.boolean().optional()}),response:responses["InventoryController_updateStatus"]},
 "InventoryController_workbench":{method:"GET",path:"/api/v1/ops/listings/:id/workbench",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["InventoryController_workbench"]},
+"LeadAssignmentsController_assign":{method:"PATCH",path:"/api/v1/ops/leads/:id/assignment",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leadAssignment,response:responses["LeadAssignmentsController_assign"]},
+"LeadAssignmentsController_history":{method:"GET",path:"/api/v1/ops/lead-assignment-history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["LeadAssignmentsController_history"]},
+"LeadAssignmentsController_leads":{method:"GET",path:"/api/v1/ops/assignment-leads",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["LeadAssignmentsController_leads"]},
 "ManagementController_activate":{method:"POST",path:"/api/v1/ops/leases/:id/activate",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_activate"]},
 "ManagementController_allocate":{method:"POST",path:"/api/v1/ops/allocations",params:z.object({}),query:z.object({}),body:z.object({paymentId:z.string().uuid(),chargeId:z.string().uuid(),amount:money}),response:responses["ManagementController_allocate"]},
 "ManagementController_charges":{method:"GET",path:"/api/v1/ops/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_charges"]},

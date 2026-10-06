@@ -1,0 +1,5 @@
+import type pg from 'pg';
+import {fail} from '../platform/core.js';
+const source=`FROM agents a JOIN profiles p ON p.id=a.user_id AND p.state='active' JOIN memberships m ON m.user_id=a.user_id AND m.organization_id=a.organization_id AND m.role='agent' AND m.status='active' WHERE a.organization_id=$1 AND a.verified_until>=coalesce((SELECT (now() AT TIME ZONE ci.timezone)::date FROM cities ci WHERE ci.slug=a.city AND ci.status='active'),current_date)`;
+export async function assignmentAgents(c:pg.PoolClient,organizationId:string){return (await c.query(`SELECT DISTINCT a.id,a.name,a.city,a.districts,a.verified_until::text AS "eligibleUntil" ${source} ORDER BY a.name,a.id LIMIT 200`,[organizationId])).rows;}
+export async function requireAssignmentAgent(c:pg.PoolClient,organizationId:string,id:string){const a=(await c.query(`SELECT a.id,a.user_id,a.city,a.districts ${source} AND a.id=$2 FOR SHARE OF a,p,m`,[organizationId,id])).rows[0];if(!a)fail(404,'Active eligible agency agent not found');return a;}

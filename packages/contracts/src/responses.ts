@@ -1,3 +1,4 @@
+import {assignmentAgent,assignmentResult} from './assignments';
 import {agencyInvitationRecord,agencyMemberRecord} from './agency-memberships';
 import {agentStatistics} from './agent-directory';
 import {ownedAgentProfile,ownedAgentCredential,credentialReviewRow,credentialBadge} from './agent-credentials';
@@ -86,7 +87,7 @@ export const responses={
  InventoryController_reviews:z.object({listings:z.array(m.listings.pick({id:true,title:true,description:true,status:true,price:true,currency:true,version:true,photos:true}).extend({area:decimal,beds:n,community:s})),submissions:z.array(owner.pick({id:true,user_id:true,data:true,status:true,version:true})),revisions:z.array(m.listing_revisions.pick({id:true,listing_id:true,changes:true,status:true,version:true,base_version:true}).extend({title:s}))}),
  InventoryController_approveRevision:z.object({approved:bool}),InventoryController_rejectRevision:z.object({approved:bool}),InventoryController_publicHistory:z.object({prices:z.array(z.object({id:uuid,previous_price:decimal.nullable(),next_price:decimal,currency:s,created_at:s,reason:s})),statuses:z.array(z.object({id:uuid,status:s,created_at:s}))}),InventoryController_review:z.union([z.object({status:s,listingId:uuid,slug:s}),z.object({status:s})]),
  InventoryController_plans:z.array(m.floor_plans.extend({development_version:n})),InventoryController_editDevelopment:versioned,
- InventoryController_editPlan:m.floor_plans.pick({id:true,development_id:true,available:true}),InventoryController_assign:z.object({id:uuid,version:n}),InventoryController_developments:z.array(m.developments),
+ InventoryController_editPlan:m.floor_plans.pick({id:true,development_id:true,available:true}),InventoryController_assign:assignmentResult,InventoryController_developments:z.array(m.developments),
  RichMediaController_publicMedia:z.array(publicMedia),RichMediaController_owned:z.array(m.listings.pick({id:true,title:true,slug:true,version:true,status:true})),
  RichMediaController_workbench:z.object({listing:z.object({id:uuid,title:s,version:n,status:s}),media:z.array(studioMedia),floorPlans:z.array(m.floor_plans.pick({id:true,name:true}))}),
  RichMediaController_attach:m.listing_media,RichMediaController_revise:m.listing_media,RichMediaController_reviews:z.array(m.listing_media.extend({property_title:s,rights:s,scan_at:s.nullable()})),RichMediaController_review:versioned,RichMediaController_remove:z.object({removed:bool}),
@@ -101,6 +102,7 @@ export const responses={
  ManagementController_statement:z.object({lease:z.object({id:uuid,currency:s,rent:decimal,startDate:s,endDate:s,status:s}),charges:z.array(chargeSummary),payments:z.array(paymentSummary),allocations:z.array(allocationSummary),deposits:z.array(depositSummary),totals:z.object({charges:decimal,recordedPayments:decimal,allocated:decimal,outstanding:decimal,credit:decimal,depositHeld:decimal}),note:s}),
  ManagementController_tenantMaintenance:z.array(m.maintenance.omit({organization_id:true,user_id:true,internal_note:true})),ManagementController_request:status,ManagementController_maintenance:z.array(m.maintenance),ManagementController_maintain:versioned,
  ServicesController_quote:status,ServicesController_quotes:z.array(m.quotes),ServicesController_changeQuote:versioned,
+ AssignmentDirectoryController_listings:z.array(m.listings.pick({id:true,title:true,status:true,agent_id:true,version:true})),LeadAssignmentsController_leads:z.array(m.leads.pick({id:true,name:true,status:true,agent_id:true,version:true})),AssignmentDirectoryController_agents:z.array(assignmentAgent),AssignmentDirectoryController_history:z.array(m.listing_assignment_history),LeadAssignmentsController_assign:assignmentResult,LeadAssignmentsController_history:z.array(m.lead_assignment_history),
  AdministrationController_cases:z.array(support),AdministrationController_support:status,AdministrationController_supportQueue:z.array(m.support_cases),AdministrationController_updateSupport:versioned,
  AdministrationController_audit:z.array(m.audit_events),AdministrationController_users:z.array(m.profiles.pick({id:true,display_name:true,email:true,state:true})),AdministrationController_suspend:m.profiles.pick({id:true,state:true}),
  AdministrationController_memberships:z.array(agencyMemberRecord),AdministrationController_dashboard:z.object({listings:n,leads:n,leases:n,maintenance:n,asOf:s,definition:s})

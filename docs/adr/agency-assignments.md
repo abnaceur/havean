@@ -1,0 +1,13 @@
+# Agency inventory and lead assignment
+
+An actual active manager membership in the selected agency is required. Inventory owns listing assignment/history; engagement owns lead assignment/history, exact conversation links and assignment notifications. Services exposes eligible agent queries; identity exposes the agency authority check. Inventory calls engagement's assignment port instead of writing its tables directly.
+
+Eligible recipients have an active identity and agent membership in the same organization and unexpired service eligibility. Target profile, identity and membership rows are share-locked during changes. Property assignments additionally check the profile's city and service district. Disabled, expired, foreign, already-assigned and terminal targets fail. Resource/version/workflow and actual manager authority are checked; idempotency protects replay.
+
+The manager explicitly chooses `preserve_leads` or `move_open_leads`. Preserving changes only the property. Moving also reassigns nonterminal listing inquiries and their exact linked conversations. Lead-only changes affect that lead and its thread. Won/lost/closed leads keep their history; existing viewing reservations keep their booked agent. New inquiries store their actual created conversation. Ambiguous historical shared threads are unlinked, never guessed; unique links and a database customer/agency/resource guard protect the relationship.
+
+Property edits and private details require current assignment; professional agent queues now also exclude unassigned inventory. Public published information remains public through deliberate public projections. Lead/thread permissions use current assignments immediately, including with an existing session and explicit foreign organization selection.
+
+Assignment, private append-only history, actual actor audit, outbox and a generic recipient inbox notification share one transaction. Notification insertion uses a narrow owner port checking real manager authority, current assigned recipient, resource organization and a matching assignment event. Notifications are work updates, not marketing email. No transport email, new appointment assignment or legal credential verification is claimed. Outbox listing events refresh the existing public/search projection from current data.
+
+O: specification staff/inventory/CRM assignment capabilities. R: supplied architecture and role contract. P: local English assignment policy/history UI and declared synthetic eligible profiles/leads, with actual OIDC sessions, SQL isolation and atomic effects. V: original private workspace UI and website parity. No new visual approval or remote deployment claim.
