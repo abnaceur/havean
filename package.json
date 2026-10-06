@@ -11,7 +11,7 @@
     "dev:setup": "node scripts/setup.mjs",
     "lint": "eslint . && node scripts/boundaries.mjs",
     "typecheck": "pnpm -r typecheck",
-    "build": "pnpm -r build",
+    "build": "pnpm -r --workspace-concurrency=1 build",
     "test:unit": "vitest run tests/unit",
     "test:integration": "vitest run tests/integration",
     "test:e2e": "playwright test --project=visual && playwright test --project=desktop --project=mobile",
