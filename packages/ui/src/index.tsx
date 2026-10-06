@@ -31,3 +31,5 @@ export {PaymentAllocationForm} from './payment-allocation-form';
 export {FinancialReversalForm} from './financial-reversal-form';
 
 export {DepositLedgerForm} from './deposit-ledger-form';
+
+export {MaintenanceRequests} from './maintenance-requests';

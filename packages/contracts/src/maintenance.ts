@@ -1,0 +1,11 @@
+import {z} from 'zod';
+const version=z.number().int().positive();
+export const maintenancePageQuery=z.object({page:z.coerce.number().int().min(1).max(10000).default(1)}).strict();
+export const maintenanceOptionsQuery=maintenancePageQuery.extend({leaseId:z.uuid().optional()});
+export const maintenanceSource=z.object({leaseId:z.uuid(),leaseVersion:version,unitId:z.uuid(),unitVersion:version,grantVersion:version.nullable(),community:z.string()});
+export const maintenanceCreate=z.object({version:z.literal(0),leaseId:z.uuid(),leaseVersion:version,unitVersion:version,grantVersion:version.nullable(),title:z.string().trim().min(5).max(120),description:z.string().trim().min(10).max(3000),category:z.enum(['Plumbing','Electrical','Heating','Appliance','Other']),urgency:z.enum(['Routine','Urgent','Emergency']),photos:z.array(z.object({assetId:z.uuid(),version,caption:z.string().trim().min(2).max(120)}).strict()).max(6).refine(v=>new Set(v.map(p=>p.assetId)).size===v.length,'Duplicate photo'),confirm:z.literal(true)}).strict();
+export const maintenanceWorkflow=z.object({version,leaseVersion:version,unitVersion:version,grantVersion:version,status:z.enum(['triaged','assigned']),assigneeId:z.uuid().nullable(),publicNote:z.string().trim().max(2000).optional()}).strict().refine(v=>v.status!=='assigned'||v.assigneeId!==null,'Select a current team assignee');
+export const maintenanceRecord=z.object({id:z.uuid(),leaseId:z.uuid(),version,title:z.string(),description:z.string(),category:z.string(),urgency:z.string(),status:z.string(),requestedBy:z.enum(['tenant','management','historical']),at:z.string(),assignedTo:z.string().nullable(),assigneeId:z.uuid().nullable(),publicNote:z.string().nullable(),leaseVersion:version,unitVersion:version,grantVersion:version.nullable(),photos:z.array(z.object({id:z.uuid(),version,caption:z.string(),url:z.string()})),activity:z.array(z.object({version,status:z.string(),publicNote:z.string().nullable(),at:z.string()})),assignees:z.array(z.object({id:z.uuid(),name:z.string()}))});
+export const maintenancePage=z.object({page:version,limit:z.literal(20),total:z.number().int().nonnegative(),items:z.array(maintenanceRecord)});
+export type MaintenanceRecord=z.infer<typeof maintenanceRecord>;
+export type MaintenanceSource=z.infer<typeof maintenanceSource>;

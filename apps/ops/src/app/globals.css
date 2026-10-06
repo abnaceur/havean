@@ -48,3 +48,10 @@ body{background:#f6f8f4}.workspace{display:grid;grid-template-columns:236px minm
 .inbox aside button span{min-width:0;overflow-wrap:anywhere}.inbox aside strong{display:block;font-size:12px}.inbox aside .dialog-actions{display:flex;flex-wrap:wrap;gap:6px}.inbox aside .dialog-actions button{min-width:0}.chat-panel [hidden]{display:none}
 
 .provider-fields{border:0;padding:0;min-width:0;display:grid;gap:15px}.provider-fields fieldset{border:1px solid var(--line);border-radius:8px;min-width:0}.provider-portfolio{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:14px;margin:16px 0}.provider-portfolio figure{margin:0;min-width:0;overflow-wrap:anywhere}.provider-portfolio img{width:100%;height:180px;object-fit:cover;border-radius:8px}.provider-portfolio figcaption{padding:8px 0}
+
+/* Maintenance dialogs retain a bounded scroll surface as workflow content grows. */
+.dialog.maintenance-dialog{position:fixed;inset:16px auto auto 50%;transform:translateX(-50%);margin:0;width:min(540px,calc(100% - 32px));max-width:calc(100% - 32px);max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain}
+.maintenance-dialog .field-form{min-width:0;overflow-wrap:anywhere}
+.maintenance-dialog .field-form>*{flex-shrink:0;min-width:0}
+.maintenance-dialog figure{margin:0}
+.maintenance-dialog .field select{max-width:100%}

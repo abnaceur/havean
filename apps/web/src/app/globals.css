@@ -84,3 +84,10 @@
 .provider-directory-filters{display:flex;flex-wrap:wrap;align-items:end;gap:12px;padding:18px 0;border-bottom:1px solid var(--line)}.provider-directory-filters .field{flex:1;min-width:180px;margin:0}.provider-portfolio-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:16px;margin-top:18px}.provider-portfolio-grid figure{margin:0;min-width:0;overflow-wrap:anywhere}.provider-portfolio-grid button{display:block;width:100%;padding:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--soft)}.provider-portfolio-grid img,.provider-portfolio-grid .photo-fallback{width:100%;height:190px;object-fit:cover}.provider-portfolio-grid figcaption{font-size:14px;padding-top:8px}.provider-portfolio-viewer img{width:100%;max-height:55vh;object-fit:contain}.provider-portfolio-viewer .photo-fallback{min-height:220px}.provider-portfolio-viewer p{margin-top:12px}@media(max-width:600px){.provider-directory-filters .field{min-width:100%}.provider-directory-filters>.button{flex:1}.provider-portfolio-grid{grid-template-columns:1fr}}
 .mortgage-schedule th{color:#485b44}
 .mortgage-schedule-scroll:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+
+/* Maintenance dialogs retain a bounded scroll surface as workflow content grows. */
+.dialog.maintenance-dialog{position:fixed;inset:16px auto auto 50%;transform:translateX(-50%);margin:0;width:min(540px,calc(100% - 32px));max-width:calc(100% - 32px);max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain}
+.maintenance-dialog .field-form{min-width:0;overflow-wrap:anywhere}
+.maintenance-dialog .field-form>*{flex-shrink:0;min-width:0}
+.maintenance-dialog figure{margin:0}
+.maintenance-dialog .field select{max-width:100%}

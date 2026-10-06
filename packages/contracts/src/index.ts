@@ -78,3 +78,4 @@ export * from './payment-allocations';
 export * from './financial-reversals';
 export * from './deposits';
 export * from './tenant-leases';
+export * from './maintenance';

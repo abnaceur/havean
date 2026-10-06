@@ -40,6 +40,7 @@ import {paymentAllocation,allocationLedgerQuery} from '../payment-allocations';
 import {financialReversal} from '../financial-reversals';
 import {depositMovement,depositLedgerQuery} from '../deposits';
 import {tenantLeaseQuery} from '../tenant-leases';
+import {maintenanceCreate,maintenanceWorkflow,maintenancePageQuery,maintenanceOptionsQuery} from '../maintenance';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -215,18 +216,24 @@ export const operations={
 "LeaseLifecycleController_end":{method:"POST",path:"/api/v1/ops/leases/:id/end",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leaseEnding,response:responses["LeaseLifecycleController_end"]},
 "LeaseLifecycleController_read":{method:"GET",path:"/api/v1/ops/leases/:id/workflow",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["LeaseLifecycleController_read"]},
 "LeaseLifecycleController_renew":{method:"POST",path:"/api/v1/ops/leases/:id/renew",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leaseRenewal,response:responses["LeaseLifecycleController_renew"]},
+"MaintenanceController_change":{method:"PATCH",path:"/api/v1/ops/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:maintenanceWorkflow,response:responses["MaintenanceController_change"]},
+"MaintenanceController_photo":{method:"GET",path:"/api/v1/maintenance/:requestId/photos/:id",params:z.object({"requestId":z.string().min(1),"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MaintenanceController_photo"]},
+"MaintenanceController_professionalCreate":{method:"POST",path:"/api/v1/ops/maintenance",params:z.object({}),query:z.object({}),body:maintenanceCreate,response:responses["MaintenanceController_professionalCreate"]},
+"MaintenanceController_professionalList":{method:"GET",path:"/api/v1/ops/maintenance",params:z.object({}),query:maintenancePageQuery,body:z.undefined(),response:responses["MaintenanceController_professionalList"]},
+"MaintenanceController_professionalOptions":{method:"GET",path:"/api/v1/ops/maintenance-options",params:z.object({}),query:maintenanceOptionsQuery,body:z.undefined(),response:responses["MaintenanceController_professionalOptions"]},
+"MaintenanceController_professionalRead":{method:"GET",path:"/api/v1/ops/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MaintenanceController_professionalRead"]},
+"MaintenanceController_tenantCreate":{method:"POST",path:"/api/v1/me/maintenance",params:z.object({}),query:z.object({}),body:maintenanceCreate,response:responses["MaintenanceController_tenantCreate"]},
+"MaintenanceController_tenantList":{method:"GET",path:"/api/v1/me/maintenance",params:z.object({}),query:maintenancePageQuery,body:z.undefined(),response:responses["MaintenanceController_tenantList"]},
+"MaintenanceController_tenantOptions":{method:"GET",path:"/api/v1/me/maintenance-options",params:z.object({}),query:maintenanceOptionsQuery,body:z.undefined(),response:responses["MaintenanceController_tenantOptions"]},
+"MaintenanceController_tenantRead":{method:"GET",path:"/api/v1/me/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MaintenanceController_tenantRead"]},
 "ManagementController_charges":{method:"GET",path:"/api/v1/ops/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_charges"]},
 "ManagementController_leases":{method:"GET",path:"/api/v1/ops/leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_leases"]},
-"ManagementController_maintain":{method:"PATCH",path:"/api/v1/ops/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.string(),version:z.number().int(),assignee:z.string().max(100).optional(),publicNote:z.string().max(2000).optional(),internalNote:z.string().max(2000).optional()}),response:responses["ManagementController_maintain"]},
-"ManagementController_maintenance":{method:"GET",path:"/api/v1/ops/maintenance",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_maintenance"]},
 "ManagementController_ownerLeases":{method:"GET",path:"/api/v1/me/owner-leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_ownerLeases"]},
 "ManagementController_payments":{method:"GET",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_payments"]},
 "ManagementController_properties":{method:"GET",path:"/api/v1/ops/managed-properties",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["ManagementController_properties"]},
-"ManagementController_request":{method:"POST",path:"/api/v1/me/maintenance",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),title:z.string().min(5).max(120),description:z.string().min(10).max(3000),category:z.enum(['Plumbing','Electrical','Heating','Appliance','Other']),urgency:z.enum(['Routine','Urgent','Emergency'])}),response:responses["ManagementController_request"]},
 "ManagementController_statement":{method:"GET",path:"/api/v1/leases/:id/statement",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_statement"]},
 "ManagementController_tenantCharges":{method:"GET",path:"/api/v1/me/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenantCharges"]},
 "ManagementController_tenantLeases":{method:"GET",path:"/api/v1/me/leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenantLeases"]},
-"ManagementController_tenantMaintenance":{method:"GET",path:"/api/v1/me/maintenance",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenantMaintenance"]},
 "ManagementController_tenants":{method:"GET",path:"/api/v1/ops/tenants",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenants"]},
 "ManagementGrantsController_create":{method:"POST",path:"/api/v1/me/management-grants",params:z.object({}),query:z.object({}),body:managementGrantCreate,response:responses["ManagementGrantsController_create"]},
 "ManagementGrantsController_detail":{method:"GET",path:"/api/v1/me/management-grants/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ManagementGrantsController_detail"]},
