@@ -85,3 +85,11 @@ body{background:#f6f8f4}.workspace{display:grid;grid-template-columns:236px minm
 .market-configuration fieldset{min-width:0;padding:16px;border:1px solid var(--line,#dde3e8);border-radius:8px}.market-configuration input,.market-configuration select,.market-configuration textarea{max-width:100%;min-width:0}.market-configuration .support-history{overflow-wrap:anywhere}.market-configuration legend{padding:0 6px}.market-configuration fieldset>div{margin-bottom:16px}.market-configuration button{white-space:normal}
 
 .analytics-workspace,.audit-search{min-width:0}.analytics-workspace .support-history,.audit-search .support-history{overflow-wrap:anywhere}.analytics-workspace input,.analytics-workspace select,.audit-search input{min-width:0;max-width:100%}.analytics-workspace .button-row{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Inventory controls must fit narrow workspaces without hiding content. */
+.inventory-filters .field{min-width:0}.inventory-filters input,.inventory-filters select{min-width:0;max-width:100%}
+@media(max-width:700px){.inventory-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.inventory-workbench .row-actions{min-width:0;max-width:100%;flex-wrap:wrap}.inventory-workbench .row-actions .button{min-height:44px;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+
+.workspace-panel .dialog-actions{min-width:0;max-width:100%;flex-wrap:wrap}.workspace-panel .dialog-actions .button{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
