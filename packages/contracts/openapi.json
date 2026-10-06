@@ -229,6 +229,45 @@
         ],
         "parameters": [
           {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "triaged",
+                "escalated",
+                "resolved"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "General",
+                "Listing complaint",
+                "Account",
+                "Viewing",
+                "Other"
+              ]
+            }
+          },
+          {
+            "name": "assigneeId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "required": false,
@@ -385,6 +424,51 @@
                                   "additionalProperties": false
                                 }
                               },
+                              "canAct": {
+                                "type": "boolean"
+                              },
+                              "canComment": {
+                                "type": "boolean"
+                              },
+                              "canReopen": {
+                                "type": "boolean"
+                              },
+                              "internalNotes": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "version": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "exclusiveMinimum": true,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "body": {
+                                      "type": "string"
+                                    },
+                                    "at": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "historical": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "version",
+                                    "body",
+                                    "at",
+                                    "historical"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "activity": {
                                 "type": "array",
                                 "items": {
@@ -405,13 +489,17 @@
                                     },
                                     "at": {
                                       "type": "string"
+                                    },
+                                    "action": {
+                                      "type": "string"
                                     }
                                   },
                                   "required": [
                                     "version",
                                     "status",
                                     "message",
-                                    "at"
+                                    "at",
+                                    "action"
                                   ],
                                   "additionalProperties": false
                                 }
@@ -432,6 +520,9 @@
                               "assigned",
                               "assigneeId",
                               "attachments",
+                              "canAct",
+                              "canComment",
+                              "canReopen",
                               "activity"
                             ],
                             "additionalProperties": false
@@ -731,6 +822,51 @@
                             "additionalProperties": false
                           }
                         },
+                        "canAct": {
+                          "type": "boolean"
+                        },
+                        "canComment": {
+                          "type": "boolean"
+                        },
+                        "canReopen": {
+                          "type": "boolean"
+                        },
+                        "internalNotes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "body": {
+                                "type": "string"
+                              },
+                              "at": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "historical": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "body",
+                              "at",
+                              "historical"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
                         "activity": {
                           "type": "array",
                           "items": {
@@ -751,13 +887,17 @@
                               },
                               "at": {
                                 "type": "string"
+                              },
+                              "action": {
+                                "type": "string"
                               }
                             },
                             "required": [
                               "version",
                               "status",
                               "message",
-                              "at"
+                              "at",
+                              "action"
                             ],
                             "additionalProperties": false
                           }
@@ -778,6 +918,9 @@
                         "assigned",
                         "assigneeId",
                         "attachments",
+                        "canAct",
+                        "canComment",
+                        "canReopen",
                         "activity"
                       ],
                       "additionalProperties": false
@@ -1850,6 +1993,455 @@
         ]
       }
     },
+    "/api/v1/ops/support-cases/{id}/actions": {
+      "post": {
+        "operationId": "AdministrationController_supportAction",
+        "tags": [
+          "Administration"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "version": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "subject": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "category": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "publicReply": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "historical": {
+                          "type": "boolean"
+                        },
+                        "listing": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            },
+                            "version": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true,
+                              "maximum": 9007199254740991
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "title",
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "assigned": {
+                          "type": "boolean"
+                        },
+                        "assigneeId": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "attachments": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "version": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "label": {
+                                "type": "string"
+                              },
+                              "mime": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "label",
+                              "mime",
+                              "url"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "canAct": {
+                          "type": "boolean"
+                        },
+                        "canComment": {
+                          "type": "boolean"
+                        },
+                        "canReopen": {
+                          "type": "boolean"
+                        },
+                        "internalNotes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "body": {
+                                "type": "string"
+                              },
+                              "at": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "historical": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "body",
+                              "at",
+                              "historical"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "activity": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "version": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "message": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "at": {
+                                "type": "string"
+                              },
+                              "action": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "version",
+                              "status",
+                              "message",
+                              "at",
+                              "action"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "version",
+                        "subject",
+                        "description",
+                        "category",
+                        "status",
+                        "publicReply",
+                        "createdAt",
+                        "updatedAt",
+                        "historical",
+                        "listing",
+                        "assigned",
+                        "assigneeId",
+                        "attachments",
+                        "canAct",
+                        "canComment",
+                        "canReopen",
+                        "activity"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "comment",
+                      "note",
+                      "assign",
+                      "escalate",
+                      "deescalate",
+                      "resolve",
+                      "reopen"
+                    ]
+                  },
+                  "assigneeId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "publicReply": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "internalNote": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  }
+                },
+                "required": [
+                  "version",
+                  "action"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
     "/api/v1/ops/support-assignees": {
       "get": {
         "operationId": "AdministrationController_supportAssignees",
@@ -2329,6 +2921,51 @@
                             "additionalProperties": false
                           }
                         },
+                        "canAct": {
+                          "type": "boolean"
+                        },
+                        "canComment": {
+                          "type": "boolean"
+                        },
+                        "canReopen": {
+                          "type": "boolean"
+                        },
+                        "internalNotes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "body": {
+                                "type": "string"
+                              },
+                              "at": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "historical": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "body",
+                              "at",
+                              "historical"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
                         "activity": {
                           "type": "array",
                           "items": {
@@ -2349,13 +2986,17 @@
                               },
                               "at": {
                                 "type": "string"
+                              },
+                              "action": {
+                                "type": "string"
                               }
                             },
                             "required": [
                               "version",
                               "status",
                               "message",
-                              "at"
+                              "at",
+                              "action"
                             ],
                             "additionalProperties": false
                           }
@@ -2376,6 +3017,9 @@
                         "assigned",
                         "assigneeId",
                         "attachments",
+                        "canAct",
+                        "canComment",
+                        "canReopen",
                         "activity"
                       ],
                       "additionalProperties": false
@@ -2425,6 +3069,618 @@
                       ]
                     }
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "AdministrationController_supportPublicChange",
+        "tags": [
+          "Administration"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "version": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "subject": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "category": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "publicReply": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "historical": {
+                          "type": "boolean"
+                        },
+                        "listing": {
+                          "nullable": true,
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            },
+                            "version": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "exclusiveMinimum": true,
+                              "maximum": 9007199254740991
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "version",
+                            "title",
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "assigned": {
+                          "type": "boolean"
+                        },
+                        "assigneeId": {
+                          "nullable": true,
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "attachments": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "version": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "label": {
+                                "type": "string"
+                              },
+                              "mime": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "label",
+                              "mime",
+                              "url"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "canAct": {
+                          "type": "boolean"
+                        },
+                        "canComment": {
+                          "type": "boolean"
+                        },
+                        "canReopen": {
+                          "type": "boolean"
+                        },
+                        "internalNotes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "body": {
+                                "type": "string"
+                              },
+                              "at": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "historical": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "body",
+                              "at",
+                              "historical"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "activity": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "version": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "message": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "at": {
+                                "type": "string"
+                              },
+                              "action": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "version",
+                              "status",
+                              "message",
+                              "at",
+                              "action"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "version",
+                        "subject",
+                        "description",
+                        "category",
+                        "status",
+                        "publicReply",
+                        "createdAt",
+                        "updatedAt",
+                        "historical",
+                        "listing",
+                        "assigned",
+                        "assigneeId",
+                        "attachments",
+                        "canAct",
+                        "canComment",
+                        "canReopen",
+                        "activity"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "comment",
+                      "reopen"
+                    ]
+                  },
+                  "publicReply": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  }
+                },
+                "required": [
+                  "version",
+                  "action",
+                  "publicReply"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ops/support-cases/export": {
+      "get": {
+        "operationId": "AdministrationController_supportExport",
+        "tags": [
+          "Administration"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "triaged",
+                "escalated",
+                "resolved"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "General",
+                "Listing complaint",
+                "Account",
+                "Viewing",
+                "Other"
+              ]
+            }
+          },
+          {
+            "name": "assigneeId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -2677,6 +3933,51 @@
                             "additionalProperties": false
                           }
                         },
+                        "canAct": {
+                          "type": "boolean"
+                        },
+                        "canComment": {
+                          "type": "boolean"
+                        },
+                        "canReopen": {
+                          "type": "boolean"
+                        },
+                        "internalNotes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "body": {
+                                "type": "string"
+                              },
+                              "at": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "historical": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "body",
+                              "at",
+                              "historical"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
                         "activity": {
                           "type": "array",
                           "items": {
@@ -2697,13 +3998,17 @@
                               },
                               "at": {
                                 "type": "string"
+                              },
+                              "action": {
+                                "type": "string"
                               }
                             },
                             "required": [
                               "version",
                               "status",
                               "message",
-                              "at"
+                              "at",
+                              "action"
                             ],
                             "additionalProperties": false
                           }
@@ -2724,6 +4029,9 @@
                         "assigned",
                         "assigneeId",
                         "attachments",
+                        "canAct",
+                        "canComment",
+                        "canReopen",
                         "activity"
                       ],
                       "additionalProperties": false
@@ -3023,6 +4331,51 @@
                             "additionalProperties": false
                           }
                         },
+                        "canAct": {
+                          "type": "boolean"
+                        },
+                        "canComment": {
+                          "type": "boolean"
+                        },
+                        "canReopen": {
+                          "type": "boolean"
+                        },
+                        "internalNotes": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "nullable": true,
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "body": {
+                                "type": "string"
+                              },
+                              "at": {
+                                "nullable": true,
+                                "type": "string"
+                              },
+                              "historical": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "version",
+                              "body",
+                              "at",
+                              "historical"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
                         "activity": {
                           "type": "array",
                           "items": {
@@ -3043,13 +4396,17 @@
                               },
                               "at": {
                                 "type": "string"
+                              },
+                              "action": {
+                                "type": "string"
                               }
                             },
                             "required": [
                               "version",
                               "status",
                               "message",
-                              "at"
+                              "at",
+                              "action"
                             ],
                             "additionalProperties": false
                           }
@@ -3070,6 +4427,9 @@
                         "assigned",
                         "assigneeId",
                         "attachments",
+                        "canAct",
+                        "canComment",
+                        "canReopen",
                         "activity"
                       ],
                       "additionalProperties": false
@@ -3273,6 +4633,45 @@
         ],
         "parameters": [
           {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "triaged",
+                "escalated",
+                "resolved"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "General",
+                "Listing complaint",
+                "Account",
+                "Viewing",
+                "Other"
+              ]
+            }
+          },
+          {
+            "name": "assigneeId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          {
             "name": "page",
             "in": "query",
             "required": false,
@@ -3429,6 +4828,51 @@
                                   "additionalProperties": false
                                 }
                               },
+                              "canAct": {
+                                "type": "boolean"
+                              },
+                              "canComment": {
+                                "type": "boolean"
+                              },
+                              "canReopen": {
+                                "type": "boolean"
+                              },
+                              "internalNotes": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "version": {
+                                      "nullable": true,
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "exclusiveMinimum": true,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "body": {
+                                      "type": "string"
+                                    },
+                                    "at": {
+                                      "nullable": true,
+                                      "type": "string"
+                                    },
+                                    "historical": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "version",
+                                    "body",
+                                    "at",
+                                    "historical"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
                               "activity": {
                                 "type": "array",
                                 "items": {
@@ -3449,13 +4893,17 @@
                                     },
                                     "at": {
                                       "type": "string"
+                                    },
+                                    "action": {
+                                      "type": "string"
                                     }
                                   },
                                   "required": [
                                     "version",
                                     "status",
                                     "message",
-                                    "at"
+                                    "at",
+                                    "action"
                                   ],
                                   "additionalProperties": false
                                 }
@@ -3476,6 +4924,9 @@
                               "assigned",
                               "assigneeId",
                               "attachments",
+                              "canAct",
+                              "canComment",
+                              "canReopen",
                               "activity"
                             ],
                             "additionalProperties": false
