@@ -1,0 +1,6 @@
+import {it,expect} from 'vitest';
+import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import {spawnSync} from 'node:child_process';
+it('Q06 credential scan rejects generated credentials and never prints their values',()=>{const dir=fs.mkdtempSync(path.join(os.tmpdir(),'haven-credential-policy-'));try{const manifest=path.join(dir,'files.list');fs.writeFileSync(manifest,'sample.txt\0');const env={...process.env,HAVEN_SCAN_MANIFEST:manifest};const token='ghp_'+'a'.repeat(36),privateKey=['-----BEGIN ','PRIVATE KEY-----'].join('');fs.writeFileSync(path.join(dir,'sample.txt'),token+'\n'+privateKey+'\n');const run=spawnSync(process.execPath,[path.resolve('scripts/secret-scan.mjs'),dir],{encoding:'utf8',env});expect(run.status).toBe(1);const result=JSON.parse(run.stdout);expect(result.findings.map((f:{kind:string})=>f.kind).sort()).toEqual(['github-token','private-key']);expect(run.stdout+run.stderr).not.toContain(token);expect(run.stdout+run.stderr).not.toContain(privateKey);fs.writeFileSync(path.join(dir,'sample.txt'),'Public application copy only.\n');const clean=spawnSync(process.execPath,[path.resolve('scripts/secret-scan.mjs'),dir],{encoding:'utf8',env});expect(clean.status).toBe(0);expect(JSON.parse(clean.stdout).findings).toEqual([]);}finally{fs.rmSync(dir,{recursive:true,force:true});}});

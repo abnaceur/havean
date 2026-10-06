@@ -23,6 +23,7 @@ check() {
   fi
 }
 check install pnpm install --frozen-lockfile
+check credentials node scripts/secret-scan.mjs .
 check tasks pnpm task:validate
 check fixtures pnpm fixtures:check
 check contracts pnpm contracts:check
