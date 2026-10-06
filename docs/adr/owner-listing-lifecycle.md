@@ -1,0 +1,13 @@
+# Owner listing lifecycle controls
+
+An authenticated account's recorded owner-to-unit relationship authorizes these commands; a global role label alone does not grant property access. Private owner listing reads expose deliberately selected property/status/amount fields, active grant version and a bounded pending price summary. Missing amounts remain unknown. Commercial total/per-area and gross/usable definitions, and rental billing period, remain explicit; no total or default period is inferred.
+
+Commands lock/recheck the owned resource, require the current active grant/version and current listing version, and commit audit/outbox with actual owner identity. Pausing or sale/lease completion uses the canonical workflow and invalidates discovery. Renewal only submits a paused/expired/rejected property for independent review. Owners cannot select publication decisions; a moderator must verify current facts, agency agent credentials and authority. Revoked/expired grants disable owner commands.
+
+Owner price commands preserve existing title, currency, transaction and area/period basis. Incomplete commercial definitions require confirmation through the property team before an owner can propose a price. Proposals remain private until independent moderation of the current published base version. Approval rechecks current owner authority for owner-origin proposals, so revocation after submission cannot promote a stale amount. Owners cannot self-approve or edit submitted proposals through SQL.
+
+Migrations 070/071 extend owner revision scope and guard its workflow. `proposed_price` is PostgreSQL NUMERIC(18,2), matching the declared decimal string and immutable once recorded. Existing valid legacy proposals are backfilled; incomplete legacy proposals remain nullable rather than being guessed. New API proposals always populate the numeric amount. Approval posts the canonical recorded decimal amount, and immutable public history omits private reasons/identities. Browser amount labels preserve cents using string grouping, including explicit unknown amounts and commercial/rental units.
+
+Owner price, availability and completion controls use BFF sessions and canonical API contracts. Errors retain input; concurrent/stale/terminal requests fail visibly. Default owner evidence policy is now explicit in fresh market seeds and new city creation, preserving existing configured settings.
+
+O: original owner entry only. R: specification O05 private revisions, identity audit and renewed verification. P: local English owner controls, synthetic grants/declared amounts and real independent reviewer sessions. V: original private lifecycle UI, actual legal ownership and new visual approval. No production launch or original-site parity claim.

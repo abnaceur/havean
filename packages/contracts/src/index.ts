@@ -41,3 +41,5 @@ export * from './development-review';
 export * from './commercial';
 
 export * from './owner-wizard';
+
+export * from './owner-lifecycle';

@@ -15,6 +15,7 @@ import {deletionRequest} from '../account-privacy';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
 import {draftCreate,draftUpdate} from '../inventory-drafts';
+import {ownerPriceChange,ownerLifecycleAction} from '../owner-lifecycle';
 import {ownerWizardCreate,ownerWizardUpdate,ownerWizardSubmit} from '../owner-wizard';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
@@ -124,9 +125,12 @@ export const operations={
 "InventoryController_editDevelopment":{method:"PATCH",path:"/api/v1/ops/developments/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.enum(['draft','coming_soon','on_sale','sold_out']),version:z.number().int()}),response:responses["InventoryController_editDevelopment"]},
 "InventoryController_editPlan":{method:"PATCH",path:"/api/v1/ops/floor-plans/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({available:z.coerce.number().int().min(0).max(100000),version:z.number().int()}),response:responses["InventoryController_editPlan"]},
 "InventoryController_listings":{method:"GET",path:"/api/v1/ops/listings",params:z.object({}),query:z.object({q:z.string().trim().max(160).optional(),status:z.enum(['draft','submitted','under_review','published','rejected','paused','sold','leased','expired','archived']).optional(),transaction:z.enum(['sale','rent']).optional(),segment:z.enum(['residential','commercial']).optional(),mine:z.enum(['true','false']).optional()}),body:z.undefined(),response:responses["InventoryController_listings"]},
+"InventoryController_ownedListings":{method:"GET",path:"/api/v1/me/owner-listings",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["InventoryController_ownedListings"]},
+"InventoryController_ownerAction":{method:"POST",path:"/api/v1/me/owner-listings/:id/actions",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:ownerLifecycleAction,response:responses["InventoryController_ownerAction"]},
 "InventoryController_ownerAgents":{method:"GET",path:"/api/v1/ops/owner-submissions/agents",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["InventoryController_ownerAgents"]},
 "InventoryController_ownerAssignmentQueue":{method:"GET",path:"/api/v1/ops/owner-submissions",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["InventoryController_ownerAssignmentQueue"]},
 "InventoryController_ownerDraft":{method:"GET",path:"/api/v1/me/owner-submissions/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["InventoryController_ownerDraft"]},
+"InventoryController_ownerPrice":{method:"PATCH",path:"/api/v1/me/owner-listings/:id/price",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:ownerPriceChange,response:responses["InventoryController_ownerPrice"]},
 "InventoryController_ownerProgress":{method:"GET",path:"/api/v1/me/owner-submissions/:id/progress",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["InventoryController_ownerProgress"]},
 "InventoryController_plans":{method:"GET",path:"/api/v1/ops/developments/:id/floor-plans",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["InventoryController_plans"]},
 "InventoryController_publicHistory":{method:"GET",path:"/api/v1/listings/:id/history",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["InventoryController_publicHistory"]},
