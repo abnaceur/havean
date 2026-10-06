@@ -1,0 +1,94 @@
+ Container haven-p02-api-run-d0f74e9da065 Creating
+ Container haven-p02-api-run-d0f74e9da065 Created
+
+ RUN  v5.0.3 /workspace
+
+ ❯ tests/integration/maintenance-requests.test.ts (5 tests | 5 failed) 11492ms
+   × P12 linked tenant creates one versioned request with private owned photo, current manager triages and assigns with exact retained activity 1801ms
+   × P12 a current manager can create an authorized request that its linked tenant sees, without impersonating tenant creation 4252ms
+   × P12 foreign unit/persona/media, stale source versions, malformed labels and inactive workflow states deny without partial request roots 1849ms
+   × P12 cross-request photo guessing, invalid transitions, stale request versions and wrong-team assignment deny; revoked grant denies manager and new tenant creates 1706ms
+   × P12 SQL rejects unversioned runtime request and immutable photo/history edits; activity is committed with exact database timestamp 1828ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/maintenance-requests.test.ts > P12 linked tenant creates one versioned request with private owned photo, current manager triages and assigns with exact retained activity
+AssertionError: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ requestBody tests/integration/maintenance-requests.test.ts:21:249
+
+ ❯ tests/integration/maintenance-requests.test.ts:24:215
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/integration/maintenance-requests.test.ts > P12 a current manager can create an authorized request that its linked tenant sees, without impersonating tenant creation
+AssertionError: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ requestBody tests/integration/maintenance-requests.test.ts:21:249
+
+ ❯ tests/integration/maintenance-requests.test.ts:25:208
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/integration/maintenance-requests.test.ts > P12 foreign unit/persona/media, stale source versions, malformed labels and inactive workflow states deny without partial request roots
+AssertionError: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ requestBody tests/integration/maintenance-requests.test.ts:21:249
+
+ ❯ tests/integration/maintenance-requests.test.ts:26:196
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/integration/maintenance-requests.test.ts > P12 cross-request photo guessing, invalid transitions, stale request versions and wrong-team assignment deny; revoked grant denies manager and new tenant creates
+AssertionError: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ requestBody tests/integration/maintenance-requests.test.ts:21:249
+
+ ❯ tests/integration/maintenance-requests.test.ts:27:315
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/integration/maintenance-requests.test.ts > P12 SQL rejects unversioned runtime request and immutable photo/history edits; activity is committed with exact database timestamp
+AssertionError: expected undefined to be truthy
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ requestBody tests/integration/maintenance-requests.test.ts:21:249
+
+ ❯ tests/integration/maintenance-requests.test.ts:28:191
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  12:00:37
+   Duration  13.07s (tests 89%, import 8%, transform 4%)

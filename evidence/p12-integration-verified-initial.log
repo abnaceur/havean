@@ -1,0 +1,63 @@
+ Container haven-p02-api-run-941f55a8ec0d Creating
+ Container haven-p02-api-run-941f55a8ec0d Created
+
+ RUN  v5.0.3 /workspace
+
+ ❯ tests/integration/maintenance-requests.test.ts (5 tests | 4 failed) 10810ms
+   × P12 linked tenant creates one versioned request with private owned photo, current manager triages and assigns with exact retained activity 1957ms
+   × P12 a current manager can create an authorized request that its linked tenant sees, without impersonating tenant creation 2501ms
+   ✓ P12 foreign unit/persona/media, stale source versions, malformed labels and inactive workflow states deny without partial request roots 2677ms
+   × P12 cross-request photo guessing, invalid transitions, stale request versions and wrong-team assignment deny; revoked grant denies manager and new tenant creates 1860ms
+   × P12 SQL rejects unversioned runtime request and immutable photo/history edits; activity is committed with exact database timestamp 1764ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/maintenance-requests.test.ts > P12 linked tenant creates one versioned request with private owned photo, current manager triages and assigns with exact retained activity
+error: new row violates row-level security policy "maintenance_current_scope" for table "maintenance"
+ ❯ node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+ ❯ apps/api/src/management/maintenance.ts:27:724
+
+ ❯ idempotent apps/api/src/platform/core.ts:22:1047
+ ❯ transaction packages/database/src/index.ts:7:1159
+ ❯ tests/integration/maintenance-requests.test.ts:24:376
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/integration/maintenance-requests.test.ts > P12 a current manager can create an authorized request that its linked tenant sees, without impersonating tenant creation
+error: new row violates row-level security policy "maintenance_current_scope" for table "maintenance"
+ ❯ node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+ ❯ apps/api/src/management/maintenance.ts:27:724
+
+ ❯ idempotent apps/api/src/platform/core.ts:22:1047
+ ❯ transaction packages/database/src/index.ts:7:1159
+ ❯ tests/integration/maintenance-requests.test.ts:25:386
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/integration/maintenance-requests.test.ts > P12 cross-request photo guessing, invalid transitions, stale request versions and wrong-team assignment deny; revoked grant denies manager and new tenant creates
+error: new row violates row-level security policy "maintenance_current_scope" for table "maintenance"
+ ❯ node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+ ❯ apps/api/src/management/maintenance.ts:27:724
+
+ ❯ idempotent apps/api/src/platform/core.ts:22:1047
+ ❯ transaction packages/database/src/index.ts:7:1159
+ ❯ tests/integration/maintenance-requests.test.ts:27:245
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/integration/maintenance-requests.test.ts > P12 SQL rejects unversioned runtime request and immutable photo/history edits; activity is committed with exact database timestamp
+error: new row violates row-level security policy "maintenance_current_scope" for table "maintenance"
+ ❯ node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+ ❯ apps/api/src/management/maintenance.ts:27:724
+
+ ❯ idempotent apps/api/src/platform/core.ts:22:1047
+ ❯ transaction packages/database/src/index.ts:7:1159
+ ❯ tests/integration/maintenance-requests.test.ts:28:530
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  12:04:08
+   Duration  12.31s (tests 89%, import 8%, transform 4%)

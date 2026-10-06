@@ -1,0 +1,24 @@
+ Container haven-p02-api-run-f702d6127a8e Creating
+ Container haven-p02-api-run-f702d6127a8e Created
+
+ RUN  v5.0.3 /workspace
+
+ ✓ tests/integration/maintenance-requests.test.ts (5 tests) 26258ms
+   ✓ P12 linked tenant creates one versioned request with private owned photo, current manager triages and assigns with exact retained activity 8338ms
+   ✓ P12 a current manager can create an authorized request that its linked tenant sees, without impersonating tenant creation 4246ms
+   ✓ P12 foreign unit/persona/media, stale source versions, malformed labels and inactive workflow states deny without partial request roots 2766ms
+   ✓ P12 cross-request photo guessing, invalid transitions, stale request versions and wrong-team assignment deny; revoked grant denies manager and new tenant creates 8804ms
+   ✓ P12 SQL rejects unversioned runtime request and immutable photo/history edits; activity is committed with exact database timestamp 2063ms
+ ✓ tests/integration/tenant-leases.test.ts (5 tests) 52872ms
+   ✓ P11 linked tenant sees exact reconciled own balance without private staff references, actor/org fields or draft payments 15159ms
+   ✓ P11 foreign users, owners and guessed finance personas cannot read another linked lease or its document 2604ms
+   ✓ P11 documents are private while draft, then exact approved bound PDF is readable only on its linked lease and revoked asset versions deny 4776ms
+   ✓ P11 reversals reconcile own recorded balance and retained history without exposing correction reasons 27491ms
+   ✓ P11 bounded history pages keep full totals, tenant-link changes deny immediately and revoked professional grant does not erase tenant contract access 2786ms
+ ✓ tests/integration/account-privacy.test.ts (3 tests) 803ms
+   ✓ A06 one-snapshot personal export excludes another persona even for an administrator and keeps money as decimal strings 522ms
+
+ Test Files  3 passed (3)
+      Tests  13 passed (13)
+   Start at  12:08:09
+   Duration  84.03s (tests 96%, import 4%, transform 1%)
