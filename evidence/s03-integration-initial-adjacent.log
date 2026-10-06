@@ -1,0 +1,37 @@
+ Container haven-p02-api-run-1bdbd5596bea Creating
+ Container haven-p02-api-run-1bdbd5596bea Created
+
+ RUN  v5.0.3 /workspace
+
+ ❯ tests/integration/discovery-ranking.test.ts (2 tests | 2 failed) 271ms
+   × D06 known freshness/view/curated scores produce deterministic order, duplicate events cannot inflate it, and withdrawn or private data is excluded 266ms
+   × D06 public ranking rejects unsupported periods/sorts; development recommendations remain city/availability scoped 2ms
+ ✓ tests/integration/home-content.test.ts (3 tests) 2082ms
+   ✓ S03 versioned scheduled publication uses the exact eligible snapshot, preserves independent draft edits and current public visibility 964ms
+   ✓ S03 future and expired schedules stay absent; invalid city/category/version/link, guessed preview and forged editor permissions deny 514ms
+   ✓ S03 actual editor taxonomy is versioned with immutable history; disabled eligibility hides publication and blocks draft admission 599ms
+ ❯ tests/integration/home-discovery.test.ts (2 tests | 2 failed) 219ms
+   × D07 city-scoped bounded home feeds show only active eligible curation and disclosed sponsorship; withdrawal/sold-out remove cards immediately 208ms
+   × D07 an empty selected city returns empty feeds rather than borrowing another city; malformed/unknown requests are explicit 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/discovery-ranking.test.ts > D06 known freshness/view/curated scores produce deterministic order, duplicate events cannot inflate it, and withdrawn or private data is excluded
+ FAIL  tests/integration/discovery-ranking.test.ts > D06 public ranking rejects unsupported periods/sorts; development recommendations remain city/availability scoped
+ FAIL  tests/integration/home-discovery.test.ts > D07 city-scoped bounded home feeds show only active eligible curation and disclosed sponsorship; withdrawal/sold-out remove cards immediately
+ FAIL  tests/integration/home-discovery.test.ts > D07 an empty selected city returns empty feeds rather than borrowing another city; malformed/unknown requests are explicit
+TypeError: fetch failed
+Caused by: Error: connect ECONNREFUSED 127.0.0.1:8088
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -111, code: 'ECONNREFUSED', syscall: 'connect', address: '127.0.0.1', port: 8088 }
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  4 failed | 3 passed (7)
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+   Start at  16:49:33
+   Duration  7.67s (import 54%, tests 36%, transform 10%)
+
+     Import  108 modules were evaluated 178 times · 3.86s total, 54% of tracked time
+             ~1.52s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation

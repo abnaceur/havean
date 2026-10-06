@@ -1,0 +1,98 @@
+ Container haven-p09-runtime-tests-run-e9bdc86e93e4 Creating
+ Container haven-p09-runtime-tests-run-e9bdc86e93e4 Created
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/home-content.spec.ts:8:1 › S03 native English editorial draft preview publication interval and taxonomy with actual public properties (26.2s)
+  ✘  2 [mobile] › tests/e2e/home-content.spec.ts:8:1 › S03 native English editorial draft preview publication interval and taxonomy with actual public properties (13.4s)
+
+
+  1) [desktop] › tests/e2e/home-content.spec.ts:8:1 › S03 native English editorial draft preview publication interval and taxonomy with actual public properties
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected substring: "eligible"
+    Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+        1) <div role="alert" class="error-box">Each selection must be current, published and eli…</div> aka getByText('Each selection must be')
+        2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 15000ms
+      - waiting for getByRole('alert')
+
+
+      12 |  const revised=title+' revised';await row.getByRole('button',{name:'Edit '+title,exact:true}).click();dialog=page.getByRole('dialog',{name:'Edit home section',exact:true});await dialog.getByLabel('Section title',{exact:true}).fill(revised);await dialog.getByRole('button',{name:'Save home draft',exact:true}).click();await expect(dialog).not.toBeVisible();await expect(row).toContainText('version 3');await publicPage.reload();await expect(section.getByRole('heading',{name:title,exact:true})).toBeVisible();await expect(section.getByRole('heading',{name:revised,exact:true})).toHaveCount(0);await row.getByRole('button',{name:'Publish '+revised,exact:true}).click();await expect(row).toContainText('published version 4');await publicPage.reload();await expect(section.getByRole('heading',{name:revised,exact:true})).toBeVisible();
+      13 |  const oldLabel=await page.getByLabel('Category label buy',{exact:true}).inputValue();await page.getByLabel('Category label buy',{exact:true}).fill('S03 approved English homes');await page.getByRole('button',{name:'Save category buy',exact:true}).click();await expect(page.getByRole('button',{name:'Save category buy',exact:true})).toBeEnabled();await expect(page.getByLabel('Category label buy',{exact:true})).toHaveValue('S03 approved English homes');await publicPage.reload();await expect(section).toContainText('S03 approved English homes');await page.getByLabel('Category active buy',{exact:true}).uncheck();await page.getByRole('button',{name:'Save category buy',exact:true}).click();await expect(page.getByRole('button',{name:'Save category buy',exact:true})).toBeEnabled();await expect(page.getByLabel('Category active buy',{exact:true})).not.toBeChecked();await publicPage.reload();await expect(section).toHaveCount(0);await page.getByLabel('Category active buy',{exact:true}).check();await page.getByLabel('Category label buy',{exact:true}).fill(oldLabel);await page.getByRole('button',{name:'Save category buy',exact:true}).click();await expect(page.getByRole('button',{name:'Save category buy',exact:true})).toBeEnabled();await expect(page.getByLabel('Category active buy',{exact:true})).toBeChecked();await publicPage.reload();await expect(section).toBeVisible();
+    > 14 |  await fixtures.query("UPDATE listings SET status='withdrawn',version=version+1 WHERE id=$1",[source.id]);await publicPage.reload();await expect(section).toHaveCount(0);await row.getByRole('button',{name:'Publish '+revised,exact:true}).click();await expect(page.getByRole('alert')).toContainText('eligible');await row.getByRole('button',{name:'Archive '+revised,exact:true}).click();await expect(row).toContainText('archived');await page.reload();await expect(row).toContainText('archived');await publicPage.close();await login(page,'buyer',WEB,'/account');expect((await page.request.get(WEB+'/api/v1/ops/home-content?city=bj')).status()).toBe(403);expect((await page.request.get(WEB+'/api/v1/ops/home-content/'+id+'/preview')).status()).toBe(403);
+         |                                                                                                                                                                                                                                                                                           ^
+      15 | });
+      16 |
+        at /workspace/tests/e2e/home-content.spec.ts:14:283
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-desktop/error-context.md
+
+    Error Context: ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-desktop/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/home-content.spec.ts:8:1 › S03 native English editorial draft preview publication interval and taxonomy with actual public properties
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected substring: "eligible"
+    Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+        1) <div role="alert" class="error-box">Each selection must be current, published and eli…</div> aka getByText('Each selection must be')
+        2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 15000ms
+      - waiting for getByRole('alert')
+
+
+      12 |  const revised=title+' revised';await row.getByRole('button',{name:'Edit '+title,exact:true}).click();dialog=page.getByRole('dialog',{name:'Edit home section',exact:true});await dialog.getByLabel('Section title',{exact:true}).fill(revised);await dialog.getByRole('button',{name:'Save home draft',exact:true}).click();await expect(dialog).not.toBeVisible();await expect(row).toContainText('version 3');await publicPage.reload();await expect(section.getByRole('heading',{name:title,exact:true})).toBeVisible();await expect(section.getByRole('heading',{name:revised,exact:true})).toHaveCount(0);await row.getByRole('button',{name:'Publish '+revised,exact:true}).click();await expect(row).toContainText('published version 4');await publicPage.reload();await expect(section.getByRole('heading',{name:revised,exact:true})).toBeVisible();
+      13 |  const oldLabel=await page.getByLabel('Category label buy',{exact:true}).inputValue();await page.getByLabel('Category label buy',{exact:true}).fill('S03 approved English homes');await page.getByRole('button',{name:'Save category buy',exact:true}).click();await expect(page.getByRole('button',{name:'Save category buy',exact:true})).toBeEnabled();await expect(page.getByLabel('Category label buy',{exact:true})).toHaveValue('S03 approved English homes');await publicPage.reload();await expect(section).toContainText('S03 approved English homes');await page.getByLabel('Category active buy',{exact:true}).uncheck();await page.getByRole('button',{name:'Save category buy',exact:true}).click();await expect(page.getByRole('button',{name:'Save category buy',exact:true})).toBeEnabled();await expect(page.getByLabel('Category active buy',{exact:true})).not.toBeChecked();await publicPage.reload();await expect(section).toHaveCount(0);await page.getByLabel('Category active buy',{exact:true}).check();await page.getByLabel('Category label buy',{exact:true}).fill(oldLabel);await page.getByRole('button',{name:'Save category buy',exact:true}).click();await expect(page.getByRole('button',{name:'Save category buy',exact:true})).toBeEnabled();await expect(page.getByLabel('Category active buy',{exact:true})).toBeChecked();await publicPage.reload();await expect(section).toBeVisible();
+    > 14 |  await fixtures.query("UPDATE listings SET status='withdrawn',version=version+1 WHERE id=$1",[source.id]);await publicPage.reload();await expect(section).toHaveCount(0);await row.getByRole('button',{name:'Publish '+revised,exact:true}).click();await expect(page.getByRole('alert')).toContainText('eligible');await row.getByRole('button',{name:'Archive '+revised,exact:true}).click();await expect(row).toContainText('archived');await page.reload();await expect(row).toContainText('archived');await publicPage.close();await login(page,'buyer',WEB,'/account');expect((await page.request.get(WEB+'/api/v1/ops/home-content?city=bj')).status()).toBe(403);expect((await page.request.get(WEB+'/api/v1/ops/home-content/'+id+'/preview')).status()).toBe(403);
+         |                                                                                                                                                                                                                                                                                           ^
+      15 | });
+      16 |
+        at /workspace/tests/e2e/home-content.spec.ts:14:283
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-mobile/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-mobile/error-context.md
+
+    Error Context: ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-mobile/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/home-content/home-content-S03-native-En-b29bb-th-actual-public-properties-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/home-content.spec.ts:8:1 › S03 native English editorial draft preview publication interval and taxonomy with actual public properties
+    [mobile] › tests/e2e/home-content.spec.ts:8:1 › S03 native English editorial draft preview publication interval and taxonomy with actual public properties
