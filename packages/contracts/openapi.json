@@ -22729,19 +22729,24 @@
                       "type": "object",
                       "properties": {
                         "principal": {
-                          "type": "string"
+                          "type": "string",
+                          "pattern": "^\\d+\\.\\d{2}(?![\\s\\S])"
                         },
                         "monthlyPayment": {
-                          "type": "string"
+                          "type": "string",
+                          "pattern": "^\\d+\\.\\d{2}(?![\\s\\S])"
                         },
                         "finalPayment": {
-                          "type": "string"
+                          "type": "string",
+                          "pattern": "^\\d+\\.\\d{2}(?![\\s\\S])"
                         },
                         "totalInterest": {
-                          "type": "string"
+                          "type": "string",
+                          "pattern": "^\\d+\\.\\d{2}(?![\\s\\S])"
                         },
                         "totalRepaid": {
-                          "type": "string"
+                          "type": "string",
+                          "pattern": "^\\d+\\.\\d{2}(?![\\s\\S])"
                         },
                         "method": {
                           "type": "string",
@@ -22771,16 +22776,20 @@
                                 "maximum": 9007199254740991
                               },
                               "principal": {
-                                "type": "string"
+                                "type": "string",
+                                "pattern": "^\\d+\\.\\d{2}(?![\\s\\S])"
                               },
                               "interest": {
-                                "type": "string"
+                                "type": "string",
+                                "pattern": "^\\d+\\.\\d{2}(?![\\s\\S])"
                               },
                               "payment": {
-                                "type": "string"
+                                "type": "string",
+                                "pattern": "^\\d+\\.\\d{2}(?![\\s\\S])"
                               },
                               "balance": {
-                                "type": "string"
+                                "type": "string",
+                                "pattern": "^\\d+\\.\\d{2}(?![\\s\\S])"
                               }
                             },
                             "required": [
@@ -22970,17 +22979,17 @@
                 "properties": {
                   "price": {
                     "type": "string",
-                    "pattern": "^\\d{1,13}(\\.\\d{1,2})?$"
+                    "pattern": "^\\d{1,13}(\\.\\d{1,2})?(?![\\s\\S])"
                   },
                   "downPayment": {
                     "type": "string",
-                    "pattern": "^\\d{1,13}(\\.\\d{1,2})?$"
+                    "pattern": "^\\d{1,13}(\\.\\d{1,2})?(?![\\s\\S])"
                   },
                   "annualRate": {
                     "anyOf": [
                       {
                         "type": "string",
-                        "pattern": "^\\d{1,2}(\\.\\d{1,6})?$"
+                        "pattern": "^\\d{1,2}(\\.\\d{1,6})?(?![\\s\\S])"
                       },
                       {
                         "type": "number",
@@ -75862,7 +75871,7 @@
                   "budget": {
                     "nullable": true,
                     "type": "string",
-                    "pattern": "^\\d{1,13}(\\.\\d{1,2})?$"
+                    "pattern": "^\\d{1,13}(\\.\\d{1,2})?(?![\\s\\S])"
                   },
                   "currency": {
                     "type": "string",
