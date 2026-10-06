@@ -1,0 +1,91 @@
+
+> haven-real-estate@0.1.0 build /workspace
+> pnpm -r --workspace-concurrency=1 build
+
+Scope: 9 of 10 workspace projects
+
+> @haven/config@0.1.0 build /workspace/packages/config
+> node ../../scripts/build-runtime.mjs config
+
+{"event":"runtime.compiled","app":"config","files":3,"workspaceSourceImports":false}
+
+> @haven/contracts@0.1.0 build /workspace/packages/contracts
+> node ../../scripts/build-runtime.mjs contracts
+
+{"event":"runtime.compiled","app":"contracts","files":62,"workspaceSourceImports":false}
+
+> @haven/database@0.1.0 build /workspace/packages/database
+> node ../../scripts/build-runtime.mjs database
+
+{"event":"runtime.compiled","app":"database","files":1,"workspaceSourceImports":false}
+
+> @haven/test-support@0.1.0 build /workspace/packages/test-support
+> tsc --noEmit
+
+
+> @haven/api@0.1.0 build /workspace/apps/api
+> node ../../scripts/build-runtime.mjs api
+
+{"event":"runtime.compiled","app":"api","files":103,"workspaceSourceImports":false}
+
+> @haven/worker@0.1.0 build /workspace/apps/worker
+> node ../../scripts/build-runtime.mjs worker
+
+{"event":"runtime.compiled","app":"worker","files":7,"workspaceSourceImports":false}
+
+> @haven/ui@0.1.0 build /workspace/packages/ui
+> tsc --noEmit
+
+
+> @haven/ops@0.1.0 build /workspace/apps/ops
+> next build
+
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 21ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.8s
+  Running TypeScript ...
+  Finished TypeScript in 10.5s ...
+  Collecting page data using 6 workers ...
+  Generating static pages using 6 workers (0/3) ...
+✓ Generating static pages using 6 workers (3/3) in 458ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+├ ƒ /[[...path]]
+├ ƒ /api/[...path]
+└ ○ /robots.txt
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+> @haven/web@0.1.0 build /workspace/apps/web
+> node scripts/copy-maplibre-worker.mjs && next build
+
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 21ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.5s
+  Running TypeScript ...
+  Finished TypeScript in 11.2s ...
+  Collecting page data using 8 workers ...
+  Generating static pages using 8 workers (0/3) ...
+✓ Generating static pages using 8 workers (3/3) in 504ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+├ ƒ /[[...path]]
+├ ƒ /api/[...path]
+├ ○ /robots.txt
+├ ƒ /sitemap.xml
+└ ƒ /sitemaps/[page]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand

@@ -1,0 +1,74 @@
+ Container haven-p09-runtime-tests-run-1d6624dd126c Creating
+ Container haven-p09-runtime-tests-run-1d6624dd126c Created
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/provider-security-readiness.spec.ts:8:1 › Q06 / real sessions reject CSRF, rotated credentials and another actor’s scanned private download (2.9s)
+  ✘  2 [mobile] › tests/e2e/provider-security-readiness.spec.ts:8:1 › Q06 / real sessions reject CSRF, rotated credentials and another actor’s scanned private download (1.7s)
+
+
+  1) [desktop] › tests/e2e/provider-security-readiness.spec.ts:8:1 › Q06 / real sessions reject CSRF, rotated credentials and another actor’s scanned private download
+
+    Error: expect(received).toBeTruthy()
+
+    Received: undefined
+
+       9 |  test.setTimeout(180000);await login(page,'buyer',web,'/account');const before=(await (await page.request.get(web+'/api/v1/me')).json()).data;
+      10 |  const rejected=await page.request.patch(web+'/api/v1/profiles/'+before.id,{headers:{Origin:'https://untrusted.example.test','Idempotency-Key':crypto.randomUUID()},data:{version:before.version,displayName:'Must not be saved'}});expect(rejected.status()).toBe(403);expect((await rejected.json()).error.code).toBe('CSRF_REJECTED');expect((await (await page.request.get(web+'/api/v1/me')).json()).data).toEqual(before);
+    > 11 |  const asset=(await fixtures.query("SELECT id FROM media_assets WHERE owner_id='00000000-0000-4000-8000-000000000004' AND purpose='document' AND visibility='private' AND status='approved' AND scan_at IS NOT NULL ORDER BY created_at DESC LIMIT 1")).rows[0];expect(asset).toBeTruthy();expect((await page.request.get(web+'/api/v1/documents/'+asset.id+'/download')).status()).toBe(404);expect((await page.request.get(web+'/api/v1/media/'+asset.id+'/view')).status()).toBe(404);
+         |                                                                                                                                                                                                                                                                               ^
+      12 |  const managerContext=await browser.newContext({...info.project.use,baseURL:ops}),managerPage=await managerContext.newPage();try{await login(managerPage,'manager',ops,'/ops/management');const link=await managerPage.request.post(ops+'/api/v1/documents/'+asset.id+'/download-link',{headers:{Origin:ops}});expect(link.ok()).toBe(true);const ticket=(await link.json()).data.url;const own=await managerPage.request.get(ops+ticket);expect(own.ok()).toBe(true);expect(own.headers()['content-type']).toContain('application/pdf');expect((await own.body()).subarray(0,5).toString()).toBe('%PDF-');expect((await page.request.get(web+ticket)).status()).toBe(403);}finally{await managerContext.close();}
+      13 |  const first=(await page.context().cookies()).find(c=>c.name==='haven_session')!.value;await login(page,'buyer',web,'/account');const second=(await page.context().cookies()).find(c=>c.name==='haven_session')!.value;expect(second).not.toBe(first);const old=await request.newContext({baseURL:web,extraHTTPHeaders:{Cookie:'haven_session='+first}});try{expect((await old.get('/api/v1/me')).status()).toBe(401);}finally{await old.dispose();}expect(await page.evaluate(()=>Object.keys(localStorage).some(k=>/token|session/i.test(k)))).toBe(false);await page.screenshot({path:`evidence/q06-session-security-${info.project.name}.png`,scale:'css'});
+      14 | });
+        at /workspace/tests/e2e/provider-security-readiness.spec.ts:11:271
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/q06-sessions-final/provider-security-readines-9a676-’s-scanned-private-download-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/q06-sessions-final/provider-security-readines-9a676-’s-scanned-private-download-desktop/error-context.md
+
+    Error Context: ../artifacts/q06-sessions-final/provider-security-readines-9a676-’s-scanned-private-download-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/q06-sessions-final/provider-security-readines-9a676-’s-scanned-private-download-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/q06-sessions-final/provider-security-readines-9a676-’s-scanned-private-download-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/provider-security-readiness.spec.ts:8:1 › Q06 / real sessions reject CSRF, rotated credentials and another actor’s scanned private download
+
+    Error: expect(received).toBeTruthy()
+
+    Received: undefined
+
+       9 |  test.setTimeout(180000);await login(page,'buyer',web,'/account');const before=(await (await page.request.get(web+'/api/v1/me')).json()).data;
+      10 |  const rejected=await page.request.patch(web+'/api/v1/profiles/'+before.id,{headers:{Origin:'https://untrusted.example.test','Idempotency-Key':crypto.randomUUID()},data:{version:before.version,displayName:'Must not be saved'}});expect(rejected.status()).toBe(403);expect((await rejected.json()).error.code).toBe('CSRF_REJECTED');expect((await (await page.request.get(web+'/api/v1/me')).json()).data).toEqual(before);
+    > 11 |  const asset=(await fixtures.query("SELECT id FROM media_assets WHERE owner_id='00000000-0000-4000-8000-000000000004' AND purpose='document' AND visibility='private' AND status='approved' AND scan_at IS NOT NULL ORDER BY created_at DESC LIMIT 1")).rows[0];expect(asset).toBeTruthy();expect((await page.request.get(web+'/api/v1/documents/'+asset.id+'/download')).status()).toBe(404);expect((await page.request.get(web+'/api/v1/media/'+asset.id+'/view')).status()).toBe(404);
+         |                                                                                                                                                                                                                                                                               ^
+      12 |  const managerContext=await browser.newContext({...info.project.use,baseURL:ops}),managerPage=await managerContext.newPage();try{await login(managerPage,'manager',ops,'/ops/management');const link=await managerPage.request.post(ops+'/api/v1/documents/'+asset.id+'/download-link',{headers:{Origin:ops}});expect(link.ok()).toBe(true);const ticket=(await link.json()).data.url;const own=await managerPage.request.get(ops+ticket);expect(own.ok()).toBe(true);expect(own.headers()['content-type']).toContain('application/pdf');expect((await own.body()).subarray(0,5).toString()).toBe('%PDF-');expect((await page.request.get(web+ticket)).status()).toBe(403);}finally{await managerContext.close();}
+      13 |  const first=(await page.context().cookies()).find(c=>c.name==='haven_session')!.value;await login(page,'buyer',web,'/account');const second=(await page.context().cookies()).find(c=>c.name==='haven_session')!.value;expect(second).not.toBe(first);const old=await request.newContext({baseURL:web,extraHTTPHeaders:{Cookie:'haven_session='+first}});try{expect((await old.get('/api/v1/me')).status()).toBe(401);}finally{await old.dispose();}expect(await page.evaluate(()=>Object.keys(localStorage).some(k=>/token|session/i.test(k)))).toBe(false);await page.screenshot({path:`evidence/q06-session-security-${info.project.name}.png`,scale:'css'});
+      14 | });
+        at /workspace/tests/e2e/provider-security-readiness.spec.ts:11:271
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/q06-sessions-final/provider-security-readines-9a676-’s-scanned-private-download-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/q06-sessions-final/provider-security-readines-9a676-’s-scanned-private-download-mobile/error-context.md
+
+    Error Context: ../artifacts/q06-sessions-final/provider-security-readines-9a676-’s-scanned-private-download-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/q06-sessions-final/provider-security-readines-9a676-’s-scanned-private-download-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/q06-sessions-final/provider-security-readines-9a676-’s-scanned-private-download-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/provider-security-readiness.spec.ts:8:1 › Q06 / real sessions reject CSRF, rotated credentials and another actor’s scanned private download
+    [mobile] › tests/e2e/provider-security-readiness.spec.ts:8:1 › Q06 / real sessions reject CSRF, rotated credentials and another actor’s scanned private download
