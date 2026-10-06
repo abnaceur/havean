@@ -34,6 +34,7 @@ import {managementGrantCreate,managementGrantUpdate,managementGrantPage} from '.
 import {tenantInvite,tenantInviteDecision} from '../tenant-links';
 import {leaseDraftCreate,leaseDraftUpdate} from '../lease-drafts';
 import {leaseActivation,leaseRenewal,leaseEnding} from '../lease-workflow';
+import {chargeGeneration,chargePreviewQuery} from '../recurring-charges';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -207,7 +208,6 @@ export const operations={
 "ManagementController_allocate":{method:"POST",path:"/api/v1/ops/allocations",params:z.object({}),query:z.object({}),body:z.object({paymentId:z.string().uuid(),chargeId:z.string().uuid(),amount:money}),response:responses["ManagementController_allocate"]},
 "ManagementController_charges":{method:"GET",path:"/api/v1/ops/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_charges"]},
 "ManagementController_deposit":{method:"POST",path:"/api/v1/ops/deposits",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),kind:z.enum(['received','released']),amount:money,reason:z.string().min(5).max(500)}),response:responses["ManagementController_deposit"]},
-"ManagementController_generate":{method:"POST",path:"/api/v1/ops/charges/generate",params:z.object({}),query:z.object({}),body:z.object({period:z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/)}),response:responses["ManagementController_generate"]},
 "ManagementController_leases":{method:"GET",path:"/api/v1/ops/leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_leases"]},
 "ManagementController_maintain":{method:"PATCH",path:"/api/v1/ops/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.string(),version:z.number().int(),assignee:z.string().max(100).optional(),publicNote:z.string().max(2000).optional(),internalNote:z.string().max(2000).optional()}),response:responses["ManagementController_maintain"]},
 "ManagementController_maintenance":{method:"GET",path:"/api/v1/ops/maintenance",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_maintenance"]},
@@ -268,6 +268,8 @@ export const operations={
 "RankingsController_developments":{method:"GET",path:"/api/v1/recommendations/developments",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj'),limit:z.coerce.number().int().min(1).max(20).default(6)}),body:z.undefined(),response:responses["RankingsController_developments"]},
 "RankingsController_rankings":{method:"GET",path:"/api/v1/rankings",params:z.object({}),query:rankingFilters,body:z.undefined(),response:responses["RankingsController_rankings"]},
 "RankingsController_recommendations":{method:"GET",path:"/api/v1/recommendations/listings",params:z.object({}),query:listingFilters,body:z.undefined(),response:responses["RankingsController_recommendations"]},
+"RecurringChargesController_generate":{method:"POST",path:"/api/v1/ops/charges/generate",params:z.object({}),query:z.object({}),body:chargeGeneration,response:responses["RecurringChargesController_generate"]},
+"RecurringChargesController_preview":{method:"GET",path:"/api/v1/ops/charge-generation-preview",params:z.object({}),query:chargePreviewQuery,body:z.undefined(),response:responses["RecurringChargesController_preview"]},
 "RentalTermsController_read":{method:"GET",path:"/api/v1/ops/listings/:id/rental-terms",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["RentalTermsController_read"]},
 "RentalTermsController_update":{method:"PATCH",path:"/api/v1/ops/listings/:id/rental-terms",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:rentalTermsUpdate,response:responses["RentalTermsController_update"]},
 "RichMediaController_attach":{method:"POST",path:"/api/v1/ops/:resource/:id/media",params:z.object({"resource":z.enum(['listings','developments']),"id":z.string().min(1)}),query:z.object({}),body:z.object({assetId:z.string().uuid(),kind,title:z.string().min(2).max(120),floorPlanId:z.string().uuid().optional(),position:z.number().int().min(0).max(1000).default(0),version:z.number().int(),metadata:metadata.default({hotspots:[],caption:''})}),response:responses["RichMediaController_attach"]},

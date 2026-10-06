@@ -1,0 +1,10 @@
+import {z} from 'zod';
+export const chargePeriod=z.string().regex(/^[1-9]\d{3}-(0[1-9]|1[0-2])(?![\s\S])/);
+export const chargePreviewQuery=z.object({period:chargePeriod,page:z.coerce.number().int().min(1).max(10000).default(1)}).strict();
+const version=z.number().int().positive();
+export const chargeGenerationItem=z.object({leaseId:z.uuid(),leaseVersion:version,unitVersion:version,grantVersion:version,configVersion:version}).strict();
+export const chargeGeneration=z.object({period:chargePeriod,items:z.array(chargeGenerationItem).min(1).max(20).refine(v=>new Set(v.map(i=>i.leaseId)).size===v.length,'Choose each lease once'),confirm:z.literal(true)}).strict();
+export const chargePreviewItem=chargeGenerationItem.extend({community:z.string(),tenant:z.string(),currency:z.string(),rent:z.string(),amount:z.string(),dueDate:z.string(),occupiedDays:z.number().int(),monthDays:z.number().int(),proration:z.enum(['calendar_days','full_month']),dueDaySource:z.enum(['lease','configured_historical_default']),exists:z.boolean()});
+export const chargePreviewRecord=z.object({period:chargePeriod,page:z.number().int(),limit:z.literal(20),total:z.number().int(),items:z.array(chargePreviewItem)});
+export const chargeGenerationRecord=z.object({period:chargePeriod,generated:z.number().int(),existing:z.number().int(),chargeIds:z.array(z.uuid())});
+export type ChargePreviewRecord=z.infer<typeof chargePreviewRecord>;
