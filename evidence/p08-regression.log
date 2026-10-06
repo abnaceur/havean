@@ -1,0 +1,96 @@
+ Container haven-p02-api-run-8f2a8b9abe21 Creating
+ Container haven-p02-api-run-8f2a8b9abe21 Created
+
+ RUN  v5.0.3 /workspace
+
+ ❯ tests/integration/payment-allocations.test.ts (7 tests | 5 failed) 200539ms
+   × P08 partial allocation leaves exact outstanding and credit, matching receipt creates one root, and settlement retains overpayment 30015ms
+   × P08 concurrent allocations respect payment 100.10 and charge 200.20 caps 30002ms
+   ✓ P08 concurrent allocations respect payment 200.20 and charge 100.10 caps 22653ms
+   × P08 cross-lease, currency, stale versions, confirmation and over-allocation deny without changing balances 30007ms
+   × P08 PostgreSQL independently serializes direct allocations and prevents immutable amount edits 30002ms
+   ✓ P08 actual finance-only staff can allocate, manager-only and guessed foreign staff cannot, and revoked grants deny receipts 22579ms
+   × P08 allocation and existing linked reversal share lock order and retained undo versions 30003ms
+ ✓ tests/integration/payment-evidence.test.ts (5 tests) 48848ms
+   ✓ P07 native draft stays out of balances and tenant reads; posting exact evidence retains history and audit once 15079ms
+   ✓ P07 edits only current drafts, retains original amount snapshots and denies posted amount changes at API and database 14753ms
+   ✓ P07 negative/float/scientific money, foreign currency and stale authority deny creation with no payment roots 2571ms
+   ✓ P07 posting requires current saved versions and confirmation, concurrent attempts create one post, and revoked grants deny receipts 10620ms
+   ✓ P07 drafts cannot be allocated or reversed before posting and actual manager-only authority cannot record payments 5745ms
+ ✓ tests/integration/lease-lifecycle.test.ts (5 tests) 32011ms
+   ✓ P05 valid next term retains original terms, links history and replays one renewal draft 9261ms
+   ✓ P05 overlapping next terms and stale/currency versions deny renewal without partial linked drafts 7261ms
+   ✓ P05 ending records termination reason and original history, never republishes, and revoked authority denies receipt replay 3404ms
+   ✓ P05 concurrent renewal requests yield one retained successor and concurrent endings yield one record 7866ms
+   ✓ P05 historical lease ending retains unknown provenance and new renewal uses current native authority 4150ms
+ ✓ tests/integration/recurring-charges.test.ts (6 tests) 15693ms
+   ✓ P06 leap-month proration uses exact cents, term-aware due date and one charge across retry and repeated month 3490ms
+   ✓ P06 concurrent generators cannot duplicate a charge; ended and out-of-term leases are excluded 4925ms
+   ✓ P06 stale versions, wrong scope and missing confirmation deny generation; grant revocation denies cached receipt 3390ms
+   ✓ P06 market full-month policy and explicit historical due-day fallback are snapshotted without inventing original terms 1125ms
+   ✓ P06 actual finance-only membership can generate within its granted property; a manager without finance cannot 2670ms
+ ✓ tests/integration/lease-activation.test.ts (4 tests) 16344ms
+   ✓ P04 atomic activation withdraws the public rental offer with exact history, audit and matching receipts 2755ms
+   ✓ P04 simultaneous overlapping draft activations yield exactly one success and one current-state conflict 3037ms
+   ✓ P04 property occupation conflicts with child rooms while sibling rooms can hold separate exclusive terms 7644ms
+   ✓ P04 stale versions, missing confirmation and expired terms deny activation without withdrawing publication 2839ms
+ ✓ tests/integration/lease-drafts.test.ts (4 tests) 10132ms
+   ✓ P03 creates one permitted canonical lease draft with exact decimals, monthly due terms and private attachment on retry 1054ms
+   ✓ P03 rejects invalid calendar/range/currency, floating amounts, stale sources and unauthorized documents without partial lease rows 999ms
+   ✓ P03 updates only current draft versions, retains original history and denies ended lease term edits 3924ms
+   ✓ P03 another real manager retains an existing team PDF while foreign and tenant document access are denied 1829ms
+ ✓ tests/integration/tenant-links.test.ts (4 tests) 6090ms
+   ✓ P02 verified recipient accepts exact grant invitation once and reads own linked profile without enumerating others 5726ms
+ ✓ tests/integration/account-privacy.test.ts (3 tests) 708ms
+   ✓ A06 one-snapshot personal export excludes another persona even for an administrator and keeps money as decimal strings 371ms
+ ✓ tests/integration/management-grants.test.ts (5 tests) 695ms
+   ✓ P01 owner grant admits manager to the same canonical unit, retries persist one root and privacy history 361ms
+ ✓ tests/integration/database.test.ts (15 tests) 365ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/payment-allocations.test.ts > P08 partial allocation leaves exact outstanding and credit, matching receipt creates one root, and settlement retains overpayment
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/payment-allocations.test.ts:27:1
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/integration/payment-allocations.test.ts > P08 concurrent allocations respect payment 100.10 and charge 200.20 caps
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/payment-allocations.test.ts:28:51
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/integration/payment-allocations.test.ts > P08 cross-lease, currency, stale versions, confirmation and over-allocation deny without changing balances
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/payment-allocations.test.ts:29:1
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/integration/payment-allocations.test.ts > P08 PostgreSQL independently serializes direct allocations and prevents immutable amount edits
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/payment-allocations.test.ts:30:1
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/integration/payment-allocations.test.ts > P08 allocation and existing linked reversal share lock order and retained undo versions
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/payment-allocations.test.ts:32:1
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed | 9 passed (10)
+      Tests  5 failed | 53 passed (58)
+   Start at  10:23:24
+   Duration  348.06s (tests 96%, import 4%)

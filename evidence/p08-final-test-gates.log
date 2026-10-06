@@ -1,0 +1,40 @@
+time="2026-10-06T14:31:55+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-api-run-76d8cfd161b0 Creating
+ Container haven-api-run-76d8cfd161b0 Created
+
+> haven-real-estate@0.1.0 lint /workspace
+> eslint . && node scripts/boundaries.mjs
+
+Application import boundaries passed
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+packages/ui typecheck: Done
+apps/api typecheck: src/inventory/digitization/multipart.ts(11,219): error TS2769: No overload matches this call.
+apps/api typecheck:   Overload 1 of 2, '(input: ListPartsCommandInput): ListPartsCommand', gave the following error.
+apps/api typecheck:     Type 'number | undefined' is not assignable to type 'string | undefined'.
+apps/api typecheck:       Type 'number' is not assignable to type 'string'.
+apps/api typecheck:   Overload 2 of 2, '(input: ListPartsCommandInput): ListPartsCommand', gave the following error.
+apps/api typecheck:     Type 'number | undefined' is not assignable to type 'string | undefined'.
+apps/api typecheck:       Type 'number' is not assignable to type 'string'.
+apps/api typecheck: src/inventory/digitization/multipart.ts(11,307): error TS2322: Type 'string | undefined' is not assignable to type 'number | undefined'.
+apps/api typecheck:   Type 'string' is not assignable to type 'number'.
+apps/api typecheck: Failed
+/workspace/apps/api:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @haven/api@0.1.0 typecheck: `tsc --noEmit`
+Exit status 2
+ ELIFECYCLE  Command failed with exit code 2.
