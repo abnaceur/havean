@@ -6,7 +6,7 @@ import {submitAccountInquiry} from './inquiries.js';
 import {Controller,Get,Post,Put,Delete,Patch,Param,Req,Body,Query,Inject} from '@nestjs/common';
 import type {FastifyRequest} from 'fastify';
 import {z} from 'zod';
-import {messageCreate,favoriteMutation,inquirySchema,leadStageUpdate,viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel,viewingCalendarQuery} from '@haven/contracts';
+import {messageCreate,messageHistoryQuery,conversationListQuery,favoriteMutation,inquirySchema,leadStageUpdate,viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel,viewingCalendarQuery} from '@haven/contracts';
 import {event} from '@haven/database';
 import {Identity,data,fail,transaction,idempotent} from '../platform/core.js';
 @Controller('api/v1')
@@ -34,7 +34,7 @@ export class EngagementController{
  @Post('viewings') async book(@Req() req:FastifyRequest,@Body() body:unknown){const a=await this.identity.actor(req),x=viewingBookingCreate.parse(body);return reserveViewing(a,req,x);}
  @Post('viewings/:id/cancel') async cancel(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req),x=viewingBookingCancel.parse(body);z.uuid().parse(id);return cancelOwnViewing(a,req,id,x);}
  @Post('ops/viewings/:id/confirm') async confirm(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager','admin']),x=viewingBookingConfirm.parse(body);z.uuid().parse(id);return confirmViewing(a,req,id,x);}
- @Get('conversations') async conversations(@Req() req:FastifyRequest){const a=await this.identity.actor(req);return transaction(a,async c=>data((await c.query('SELECT id,resource_id,created_at FROM conversations WHERE conversation_scope(id) ORDER BY created_at DESC,id LIMIT 100')).rows));}
- @Get('conversations/:id/messages') async messages(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);return readMessages(a,id);}
+ @Get('conversations') async conversations(@Req() req:FastifyRequest,@Query() input:unknown={}){const a=await this.identity.actor(req),x=conversationListQuery.parse(input);return transaction(a,async c=>data((await c.query(`SELECT c.id,c.resource_id,c.created_at,c.resource_type,c.state,ARRAY(SELECT p.display_name FROM conversation_members cm JOIN profiles p ON p.id=cm.user_id WHERE cm.conversation_id=c.id AND cm.status='active' ORDER BY cm.kind,cm.user_id) participants,(SELECT count(*)::text FROM messages m WHERE m.conversation_id=c.id AND m.sender_id<>$1 AND m.sequence>coalesce(r.sequence,0)) unread_count FROM conversations c LEFT JOIN conversation_read_cursors r ON r.conversation_id=c.id AND r.user_id=$1 WHERE conversation_scope(c.id) ORDER BY c.created_at DESC,c.id LIMIT 100 OFFSET $2`,[a.id,(x.page-1)*100])).rows));}
+ @Get('conversations/:id/messages') async messages(@Req() req:FastifyRequest,@Param('id') id:string,@Query() input:unknown={}){const a=await this.identity.actor(req),x=messageHistoryQuery.parse(input);return readMessages(a,id,x);}
  @Post('conversations/:id/messages') async message(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req),x=messageCreate.parse(body);return persistMessage(a,id,x);}
 }

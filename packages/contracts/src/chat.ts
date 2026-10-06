@@ -6,3 +6,10 @@ export const chatAttachment=z.object({assetId:z.uuid(),version:z.number().int().
 export const chatMessage=z.object({id:z.uuid(),conversation_id:z.uuid(),sender_id:z.uuid(),sequence:z.string().regex(/^[1-9]\d*$/),version:z.number().int().positive(),body:z.string(),created_at:z.string(),attachments:z.array(chatAttachment)});
 export type MessageCreateInput=z.input<typeof messageCreate>;
 export type ChatMessageRecord=z.infer<typeof chatMessage>;
+
+const sequence=z.string().regex(/^(0|[1-9]\d*)$/).refine(v=>BigInt(v)<=9223372036854775807n,'Sequence is out of range');
+export const messageHistoryQuery=z.object({before:sequence.optional(),after:sequence.optional(),limit:z.coerce.number().int().min(1).max(100).default(100)}).strict().refine(v=>!(v.before&&v.after),'Use either before or after');
+export const conversationListQuery=z.object({page:z.coerce.number().int().min(1).max(10000).default(1)}).strict();
+export const readCursorUpdate=z.object({version:z.number().int().nonnegative(),sequence}).strict();
+export const readCursor=z.object({version:z.number().int().nonnegative(),sequence});
+export const conversationSummary=z.object({id:z.uuid(),resource_id:z.uuid(),created_at:z.string(),resource_type:z.string().nullable(),state:z.enum(['legacy','active','closed']),unread_count:sequence,participants:z.array(z.string())});

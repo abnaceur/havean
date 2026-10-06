@@ -93,3 +93,5 @@ Viewing calendars are available at `/account/viewings` and `/ops/viewings`. Conf
 Conversation participants and inquiry context are shown at `/account/messages` and `/ops/messages`. Current assignment/membership controls every read and authenticated socket subscription; see [conversation authorization](docs/adr/conversation-authorization.md).
 
 Messages commit before acknowledgement, retain drafts for receipt retries and share scanned files only with current participants; see [durable private messages](docs/adr/durable-private-messages.md).
+
+Inbox selection survives refresh, unread counts use own committed read cursors, and older messages remain accessible; see [conversation read state](docs/adr/conversation-read-state.md).

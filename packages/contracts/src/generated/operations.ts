@@ -27,7 +27,7 @@ import {availabilityUpdate,availabilityBlockCreate,availabilityBlockCancel,viewi
 import {viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel} from '../viewing-bookings';
 import {viewingCalendarQuery,viewingRescheduleQuery,viewingReschedule,viewingTerminalAction} from '../viewing-calendar';
 import {leadExportQuery,viewingExportQuery} from '../crm-exports';
-import {messageCreate,chatUploadIntent} from '../chat';
+import {messageCreate,chatUploadIntent,messageHistoryQuery,conversationListQuery,readCursorUpdate} from '../chat';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -68,7 +68,9 @@ export const operations={
 "BrowsingHistoryController_remove":{method:"DELETE",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyVersion,response:responses["BrowsingHistoryController_remove"]},
 "ChatMediaController_download":{method:"GET",path:"/api/v1/conversations/:conversationId/attachments/:id",params:z.object({"conversationId":z.string().min(1),"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ChatMediaController_download"]},
 "ChatMediaController_intent":{method:"POST",path:"/api/v1/conversations/:id/attachment-intents",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:chatUploadIntent,response:responses["ChatMediaController_intent"]},
+"ConversationsController_cursor":{method:"GET",path:"/api/v1/conversations/:id/read-cursor",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ConversationsController_cursor"]},
 "ConversationsController_detail":{method:"GET",path:"/api/v1/conversations/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ConversationsController_detail"]},
+"ConversationsController_read":{method:"PATCH",path:"/api/v1/conversations/:id/read-cursor",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:readCursorUpdate,response:responses["ConversationsController_read"]},
 "CrmController_detail":{method:"GET",path:"/api/v1/ops/leads/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["CrmController_detail"]},
 "CrmController_note":{method:"POST",path:"/api/v1/ops/leads/:id/notes",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leadNoteCreate,response:responses["CrmController_note"]},
 "CrmController_queue":{method:"GET",path:"/api/v1/ops/lead-queue",params:z.object({}),query:leadQueueFilters,body:z.undefined(),response:responses["CrmController_queue"]},
@@ -125,7 +127,7 @@ export const operations={
 "EngagementController_book":{method:"POST",path:"/api/v1/viewings",params:z.object({}),query:z.object({}),body:viewingBookingCreate,response:responses["EngagementController_book"]},
 "EngagementController_cancel":{method:"POST",path:"/api/v1/viewings/:id/cancel",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewingBookingCancel,response:responses["EngagementController_cancel"]},
 "EngagementController_confirm":{method:"POST",path:"/api/v1/ops/viewings/:id/confirm",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewingBookingConfirm,response:responses["EngagementController_confirm"]},
-"EngagementController_conversations":{method:"GET",path:"/api/v1/conversations",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_conversations"]},
+"EngagementController_conversations":{method:"GET",path:"/api/v1/conversations",params:z.object({}),query:conversationListQuery,body:z.undefined(),response:responses["EngagementController_conversations"]},
 "EngagementController_favorite":{method:"PUT",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:favoriteMutation,response:responses["EngagementController_favorite"]},
 "EngagementController_favorites":{method:"GET",path:"/api/v1/me/favorites",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_favorites"]},
 "EngagementController_favoriteState":{method:"GET",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_favoriteState"]},
@@ -134,7 +136,7 @@ export const operations={
 "EngagementController_lead":{method:"PATCH",path:"/api/v1/ops/leads/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leadStageUpdate,response:responses["EngagementController_lead"]},
 "EngagementController_leads":{method:"GET",path:"/api/v1/ops/leads",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_leads"]},
 "EngagementController_message":{method:"POST",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:messageCreate,response:responses["EngagementController_message"]},
-"EngagementController_messages":{method:"GET",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_messages"]},
+"EngagementController_messages":{method:"GET",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:messageHistoryQuery,body:z.undefined(),response:responses["EngagementController_messages"]},
 "EngagementController_opsViewings":{method:"GET",path:"/api/v1/ops/viewings",params:z.object({}),query:viewingCalendarQuery,body:z.undefined(),response:responses["EngagementController_opsViewings"]},
 "EngagementController_unfavorite":{method:"DELETE",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:favoriteMutation,response:responses["EngagementController_unfavorite"]},
 "EngagementController_viewings":{method:"GET",path:"/api/v1/me/viewings",params:z.object({}),query:viewingCalendarQuery,body:z.undefined(),response:responses["EngagementController_viewings"]},

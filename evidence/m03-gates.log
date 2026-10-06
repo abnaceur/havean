@@ -1,0 +1,117 @@
+ Container haven-api-run-ca4d3fe663ac Creating 
+ Container haven-api-run-ca4d3fe663ac Created 
+
+> haven-real-estate@0.1.0 db:migrate /workspace
+> tsx packages/database/src/migrate.ts
+
+Applied 097-conversation-read-cursors.sql
+ Container haven-integration-api-run-bf78bbd88dc3 Creating 
+ Container haven-integration-api-run-bf78bbd88dc3 Created 
+
+> haven-real-estate@0.1.0 db:migrate /workspace
+> tsx packages/database/src/migrate.ts
+
+Applied 097-conversation-read-cursors.sql
+ Container haven-api-run-fadfe1f5f59d Creating 
+ Container haven-api-run-fadfe1f5f59d Created 
+
+> haven-real-estate@0.1.0 contracts:models /workspace
+> node scripts/generate-models.mjs
+
+Generated 91 model schemas; no database values exported.
+ Container haven-api-run-52e9219da9ca Creating 
+ Container haven-api-run-52e9219da9ca Created 
+
+> haven-real-estate@0.1.0 contracts:generate /workspace
+> node scripts/generate-contracts.mjs && tsx scripts/generate-openapi.ts
+
+Generated 243 typed API operations.
+Generated OpenAPI from canonical schemas
+ Container haven-api-run-458ffb5ba824 Creating 
+ Container haven-api-run-458ffb5ba824 Created 
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+packages/ui typecheck: Done
+apps/api typecheck: Done
+apps/ops typecheck$ tsc --noEmit
+apps/web typecheck$ tsc --noEmit
+apps/ops typecheck: Done
+apps/web typecheck: Done
+ Container haven-api-run-dbe401ad8915 Creating 
+ Container haven-api-run-dbe401ad8915 Created 
+
+> haven-real-estate@0.1.0 contracts:generate /workspace
+> node scripts/generate-contracts.mjs && tsx scripts/generate-openapi.ts
+
+Generated 243 typed API operations.
+Generated OpenAPI from canonical schemas
+ Container haven-api-run-6ab48ac82f56 Creating 
+ Container haven-api-run-6ab48ac82f56 Created 
+
+> haven-real-estate@0.1.0 lint /workspace
+> eslint . && node scripts/boundaries.mjs
+
+
+/workspace/tests/e2e/inbox.spec.ts
+  5:9   error  'readFile' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  6:15  error  'apiRequest' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 2 problems (2 errors, 0 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.
+
+ Container haven-api-run-a96cacf8aee8 Creating 
+ Container haven-api-run-a96cacf8aee8 Created 
+
+> haven-real-estate@0.1.0 lint /workspace
+> eslint . && node scripts/boundaries.mjs
+
+Application import boundaries passed
+ Container haven-api-run-69b5a54a61aa Creating 
+ Container haven-api-run-69b5a54a61aa Created 
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/contracts typecheck$ tsc --noEmit
+packages/config typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+packages/ui typecheck: Done
+apps/api typecheck: Done
+apps/ops typecheck$ tsc --noEmit
+apps/web typecheck$ tsc --noEmit
+apps/ops typecheck: Done
+apps/web typecheck: Done
+ Container haven-api-run-91526a28e88b Creating 
+ Container haven-api-run-91526a28e88b Created 
+
+> haven-real-estate@0.1.0 contracts:check /workspace
+> node scripts/generate-contracts.mjs --check && tsx scripts/generate-openapi.ts --check
+
+Generated 243 typed API operations.
+OpenAPI matches canonical schemas

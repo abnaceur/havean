@@ -1,0 +1,96 @@
+ Container haven-tests-run-2cb2cd578960 Creating 
+ Container haven-tests-run-2cb2cd578960 Created 
+
+Running 4 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/inbox.spec.ts:11:1 › M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes (7.7s)
+  ✓  2 [desktop] › tests/e2e/messages.spec.ts:10:1 › M02 native lost-ACK retry keeps text/files and creates one inert message; current participants download its private PDF (15.8s)
+  ✘  3 [mobile] › tests/e2e/inbox.spec.ts:11:1 › M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes (5.7s)
+  ✓  4 [mobile] › tests/e2e/messages.spec.ts:10:1 › M02 native lost-ACK retry keeps text/files and creates one inert message; current participants download its private PDF (11.9s)
+
+
+  1) [desktop] › tests/e2e/inbox.spec.ts:11:1 › M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected substring: "Message not confirmed"
+    Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+        1) <div role="alert" class="error-box">Message not confirmed. Your draft is retained. Sy…</div> aka getByText('Message not confirmed. Your')
+        2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 15000ms
+      - waiting for getByRole('alert')
+
+
+      15 |  const first=ids[0],second=ids[1];await page.goto('/account/messages?conversation='+first);await expect(page.getByRole('textbox',{name:'Your message',exact:true})).toBeEnabled();await page.getByRole('textbox',{name:'Your message',exact:true}).fill('A retained draft for the first room.');
+      16 |  await page.locator('.inbox aside button').nth(0).click();await expect(page).toHaveURL(new RegExp('conversation='+second));await page.locator('[data-conversation-id="'+first+'"]').click();await expect(page.getByRole('textbox',{name:'Your message',exact:true})).toHaveValue('A retained draft for the first room.');await page.locator('[data-conversation-id="'+second+'"]').click();await page.getByRole('textbox',{name:'Your message',exact:true}).fill('M03 second room only '+agent);await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.message')).toContainText('M03 second room only');await page.reload();await expect(page).toHaveURL(new RegExp('conversation='+second));await expect(page.locator('.message')).toContainText('M03 second room only');
+    > 17 |  const message='M03 unconfirmed draft '+agent;await page.route('**/api/v1/conversations/'+second+'/messages',async route=>{if(route.request().method()==='POST')await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:{code:'TEST_UNAVAILABLE',message:'Synthetic temporary service failure'}})});else await route.continue();});await page.getByRole('textbox',{name:'Your message',exact:true}).fill(message);await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.getByRole('alert')).toContainText('Message not confirmed');await expect(page.getByRole('textbox',{name:'Your message',exact:true})).toHaveValue(message);await expect(page.locator('.message').filter({hasText:message})).toHaveCount(0);await page.unroute('**/api/v1/conversations/'+second+'/messages');await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.message').filter({hasText:message})).toHaveCount(1);
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ^
+      18 |  // Two incoming messages remain unread while the professional opens the other room.
+      19 |  await login(page,'agent','http://localhost:8089','/ops/messages?conversation='+first);await expect(page.locator('[data-conversation-id="'+second+'"]').getByLabel('2 unread messages',{exact:true})).toBeVisible();expect((await (await page.request.get('http://localhost:8089/api/v1/conversations/'+second+'/read-cursor')).json()).data.sequence).toBe('0');await page.locator('.inbox aside button').nth(0).click();await expect(page.locator('.message').filter({hasText:message})).toBeVisible();await expect.poll(async()=>(await (await page.request.get('http://localhost:8089/api/v1/conversations/'+second+'/read-cursor')).json()).data.sequence).toBe('2');await expect(page.locator('[data-conversation-id="'+second+'"]').getByLabel('2 unread messages',{exact:true})).toHaveCount(0);await page.reload();await expect(page).toHaveURL(new RegExp('conversation='+second));await expect(page.locator('.message').filter({hasText:message})).toBeVisible();await page.getByRole('textbox',{name:'Reply to client',exact:true}).fill('M03 native professional reply.');await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.message').filter({hasText:'M03 native professional reply.'})).toBeVisible();
+      20 |  expect((await new AxeBuilder({page}).include('main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/m03-inbox-${info.project.name}.png`,scale:'css'});
+        at /workspace/tests/e2e/inbox.spec.ts:17:539
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/inbox-M03-unread-read-curs-c51ce-er-and-professional-inboxes-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/inbox-M03-unread-read-curs-c51ce-er-and-professional-inboxes-desktop/error-context.md
+
+    Error Context: test-results/inbox-M03-unread-read-curs-c51ce-er-and-professional-inboxes-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/inbox-M03-unread-read-curs-c51ce-er-and-professional-inboxes-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/inbox-M03-unread-read-curs-c51ce-er-and-professional-inboxes-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/inbox.spec.ts:11:1 › M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected substring: "Message not confirmed"
+    Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+        1) <div role="alert" class="error-box">Message not confirmed. Your draft is retained. Sy…</div> aka getByText('Message not confirmed. Your')
+        2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 15000ms
+      - waiting for getByRole('alert')
+
+
+      15 |  const first=ids[0],second=ids[1];await page.goto('/account/messages?conversation='+first);await expect(page.getByRole('textbox',{name:'Your message',exact:true})).toBeEnabled();await page.getByRole('textbox',{name:'Your message',exact:true}).fill('A retained draft for the first room.');
+      16 |  await page.locator('.inbox aside button').nth(0).click();await expect(page).toHaveURL(new RegExp('conversation='+second));await page.locator('[data-conversation-id="'+first+'"]').click();await expect(page.getByRole('textbox',{name:'Your message',exact:true})).toHaveValue('A retained draft for the first room.');await page.locator('[data-conversation-id="'+second+'"]').click();await page.getByRole('textbox',{name:'Your message',exact:true}).fill('M03 second room only '+agent);await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.message')).toContainText('M03 second room only');await page.reload();await expect(page).toHaveURL(new RegExp('conversation='+second));await expect(page.locator('.message')).toContainText('M03 second room only');
+    > 17 |  const message='M03 unconfirmed draft '+agent;await page.route('**/api/v1/conversations/'+second+'/messages',async route=>{if(route.request().method()==='POST')await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:{code:'TEST_UNAVAILABLE',message:'Synthetic temporary service failure'}})});else await route.continue();});await page.getByRole('textbox',{name:'Your message',exact:true}).fill(message);await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.getByRole('alert')).toContainText('Message not confirmed');await expect(page.getByRole('textbox',{name:'Your message',exact:true})).toHaveValue(message);await expect(page.locator('.message').filter({hasText:message})).toHaveCount(0);await page.unroute('**/api/v1/conversations/'+second+'/messages');await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.message').filter({hasText:message})).toHaveCount(1);
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ^
+      18 |  // Two incoming messages remain unread while the professional opens the other room.
+      19 |  await login(page,'agent','http://localhost:8089','/ops/messages?conversation='+first);await expect(page.locator('[data-conversation-id="'+second+'"]').getByLabel('2 unread messages',{exact:true})).toBeVisible();expect((await (await page.request.get('http://localhost:8089/api/v1/conversations/'+second+'/read-cursor')).json()).data.sequence).toBe('0');await page.locator('.inbox aside button').nth(0).click();await expect(page.locator('.message').filter({hasText:message})).toBeVisible();await expect.poll(async()=>(await (await page.request.get('http://localhost:8089/api/v1/conversations/'+second+'/read-cursor')).json()).data.sequence).toBe('2');await expect(page.locator('[data-conversation-id="'+second+'"]').getByLabel('2 unread messages',{exact:true})).toHaveCount(0);await page.reload();await expect(page).toHaveURL(new RegExp('conversation='+second));await expect(page.locator('.message').filter({hasText:message})).toBeVisible();await page.getByRole('textbox',{name:'Reply to client',exact:true}).fill('M03 native professional reply.');await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.message').filter({hasText:'M03 native professional reply.'})).toBeVisible();
+      20 |  expect((await new AxeBuilder({page}).include('main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/m03-inbox-${info.project.name}.png`,scale:'css'});
+        at /workspace/tests/e2e/inbox.spec.ts:17:539
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/inbox-M03-unread-read-curs-c51ce-er-and-professional-inboxes-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/inbox-M03-unread-read-curs-c51ce-er-and-professional-inboxes-mobile/error-context.md
+
+    Error Context: test-results/inbox-M03-unread-read-curs-c51ce-er-and-professional-inboxes-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/inbox-M03-unread-read-curs-c51ce-er-and-professional-inboxes-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/inbox-M03-unread-read-curs-c51ce-er-and-professional-inboxes-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/inbox.spec.ts:11:1 › M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes 
+    [mobile] › tests/e2e/inbox.spec.ts:11:1 › M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes 
+  2 passed (44.5s)
+
