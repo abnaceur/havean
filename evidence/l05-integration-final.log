@@ -1,0 +1,31 @@
+ Container haven-integration-tests-run-d985a8d92ea7 Creating 
+ Container haven-integration-tests-run-d985a8d92ea7 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/viewing-calendar.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 3770[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 consumer atomically reschedules a confirmed viewing, requiring fresh confirmation; idempotent receipt preserves one event and row[33m 511[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 conflicting/stale/unauthorized reschedules and cancellations preserve the original confirmed interval[33m 363[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 assigned professional reschedule retains confirmation; professional cancellation releases the new slot[33m 545[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 outcomes require a scoped confirmed viewing whose actual interval has ended, then become terminal[33m 334[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 concurrent reschedules from the same version yield one change and one conflict[33m 353[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 calendar date filters use the recorded property date, including times on the previous UTC day[33m 456[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 property capacity remains reserved when assignment changes; the former appointment can be cancelled through actual professional scope[33m 834[2mms[22m[39m
+ [32m✓[39m tests/integration/viewing-bookings.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2487[2mms[22m[39m
+   [33m[2m✓[22m[39m L04 concurrent actual consumers yield one accepted reservation and one conflict[33m 401[2mms[22m[39m
+   [33m[2m✓[22m[39m L04 only the current assigned professional confirms once; owning cancellation is versioned and releases capacity[33m 449[2mms[22m[39m
+   [33m[2m✓[22m[39m L04 database writes require current metadata and retained travel gaps apply across properties[33m 796[2mms[22m[39m
+ [32m✓[39m tests/integration/viewing-availability.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1493[2mms[22m[39m
+   [33m[2m✓[22m[39m L03 current assigned agent publishes versioned working hours; public future slots convert property local time to actual UTC[33m 402[2mms[22m[39m
+   [33m[2m✓[22m[39m L03 private blocked intervals and existing agent appointments remove overlapping or buffered slots; cancellation restores capacity[33m 583[2mms[22m[39m
+ [32m✓[39m tests/integration/resale-detail.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 971[2mms[22m[39m
+   [33m[2m✓[22m[39m D08 detail exposes only published facts and current eligible assigned agents; expired/unassigned agents and withdrawn listings cannot receive bookings[33m 966[2mms[22m[39m
+ [32m✓[39m tests/integration/rental-detail.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 424[2mms[22m[39m
+   [33m[2m✓[22m[39m R03 public detail returns exact fixture deposit, explicit utilities and room facts without internal fields; absent terms are null; unavailable rentals cannot book[33m 344[2mms[22m[39m
+ [32m✓[39m tests/integration/database.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 325[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m      Tests [22m [1m[32m38 passed[39m[22m[90m (38)[39m
+[2m   Start at [22m 04:11:19
+[2m   Duration [22m 17.76s[2m (tests 56%, import 41%, transform 3%)[22m
+

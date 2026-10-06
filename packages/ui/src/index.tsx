@@ -11,3 +11,5 @@ export function Badge({children}:{children:ReactNode}){return <span className="b
 export {MediaStudio,MediaReviewQueue} from './media-studio';
 
 export {DraftListingWorkbench} from './draft-workbench';
+
+export {ViewingCalendar} from './viewing-calendar';

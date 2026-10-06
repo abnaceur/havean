@@ -25,6 +25,7 @@ import {inquirySessionCreate,guestInquiry} from '../inquiries';
 import {leadQueueFilters,leadStageUpdate,leadNoteCreate} from '../crm';
 import {availabilityUpdate,availabilityBlockCreate,availabilityBlockCancel,viewingSlotQuery} from '../viewing-availability';
 import {viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel} from '../viewing-bookings';
+import {viewingCalendarQuery,viewingRescheduleQuery,viewingReschedule,viewingTerminalAction} from '../viewing-calendar';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -127,9 +128,9 @@ export const operations={
 "EngagementController_leads":{method:"GET",path:"/api/v1/ops/leads",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_leads"]},
 "EngagementController_message":{method:"POST",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({body:z.string().trim().min(1).max(4000),clientId:z.string().uuid()}),response:responses["EngagementController_message"]},
 "EngagementController_messages":{method:"GET",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_messages"]},
-"EngagementController_opsViewings":{method:"GET",path:"/api/v1/ops/viewings",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_opsViewings"]},
+"EngagementController_opsViewings":{method:"GET",path:"/api/v1/ops/viewings",params:z.object({}),query:viewingCalendarQuery,body:z.undefined(),response:responses["EngagementController_opsViewings"]},
 "EngagementController_unfavorite":{method:"DELETE",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:favoriteMutation,response:responses["EngagementController_unfavorite"]},
-"EngagementController_viewings":{method:"GET",path:"/api/v1/me/viewings",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_viewings"]},
+"EngagementController_viewings":{method:"GET",path:"/api/v1/me/viewings",params:z.object({}),query:viewingCalendarQuery,body:z.undefined(),response:responses["EngagementController_viewings"]},
 "GeographyController_archive":{method:"DELETE",path:"/api/v1/ops/geography/:kind/:id",params:z.object({"kind":geographyKind,"id":z.string().min(1)}),query:z.object({}),body:z.object({version:z.number().int().positive()}),response:responses["GeographyController_archive"]},
 "GeographyController_buildings":{method:"GET",path:"/api/v1/communities/:id/buildings",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["GeographyController_buildings"]},
 "GeographyController_create":{method:"POST",path:"/api/v1/ops/geography/:kind",params:z.object({"kind":geographyKind}),query:z.object({}),body:geographyCreate,response:responses["GeographyController_create"]},
@@ -259,4 +260,10 @@ export const operations={
 "ViewingAvailabilityController_read":{method:"GET",path:"/api/v1/ops/viewing-availability/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ViewingAvailabilityController_read"]},
 "ViewingAvailabilityController_save":{method:"PUT",path:"/api/v1/ops/viewing-availability/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:availabilityUpdate,response:responses["ViewingAvailabilityController_save"]},
 "ViewingAvailabilityController_slots":{method:"GET",path:"/api/v1/viewing-slots",params:z.object({}),query:viewingSlotQuery,body:z.undefined(),response:responses["ViewingAvailabilityController_slots"]},
+"ViewingCalendarController_cancel":{method:"POST",path:"/api/v1/ops/viewings/:id/cancel",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewingBookingCancel,response:responses["ViewingCalendarController_cancel"]},
+"ViewingCalendarController_opsReschedule":{method:"POST",path:"/api/v1/ops/viewings/:id/reschedule",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewingReschedule,response:responses["ViewingCalendarController_opsReschedule"]},
+"ViewingCalendarController_opsSlots":{method:"GET",path:"/api/v1/ops/viewings/:id/slots",params:z.object({"id":z.string().min(1)}),query:viewingRescheduleQuery,body:z.undefined(),response:responses["ViewingCalendarController_opsSlots"]},
+"ViewingCalendarController_reschedule":{method:"POST",path:"/api/v1/viewings/:id/reschedule",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewingReschedule,response:responses["ViewingCalendarController_reschedule"]},
+"ViewingCalendarController_slots":{method:"GET",path:"/api/v1/viewings/:id/slots",params:z.object({"id":z.string().min(1)}),query:viewingRescheduleQuery,body:z.undefined(),response:responses["ViewingCalendarController_slots"]},
+"ViewingCalendarController_terminal":{method:"POST",path:"/api/v1/ops/viewings/:id/outcome",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewingTerminalAction,response:responses["ViewingCalendarController_terminal"]},
 } as const;

@@ -1,10 +1,11 @@
+import {viewingCalendar} from './viewing-calendar.js';
 import {reserveViewing,confirmViewing,cancelOwnViewing} from './viewing-bookings.js';
 import {changeLeadStage,crmAuthority} from './crm.js';
 import {submitAccountInquiry} from './inquiries.js';
-import {Controller,Get,Post,Put,Delete,Patch,Param,Req,Body,Inject} from '@nestjs/common';
+import {Controller,Get,Post,Put,Delete,Patch,Param,Req,Body,Query,Inject} from '@nestjs/common';
 import type {FastifyRequest} from 'fastify';
 import {z} from 'zod';
-import {favoriteMutation,inquirySchema,leadStageUpdate,viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel} from '@haven/contracts';
+import {favoriteMutation,inquirySchema,leadStageUpdate,viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel,viewingCalendarQuery} from '@haven/contracts';
 import {event} from '@haven/database';
 import {Identity,data,fail,transaction,idempotent} from '../platform/core.js';
 @Controller('api/v1')
@@ -27,8 +28,8 @@ export class EngagementController{
  @Get('me/inquiries') async inquiries(@Req() req:FastifyRequest){const a=await this.identity.actor(req);return transaction(a,async c=>data((await c.query('SELECT id,resource_id,status,created_at,message FROM leads WHERE user_id=$1 ORDER BY created_at DESC',[a.id])).rows));}
  @Get('ops/leads') async leads(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['agent','agency_manager','developer','vendor','admin']);return transaction(a,async c=>{const auth=await crmAuthority(c,a);return data((await c.query('SELECT l.* FROM leads l WHERE l.organization_id=$1 AND ($2 OR EXISTS(SELECT 1 FROM agents ag WHERE ag.id=l.agent_id AND ag.user_id=$3 AND ag.organization_id=$1)) ORDER BY l.created_at DESC,l.id LIMIT 200',[a.orgId,auth.team,a.id])).rows);});}
  @Patch('ops/leads/:id') async lead(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager','developer','vendor','admin']),x=leadStageUpdate.parse(body);return changeLeadStage(a,req,id,x);}
- @Get('me/viewings') async viewings(@Req() req:FastifyRequest){const a=await this.identity.actor(req);return transaction(a,async c=>data((await c.query('SELECT v.*,l.title FROM viewings v JOIN listings l ON l.id=v.listing_id WHERE v.user_id=$1 ORDER BY start_at',[a.id])).rows));}
- @Get('ops/viewings') async opsViewings(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['agent','agency_manager','admin']);return transaction(a,async c=>data((await c.query('SELECT v.*,l.title,l.version AS current_listing_version,policy.version AS current_schedule_version FROM viewings v JOIN listings l ON l.id=v.listing_id LEFT JOIN viewing_availability policy ON policy.listing_id=v.listing_id WHERE viewing_schedule_scope(v.listing_id,v.agent_id) ORDER BY start_at')).rows));}
+ @Get('me/viewings') async viewings(@Req() req:FastifyRequest,@Query() input:unknown){const a=await this.identity.actor(req),x=viewingCalendarQuery.parse(input);return viewingCalendar(a,x,false);}
+ @Get('ops/viewings') async opsViewings(@Req() req:FastifyRequest,@Query() input:unknown){const a=await this.identity.actor(req,['agent','agency_manager','admin']),x=viewingCalendarQuery.parse(input);return viewingCalendar(a,x,true);}
  @Post('viewings') async book(@Req() req:FastifyRequest,@Body() body:unknown){const a=await this.identity.actor(req),x=viewingBookingCreate.parse(body);return reserveViewing(a,req,x);}
  @Post('viewings/:id/cancel') async cancel(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req),x=viewingBookingCancel.parse(body);z.uuid().parse(id);return cancelOwnViewing(a,req,id,x);}
  @Post('ops/viewings/:id/confirm') async confirm(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager','admin']),x=viewingBookingConfirm.parse(body);z.uuid().parse(id);return confirmViewing(a,req,id,x);}

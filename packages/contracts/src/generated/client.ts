@@ -228,5 +228,11 @@ export const sdk={
 "ViewingAvailabilityController_listings":call(operations["ViewingAvailabilityController_listings"]),
 "ViewingAvailabilityController_read":call(operations["ViewingAvailabilityController_read"]),
 "ViewingAvailabilityController_save":call(operations["ViewingAvailabilityController_save"]),
-"ViewingAvailabilityController_slots":call(operations["ViewingAvailabilityController_slots"])
+"ViewingAvailabilityController_slots":call(operations["ViewingAvailabilityController_slots"]),
+"ViewingCalendarController_cancel":call(operations["ViewingCalendarController_cancel"]),
+"ViewingCalendarController_opsReschedule":call(operations["ViewingCalendarController_opsReschedule"]),
+"ViewingCalendarController_opsSlots":call(operations["ViewingCalendarController_opsSlots"]),
+"ViewingCalendarController_reschedule":call(operations["ViewingCalendarController_reschedule"]),
+"ViewingCalendarController_slots":call(operations["ViewingCalendarController_slots"]),
+"ViewingCalendarController_terminal":call(operations["ViewingCalendarController_terminal"])
 };
