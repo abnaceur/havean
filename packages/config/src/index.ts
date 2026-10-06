@@ -1,3 +1,4 @@
+export * from './bff-client';
 export {notificationWorkerHeaders,validNotificationWorker} from './notification-worker';
 import { z } from 'zod';
 export const environmentSchema = z.object({

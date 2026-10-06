@@ -37,7 +37,7 @@ const datasets:Record<string,string>={
  alertDeliveries:'SELECT id,search_id,cadence,period_start,due_at,status,version,attempts,acceptance_recorded_at,error_code,created_at FROM alert_digests WHERE user_id=$1 ORDER BY id',
  ownerGrants:'SELECT id,unit_id,status,version,source,expires_at,created_at FROM owner_unit_grants WHERE owner_id=$1 ORDER BY id',
  ownerContacts:'SELECT listing_id,contact,audience,version FROM listing_owner_contacts WHERE owner_id=$1 ORDER BY listing_id',
- inquiries:'SELECT id,resource_id,resource_type,name,email,phone,message,status,version,resource_version,commercial_context,created_at FROM leads WHERE user_id=$1 ORDER BY id',
+ inquiries:'SELECT id,resource_id,resource_type,name,email,phone,message,status,version,resource_version,commercial_context,consent_at,consent_policy_version,inquiry_city,created_at FROM leads WHERE user_id=$1 ORDER BY id',
  viewings:'SELECT id,listing_id,start_at,end_at,status,version FROM viewings WHERE user_id=$1 ORDER BY id',
  conversations:'SELECT id,resource_id,created_at FROM conversations WHERE user_id=$1 ORDER BY id',
  sentMessages:'SELECT m.id,m.conversation_id,m.client_id,m.sequence::text,m.body,m.created_at FROM messages m JOIN conversations c ON c.id=m.conversation_id WHERE m.sender_id=$1 AND c.user_id=$1 ORDER BY m.id',

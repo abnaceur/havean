@@ -21,6 +21,7 @@ import {agentDirectoryFilters} from '../agent-directory';
 import {agentProfileCreate,agentProfileUpdate,agentCredentialSubmit,agentCredentialReview,agentCredentialFilters} from '../agent-credentials';
 import {ownerPriceChange,ownerLifecycleAction} from '../owner-lifecycle';
 import {ownerWizardCreate,ownerWizardUpdate,ownerWizardSubmit} from '../owner-wizard';
+import {inquirySessionCreate,guestInquiry} from '../inquiries';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -131,6 +132,7 @@ export const operations={
 "GeographyController_records":{method:"GET",path:"/api/v1/ops/geography/:kind",params:z.object({"kind":geographyKind}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["GeographyController_records"]},
 "GeographyController_statistics":{method:"GET",path:"/api/v1/communities/:id/statistics",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["GeographyController_statistics"]},
 "GeographyController_update":{method:"PATCH",path:"/api/v1/ops/geography/:kind/:id",params:z.object({"kind":geographyKind,"id":z.string().min(1)}),query:z.object({}),body:geographyUpdate,response:responses["GeographyController_update"]},
+"GuestInquiriesController_submit":{method:"POST",path:"/api/v1/guest-inquiries",params:z.object({}),query:z.object({}),body:guestInquiry,response:responses["GuestInquiriesController_submit"]},
 "HealthController_live":{method:"GET",path:"/api/v1/health/live",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["HealthController_live"]},
 "HealthController_metrics":{method:"GET",path:"/api/v1/health/metrics",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["HealthController_metrics"]},
 "HealthController_ready":{method:"GET",path:"/api/v1/health/ready",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["HealthController_ready"]},
@@ -139,6 +141,7 @@ export const operations={
 "IdentityController_login":{method:"GET",path:"/api/v1/auth/login",params:z.object({}),query:z.object({returnTo:z.string().optional(),prompt:z.literal('login').optional()}),body:z.undefined(),response:responses["IdentityController_login"]},
 "IdentityController_logout":{method:"POST",path:"/api/v1/auth/logout",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["IdentityController_logout"]},
 "IdentityController_me":{method:"GET",path:"/api/v1/me",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["IdentityController_me"]},
+"InquirySessionsController_create":{method:"POST",path:"/api/v1/inquiry-session",params:z.object({}),query:z.object({}),body:inquirySessionCreate,response:responses["InquirySessionsController_create"]},
 "InventoryController_approveRevision":{method:"POST",path:"/api/v1/ops/revisions/:id/approve",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({version:z.number().int().positive(),reason:z.string().trim().min(5).max(1000),verified:z.boolean()}),response:responses["InventoryController_approveRevision"]},
 "InventoryController_assign":{method:"POST",path:"/api/v1/ops/assignments",params:z.object({}),query:z.object({}),body:listingAssignment,response:responses["InventoryController_assign"]},
 "InventoryController_assignOwnerAgent":{method:"PATCH",path:"/api/v1/ops/owner-submissions/:id/assignment",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({version:z.number().int().positive(),agentId:z.uuid()}).strict(),response:responses["InventoryController_assignOwnerAgent"]},

@@ -1,0 +1,17 @@
+import {Controller,Post,Req,Res,Body,Inject} from '@nestjs/common';
+import type {FastifyRequest,FastifyReply} from 'fastify';
+import type pg from 'pg';
+import {z} from 'zod';
+import {verifyInquiryClient} from '@haven/config';
+import {inquirySessionCreate} from '@haven/contracts';
+import {Identity,env,encrypt,decrypt,cookie,fail,data,transaction} from '../platform/core.js';
+import {admitInquiry,inquiryLimits} from './inquiry-limits.js';
+const pointer=z.object({kind:z.literal('guest-inquiry'),id:z.uuid(),version:z.number().int().positive()}).strict();
+export function inquiryClientAddress(req:FastifyRequest){const origin=req.headers.origin;if(typeof origin!=='string'||![env.PUBLIC_WEB_URL,env.PUBLIC_OPS_URL].includes(origin))fail(403,'Use the inquiry form on the website','UNTRUSTED_INQUIRY_CLIENT');const address=verifyInquiryClient(req.headers['x-haven-inquiry-client'],env.SESSION_KEY,{origin,method:req.method,path:req.url.split('?')[0]});if(!address)fail(403,'Use the inquiry form on the website','UNTRUSTED_INQUIRY_CLIENT');return address;}
+export function guestPointer(req:FastifyRequest){try{return pointer.parse(decrypt(cookie(req,'haven_inquiry')||''));}catch{fail(401,'This inquiry form expired. Refresh the form and try again.','INQUIRY_SESSION_EXPIRED');}}
+export async function activeInquiryGuest(c:pg.PoolClient,req:FastifyRequest,version:number){const p=guestPointer(req);await c.query("SELECT set_config('app.inquiry_guest',$1,true)",[p.id]);const s=(await c.query("SELECT * FROM lock_current_inquiry_session($1)",[p.id])).rows[0];if(!s)fail(401,'This inquiry form expired. Refresh the form and try again.','INQUIRY_SESSION_EXPIRED');if(s.version!==p.version||s.version!==version)fail(409,'This inquiry session changed. Refresh the form before sending.','INQUIRY_SESSION_CHANGED');return s;}
+@Controller('api/v1')
+export class InquirySessionsController{
+ constructor(@Inject(Identity) private readonly identity:Identity){}
+ @Post('inquiry-session') async create(@Req() req:FastifyRequest,@Res({passthrough:true}) reply:FastifyReply,@Body() body:unknown){inquirySessionCreate.parse(body);if(cookie(req,'haven_session')){await this.identity.actor(req);fail(400,'Use your signed-in account to send this inquiry','ACCOUNT_INQUIRY_REQUIRED');}const address=inquiryClientAddress(req);return transaction(null,async c=>{let s:any;try{const p=guestPointer(req);await c.query("SELECT set_config('app.inquiry_guest',$1,true)",[p.id]);s=(await c.query("SELECT * FROM lock_current_inquiry_session($1) WHERE version=$2",[p.id,p.version])).rows[0];}catch(e){if(!(e instanceof Error)||!('status' in e)||e.status!==401)throw e;}if(!s){await admitInquiry(c,[{purpose:'guest-session-address',value:address,maximum:inquiryLimits.guestSessions}]);const id=crypto.randomUUID();await c.query("SELECT set_config('app.inquiry_guest',$1,true)",[id]);s=(await c.query('INSERT INTO inquiry_sessions(id) VALUES($1) RETURNING id,version,expires_at',[id])).rows[0];}const age=Math.max(0,Math.floor((new Date(s.expires_at).getTime()-Date.now())/1000));reply.header('Cache-Control','no-store');reply.header('Set-Cookie',`haven_inquiry=${encrypt({kind:'guest-inquiry',id:s.id,version:s.version})}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${age}${env.NODE_ENV==='production'?'; Secure':''}`);return data({id:s.id,version:s.version,expiresAt:new Date(s.expires_at).toISOString(),policyVersion:1,windowSeconds:inquiryLimits.windowSeconds,maximumRequests:inquiryLimits.guest});});}
+}

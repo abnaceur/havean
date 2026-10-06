@@ -1,3 +1,4 @@
+import {inquirySessionRecord,guestInquiryReceipt} from './inquiries';
 import {agentDashboard} from './agent-dashboard';
 import {assignmentAgent,assignmentResult} from './assignments';
 import {agencyInvitationRecord,agencyMemberRecord} from './agency-memberships';
@@ -78,6 +79,7 @@ export const responses={
  DiscoveryController_providers:z.array(provider),DiscoveryController_provider:provider,
  DiscoveryController_estimate:z.object({principal:decimal,monthlyPayment:decimal,totalInterest:decimal,totalRepaid:decimal,schedule:z.array(z.object({month:n,principal:decimal,interest:decimal,payment:decimal,balance:decimal})),assumptions:s}),
  EngagementController_favorites:z.array(savedProperty),EngagementController_favoriteState:favoriteState,EngagementController_favorite:favoriteState,EngagementController_unfavorite:favoriteState,
+ InquirySessionsController_create:inquirySessionRecord,GuestInquiriesController_submit:guestInquiryReceipt,
  EngagementController_inquiry:status.extend({created_at:s,conversationId:uuid}),EngagementController_inquiries:z.array(m.leads.pick({id:true,resource_id:true,status:true,created_at:true,message:true})),
  EngagementController_leads:z.array(m.leads),EngagementController_lead:m.leads,
  EngagementController_viewings:z.array(m.viewings.extend({title:s})),EngagementController_opsViewings:z.array(m.viewings.extend({title:s})),EngagementController_book:m.viewings,EngagementController_cancel:m.viewings,EngagementController_confirm:m.viewings,

@@ -49,10 +49,10 @@ export function createProcessor(options:ProcessorOptions={}){
   }
   if(row.kind==='listing.published'&&version)await planPublicationAlerts(id,version);
   if(row.kind==='notification.digest_ready')await deliverAlertDigest(row.aggregate_id);
-  if(row.kind==='inquiry.submitted'&&env.NODE_ENV==='production'){await confirmInquiry(id);await options.afterEffect?.('after-mail');}
+  if(row.kind==='inquiry.submitted'&&env.NODE_ENV==='production'&&(await c.query('SELECT user_id FROM leads WHERE id=$1',[row.aggregate_id])).rows[0]?.user_id){await confirmInquiry(id);await options.afterEffect?.('after-mail');}
   if(row.kind==='inquiry.submitted'&&env.NODE_ENV!=='production'){
    const lead=(await c.query('SELECT user_id,email FROM leads WHERE id=$1',[row.aggregate_id])).rows[0];
-   if(lead){
+   if(lead?.user_id){
     // The development mail adapter reconciles delivery by stable Message-ID after a crash.
     // Production providers must implement the same idempotent delivery contract.
     const messageId=id+'@haven.local',found=await fetch(mailApi+'/api/v1/search?query='+encodeURIComponent('message-id:'+messageId),{signal:AbortSignal.timeout(5000)});
