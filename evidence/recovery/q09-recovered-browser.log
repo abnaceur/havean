@@ -1,0 +1,72 @@
+ Container tmp-tests-run-79bba15e81ff Creating
+ Container tmp-tests-run-79bba15e81ff Created
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/recovery-https.spec.ts:7:1 › Q09 restored identity, public listing and pre-backup private document work through real HTTPS (190ms)
+  ✘  2 [mobile] › tests/e2e/recovery-https.spec.ts:7:1 › Q09 restored identity, public listing and pre-backup private document work through real HTTPS (245ms)
+
+
+  1) [desktop] › tests/e2e/recovery-https.spec.ts:7:1 › Q09 restored identity, public listing and pre-backup private document work through real HTTPS
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at https://web.haven.test:8443/bj/buy/home-1
+    Call log:
+      - navigating to "https://web.haven.test:8443/bj/buy/home-1", waiting until "load"
+
+
+       7 | test('Q09 restored identity, public listing and pre-backup private document work through real HTTPS',async({page,browser},info)=>{
+       8 |  const ops=process.env.PUBLIC_OPS_URL!,web=process.env.PUBLIC_WEB_URL!,asset=process.env.RECOVERY_TEST_ASSET!;
+    >  9 |  expect(asset).toMatch(/^[a-f0-9-]{36}$/);await page.goto(web+'/bj/buy/home-1');await expect(page.locator('#main')).toBeVisible();
+         |                                                      ^
+      10 |  await login(page,'manager',ops,'/ops/management');const me=await page.request.get(ops+'/api/v1/me');expect(me.ok()).toBe(true);expect((await me.json()).data.roles).toContain('property_manager');
+      11 |  const link=await page.request.post(ops+'/api/v1/documents/'+asset+'/download-link',{headers:{Origin:ops}});expect(link.ok()).toBe(true);const ticket=(await link.json()).data.url,document=await page.request.get(ops+ticket);expect(document.ok()).toBe(true);const bytes=await document.body();expect(createHash('sha256').update(bytes).digest('hex')).toBe(process.env.RECOVERY_TEST_ASSET_SHA256);
+      12 |  const context=await browser.newContext({...info.project.use,baseURL:web});try{const buyer=await context.newPage();await login(buyer,'buyer',web,'/account');expect((await buyer.request.get(web+ticket)).status()).toBe(403);}finally{await context.close();}
+        at /workspace/tests/e2e/recovery-https.spec.ts:9:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/recovery-https-Q09-restore-cb3da-ent-work-through-real-HTTPS-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/recovery-https-Q09-restore-cb3da-ent-work-through-real-HTTPS-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/recovery-https-Q09-restore-cb3da-ent-work-through-real-HTTPS-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/recovery-https-Q09-restore-cb3da-ent-work-through-real-HTTPS-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/recovery-https.spec.ts:7:1 › Q09 restored identity, public listing and pre-backup private document work through real HTTPS
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at https://web.haven.test:8443/bj/buy/home-1
+    Call log:
+      - navigating to "https://web.haven.test:8443/bj/buy/home-1", waiting until "load"
+
+
+       7 | test('Q09 restored identity, public listing and pre-backup private document work through real HTTPS',async({page,browser},info)=>{
+       8 |  const ops=process.env.PUBLIC_OPS_URL!,web=process.env.PUBLIC_WEB_URL!,asset=process.env.RECOVERY_TEST_ASSET!;
+    >  9 |  expect(asset).toMatch(/^[a-f0-9-]{36}$/);await page.goto(web+'/bj/buy/home-1');await expect(page.locator('#main')).toBeVisible();
+         |                                                      ^
+      10 |  await login(page,'manager',ops,'/ops/management');const me=await page.request.get(ops+'/api/v1/me');expect(me.ok()).toBe(true);expect((await me.json()).data.roles).toContain('property_manager');
+      11 |  const link=await page.request.post(ops+'/api/v1/documents/'+asset+'/download-link',{headers:{Origin:ops}});expect(link.ok()).toBe(true);const ticket=(await link.json()).data.url,document=await page.request.get(ops+ticket);expect(document.ok()).toBe(true);const bytes=await document.body();expect(createHash('sha256').update(bytes).digest('hex')).toBe(process.env.RECOVERY_TEST_ASSET_SHA256);
+      12 |  const context=await browser.newContext({...info.project.use,baseURL:web});try{const buyer=await context.newPage();await login(buyer,'buyer',web,'/account');expect((await buyer.request.get(web+ticket)).status()).toBe(403);}finally{await context.close();}
+        at /workspace/tests/e2e/recovery-https.spec.ts:9:54
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/recovery-https-Q09-restore-cb3da-ent-work-through-real-HTTPS-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/recovery-https-Q09-restore-cb3da-ent-work-through-real-HTTPS-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/recovery-https-Q09-restore-cb3da-ent-work-through-real-HTTPS-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/recovery-https-Q09-restore-cb3da-ent-work-through-real-HTTPS-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/recovery-https.spec.ts:7:1 › Q09 restored identity, public listing and pre-backup private document work through real HTTPS
+    [mobile] › tests/e2e/recovery-https.spec.ts:7:1 › Q09 restored identity, public listing and pre-backup private document work through real HTTPS
