@@ -1,0 +1,53 @@
+ Container haven-p09-runtime-tests-run-b4ba6f8274bd Creating
+ Container haven-p09-runtime-tests-run-b4ba6f8274bd Created
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/tenant-leases.spec.ts:9:1 › P11 linked tenant reads actual lease PDF and reconciled balance without private staff evidence (35.4s)
+  ✓  2 [mobile] › tests/e2e/tenant-leases.spec.ts:9:1 › P11 linked tenant reads actual lease PDF and reconciled balance without private staff evidence (39.7s)
+
+
+  1) [desktop] › tests/e2e/tenant-leases.spec.ts:9:1 › P11 linked tenant reads actual lease PDF and reconciled balance without private staff evidence
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByLabel('Linked lease', { exact: true })
+    Expected: "5629a912-3c50-4326-9d7e-c95b64abb63a"
+    Received: ""
+    Timeout:  15000ms
+
+    Call log:
+      - Expect "toHaveValue" getByLabel('Linked lease', { exact: true }) with timeout 15000ms
+      - waiting for getByLabel('Linked lease', { exact: true })
+        28 × locator resolved to <select aria-label="Linked lease">…</select>
+           - unexpected value ""
+
+
+      13 |  const posted=(await posting.json()).data,ledgerBefore=(await (await page.request.get(OPS+'/api/v1/ops/leases/'+lease.id+'/allocation-ledger')).json()).data,allocBody={version:0,leaseId:lease.id,leaseVersion:ledgerBefore.leaseVersion,unitVersion:ledgerBefore.unitVersion,grantVersion:ledgerBefore.grantVersion,paymentId:payment.id,paymentVersion:posted.version,chargeId,chargeVersion:1,amount:'200.20',currency:'CNY',confirm:true};const allocated=await page.request.post(OPS+'/api/v1/ops/allocations',{headers:{...headers,'Idempotency-Key':crypto.randomUUID()},data:allocBody});expect(allocated.ok()).toBe(true);
+      14 |  const depositLedger=(await (await page.request.get(OPS+'/api/v1/ops/leases/'+lease.id+'/deposit-ledger')).json()).data,deposit=await page.request.post(OPS+'/api/v1/ops/deposits',{headers:{Origin:OPS,'Idempotency-Key':crypto.randomUUID()},data:{version:0,leaseId:lease.id,leaseVersion:depositLedger.leaseVersion,unitVersion:depositLedger.unitVersion,grantVersion:depositLedger.grantVersion,liabilityVersion:depositLedger.liabilityVersion,kind:'received',direction:'increase',amount:'100.10',currency:'CNY',reason:'P11 PRIVATE OWNER NOTE SENTINEL deposit reference.',confirm:true}});expect(deposit.ok()).toBe(true);
+    > 15 |  await login(page,'tenant',WEB,'/tenant/leases?lease='+lease.id);await expect(page.getByRole('heading',{name:'Approved lease documents',exact:true})).toBeVisible();await expect(page.locator('.tenant-lease')).toContainText('CNY 438.37');await expect(page.locator('.tenant-lease')).toContainText('CNY 799.90');await expect(page.locator('.tenant-lease')).toContainText('CNY 100.10');await expect(page.locator('body')).not.toContainText('PRIVATE OWNER NOTE SENTINEL');await expect(page.locator('.tenant-lease')).toContainText('no funds are transferred');const link=page.getByRole('link',{name:'Synthetic signed tenancy terms · PDF version '+doc.version,exact:true}),url=await link.getAttribute('href');const downloaded=await page.request.get(WEB+url);expect(downloaded.status()).toBe(200);expect(downloaded.headers()['cache-control']).toContain('no-store');expect(await downloaded.body()).toEqual(pdf);const [download]=await Promise.all([page.waitForEvent('download'),link.click()]);expect(download.suggestedFilename()).toBe('lease-document.pdf');await page.reload();await expect(page.getByLabel('Linked lease',{exact:true})).toHaveValue(lease.id);expect(await page.getByRole('button',{name:/pay|transfer funds|send money/i}).count()).toBe(0);expect((await new AxeBuilder({page}).include('.tenant-lease').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/p11-tenant-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ^
+      16 |  await login(page,'buyer',WEB,'/tenant/leases');expect((await page.request.get(WEB+'/api/v1/tenant/leases/'+lease.id)).status()).toBe(404);expect((await page.request.get(WEB+url)).status()).toBe(404);await login(page,'tenant',WEB,'/tenant/leases?lease='+lease.id);await expect(page.getByRole('heading',{name:'Approved lease documents',exact:true})).toBeVisible();
+      17 | });
+      18 |
+        at /workspace/tests/e2e/tenant-leases.spec.ts:15:1123
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/test-results/tenant-leases-P11-linked-t-f389a-hout-private-staff-evidence-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/test-results/tenant-leases-P11-linked-t-f389a-hout-private-staff-evidence-desktop/error-context.md
+
+    Error Context: ../artifacts/test-results/tenant-leases-P11-linked-t-f389a-hout-private-staff-evidence-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/test-results/tenant-leases-P11-linked-t-f389a-hout-private-staff-evidence-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/test-results/tenant-leases-P11-linked-t-f389a-hout-private-staff-evidence-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/tenant-leases.spec.ts:9:1 › P11 linked tenant reads actual lease PDF and reconciled balance without private staff evidence
+  1 passed (1.3m)
