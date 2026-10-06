@@ -22729,20 +22729,35 @@
                       "type": "object",
                       "properties": {
                         "principal": {
-                          "type": "string",
-                          "pattern": "^-?\\d+(\\.\\d+)?$"
+                          "type": "string"
                         },
                         "monthlyPayment": {
-                          "type": "string",
-                          "pattern": "^-?\\d+(\\.\\d+)?$"
+                          "type": "string"
+                        },
+                        "finalPayment": {
+                          "type": "string"
                         },
                         "totalInterest": {
-                          "type": "string",
-                          "pattern": "^-?\\d+(\\.\\d+)?$"
+                          "type": "string"
                         },
                         "totalRepaid": {
+                          "type": "string"
+                        },
+                        "method": {
                           "type": "string",
-                          "pattern": "^-?\\d+(\\.\\d+)?$"
+                          "enum": [
+                            "equal_payment",
+                            "equal_principal"
+                          ]
+                        },
+                        "annualRate": {
+                          "type": "string"
+                        },
+                        "months": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
                         },
                         "schedule": {
                           "type": "array",
@@ -22750,23 +22765,22 @@
                             "type": "object",
                             "properties": {
                               "month": {
-                                "type": "number"
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
                               },
                               "principal": {
-                                "type": "string",
-                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                                "type": "string"
                               },
                               "interest": {
-                                "type": "string",
-                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                                "type": "string"
                               },
                               "payment": {
-                                "type": "string",
-                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                                "type": "string"
                               },
                               "balance": {
-                                "type": "string",
-                                "pattern": "^-?\\d+(\\.\\d+)?$"
+                                "type": "string"
                               }
                             },
                             "required": [
@@ -22786,8 +22800,12 @@
                       "required": [
                         "principal",
                         "monthlyPayment",
+                        "finalPayment",
                         "totalInterest",
                         "totalRepaid",
+                        "method",
+                        "annualRate",
+                        "months",
                         "schedule",
                         "assumptions"
                       ],
@@ -22952,16 +22970,24 @@
                 "properties": {
                   "price": {
                     "type": "string",
-                    "pattern": "^\\d+(\\.\\d{1,2})?$"
+                    "pattern": "^\\d{1,13}(\\.\\d{1,2})?$"
                   },
                   "downPayment": {
                     "type": "string",
-                    "pattern": "^\\d+(\\.\\d{1,2})?$"
+                    "pattern": "^\\d{1,13}(\\.\\d{1,2})?$"
                   },
                   "annualRate": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 30
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "pattern": "^\\d{1,2}(\\.\\d{1,6})?$"
+                      },
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 30
+                      }
+                    ]
                   },
                   "years": {
                     "type": "integer",
@@ -22982,7 +23008,8 @@
                   "annualRate",
                   "years",
                   "method"
-                ]
+                ],
+                "additionalProperties": false
               }
             }
           }

@@ -1,3 +1,4 @@
+import {mortgageResult} from './mortgage';
 import {quoteRecord} from './quotes';
 import {ownedProvider,providerReviewRow,publicProvider} from './providers';
 import {chatMessage,readCursor,conversationSummary} from './chat';
@@ -85,7 +86,7 @@ export const responses={
  DiscoveryController_development:development.extend({latitude:n.nullable(),longitude:n.nullable(),floorPlans:z.array(m.floor_plans),phases:z.array(z.object({id:uuid,name:s,status:z.enum(['coming_soon','on_sale','sold_out'])}))}),
  ProviderCatalogController_categories:z.array(z.string()),ProviderCatalogController_list:z.array(ownedProvider),ProviderCatalogController_create:ownedProvider,ProviderCatalogController_update:ownedProvider,ProviderCatalogController_submit:ownedProvider,ProviderCatalogController_withdraw:ownedProvider,ProviderCatalogController_queue:z.array(providerReviewRow),ProviderCatalogController_review:ownedProvider,
  DiscoveryController_providers:z.array(provider),DiscoveryController_provider:provider,
- DiscoveryController_estimate:z.object({principal:decimal,monthlyPayment:decimal,totalInterest:decimal,totalRepaid:decimal,schedule:z.array(z.object({month:n,principal:decimal,interest:decimal,payment:decimal,balance:decimal})),assumptions:s}),
+ DiscoveryController_estimate:mortgageResult,
  EngagementController_favorites:z.array(savedProperty),EngagementController_favoriteState:favoriteState,EngagementController_favorite:favoriteState,EngagementController_unfavorite:favoriteState,
  InquirySessionsController_create:inquirySessionRecord,GuestInquiriesController_submit:guestInquiryReceipt,
  EngagementController_inquiry:status.extend({created_at:s,conversationId:uuid}),EngagementController_inquiries:z.array(m.leads.pick({id:true,resource_id:true,status:true,created_at:true,message:true})),

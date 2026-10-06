@@ -13,7 +13,7 @@ import {rankingExpressions} from './ranking-policy.js';
 import {rankedListings} from './rankings.js';
 import {rankingFilters} from '@haven/contracts';
 import {searchListings,mapListings} from './search.js';
-import {mortgage} from '@haven/contracts/mortgage';
+import {mortgage} from './mortgage-engine.js';
 import {pool,data,fail,transaction,env} from '../platform/core.js';
 @Controller('api/v1')
 export class DiscoveryController{
