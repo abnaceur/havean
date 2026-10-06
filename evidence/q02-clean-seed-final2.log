@@ -1,0 +1,35 @@
+
+> haven-real-estate@0.1.0 db:seed /workspace
+> tsx packages/database/src/seed.ts
+
+Seeded deterministic synthetic Beijing inventory and 11 role personas
+/workspace/node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694
+          Error.captureStackTrace(err)
+                ^
+
+error: duplicate key value violates unique constraint "market_configuration_history_city_version_key"
+    at /workspace/node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async <anonymous> (/workspace/packages/database/src/seed.ts:51:2) {
+  length: 511,
+  severity: 'ERROR',
+  code: '23505',
+  detail: 'Key (city, version)=(bj, 1) already exists.',
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: 'SQL statement "INSERT INTO market_configuration_history(city,version,actor_id,at,data) VALUES(NEW.id,NEW.version,actor_id(),NEW.updated_at,NEW.data)"\n' +
+    'PL/pgSQL function market_configuration_record() line 2 at SQL statement',
+  schema: 'public',
+  table: 'market_configuration_history',
+  column: undefined,
+  dataType: undefined,
+  constraint: 'market_configuration_history_city_version_key',
+  file: 'nbtinsert.c',
+  line: '666',
+  routine: '_bt_check_unique'
+}
+
+Node.js v24.21.0
+ ELIFECYCLE  Command failed with exit code 1.

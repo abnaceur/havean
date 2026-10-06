@@ -1,0 +1,77 @@
+ Container haven-p09-runtime-tests-run-3444534b2ea7 Creating 
+ Container haven-p09-runtime-tests-run-3444534b2ea7 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/visual-audit.spec.ts:7:30 › Q02 category evidence coverage at 375 pixels (4.5s)
+  ✘  2 [desktop] › tests/e2e/visual-audit.spec.ts:7:30 › Q02 category evidence coverage at 390 pixels (4.2s)
+
+
+  1) [desktop] › tests/e2e/visual-audit.spec.ts:7:30 › Q02 category evidence coverage at 375 pixels 
+
+    Error: renovation-detail
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      5 | const screens=JSON.parse(fs.readFileSync('docs/reference/screens.json','utf8')).filter((s:any)=>!process.env.Q02_CATEGORY_DETAILS||['commercial-detail','community-detail','agent-detail','renovation-detail'].includes(s.id)),folder='evidence/visual/q02',records:any[]=[];
+      6 | test.afterAll(()=>{fs.mkdirSync(folder,{recursive:true});fs.writeFileSync(folder+'/manifest.json',JSON.stringify({evidenceLabel:'P',referenceParity:'unverified',scope:'Current local synthetic public pages and anonymous private entry states; media not supplied in a fixture is explicitly recorded.',screens:records},null,2)+'\n');});
+    > 7 | for(const width of [375,390])test('Q02 category evidence coverage at '+width+' pixels',async({page},info)=>{test.setTimeout(300000);fs.mkdirSync(folder,{recursive:true});await page.setViewportSize({width,height:width===375?812:844});for(const screen of screens){const origin=screen.localRoute.startsWith('/ops')?process.env.PUBLIC_OPS_URL:process.env.PUBLIC_WEB_URL;const response=await page.goto((origin||'http://localhost:8088')+screen.localRoute);expect(response?.status(),screen.id).toBe(200);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.localRoute==='/bj');if(['city-selector'].includes(screen.id)){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}if(['filter-sheet','resale-filters'].includes(screen.id))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id==='resale-sort')await page.getByLabel('Sort properties').selectOption('price_asc');const mediaNames:Record<string,string>={'property-floor-plan':'Floor plan','property-video':'Video','property-360':'360° tour'};let state='current route';if(mediaNames[screen.id]){const option=page.getByRole('button',{name:mediaNames[screen.id],exact:true});if(await option.count()){await option.click();state=mediaNames[screen.id];}else state='This synthetic fixture does not supply '+mediaNames[screen.id];}if(screen.localRoute.startsWith('/account')||screen.localRoute.startsWith('/tenant')||screen.localRoute.startsWith('/ops'))state='anonymous private entry; authenticated workflow evidence remains in its feature task';const file=screen.id+'-'+width+'-'+info.project.name+'.png',bytes=await page.screenshot({path:folder+'/'+file,fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});records.push({id:screen.id,route:screen.localRoute,viewport:{width,height:width===375?812:844},file,sha256:createHash('sha256').update(bytes).digest('hex'),renderer:page.context().browser()?.version(),capturedAt:new Date().toISOString(),evidenceLabel:'P',referenceParity:'unverified',state});}});
+        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ^
+      8 |
+        at /workspace/tests/e2e/visual-audit.spec.ts:7:488
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/visual-details/visual-audit-Q02-category-evidence-coverage-at-375-pixels-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/visual-details/visual-audit-Q02-category-evidence-coverage-at-375-pixels-desktop/error-context.md
+
+    Error Context: ../artifacts/visual-details/visual-audit-Q02-category-evidence-coverage-at-375-pixels-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/visual-details/visual-audit-Q02-category-evidence-coverage-at-375-pixels-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/visual-details/visual-audit-Q02-category-evidence-coverage-at-375-pixels-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › tests/e2e/visual-audit.spec.ts:7:30 › Q02 category evidence coverage at 390 pixels 
+
+    Error: renovation-detail
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 404
+
+      5 | const screens=JSON.parse(fs.readFileSync('docs/reference/screens.json','utf8')).filter((s:any)=>!process.env.Q02_CATEGORY_DETAILS||['commercial-detail','community-detail','agent-detail','renovation-detail'].includes(s.id)),folder='evidence/visual/q02',records:any[]=[];
+      6 | test.afterAll(()=>{fs.mkdirSync(folder,{recursive:true});fs.writeFileSync(folder+'/manifest.json',JSON.stringify({evidenceLabel:'P',referenceParity:'unverified',scope:'Current local synthetic public pages and anonymous private entry states; media not supplied in a fixture is explicitly recorded.',screens:records},null,2)+'\n');});
+    > 7 | for(const width of [375,390])test('Q02 category evidence coverage at '+width+' pixels',async({page},info)=>{test.setTimeout(300000);fs.mkdirSync(folder,{recursive:true});await page.setViewportSize({width,height:width===375?812:844});for(const screen of screens){const origin=screen.localRoute.startsWith('/ops')?process.env.PUBLIC_OPS_URL:process.env.PUBLIC_WEB_URL;const response=await page.goto((origin||'http://localhost:8088')+screen.localRoute);expect(response?.status(),screen.id).toBe(200);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.localRoute==='/bj');if(['city-selector'].includes(screen.id)){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}if(['filter-sheet','resale-filters'].includes(screen.id))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id==='resale-sort')await page.getByLabel('Sort properties').selectOption('price_asc');const mediaNames:Record<string,string>={'property-floor-plan':'Floor plan','property-video':'Video','property-360':'360° tour'};let state='current route';if(mediaNames[screen.id]){const option=page.getByRole('button',{name:mediaNames[screen.id],exact:true});if(await option.count()){await option.click();state=mediaNames[screen.id];}else state='This synthetic fixture does not supply '+mediaNames[screen.id];}if(screen.localRoute.startsWith('/account')||screen.localRoute.startsWith('/tenant')||screen.localRoute.startsWith('/ops'))state='anonymous private entry; authenticated workflow evidence remains in its feature task';const file=screen.id+'-'+width+'-'+info.project.name+'.png',bytes=await page.screenshot({path:folder+'/'+file,fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});records.push({id:screen.id,route:screen.localRoute,viewport:{width,height:width===375?812:844},file,sha256:createHash('sha256').update(bytes).digest('hex'),renderer:page.context().browser()?.version(),capturedAt:new Date().toISOString(),evidenceLabel:'P',referenceParity:'unverified',state});}});
+        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ^
+      8 |
+        at /workspace/tests/e2e/visual-audit.spec.ts:7:488
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/visual-details/visual-audit-Q02-category-evidence-coverage-at-390-pixels-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/visual-details/visual-audit-Q02-category-evidence-coverage-at-390-pixels-desktop/error-context.md
+
+    Error Context: ../artifacts/visual-details/visual-audit-Q02-category-evidence-coverage-at-390-pixels-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/visual-details/visual-audit-Q02-category-evidence-coverage-at-390-pixels-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/visual-details/visual-audit-Q02-category-evidence-coverage-at-390-pixels-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/visual-audit.spec.ts:7:30 › Q02 category evidence coverage at 375 pixels ─
+    [desktop] › tests/e2e/visual-audit.spec.ts:7:30 › Q02 category evidence coverage at 390 pixels ─
+

@@ -1,0 +1,33 @@
+
+> haven-real-estate@0.1.0 db:migrate /workspace
+> tsx packages/database/src/migrate.ts
+
+/workspace/node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694
+          Error.captureStackTrace(err)
+                ^
+
+error: permission denied to create extension "postgis"
+    at /workspace/node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async <anonymous> (/workspace/packages/database/src/migrate.ts:5:355) {
+  length: 164,
+  severity: 'ERROR',
+  code: '42501',
+  detail: undefined,
+  hint: 'Must be superuser to create this extension.',
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'extension.c',
+  line: '932',
+  routine: 'execute_extension_script'
+}
+
+Node.js v24.21.0
+ ELIFECYCLE  Command failed with exit code 1.
