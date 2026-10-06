@@ -1,0 +1,9 @@
+import {z} from 'zod';
+const version=z.number().int().positive(),category=z.enum(['General','Listing complaint','Account','Viewing','Other']);
+export const supportPageQuery=z.object({page:z.coerce.number().int().min(1).max(10000).default(1)}).strict();
+export const supportCreate=z.object({version:z.literal(0),subject:z.string().trim().min(5).max(120),description:z.string().trim().min(10).max(3000),category,listing:z.object({id:z.uuid(),version}).strict().nullable().default(null),attachments:z.array(z.object({assetId:z.uuid(),version,label:z.string().trim().min(2).max(120)}).strict()).max(6).default([]).refine(v=>new Set(v.map(a=>a.assetId)).size===v.length,'Duplicate attachment'),consent:z.literal(true)}).strict().refine(v=>v.category!=='Listing complaint'||v.listing!==null,'Select the published listing for this complaint');
+export const supportTriage=z.object({version,assigneeId:z.uuid(),publicReply:z.string().trim().min(5).max(2000)}).strict();
+export const supportRecord=z.object({id:z.uuid(),version,subject:z.string(),description:z.string(),category:z.string(),status:z.string(),publicReply:z.string().nullable(),createdAt:z.string(),updatedAt:z.string().nullable(),historical:z.boolean(),listing:z.object({id:z.uuid(),version,title:z.string(),url:z.string()}).nullable(),assigned:z.boolean(),assigneeId:z.uuid().nullable(),attachments:z.array(z.object({id:z.uuid(),version,label:z.string(),mime:z.string(),url:z.string()})),activity:z.array(z.object({version,status:z.string(),message:z.string().nullable(),at:z.string()}))});
+export const supportPage=z.object({page:version,limit:z.literal(20),total:z.number().int().nonnegative(),items:z.array(supportRecord)});
+export const supportAssignees=z.array(z.object({id:z.uuid(),name:z.string()}));
+export type SupportRecord=z.infer<typeof supportRecord>;

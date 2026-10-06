@@ -1,18 +1,25 @@
+import {supportCreate,supportTriage,supportPageQuery} from '@haven/contracts';
+import {createSupport,triageSupport,supportList,supportDetail,supportStaff} from './support-cases.js';
+import {readPrivateObject} from '../inventory/media.js';
 import {managementDashboard} from '../management/dashboard.js';
 import {AgentDashboardController} from './agent-dashboard.js';
 import {agencyMembers} from '../identity/agency-memberships.js';
-import {Controller,Get,Post,Patch,Param,Req,Body,Inject} from '@nestjs/common';
-import type {FastifyRequest} from 'fastify';
+import {Controller,Get,Post,Patch,Param,Req,Body,Query,Res,Inject} from '@nestjs/common';
+import type {FastifyRequest,FastifyReply} from 'fastify';
 import {z} from 'zod';
 import {event} from '@haven/database';
-import {Identity,data,fail,transaction,idempotent} from '../platform/core.js';
+import {Identity,data,fail,transaction} from '../platform/core.js';
 @Controller('api/v1')
 export class AdministrationController{
  constructor(@Inject(Identity) private readonly identity:Identity){}
- @Get('support-cases') async cases(@Req() req:FastifyRequest){const a=await this.identity.actor(req);return transaction(a,async c=>data((await c.query('SELECT id,subject,description,category,status,public_reply,version,created_at FROM support_cases WHERE user_id=$1 ORDER BY created_at DESC',[a.id])).rows));}
- @Post('support-cases') async support(@Req() req:FastifyRequest,@Body() body:unknown){const a=await this.identity.actor(req);const x=z.object({subject:z.string().min(5).max(120),description:z.string().min(10).max(3000),category:z.enum(['General','Listing complaint','Account','Viewing','Other'])}).parse(body);return transaction(a,async c=>idempotent(c,a,req,x,async()=>{const r=await c.query('INSERT INTO support_cases(user_id,subject,description,category) VALUES($1,$2,$3,$4) RETURNING id,status',[a.id,x.subject,x.description,x.category]);await event(c,a,r.rows[0].id,'support.opened');return data(r.rows[0]);}));}
- @Get('ops/support-cases') async supportQueue(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['support','admin']);return transaction(a,async c=>data((await c.query('SELECT * FROM support_cases ORDER BY created_at DESC')).rows));}
- @Patch('ops/support-cases/:id') async updateSupport(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['support','admin']);const x=z.object({status:z.enum(['triaged','escalated','resolved']),publicReply:z.string().min(5).max(2000),internalNote:z.string().max(2000).optional(),version:z.number().int()}).parse(body);return transaction(a,async c=>{const r=await c.query('UPDATE support_cases SET status=$2,public_reply=$3,internal_note=$4,version=version+1 WHERE id=$1 AND version=$5 RETURNING id,status,version',[id,x.status,x.publicReply,x.internalNote,x.version]);if(!r.rowCount)fail(409,'Case unavailable or changed');await event(c,a,id,'support.'+x.status);return data(r.rows[0]);});}
+ @Get('support-cases') async cases(@Req() req:FastifyRequest,@Query() input:unknown={}){const a=await this.identity.actor(req),x=supportPageQuery.parse(input);return transaction(a,async c=>data(await supportList(c,x)));}
+ @Get('support-cases/:id') async supportDetail(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);return transaction(a,async c=>data(await supportDetail(c,z.uuid().parse(id))));}
+ @Post('support-cases') async support(@Req() req:FastifyRequest,@Body() body:unknown){const a=await this.identity.actor(req),x=supportCreate.parse(body);return transaction(a,c=>createSupport(c,a,req,x));}
+ @Get('ops/support-cases') async supportQueue(@Req() req:FastifyRequest,@Query() input:unknown={}){const a=await this.identity.actor(req,['support','admin']),x=supportPageQuery.parse(input);return transaction(a,async c=>data(await supportList(c,x,true)));}
+ @Get('ops/support-cases/:id') async supportProfessionalDetail(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['support','admin']);return transaction(a,async c=>data(await supportDetail(c,z.uuid().parse(id),true)));}
+ @Get('ops/support-assignees') async supportAssignees(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['support','admin']);return transaction(a,async c=>{await supportStaff(c);return data((await c.query('SELECT * FROM support_assignee_directory()')).rows);});}
+ @Patch('ops/support-cases/:id') async updateSupport(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['support','admin']),x=supportTriage.parse(body);return transaction(a,c=>triageSupport(c,a,req,z.uuid().parse(id),x));}
+ @Get('support-cases/:id/attachments/:assetId') async supportAttachment(@Req() req:FastifyRequest,@Param('id') id:string,@Param('assetId') assetId:string,@Res() reply:FastifyReply){const a=await this.identity.actor(req);return transaction(a,async c=>{const source=(await c.query('SELECT support_attachment_file($1,$2) source',[z.uuid().parse(id),z.uuid().parse(assetId)])).rows[0].source;if(!source||!source.key)fail(404,'Currently authorized support attachment not found');const content=await readPrivateObject(source.key);return reply.header('Content-Type',source.mime).header('Cache-Control','no-store').header('X-Content-Type-Options','nosniff').header('Content-Security-Policy',"default-src 'none'; frame-ancestors 'none'; base-uri 'none'").send(content);});}
  @Get('ops/audit') async audit(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['admin']);return transaction(a,async c=>data((await c.query('SELECT id,actor_id,resource_id,action,created_at FROM audit_events ORDER BY created_at DESC LIMIT 200')).rows));}
  @Get('ops/users') async users(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['admin']);return transaction(a,async c=>data((await c.query('SELECT id,display_name,email,state FROM profiles ORDER BY display_name')).rows));}
  @Post('ops/users/:id/suspend') async suspend(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['admin']);if(a.id===id)fail(400,'You cannot suspend your own account');return transaction(a,async c=>{const r=await c.query("UPDATE profiles SET state='suspended' WHERE id=$1 RETURNING id,state",[id]);if(!r.rowCount)fail(404,'User not found');await c.query('DELETE FROM sessions WHERE user_id=$1',[id]);await event(c,a,id,'account.suspended');return data(r.rows[0]);});}

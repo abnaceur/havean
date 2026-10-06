@@ -83,3 +83,5 @@ export * from './maintenance';
 export * from './statements';
 
 export * from './management-dashboard';
+
+export * from './support-cases';

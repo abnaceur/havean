@@ -41,6 +41,7 @@ import {financialReversal} from '../financial-reversals';
 import {depositMovement,depositLedgerQuery} from '../deposits';
 import {tenantLeaseQuery} from '../tenant-leases';
 import {managementDashboardQuery} from '../management-dashboard';
+import {supportCreate,supportTriage,supportPageQuery} from '../support-cases';
 import {statementQuery} from '../statements';
 import {maintenanceCreate,maintenanceWorkflow,maintenancePageQuery,maintenanceOptionsQuery,maintenanceTenantAction} from '../maintenance';
 import {responses} from '../responses';
@@ -50,13 +51,17 @@ const kind=z.enum(['photo','floor_plan','panorama','video']);
 const metadata=propertyMediaMetadata;
 export const operations={
 "AdministrationController_audit":{method:"GET",path:"/api/v1/ops/audit",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_audit"]},
-"AdministrationController_cases":{method:"GET",path:"/api/v1/support-cases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_cases"]},
+"AdministrationController_cases":{method:"GET",path:"/api/v1/support-cases",params:z.object({}),query:supportPageQuery,body:z.undefined(),response:responses["AdministrationController_cases"]},
 "AdministrationController_dashboard":{method:"GET",path:"/api/v1/ops/dashboard",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_dashboard"]},
 "AdministrationController_memberships":{method:"GET",path:"/api/v1/ops/memberships",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_memberships"]},
-"AdministrationController_support":{method:"POST",path:"/api/v1/support-cases",params:z.object({}),query:z.object({}),body:z.object({subject:z.string().min(5).max(120),description:z.string().min(10).max(3000),category:z.enum(['General','Listing complaint','Account','Viewing','Other'])}),response:responses["AdministrationController_support"]},
-"AdministrationController_supportQueue":{method:"GET",path:"/api/v1/ops/support-cases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_supportQueue"]},
+"AdministrationController_support":{method:"POST",path:"/api/v1/support-cases",params:z.object({}),query:z.object({}),body:supportCreate,response:responses["AdministrationController_support"]},
+"AdministrationController_supportAssignees":{method:"GET",path:"/api/v1/ops/support-assignees",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_supportAssignees"]},
+"AdministrationController_supportAttachment":{method:"GET",path:"/api/v1/support-cases/:id/attachments/:assetId",params:z.object({"id":z.string().min(1),"assetId":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_supportAttachment"]},
+"AdministrationController_supportDetail":{method:"GET",path:"/api/v1/support-cases/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_supportDetail"]},
+"AdministrationController_supportProfessionalDetail":{method:"GET",path:"/api/v1/ops/support-cases/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_supportProfessionalDetail"]},
+"AdministrationController_supportQueue":{method:"GET",path:"/api/v1/ops/support-cases",params:z.object({}),query:supportPageQuery,body:z.undefined(),response:responses["AdministrationController_supportQueue"]},
 "AdministrationController_suspend":{method:"POST",path:"/api/v1/ops/users/:id/suspend",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_suspend"]},
-"AdministrationController_updateSupport":{method:"PATCH",path:"/api/v1/ops/support-cases/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.enum(['triaged','escalated','resolved']),publicReply:z.string().min(5).max(2000),internalNote:z.string().max(2000).optional(),version:z.number().int()}),response:responses["AdministrationController_updateSupport"]},
+"AdministrationController_updateSupport":{method:"PATCH",path:"/api/v1/ops/support-cases/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:supportTriage,response:responses["AdministrationController_updateSupport"]},
 "AdministrationController_users":{method:"GET",path:"/api/v1/ops/users",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_users"]},
 "AgencyMembershipsController_decision":{method:"PATCH",path:"/api/v1/agency-invitations/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:agencyInviteDecision,response:responses["AgencyMembershipsController_decision"]},
 "AgencyMembershipsController_history":{method:"GET",path:"/api/v1/ops/membership-history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AgencyMembershipsController_history"]},

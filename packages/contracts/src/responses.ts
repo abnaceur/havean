@@ -1,3 +1,4 @@
+import {supportRecord,supportPage,supportAssignees} from './support-cases';
 import {managementDashboardRecord} from './management-dashboard';
 import {statementRecord} from './statements';
 import {maintenanceRecord,maintenancePage,maintenanceSource} from './maintenance';
@@ -59,7 +60,6 @@ const studioMedia=m.listing_media.extend({metadata:mediaMetadata,pending_metadat
 const publicMedia=z.object({id:uuid,kind:z.enum(['photo','floor_plan','panorama','video']),title:s,position:n,floorPlanId:uuid.nullable(),url:s,poster:s.nullable(),width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),caption:s,spatial:floorLayout.safeExtend({rooms:z.array(floorLayout.shape.rooms.element)}).nullable(),hotspots:mediaMetadata.shape.hotspots});
 const geographyRecord=z.union([m.transit_stations,m.communities.extend({latitude:n.nullable(),longitude:n.nullable()}),m.buildings,m.neighborhoods,m.cities,m.districts,m.transit_lines]);
 const market=z.object({name:s,currency:s,timezone:s,areaUnit:s,annualRate:decimal,mortgageEstimateNotes:z.string().default(defaultMortgageEstimateNotes),rentPeriod:s,supportEmail:s,demo:bool,pricePresets:z.array(pricePreset).default([]),requiredOwnerEvidenceTypes:z.array(z.enum(['ownership','authorization'])).default(['ownership'])});
-const support=m.support_cases.omit({user_id:true,internal_note:true});
 const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nullable(),currency:s});
 const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});
 const draft=m.listings.pick({id:true,unit_id:true,organization_id:true,owner_id:true,agent_id:true,title:true,description:true,transaction:true,segment:true,currency:true,price:true,rent_period:true,furnishing:true,available_from:true,features:true,status:true,version:true,slug:true});
@@ -135,7 +135,7 @@ export const responses={
  ManagementGrantsController_units:z.array(managementUnit),ManagementGrantsController_unit:managementUnit,ManagementGrantsController_organizations:z.array(z.object({id:z.uuid(),name:z.string()})),ManagementGrantsController_list:z.array(managementGrantRecord),ManagementGrantsController_detail:managementGrantRecord,ManagementGrantsController_professional:managementGrantRecord,ManagementGrantsController_create:managementGrantRecord,ManagementGrantsController_update:managementGrantRecord,
  ServicesController_quote:quoteRecord,ServicesController_quotes:z.array(quoteRecord),ServicesController_own:z.array(quoteRecord),ServicesController_detail:quoteRecord,ServicesController_ownDetail:quoteRecord,ServicesController_changeQuote:quoteRecord,
  AssignmentDirectoryController_listings:z.array(m.listings.pick({id:true,title:true,status:true,agent_id:true,version:true})),LeadAssignmentsController_leads:z.array(m.leads.pick({id:true,name:true,status:true,agent_id:true,version:true})),AssignmentDirectoryController_agents:z.array(assignmentAgent),AssignmentDirectoryController_history:z.array(m.listing_assignment_history),LeadAssignmentsController_assign:assignmentResult,LeadAssignmentsController_history:z.array(m.lead_assignment_history),
- AgentDashboardController_overview:agentDashboard,AdministrationController_cases:z.array(support),AdministrationController_support:status,AdministrationController_supportQueue:z.array(m.support_cases),AdministrationController_updateSupport:versioned,
+ AgentDashboardController_overview:agentDashboard,AdministrationController_cases:supportPage,AdministrationController_support:supportRecord,AdministrationController_supportQueue:supportPage,AdministrationController_updateSupport:supportRecord,AdministrationController_supportDetail:supportRecord,AdministrationController_supportProfessionalDetail:supportRecord,AdministrationController_supportAssignees:supportAssignees,AdministrationController_supportAttachment:z.instanceof(Blob),
  AdministrationController_audit:z.array(m.audit_events),AdministrationController_users:z.array(m.profiles.pick({id:true,display_name:true,email:true,state:true})),AdministrationController_suspend:m.profiles.pick({id:true,state:true}),
  AdministrationController_memberships:z.array(agencyMemberRecord),AdministrationController_dashboard:z.union([agentDashboard,managementDashboardRecord,z.object({listings:n,leads:n,leases:n,maintenance:n,asOf:s,definition:s})])
 } as const;

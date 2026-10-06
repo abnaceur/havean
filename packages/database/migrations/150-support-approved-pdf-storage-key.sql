@@ -1,0 +1,4 @@
+-- Approved PDF bytes retain the original upload key under quarantine/, matching
+-- existing inventory and lease-document downloads. Approval/scan/private/version
+-- admission remains mandatory; the storage prefix does not confer permission.
+CREATE OR REPLACE FUNCTION support_attachment_file(target uuid,asset uuid) RETURNS jsonb LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public,pg_temp AS $$ SELECT jsonb_build_object('key',CASE WHEN a.purpose='photo' THEN a.variants->>'display' ELSE 'quarantine/'||a.object_key END,'mime',CASE WHEN a.purpose='photo' THEN 'image/webp' ELSE a.mime END) FROM support_case_attachments s JOIN media_assets a ON a.id=s.asset_id AND a.version=s.asset_version WHERE s.case_id=target AND a.id=asset AND support_case_access(target) AND a.visibility='private' AND a.status='approved' AND a.scan_at IS NOT NULL $$;
