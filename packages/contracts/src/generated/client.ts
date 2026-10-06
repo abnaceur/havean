@@ -177,6 +177,7 @@ export const sdk={
 "MaintenanceController_professionalList":call(operations["MaintenanceController_professionalList"]),
 "MaintenanceController_professionalOptions":call(operations["MaintenanceController_professionalOptions"]),
 "MaintenanceController_professionalRead":call(operations["MaintenanceController_professionalRead"]),
+"MaintenanceController_tenantChange":call(operations["MaintenanceController_tenantChange"]),
 "MaintenanceController_tenantCreate":call(operations["MaintenanceController_tenantCreate"]),
 "MaintenanceController_tenantList":call(operations["MaintenanceController_tenantList"]),
 "MaintenanceController_tenantOptions":call(operations["MaintenanceController_tenantOptions"]),

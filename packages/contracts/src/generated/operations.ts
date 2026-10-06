@@ -40,7 +40,7 @@ import {paymentAllocation,allocationLedgerQuery} from '../payment-allocations';
 import {financialReversal} from '../financial-reversals';
 import {depositMovement,depositLedgerQuery} from '../deposits';
 import {tenantLeaseQuery} from '../tenant-leases';
-import {maintenanceCreate,maintenanceWorkflow,maintenancePageQuery,maintenanceOptionsQuery} from '../maintenance';
+import {maintenanceCreate,maintenanceWorkflow,maintenancePageQuery,maintenanceOptionsQuery,maintenanceTenantAction} from '../maintenance';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -222,6 +222,7 @@ export const operations={
 "MaintenanceController_professionalList":{method:"GET",path:"/api/v1/ops/maintenance",params:z.object({}),query:maintenancePageQuery,body:z.undefined(),response:responses["MaintenanceController_professionalList"]},
 "MaintenanceController_professionalOptions":{method:"GET",path:"/api/v1/ops/maintenance-options",params:z.object({}),query:maintenanceOptionsQuery,body:z.undefined(),response:responses["MaintenanceController_professionalOptions"]},
 "MaintenanceController_professionalRead":{method:"GET",path:"/api/v1/ops/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MaintenanceController_professionalRead"]},
+"MaintenanceController_tenantChange":{method:"PATCH",path:"/api/v1/me/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:maintenanceTenantAction,response:responses["MaintenanceController_tenantChange"]},
 "MaintenanceController_tenantCreate":{method:"POST",path:"/api/v1/me/maintenance",params:z.object({}),query:z.object({}),body:maintenanceCreate,response:responses["MaintenanceController_tenantCreate"]},
 "MaintenanceController_tenantList":{method:"GET",path:"/api/v1/me/maintenance",params:z.object({}),query:maintenancePageQuery,body:z.undefined(),response:responses["MaintenanceController_tenantList"]},
 "MaintenanceController_tenantOptions":{method:"GET",path:"/api/v1/me/maintenance-options",params:z.object({}),query:maintenanceOptionsQuery,body:z.undefined(),response:responses["MaintenanceController_tenantOptions"]},

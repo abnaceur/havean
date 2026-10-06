@@ -15,10 +15,9 @@ export async function completeOtp(page:Page,persona:string){
  for(let attempt=0;attempt<3;attempt++){
   await page.getByLabel('One-time code',{exact:true}).fill(personaOtp(persona)!);
   await page.getByRole('button',{name:'Sign In',exact:true}).click();
-  const result=await Promise.race([
-   page.waitForURL(url=>[process.env.PUBLIC_WEB_URL||'http://localhost:8088',process.env.PUBLIC_OPS_URL||'http://localhost:8089'].includes(url.origin)).then(()=>true),
-   page.getByText('Invalid authenticator code.',{exact:true}).waitFor().then(()=>false)
-  ]);
+  const origins=[process.env.PUBLIC_WEB_URL||'http://localhost:8088',process.env.PUBLIC_OPS_URL||'http://localhost:8089'];
+  await page.waitForFunction(origins=>origins.includes(location.origin)||document.body?.innerText.includes('Invalid authenticator code.'),origins);
+  const result=origins.includes(new URL(page.url()).origin);
   if(result)return;
   // Keycloak rejects reuse of a successful OTP, including between isolated browser contexts.
   await page.waitForTimeout(30000-Date.now()%30000+100);
