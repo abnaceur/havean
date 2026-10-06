@@ -1,0 +1,28 @@
+ Container haven-p02-api-run-6fbcb990d09c Creating
+ Container haven-p02-api-run-6fbcb990d09c Created
+
+ RUN  v5.0.3 /workspace
+
+ ❯ tests/integration/deposits.test.ts (5 tests | 1 failed) 23754ms
+   ✓ P10 received, partial release and explicit bidirectional adjustments reconcile liability without changing rent totals 11896ms
+   ✓ P10 excess, stale authority, invalid decimals, wrong currency and unconfirmed movements deny without liability changes; SQL rejects bypass 4617ms
+   ✓ P10 concurrent releases use one liability version and receipt replay remains scoped after revocation 3833ms
+   ✓ P10 actual foreign finance and manager-only identities cannot read or mutate another deposit ledger 1564ms
+   × P10 historical adjustments preserve prior decrease convention and unknown provenance, while subsequent native release is exact 1792ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/deposits.test.ts > P10 historical adjustments preserve prior decrease convention and unknown provenance, while subsequent native release is exact
+error: Actual finance authority required
+ ❯ node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+ ❯ transaction packages/database/src/index.ts:7:1159
+
+ ❯ tests/integration/deposits.test.ts:33:284
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  11:28:11
+   Duration  25.26s (tests 94%, import 4%, transform 2%)

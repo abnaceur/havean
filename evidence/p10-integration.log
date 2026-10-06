@@ -1,0 +1,30 @@
+ Container haven-p02-api-run-31a079ae3aac Creating
+ Container haven-p02-api-run-31a079ae3aac Created
+
+ RUN  v5.0.3 /workspace
+
+ ✓ tests/integration/deposits.test.ts (5 tests) 26736ms
+   ✓ P10 received, partial release and explicit bidirectional adjustments reconcile liability without changing rent totals 12273ms
+   ✓ P10 excess, stale authority, invalid decimals, wrong currency and unconfirmed movements deny without liability changes; SQL rejects bypass 4642ms
+   ✓ P10 concurrent releases use one liability version and receipt replay remains scoped after revocation 3987ms
+   ✓ P10 actual foreign finance and manager-only identities cannot read or mutate another deposit ledger 1618ms
+   ✓ P10 historical adjustments preserve prior decrease convention and unknown provenance, while subsequent native release is exact 4162ms
+ ✓ tests/integration/payment-allocations.test.ts (7 tests) 128663ms
+   ✓ P08 partial allocation leaves exact outstanding and credit, matching receipt creates one root, and settlement retains overpayment 22852ms
+   ✓ P08 concurrent allocations respect payment 100.10 and charge 200.20 caps 13699ms
+   ✓ P08 concurrent allocations respect payment 200.20 and charge 100.10 caps 16109ms
+   ✓ P08 cross-lease, currency, stale versions, confirmation and over-allocation deny without changing balances 21513ms
+   ✓ P08 PostgreSQL independently serializes direct allocations and prevents immutable amount edits 19467ms
+   ✓ P08 actual finance-only staff can allocate, manager-only and guessed foreign staff cannot, and revoked grants deny receipts 14660ms
+   ✓ P08 allocation and existing linked reversal share lock order and retained undo versions 20293ms
+ ✓ tests/integration/financial-reversals.test.ts (5 tests) 109940ms
+   ✓ P09 payment reversal preserves original, restores balance and retains one attributed undo across receipt and fresh retries 24430ms
+   ✓ P09 charge reversal preserves original and restores payment credit without reversing a reversal 24701ms
+   ✓ P09 simultaneous payment reversals and an allocation settle once under the shared finance lock 27933ms
+   ✓ P09 stale versions, confirmation, foreign actual finance and revoked grants deny reversal or receipt without evidence 14163ms
+   ✓ P09 SQL requires exact linked evidence and commit-time allocation undo atomically 18662ms
+
+ Test Files  3 passed (3)
+      Tests  17 passed (17)
+   Start at  11:29:17
+   Duration  269.22s (tests 99%, import 1%)
