@@ -85,8 +85,8 @@
 - [x] **V01 Create service provider catalog** — done; dependencies: A06, L06, U07
 - [x] **V02 Build provider discovery and detail** — done; dependencies: V01, A06, L06, U07
 - [x] **V03 Implement renovation quote workflow** — done; dependencies: V02, A06, L06, U07
-- [ ] **T01 Implement mortgage calculation engine** — in_progress; dependencies: F08, U07
-- [ ] **T02 Build mortgage interface** — todo; dependencies: T01, F08, U07
+- [x] **T01 Implement mortgage calculation engine** — done; dependencies: F08, U07
+- [ ] **T02 Build mortgage interface** — in_progress; dependencies: T01, F08, U07
 - [ ] **T03 Export repayment schedule** — todo; dependencies: T02, F08, U07
 - [ ] **P01 Create management grants and portfolios** — todo; dependencies: R04, O05, B05, F12
 - [ ] **P02 Create tenant profiles and account links** — todo; dependencies: P01, R04, O05, B05, F12
