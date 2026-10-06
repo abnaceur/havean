@@ -10,7 +10,7 @@ async function record(page:any,id:string){return(await(await page.request.get('h
 async function unavailable(page:any,row:any){
  expect((await page.request.get('http://localhost:8088/api/v1/listings/'+row.slug)).status()).toBe(404);
  expect((await page.request.post('/api/v1/inquiries',{headers:{Origin:'http://localhost:8088','idempotency-key':crypto.randomUUID()},data:{resourceId:row.id,resourceType:'listing',name:'Expiry Buyer',email:'expiry@example.test',phone:'123456789',message:'This withdrawn property must reject a late inquiry.',consent:true}})).status()).toBe(404);
- expect((await page.request.post('/api/v1/viewings',{headers:{Origin:'http://localhost:8088','idempotency-key':crypto.randomUUID()},data:{listingId:row.id,startAt:new Date(Date.now()+86400000).toISOString()}})).status()).toBe(404);
+ expect((await page.request.post('/api/v1/viewings',{headers:{Origin:'http://localhost:8088','idempotency-key':crypto.randomUUID()},data:{version:0,listingVersion:row.version,scheduleVersion:1,agentId:'10000000-0000-4000-8000-000000000060',listingId:row.id,startAt:new Date(Date.now()+86400000).toISOString()}})).status()).toBe(404);
  await page.goto('/bj/buy/'+row.slug);await expect(page.getByRole('heading',{name:'This page is unavailable.',exact:true})).toBeVisible();await expect(page.locator('.detail-actions')).toHaveCount(0);
 }
 test('I08 authors schedule and remove expiration, reject stale/past/foreign edits, and actual dispatcher expires the listing',async({page},info)=>{

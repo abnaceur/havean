@@ -1,0 +1,29 @@
+ Container haven-integration-tests-run-af409fa7b22e Creating 
+ Container haven-integration-tests-run-af409fa7b22e Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/viewing-bookings.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2845[2mms[22m[39m
+   [33m[2m✓[22m[39m L04 a current slot reserves its configured duration once; lost-response retries preserve the same booking and event[33m 317[2mms[22m[39m
+   [33m[2m✓[22m[39m L04 concurrent actual consumers yield one accepted reservation and one conflict[33m 423[2mms[22m[39m
+   [33m[2m✓[22m[39m L04 stale resource/availability/agent, off-cadence, outside hours, past and private-blocked requests fail without reservation[33m 320[2mms[22m[39m
+   [33m[2m✓[22m[39m L04 only the current assigned professional confirms once; owning cancellation is versioned and releases capacity[33m 574[2mms[22m[39m
+   [33m[2m✓[22m[39m L04 database writes require current metadata and retained travel gaps apply across properties[33m 806[2mms[22m[39m
+ [32m✓[39m tests/integration/viewing-availability.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1408[2mms[22m[39m
+   [33m[2m✓[22m[39m L03 current assigned agent publishes versioned working hours; public future slots convert property local time to actual UTC[33m 369[2mms[22m[39m
+   [33m[2m✓[22m[39m L03 private blocked intervals and existing agent appointments remove overlapping or buffered slots; cancellation restores capacity[33m 474[2mms[22m[39m
+   [33m[2m✓[22m[39m L03 public slot generation excludes spring gaps and clock-crossing durations and resolves autumn repeated times consistently[33m 304[2mms[22m[39m
+ [32m✓[39m tests/integration/database.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 346[2mms[22m[39m
+ [32m✓[39m tests/integration/resale-detail.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1029[2mms[22m[39m
+   [33m[2m✓[22m[39m D08 detail exposes only published facts and current eligible assigned agents; expired/unassigned agents and withdrawn listings cannot receive bookings[33m 1024[2mms[22m[39m
+ [32m✓[39m tests/integration/rental-detail.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 417[2mms[22m[39m
+   [33m[2m✓[22m[39m R03 public detail returns exact fixture deposit, explicit utilities and room facts without internal fields; absent terms are null; unavailable rentals cannot book[33m 340[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m30 passed[39m[22m[90m (30)[39m
+[2m   Start at [22m 03:42:48
+[2m   Duration [22m 14.78s[2m (import 50%, tests 44%, transform 6%)[22m
+
+[2m    Isolate [22m [33m5 workers spawned[39m[2m · ~186ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~744ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+

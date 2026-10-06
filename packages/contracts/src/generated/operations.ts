@@ -24,6 +24,7 @@ import {ownerWizardCreate,ownerWizardUpdate,ownerWizardSubmit} from '../owner-wi
 import {inquirySessionCreate,guestInquiry} from '../inquiries';
 import {leadQueueFilters,leadStageUpdate,leadNoteCreate} from '../crm';
 import {availabilityUpdate,availabilityBlockCreate,availabilityBlockCancel,viewingSlotQuery} from '../viewing-availability';
+import {viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel} from '../viewing-bookings';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -113,9 +114,9 @@ export const operations={
 "DraftInventoryController_read":{method:"GET",path:"/api/v1/ops/listings/:id/draft",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DraftInventoryController_read"]},
 "DraftInventoryController_units":{method:"GET",path:"/api/v1/ops/listing-units",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DraftInventoryController_units"]},
 "DraftInventoryController_update":{method:"PATCH",path:"/api/v1/ops/listings/:id/draft",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:draftUpdate,response:responses["DraftInventoryController_update"]},
-"EngagementController_book":{method:"POST",path:"/api/v1/viewings",params:z.object({}),query:z.object({}),body:z.object({listingId:z.string().uuid(),startAt:z.string().datetime()}),response:responses["EngagementController_book"]},
-"EngagementController_cancel":{method:"POST",path:"/api/v1/viewings/:id/cancel",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_cancel"]},
-"EngagementController_confirm":{method:"POST",path:"/api/v1/ops/viewings/:id/confirm",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_confirm"]},
+"EngagementController_book":{method:"POST",path:"/api/v1/viewings",params:z.object({}),query:z.object({}),body:viewingBookingCreate,response:responses["EngagementController_book"]},
+"EngagementController_cancel":{method:"POST",path:"/api/v1/viewings/:id/cancel",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewingBookingCancel,response:responses["EngagementController_cancel"]},
+"EngagementController_confirm":{method:"POST",path:"/api/v1/ops/viewings/:id/confirm",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewingBookingConfirm,response:responses["EngagementController_confirm"]},
 "EngagementController_conversations":{method:"GET",path:"/api/v1/conversations",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_conversations"]},
 "EngagementController_favorite":{method:"PUT",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:favoriteMutation,response:responses["EngagementController_favorite"]},
 "EngagementController_favorites":{method:"GET",path:"/api/v1/me/favorites",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_favorites"]},

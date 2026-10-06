@@ -59,3 +59,5 @@ export * from './inquiries';
 export * from './crm';
 
 export * from './viewing-availability';
+
+export * from './viewing-bookings';

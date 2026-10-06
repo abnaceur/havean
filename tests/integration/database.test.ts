@@ -18,7 +18,7 @@ describe('F07 management grant expiry',()=>{it('an expired grant immediately rem
   expect((await c.query('SELECT * FROM payments WHERE lease_id=$1',[id(5100)])).rowCount).toBe(0);
  });
 });});
-describe('L04 viewing availability',()=>{it('rejects concurrent interval overlap at the database',async()=>{await rollback(agent,async c=>{await c.query("INSERT INTO viewings(listing_id,user_id,agent_id,start_at,end_at) VALUES($1,$2,$3,'2031-01-04T10:00:00Z','2031-01-04T11:00:00Z')",[id(2000),person(3),id(60)]);await c.query('SAVEPOINT overlap');await expect(c.query("INSERT INTO viewings(listing_id,user_id,agent_id,start_at,end_at) VALUES($1,$2,$3,'2031-01-04T10:30:00Z','2031-01-04T11:30:00Z')",[id(2000),person(3),id(60)])).rejects.toMatchObject({code:'23P01'});await c.query('ROLLBACK TO SAVEPOINT overlap');});});});
+describe('L04 viewing availability',()=>{it('rejects concurrent interval overlap at the database',async()=>{await rollback({id:person(10),orgId:id(1),roles:['admin']},async c=>{await c.query("INSERT INTO viewings(listing_id,user_id,agent_id,start_at,end_at) VALUES($1,$2,$3,'2031-01-04T10:00:00Z','2031-01-04T11:00:00Z')",[id(2000),person(3),id(60)]);await c.query('SAVEPOINT overlap');await expect(c.query("INSERT INTO viewings(listing_id,user_id,agent_id,start_at,end_at) VALUES($1,$2,$3,'2031-01-04T10:30:00Z','2031-01-04T11:30:00Z')",[id(2000),person(3),id(60)])).rejects.toMatchObject({code:'23P01'});await c.query('ROLLBACK TO SAVEPOINT overlap');});});});
 describe('F07 private unit details',()=>{
  it('keeps addresses out of anonymous and foreign raw SQL reads',async()=>{
   expect((await transaction(null,c=>c.query('SELECT * FROM unit_private_details'))).rowCount).toBe(0);

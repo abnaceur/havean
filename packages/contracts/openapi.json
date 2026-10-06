@@ -28599,6 +28599,21 @@
                         },
                         "version": {
                           "type": "number"
+                        },
+                        "listing_version": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "availability_version": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "property_zone": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "buffer_minutes": {
+                          "type": "number"
                         }
                       },
                       "required": [
@@ -28609,7 +28624,11 @@
                         "start_at",
                         "end_at",
                         "status",
-                        "version"
+                        "version",
+                        "listing_version",
+                        "availability_version",
+                        "property_zone",
+                        "buffer_minutes"
                       ],
                       "additionalProperties": false
                     },
@@ -28770,7 +28789,30 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "version": {
+                    "type": "number",
+                    "enum": [
+                      0
+                    ]
+                  },
                   "listingId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "listingVersion": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "scheduleVersion": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "agentId": {
                     "type": "string",
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
@@ -28782,9 +28824,14 @@
                   }
                 },
                 "required": [
+                  "version",
                   "listingId",
+                  "listingVersion",
+                  "scheduleVersion",
+                  "agentId",
                   "startAt"
-                ]
+                ],
+                "additionalProperties": false
               }
             }
           }
@@ -28855,6 +28902,21 @@
                         },
                         "version": {
                           "type": "number"
+                        },
+                        "listing_version": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "availability_version": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "property_zone": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "buffer_minutes": {
+                          "type": "number"
                         }
                       },
                       "required": [
@@ -28865,7 +28927,11 @@
                         "start_at",
                         "end_at",
                         "status",
-                        "version"
+                        "version",
+                        "listing_version",
+                        "availability_version",
+                        "property_zone",
+                        "buffer_minutes"
                       ],
                       "additionalProperties": false
                     },
@@ -29019,6 +29085,28 @@
             }
           }
         },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "version"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
         "security": [
           {
             "session": []
@@ -29085,6 +29173,21 @@
                         },
                         "version": {
                           "type": "number"
+                        },
+                        "listing_version": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "availability_version": {
+                          "nullable": true,
+                          "type": "number"
+                        },
+                        "property_zone": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "buffer_minutes": {
+                          "type": "number"
                         }
                       },
                       "required": [
@@ -29095,7 +29198,11 @@
                         "start_at",
                         "end_at",
                         "status",
-                        "version"
+                        "version",
+                        "listing_version",
+                        "availability_version",
+                        "property_zone",
+                        "buffer_minutes"
                       ],
                       "additionalProperties": false
                     },
@@ -29245,6 +29352,42 @@
                 "schema": {
                   "$ref": "#/components/schemas/ApiError"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "listingVersion": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "scheduleVersion": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "required": [
+                  "version",
+                  "listingVersion",
+                  "scheduleVersion"
+                ],
+                "additionalProperties": false
               }
             }
           }
@@ -31983,8 +32126,30 @@
                           "version": {
                             "type": "number"
                           },
+                          "listing_version": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "availability_version": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "property_zone": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "buffer_minutes": {
+                            "type": "number"
+                          },
                           "title": {
                             "type": "string"
+                          },
+                          "current_listing_version": {
+                            "type": "number"
+                          },
+                          "current_schedule_version": {
+                            "nullable": true,
+                            "type": "number"
                           }
                         },
                         "required": [
@@ -31996,7 +32161,13 @@
                           "end_at",
                           "status",
                           "version",
-                          "title"
+                          "listing_version",
+                          "availability_version",
+                          "property_zone",
+                          "buffer_minutes",
+                          "title",
+                          "current_listing_version",
+                          "current_schedule_version"
                         ],
                         "additionalProperties": false
                       }
@@ -32210,6 +32381,21 @@
                           "version": {
                             "type": "number"
                           },
+                          "listing_version": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "availability_version": {
+                            "nullable": true,
+                            "type": "number"
+                          },
+                          "property_zone": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "buffer_minutes": {
+                            "type": "number"
+                          },
                           "title": {
                             "type": "string"
                           }
@@ -32223,6 +32409,10 @@
                           "end_at",
                           "status",
                           "version",
+                          "listing_version",
+                          "availability_version",
+                          "property_zone",
+                          "buffer_minutes",
                           "title"
                         ],
                         "additionalProperties": false
