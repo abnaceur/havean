@@ -17,12 +17,12 @@ describe('F09 real queue replay and crash recovery',()=>{
   await transaction(workerActor,async c=>{await c.query("INSERT INTO leads(id,user_id,organization_id,resource_id,resource_type,name,email,phone,message) VALUES($1,$2,$3,$4,'listing','Queue Buyer','queue@example.test','123456789','Synthetic queue retry inquiry')",[leadId,person(1),id(1),id(2000)]);await c.query("INSERT INTO outbox(id,aggregate_id,kind,payload,dispatched_at) VALUES($1,$2,'inquiry.submitted','{}',now())",[eventId,leadId]);});
   const queue=new Queue(queueName,{connection});let child:ChildProcess|undefined;
   try{
-   child=fork('tests/support/crash-worker.ts',[],{execArgv:['--import','tsx'],env:{...process.env,TEST_QUEUE:queueName,TEST_CRASH_POINT:'after-mail',MAIL_API_URL:'http://mail:8025',MAIL_HOST:'mail'},stdio:['ignore','ignore','ignore','ipc']});
+   child=fork('tests/support/crash-worker.ts',[],{execArgv:['--import','tsx'],env:{...process.env,TEST_QUEUE:queueName,TEST_CRASH_POINT:'after-mail',MAIL_API_URL:(process.env.MAIL_API_URL||'http://mail:8025'),MAIL_HOST:process.env.SMTP_HOST||'mail'},stdio:['ignore','ignore','ignore','ipc']});
    await waitMessage(child,'ready');const applied=waitMessage(child,'effect-applied');await queue.add('event',{id:eventId},{jobId:eventId,attempts:3});await applied;
    const exited=once(child,'exit');child.kill('SIGKILL');await exited;
    expect((await pool.query('SELECT processed_at FROM outbox WHERE id=$1',[eventId])).rows[0].processed_at).toBeNull();
    await runQueue(queueName,createProcessor(),eventId);
-   const mail=await fetch('http://mail:8025/api/v1/search?query='+encodeURIComponent('message-id:'+eventId+'@haven.local')).then(r=>r.json());expect(mail.messages_count).toBe(1);
+   const mail=await fetch((process.env.MAIL_API_URL||'http://mail:8025')+'/api/v1/search?query='+encodeURIComponent('message-id:'+eventId+'@haven.local')).then(r=>r.json());expect(mail.messages_count).toBe(1);
    await runQueue(queueName,createProcessor(),eventId);
    const effects=await transaction(workerActor,c=>c.query('SELECT * FROM outbox_effects WHERE event_id=$1',[eventId]));expect(effects.rowCount).toBe(1);
    const notifications=await transaction(workerActor,c=>c.query('SELECT * FROM notifications WHERE source_event_id=$1',[eventId]));expect(notifications.rowCount).toBe(1);

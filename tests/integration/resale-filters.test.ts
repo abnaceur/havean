@@ -5,7 +5,7 @@ import {compileListingSearch} from '../../apps/api/src/geography/search';
 import {listingFilters} from '../../packages/contracts/src/domain';
 import {createProcessor,initializeSearch,workerActor} from '../../apps/worker/src/processor';
 afterAll(()=>pool.end());
-const origin='http://localhost:8088';
+const origin=(process.env.INTEGRATION_WEB_URL||process.env.PUBLIC_WEB_URL||'http://localhost:8088');
 async function get(query:Record<string,string>){const response=await fetch(origin+'/api/v1/listings?'+new URLSearchParams(query));expect(response.status).toBe(200);return response.json();}
 async function project(id:string){const eventId=await transaction(workerActor,async c=>(await c.query("INSERT INTO outbox(aggregate_id,kind,payload,dispatched_at) VALUES($1,'listing.changed','{}',now()) RETURNING id",[id])).rows[0].id);await createProcessor()({data:{id:eventId}});}
 it('D04 combined resale facets use OR within groups and AND between them, including actual public tour eligibility and bounded transit proximity',async()=>{

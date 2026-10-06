@@ -5,7 +5,7 @@ for(const [key,value] of Object.entries(env))if(process.env[key]===undefined)pro
 const ip=(service:string)=>process.env.HAVEN_CONTAINER_TESTS==='true'?service:execFileSync('docker',['inspect','-f','{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}','haven-'+service+'-1'],{encoding:'utf8'}).trim();
 process.env.DATABASE_URL=env.DATABASE_URL.replace('@db:',`@${ip('db')}:`);
 process.env.MIGRATION_DATABASE_URL=env.MIGRATION_DATABASE_URL.replace('@db:',`@${ip('db')}:`);
-process.env.REDIS_URL=`redis://${ip('cache')}:6379`;
-process.env.SEARCH_URL=`http://${ip('search')}:7700`;
+process.env.REDIS_URL=env.REDIS_URL.replace('://cache:',`://${ip('cache')}:`);
+process.env.SEARCH_URL=env.SEARCH_URL.replace('://search:',`://${ip('search')}:`);
 process.env.SEARCH_KEY=env.SEARCH_KEY;
 process.env.DEV_PASSWORD=env.DEV_PASSWORD;

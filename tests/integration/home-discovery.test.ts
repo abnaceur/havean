@@ -8,7 +8,7 @@ import {RankingBoostsController} from '../../apps/api/src/administration/ranking
 import type {Identity} from '../../apps/api/src/platform/core';
 import {responses} from '../../packages/contracts/src/responses';
 afterAll(()=>pool.end());
-const origin=process.env.PUBLIC_WEB_URL||'http://localhost:8088',boosts=new RankingBoostsController({actor:async()=>workerActor} as unknown as Identity);
+const origin=process.env.INTEGRATION_WEB_URL||process.env.PUBLIC_WEB_URL||'http://localhost:8088',boosts=new RankingBoostsController({actor:async()=>workerActor} as unknown as Identity);
 const request=()=>({method:'POST',url:'/api/v1/ops/ranking-boosts',headers:{'idempotency-key':crypto.randomUUID()}} as unknown as FastifyRequest);
 async function home(city='bj'){const response=await fetch(origin+'/api/v1/discovery/home?city='+city);expect(response.status).toBe(200);const result=await response.json();responses.HomeDiscoveryController_home.parse(result.data);return result;}
 it('D07 city-scoped bounded home feeds show only active eligible curation and disclosed sponsorship; withdrawal/sold-out remove cards immediately',async()=>{

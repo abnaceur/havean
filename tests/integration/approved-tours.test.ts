@@ -3,7 +3,7 @@ import {it,expect,afterAll} from 'vitest';
 import {pool,transaction} from '../../packages/database/src/index';
 import {workerActor} from '../../apps/worker/src/processor';
 afterAll(()=>pool.end());
-const origin='http://localhost:8088';
+const origin=(process.env.INTEGRATION_WEB_URL||process.env.PUBLIC_WEB_URL||'http://localhost:8088');
 it('D09 only scanned decoded approved panoramas expose public metadata and a tour badge; denied assets expose no storage URL',async()=>{
  const sentinel='PRIVATE-OBJECT-'+crypto.randomUUID();let listing='',asset='',media='';
  await transaction(workerActor,async c=>{

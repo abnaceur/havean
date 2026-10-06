@@ -1,3 +1,4 @@
+import {fixtureAccountState} from '../support/account-fixture';
 import '../support/env';
 import {it,expect,afterAll} from 'vitest';
 import {pool,transaction,type Actor} from '../../packages/database/src/index';
@@ -26,5 +27,5 @@ it('A02 own favorites persist, repeated desired-state writes/replays are idempot
   await expect(owner.favorite(req(),'10000000-0000-4000-8000-000000002900',{version:0,listingVersion:1})).rejects.toMatchObject({status:404});
   await expect(owner.favorite(req(),listing.id,{...body,userId:other})).rejects.toMatchObject({name:'ZodError'});
   await transaction(workerActor,async c=>{expect((await c.query("SELECT count(*)::int n FROM audit_events WHERE actor_id=$1 AND action='favorite.saved'",[first])).rows[0].n).toBe(1);expect((await c.query("SELECT count(*)::int n FROM audit_events WHERE actor_id=$1 AND action='favorite.removed'",[first])).rows[0].n).toBe(1);expect((await c.query("SELECT count(*)::int n FROM favorites WHERE user_id=$1 AND listing_id=$2",[first,listing.id])).rows[0].n).toBe(1);});
- }finally{await transaction(workerActor,async c=>{await c.query('DELETE FROM favorites WHERE user_id=ANY($1::uuid[])',[[first,other]]);await c.query("UPDATE profiles SET state='archived' WHERE id=ANY($1::uuid[])",[[first,other]]);});}
+ }finally{await transaction(workerActor,async c=>{await c.query('DELETE FROM favorites WHERE user_id=ANY($1::uuid[])',[[first,other]]);await fixtureAccountState(c,'suspended',"WHERE id=ANY($1::uuid[])",[[first,other]]);});}
 });

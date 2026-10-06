@@ -1,3 +1,4 @@
+import {marketAdmin,marketRequest,saveMarketPatch} from '../support/market-admin';
 import '../support/env';
 import {it,expect,afterAll} from 'vitest';
 import type {FastifyRequest,FastifyReply} from 'fastify';
@@ -28,5 +29,7 @@ it('O03 actual approved PDF attachment is versioned, scoped and labelled; author
  await expect(reviewing.download(request({signature:encrypt({assetId:upload.id,actorId:reviewer.id,expires:Date.now()-1000})}),upload.id,reply)).rejects.toMatchObject({status:403});await expect(media.download(request({signature:new URL(link.url,'http://localhost').searchParams.get('signature')}),upload.id,reply)).rejects.toMatchObject({status:403});
 });
 it('O03 configured required categories are checked without trusting unattached classification metadata',async()=>{
- const marker=new Error('rollback');try{await transaction(workerActor,async c=>{await c.query("UPDATE market_config SET data=data||'{\"requiredOwnerEvidenceTypes\":[\"ownership\",\"authorization\"]}'::jsonb WHERE id='bj'");const id=crypto.randomUUID(),other=crypto.randomUUID();await expect(validateOwnerEvidencePolicy(c,{city:'bj',documents:[id],documentTypes:{[id]:'ownership',[other]:'authorization'}})).rejects.toMatchObject({status:409});await validateOwnerEvidencePolicy(c,{city:'bj',documents:[id,other],documentTypes:{[id]:'ownership',[other]:'authorization'}});await c.query("UPDATE market_config SET data=data||'{\"requiredOwnerEvidenceTypes\":[]}'::jsonb WHERE id='bj'");await validateOwnerEvidencePolicy(c,{city:'bj',documents:[]});throw marker;});}catch(error){if(error!==marker)throw error;}
+ const original=(await marketAdmin.marketRead(marketRequest('GET'),'bj')).data.data.requiredOwnerEvidenceTypes;
+ try{await saveMarketPatch({requiredOwnerEvidenceTypes:['ownership','authorization']});const id=crypto.randomUUID(),other=crypto.randomUUID();await transaction(workerActor,async c=>{await expect(validateOwnerEvidencePolicy(c,{city:'bj',documents:[id],documentTypes:{[id]:'ownership',[other]:'authorization'}})).rejects.toMatchObject({status:409});await validateOwnerEvidencePolicy(c,{city:'bj',documents:[id,other],documentTypes:{[id]:'ownership',[other]:'authorization'}});});await saveMarketPatch({requiredOwnerEvidenceTypes:[]});await transaction(workerActor,c=>validateOwnerEvidencePolicy(c,{city:'bj',documents:[]}));}finally{await saveMarketPatch({requiredOwnerEvidenceTypes:original});}
+
 });

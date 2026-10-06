@@ -24,8 +24,8 @@ export async function initializeSearch(){
  await searchTask('/indexes/listings/settings','PATCH',listingSearchSettings);
 }
 export function createProcessor(options:ProcessorOptions={}){
- const env=config(),mailApi=options.mailApiUrl||process.env.MAIL_API_URL||'http://mail:8025';
- const transport=nodemailer.createTransport({host:options.mailHost||'mail',port:options.mailPort||1025,secure:false});
+ const env=config(),mailApi=options.mailApiUrl||env.MAIL_API_URL;
+ const transport=nodemailer.createTransport({host:options.mailHost||env.SMTP_HOST,port:options.mailPort||env.SMTP_PORT,secure:false});
  return async(job:{data:{id:string}})=>transaction(workerActor,async c=>{
   const id=job.data.id;
   await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',[id]);

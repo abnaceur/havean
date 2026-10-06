@@ -1,3 +1,4 @@
+import {fixtureAccountState} from '../support/account-fixture';
 import '../support/env';
 import {it,expect,afterAll} from 'vitest';
 import {pool,transaction,type Actor} from '../../packages/database/src/index';
@@ -28,5 +29,5 @@ it('A03 history is opt-in, versioned, removable/clearable and scoped; archived f
   expect((await history.read(req('GET'))).data.entries).toHaveLength(1);expect((await history.clear(req('DELETE','/api/v1/me/history'),{version:4})).data.entries).toEqual([]);
   await history.preferences(req('PATCH','/api/v1/me/history/preferences'),{version:5,enabled:false});await expect(history.record(req(),id,{version:6,listingVersion:2})).rejects.toMatchObject({status:403});
   await favorites.unfavorite(req('DELETE','/api/v1/me/favorites/'+id),id,{version:1,listingVersion:null});expect((await favorites.favorites(req('GET'))).data).toEqual([]);
- }finally{await transaction(workerActor,async c=>{await c.query('DELETE FROM browsing_history WHERE user_id=ANY($1::uuid[])',[[first,other]]);await c.query('DELETE FROM browsing_history_settings WHERE user_id=ANY($1::uuid[])',[[first,other]]);await c.query('DELETE FROM favorites WHERE user_id=ANY($1::uuid[])',[[first,other]]);await c.query("UPDATE profiles SET state='archived' WHERE id=ANY($1::uuid[])",[[first,other]]);await c.query("UPDATE listings SET status='archived' WHERE id=$1",[id]);});}
+ }finally{await transaction(workerActor,async c=>{await c.query('DELETE FROM browsing_history WHERE user_id=ANY($1::uuid[])',[[first,other]]);await c.query('DELETE FROM browsing_history_settings WHERE user_id=ANY($1::uuid[])',[[first,other]]);await c.query('DELETE FROM favorites WHERE user_id=ANY($1::uuid[])',[[first,other]]);await fixtureAccountState(c,'suspended',"WHERE id=ANY($1::uuid[])",[[first,other]]);await c.query("UPDATE listings SET status='archived' WHERE id=$1",[id]);});}
 });

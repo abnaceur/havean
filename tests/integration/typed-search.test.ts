@@ -5,15 +5,15 @@ import {createProcessor,workerActor,initializeSearch} from '../../apps/worker/sr
 import {listingFilters} from '../../packages/contracts/src/domain';
 import {searchListings,compileListingSearch} from '../../apps/api/src/geography/search';
 afterAll(()=>pool.end());
-const origin='http://localhost:8088';
+const origin=(process.env.INTEGRATION_WEB_URL||process.env.PUBLIC_WEB_URL||'http://localhost:8088');
 async function get(query:Record<string,string>){return fetch(origin+'/api/v1/listings?'+new URLSearchParams(query));}
 it('D02 exact city/decimal filters, UUID ties and opaque bounded cursors return the expected IDs without duplicates',async()=>{
  await initializeSearch();const price='900077.13',ids:string[]=[];
+ try{
  for(let i=0;i<3;i++){
   const id=await transaction(workerActor,async c=>(await c.query(`INSERT INTO listings(unit_id,organization_id,owner_id,agent_id,slug,title,description,transaction,segment,currency,price,photos,status,published_at) SELECT unit_id,organization_id,owner_id,agent_id,$1,title,description,transaction,segment,currency,$2,photos,'published',now() FROM listings WHERE id='10000000-0000-4000-8000-000000002000' RETURNING id`,['typed-search-'+crypto.randomUUID(),price])).rows[0].id);ids.push(id);
   const eventId=await transaction(workerActor,async c=>(await c.query("INSERT INTO outbox(aggregate_id,kind,payload,dispatched_at) VALUES($1,'listing.published','{}',now()) RETURNING id",[id])).rows[0].id);await createProcessor()({data:{id:eventId}});
  }
- try{
   const criteria={city:'bj',minPrice:price,maxPrice:price,sort:'price_asc',limit:'2'};
   const firstResponse=await get(criteria);expect(firstResponse.status).toBe(200);const first=await firstResponse.json();expect(first.meta.searchMode).toBe('meilisearch');expect(first.data.map((d:any)=>d.id)).toEqual(ids.sort().slice(0,2));expect(first.meta.total).toBe(3);expect(first.meta.nextCursor).toBeTruthy();
   const second=await (await get({...criteria,cursor:first.meta.nextCursor})).json();expect(second.data.map((d:any)=>d.id)).toEqual(ids.slice(2));expect(second.meta.nextCursor).toBeNull();expect(new Set([...first.data,...second.data].map((d:any)=>d.id)).size).toBe(3);

@@ -3,7 +3,7 @@ import {it,expect,afterAll} from 'vitest';
 import {pool,transaction} from '../../packages/database/src/index';
 import {workerActor,createProcessor,initializeSearch} from '../../apps/worker/src/processor';
 afterAll(()=>pool.end());
-const origin='http://localhost:8088';
+const origin=(process.env.INTEGRATION_WEB_URL||process.env.PUBLIC_WEB_URL||'http://localhost:8088');
 async function response(path:string,query:Record<string,string>){const result=await fetch(origin+'/api/v1/'+path+'?'+new URLSearchParams(query));expect(result.status).toBe(200);return result.json();}
 it('D05 map/list bounds use identical canonical criteria and only rounded public community positions; private coordinate sentinels never enter responses or projections',async()=>{
  await initializeSearch();const ids:string[]=[],privateLatitude='12.345678',privateLongitude='67.891234',price='7654321.19';

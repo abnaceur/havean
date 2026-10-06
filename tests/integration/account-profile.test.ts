@@ -1,3 +1,4 @@
+import {fixtureAccountState} from '../support/account-fixture';
 import '../support/env';
 import {it,expect,afterAll} from 'vitest';
 import {pool,transaction,type Actor} from '../../packages/database/src/index';
@@ -20,6 +21,6 @@ it('A01 versioned own profile persists, replay is audited once, other profiles/i
   await expect(transaction(actor,c=>c.query("UPDATE profiles SET email='unauthorized@example.test',version=version+1 WHERE id=$1",[id]))).rejects.toMatchObject({code:'42501'});
   await expect(transaction(actor,c=>c.query("UPDATE profiles SET display_name='Wrong version' WHERE id=$1",[id]))).rejects.toMatchObject({code:'40001'});
   expect((await me.me(req())).data).toMatchObject({displayName:'Local profile name',email:'profile@example.test',version:2});
-  await transaction(workerActor,c=>c.query("UPDATE profiles SET state='suspended' WHERE id=$1",[id]));await expect(profiles.update(req(),id,{...input,version:2})).rejects.toMatchObject({status:404});
- }finally{await transaction(workerActor,c=>c.query("UPDATE profiles SET state='archived' WHERE id=$1",[id]));}
+  await transaction(workerActor,c=>fixtureAccountState(c,'suspended',"WHERE id=$1",[id]));await expect(profiles.update(req(),id,{...input,version:2})).rejects.toMatchObject({status:404});
+ }finally{await transaction(workerActor,c=>fixtureAccountState(c,'suspended',"WHERE id=$1",[id]));}
 });

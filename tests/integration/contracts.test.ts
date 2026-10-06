@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import {operations} from '../../packages/contracts/src/generated/operations';
 import {sdk} from '../../packages/contracts/src/generated/client';
 import {ApiError} from '../../packages/contracts/src/transport';
-const origin='http://localhost:8088',realFetch=globalThis.fetch;
+const origin=(process.env.INTEGRATION_WEB_URL||process.env.PUBLIC_WEB_URL||'http://localhost:8088'),realFetch=globalThis.fetch;
 afterEach(()=>vi.unstubAllGlobals());
 beforeAll(async()=>{const deadline=Date.now()+20000;while(Date.now()<deadline){try{if((await realFetch(origin+'/api/v1/health/ready')).status===200)return;}catch{/* Retry only during bounded startup readiness. */}await new Promise(resolve=>setTimeout(resolve,200));}throw Error('API readiness did not succeed within 20 seconds');});
 describe('F08 generated API contract',()=>{
@@ -33,7 +33,7 @@ describe('F08 generated API contract',()=>{
   await expect(sdk.IdentityController_me({})).rejects.toMatchObject({code:'AUTH_REQUIRED',status:401});
  });
  it('malformed JSON returns a sanitized client error',async()=>{
-  const response=await realFetch(origin+'/api/v1/tools/mortgage-estimate',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:'{not json'});
+  const response=await realFetch(origin+'/api/v1/tools/mortgage-estimate',{method:'POST',headers:{Origin:process.env.PUBLIC_WEB_URL||origin,'Content-Type':'application/json'},body:'{not json'});
   expect(response.status).toBe(400);const body=await response.json();expect(body.error.requestId).toBeTruthy();expect(body.error.code).toBe('MALFORMED_REQUEST');expect(body.error).not.toHaveProperty('stack');
  });
 });

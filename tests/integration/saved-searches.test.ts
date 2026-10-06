@@ -1,3 +1,4 @@
+import {fixtureAccountState} from '../support/account-fixture';
 import '../support/env';
 import {it,expect,afterAll} from 'vitest';
 import {pool,transaction,type Actor} from '../../packages/database/src/index';
@@ -21,7 +22,7 @@ it('A04 normalized complex rental criteria restore, require city currency, updat
   await expect(searches.create(req(),{...input,filters:{...filters,currency:'USD'}})).rejects.toMatchObject({status:400});await expect(searches.create(req(),{...input,filters:{...filters,city:'unknown-city'}})).rejects.toMatchObject({status:400});await expect(searches.create(req(),{...input,filters:{...filters,communityId:crypto.randomUUID()}})).rejects.toMatchObject({status:400});
   const resumed=await searches.update(req('PATCH'),id,{...input,filters:created.data.filters,version:2,paused:false});expect(resumed.data).toMatchObject({version:3,paused:false,alertEligible:true});const deleted=await searches.remove(req('DELETE'),id,{version:3});expect(deleted.data).toEqual({deleted:true,version:4});expect((await searches.read(req('GET'))).data).toEqual([]);await expect(searches.update(req('PATCH'),id,{...input,version:4,paused:false})).rejects.toMatchObject({status:404});
   await transaction(workerActor,async c=>{expect((await c.query("SELECT count(*)::int n FROM audit_events WHERE resource_id=$1 AND action='account.saved_search_created'",[id])).rows[0].n).toBe(1);expect((await c.query('SELECT paused,version,deleted_at IS NOT NULL deleted FROM saved_searches WHERE id=$1',[id])).rows[0]).toEqual({paused:true,version:4,deleted:true});});
- }finally{await transaction(workerActor,c=>c.query("UPDATE profiles SET state='archived' WHERE id=ANY($1::uuid[])",[[first,other]]));}
+ }finally{await transaction(workerActor,c=>fixtureAccountState(c,'suspended',"WHERE id=ANY($1::uuid[])",[[first,other]]));}
 });
 it('A04 matching uses current SQL currency/availability and legacy criteria stay ineligible',async()=>{
  const actor:Actor={id:'00000000-0000-4000-8000-000000000001',orgId:null,roles:['consumer']},searches=new SavedSearchController({actor:async()=>actor} as unknown as Identity),request=(method='POST')=>({method,url:'/api/v1/me/saved-searches',headers:{'idempotency-key':crypto.randomUUID()}} as unknown as FastifyRequest);

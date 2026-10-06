@@ -1,10 +1,10 @@
 import {test,expect} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {login,apiRequest} from '../support/browser';
-test('mapped rooms, multiple floors and real 3D geometry publish only after moderation',async({page,browser},info)=>{
+test('Q04 / mapped rooms, multiple floors and real 3D geometry publish only after moderation',async({page,browser},info)=>{
  test.setTimeout(240000);
  const listingId='10000000-0000-4000-8000-000000002000',suffix=info.project.name+'-'+crypto.randomUUID().slice(0,6);
- await login(page,'agent','http://localhost:8089','/ops/listings');
+ await login(page,'agent',(process.env.PUBLIC_OPS_URL||'http://localhost:8089'),'/ops/listings');
  await page.locator('tr[data-record-id="'+listingId+'"]').getByRole('button',{name:'Media',exact:true}).click();
  const assets:any[]=[];
  for(const [kind,file,label] of [['floor_plan','property-plan.png','Ground'],['floor_plan','property-plan.png','Upper'],['panorama','panorama-living.png','Living'],['panorama','panorama-bedroom.png','Bedroom']]){
@@ -17,7 +17,7 @@ test('mapped rooms, multiple floors and real 3D geometry publish only after mode
   await page.getByRole('checkbox',{name:'I have the rights and permission to publish this media.',exact:true}).check();
   await page.getByRole('button',{name:'Upload and submit for review',exact:true}).click();
   await expect(page.getByRole('status').filter({hasText:'Upload prepared and submitted for moderation.'})).toBeVisible();
-  assets.push((await (await page.request.get('http://localhost:8089/api/v1/ops/listings/'+listingId+'/media')).json()).data.media.find((row:any)=>row.title===title));
+  assets.push((await (await page.request.get((process.env.PUBLIC_OPS_URL||'http://localhost:8089')+'/api/v1/ops/listings/'+listingId+'/media')).json()).data.media.find((row:any)=>row.title===title));
  }
  const [ground,upper,living,bedroom]=assets;
  for(const [plan,scene,name,level] of [[ground,living,'Ground floor '+suffix,0],[upper,bedroom,'Upper floor '+suffix,1]] as const){
@@ -34,9 +34,9 @@ test('mapped rooms, multiple floors and real 3D geometry publish only after mode
   await page.getByRole('button',{name:'Submit media revision',exact:true}).click();
   await expect(page.getByRole('dialog',{name:'Edit property media'})).toHaveCount(0);
  }
- let publicRows=(await (await page.request.get('http://localhost:8089/api/v1/listings/'+listingId+'/media')).json()).data;
+ let publicRows=(await (await page.request.get((process.env.PUBLIC_OPS_URL||'http://localhost:8089')+'/api/v1/listings/'+listingId+'/media')).json()).data;
  expect(publicRows.some((row:any)=>assets.some(item=>item.id===row.id))).toBe(false);
- const workbench=(await (await page.request.get('http://localhost:8089/api/v1/ops/listings/'+listingId+'/media')).json()).data.media;
+ const workbench=(await (await page.request.get((process.env.PUBLIC_OPS_URL||'http://localhost:8089')+'/api/v1/ops/listings/'+listingId+'/media')).json()).data.media;
  const draft=workbench.find((row:any)=>row.id===ground.id);
  const spatial=draft.pending_metadata.spatial;expect(spatial.rooms[0].camera).toMatchObject({x:0.3,y:0.25});
  const invalid=await apiRequest(page,'/ops/property-media/'+ground.id,{title:ground.title,position:0,metadata:{caption:'Invalid geometry',hotspots:[],spatial:{...spatial,rooms:[{...spatial.rooms[0],camera:{x:0.99,y:0.99,headingDegrees:0}}]}},version:draft.version},'PATCH');expect(invalid.status()).toBe(400);
@@ -44,28 +44,28 @@ test('mapped rooms, multiple floors and real 3D geometry publish only after mode
  const self=await apiRequest(page,'/ops/property-media/'+ground.id+'/review',{decision:'approved',reason:'Self approval forbidden',version:draft.version});expect(self.status()).toBe(403);
  const context=await browser.newContext({viewport:page.viewportSize()!});const moderator=await context.newPage();
  try{
-  await login(moderator,'moderator','http://localhost:8089','/ops/reviews');
+  await login(moderator,'moderator',(process.env.PUBLIC_OPS_URL||'http://localhost:8089'),'/ops/reviews');
   // A reviewed floor must not expose the IDs or room geometry of an unapproved panorama.
   const approved=await apiRequest(moderator,'/ops/property-media/'+ground.id+'/review',{decision:'approved',reason:'Reviewed synthetic dimensions and room mapping',version:draft.version});expect(approved.ok()).toBe(true);
-  publicRows=(await (await page.request.get('http://localhost:8089/api/v1/listings/'+listingId+'/media')).json()).data;
+  publicRows=(await (await page.request.get((process.env.PUBLIC_OPS_URL||'http://localhost:8089')+'/api/v1/listings/'+listingId+'/media')).json()).data;
   expect(publicRows.find((row:any)=>row.id===ground.id).spatial.rooms).toEqual([]);
   for(const asset of [upper,living,bedroom]){
-   const fresh=(await (await page.request.get('http://localhost:8089/api/v1/ops/listings/'+listingId+'/media')).json()).data.media.find((row:any)=>row.id===asset.id);
+   const fresh=(await (await page.request.get((process.env.PUBLIC_OPS_URL||'http://localhost:8089')+'/api/v1/ops/listings/'+listingId+'/media')).json()).data.media.find((row:any)=>row.id===asset.id);
    const review=await apiRequest(moderator,'/ops/property-media/'+asset.id+'/review',{decision:'approved',reason:'Reviewed synthetic media and spatial references',version:fresh.version});expect(review.ok()).toBe(true);
   }
   // Published layout remains stable until its proposed revision has a separate approval.
-  const fresh=(await (await page.request.get('http://localhost:8089/api/v1/ops/listings/'+listingId+'/media')).json()).data.media.find((row:any)=>row.id===ground.id);
+  const fresh=(await (await page.request.get((process.env.PUBLIC_OPS_URL||'http://localhost:8089')+'/api/v1/ops/listings/'+listingId+'/media')).json()).data.media.find((row:any)=>row.id===ground.id);
   const edited=await apiRequest(page,'/ops/property-media/'+ground.id,{title:ground.title,position:0,metadata:{...fresh.metadata,spatial:{...fresh.metadata.spatial,name:'Reviewed ground '+suffix}},version:fresh.version},'PATCH');expect(edited.ok()).toBe(true);
-  publicRows=(await (await page.request.get('http://localhost:8089/api/v1/listings/'+listingId+'/media')).json()).data;
+  publicRows=(await (await page.request.get((process.env.PUBLIC_OPS_URL||'http://localhost:8089')+'/api/v1/listings/'+listingId+'/media')).json()).data;
   expect(publicRows.find((row:any)=>row.id===ground.id).spatial.name).toBe('Ground floor '+suffix);
   const review=await apiRequest(moderator,'/ops/property-media/'+ground.id+'/review',{decision:'approved',reason:'Approved floor name revision',version:(await edited.json()).data.version});expect(review.ok()).toBe(true);
-  const published=(await (await page.request.get('http://localhost:8089/api/v1/ops/listings/'+listingId+'/media')).json()).data.media.find((row:any)=>row.id===ground.id);
+  const published=(await (await page.request.get((process.env.PUBLIC_OPS_URL||'http://localhost:8089')+'/api/v1/ops/listings/'+listingId+'/media')).json()).data.media.find((row:any)=>row.id===ground.id);
   const moderatorEdit=await apiRequest(moderator,'/ops/property-media/'+ground.id,{title:ground.title,position:0,metadata:{...published.metadata,caption:'Moderator authored change'},version:published.version},'PATCH');expect(moderatorEdit.ok()).toBe(true);
   const revisionVersion=(await moderatorEdit.json()).data.version;
   const ownReview=await apiRequest(moderator,'/ops/property-media/'+ground.id+'/review',{decision:'approved',reason:'Self authored revision must be denied',version:revisionVersion});expect(ownReview.status()).toBe(403);
   const withdraw=await apiRequest(moderator,'/ops/property-media/'+ground.id+'/review',{decision:'rejected',reason:'Withdraw own proposed revision',version:revisionVersion});expect(withdraw.ok()).toBe(true);
  }finally{await context.close();}
- await page.goto('http://localhost:8088/bj/buy/home-1');
+ await page.goto((process.env.PUBLIC_WEB_URL||'http://localhost:8088')+'/bj/buy/home-1');
  await expect(page.getByRole('region',{name:'Property gallery'})).toBeVisible();
  await page.getByRole('button',{name:/^Floor plans/}).click();
  if(await page.getByLabel('Property floor plan',{exact:true}).count())await page.getByLabel('Property floor plan',{exact:true}).selectOption(ground.id);
@@ -91,8 +91,8 @@ test('mapped rooms, multiple floors and real 3D geometry publish only after mode
  expect(await page.evaluate(width=>document.documentElement.scrollWidth<=width,page.viewportSize()!.width)).toBe(true);
  await page.screenshot({path:'evidence/spatial-tour-'+info.project.name+'.png',fullPage:true});
  const accessibility=await new AxeBuilder({page}).include('.tour-viewer').analyze();expect(accessibility.violations.filter(issue=>issue.impact==='serious'||issue.impact==='critical')).toEqual([]);
- await page.goto('http://localhost:8088/bj/buy/home-1?media=vr&floor='+ground.id);
+ await page.goto((process.env.PUBLIC_WEB_URL||'http://localhost:8088')+'/bj/buy/home-1?media=vr&floor='+ground.id);
  await expect(page.getByRole('dialog',{name:'Interactive property tour'}).getByRole('img',{name:'360 degree view: '+living.title,exact:true})).toBeVisible();
- await page.goto('http://localhost:8088/bj/buy/home-1?media=plan&floor='+ground.id);
+ await page.goto((process.env.PUBLIC_WEB_URL||'http://localhost:8088')+'/bj/buy/home-1?media=plan&floor='+ground.id);
  await expect(page.getByRole('dialog',{name:'Interactive property tour'}).getByRole('img',{name:ground.title,exact:true})).toBeVisible();
 });

@@ -9,7 +9,7 @@ import {HealthController} from '../../apps/api/src/platform/health';
 import type {Identity} from '../../apps/api/src/platform/core';
 import type {FastifyRequest} from 'fastify';
 afterAll(()=>pool.end());
-const origin='http://localhost:8088',headers={Authorization:'Bearer '+process.env.SEARCH_KEY};
+const origin=(process.env.INTEGRATION_WEB_URL||process.env.PUBLIC_WEB_URL||'http://localhost:8088'),headers={Authorization:'Bearer '+process.env.SEARCH_KEY};
 async function read(path:string){const r=await fetch(process.env.SEARCH_URL+path,{headers});expect(r.ok).toBe(true);return r.json();}
 async function fixture(){return transaction(workerActor,async c=>(await c.query(`INSERT INTO listings(unit_id,organization_id,owner_id,agent_id,slug,title,description,transaction,segment,currency,price,photos,status,published_at) SELECT unit_id,organization_id,owner_id,agent_id,$1,'D10 rebuild fixture','Public synthetic rebuild fixture','sale','residential','CNY','2111111.11',photos,'published',now() FROM listings WHERE id='10000000-0000-4000-8000-000000002000' RETURNING id`,['rebuild-'+crypto.randomUUID()])).rows[0].id);}
 it('D10 verified temporary rebuild preserves the old serving index and browsing, then swaps the complete eligible public count and catches queued projections',async()=>{

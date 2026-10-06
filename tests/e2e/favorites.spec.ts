@@ -5,10 +5,10 @@ import {createRequire} from 'node:module';
 import {login} from '../support/browser';
 const require=createRequire(new URL('../../packages/database/package.json',import.meta.url)),{Pool}=require('pg'),fixtures=new Pool({connectionString:process.env.DATABASE_URL});
 test.afterAll(()=>fixtures.end());
-const id='10000000-0000-4000-8000-000000002000',origin='http://localhost:8088';
+const id='10000000-0000-4000-8000-000000002000',origin=(process.env.PUBLIC_WEB_URL||'http://localhost:8088');
 async function state(page:any){return (await (await page.request.get('/api/v1/me/favorites/'+id)).json()).data;}
 async function remove(page:any){const current=await state(page);const response=await page.request.delete('/api/v1/me/favorites/'+id,{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:{version:current.version,listingVersion:current.listingVersion}});expect(response.ok()).toBe(true);}
-test('A02 guest save returns to the intended property once after login; persistence and another user isolation',async({page})=>{
+test('Q04 / A02 guest save returns to the intended property once after login; persistence and another user isolation',async({page})=>{
  await login(page,'buyer');await remove(page);const buyer=(await(await page.request.get('/api/v1/me')).json()).data.id;const count=async()=>Number((await fixtures.query("SELECT count(*) n FROM audit_events WHERE actor_id=$1 AND resource_id=$2 AND action='favorite.saved'",[buyer,id])).rows[0].n),before=await count();
  try{
   await page.context().clearCookies();const returnTo='/bj/buy/home-1?entry=saved';await page.goto(returnTo);await page.getByRole('button',{name:'Save',exact:true}).click();await expect(page.getByRole('heading',{name:'Sign in to your account',exact:true})).toBeVisible();await page.getByRole('textbox',{name:'Username or email'}).fill('buyer');await page.getByLabel('Password',{exact:true}).fill(process.env.DEV_PASSWORD!);await page.getByRole('button',{name:'Sign In',exact:true}).click();await expect(page).toHaveURL(origin+returnTo);await expect(page.locator('.toast')).toContainText('Home saved');await expect(page.getByRole('button',{name:'Saved',exact:true})).toHaveAttribute('aria-pressed','true');expect(await count()).toBe(before+1);
@@ -17,7 +17,7 @@ test('A02 guest save returns to the intended property once after login; persiste
   await login(page,'owner');const other=(await(await page.request.get('/api/v1/me/favorites')).json()).data;expect(other.some((row:any)=>row.id===id)).toBe(false);const guessed=await page.request.get('/api/v1/me/favorites?userId='+buyer);expect((await guessed.json()).data.some((row:any)=>row.id===id)).toBe(false);
  }finally{await login(page,'buyer');await remove(page);}
 });
-test('A02 failed add/remove rolls back optimistic hearts; duplicate clicks write once and refresh persists',async({page},info)=>{
+test('Q04 / A02 failed add/remove rolls back optimistic hearts; duplicate clicks write once and refresh persists',async({page},info)=>{
  await login(page,'buyer');await remove(page);await page.goto('/bj/buy/home-1');await expect(page.getByRole('button',{name:'Save',exact:true})).toBeEnabled();
  const route='**/api/v1/me/favorites/'+id;
  try{
@@ -28,7 +28,7 @@ test('A02 failed add/remove rolls back optimistic hearts; duplicate clicks write
   await page.goto('/account/favorites');const card=page.locator('[data-listing-id="'+id+'"]');await expect(card.getByRole('button',{name:'Remove from favorites',exact:true})).toHaveAttribute('aria-pressed','true');const result=await new AxeBuilder({page}).include('main').analyze();expect(result.violations.filter(issue=>issue.impact==='serious'||issue.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);await page.screenshot({path:`evidence/a02-favorites-${info.project.name}.png`,scale:'css'});
  }finally{await page.unroute(route);await remove(page);}
 });
-test('A02 expired save resumes once through standard sign-in and clears stale private state',async({page})=>{
+test('Q04 / A02 expired save resumes once through standard sign-in and clears stale private state',async({page})=>{
  await login(page,'buyer');await remove(page);await page.goto('/bj/buy/home-1');await expect(page.getByRole('button',{name:'Save',exact:true})).toBeEnabled();const session=(await page.context().cookies()).find(cookie=>cookie.name==='haven_session')!.value;await fixtures.query("UPDATE sessions SET expires_at=now()-interval '1 hour' WHERE id=$1",[session]);
  try{await page.getByRole('button',{name:'Save',exact:true}).click();await expect(page.getByRole('heading',{name:'Sign in to your account',exact:true})).toBeVisible();await page.getByRole('textbox',{name:'Username or email'}).fill('buyer');await page.getByLabel('Password',{exact:true}).fill(process.env.DEV_PASSWORD!);await page.getByRole('button',{name:'Sign In',exact:true}).click();await expect(page).toHaveURL(origin+'/bj/buy/home-1');await expect(page.locator('.toast')).toContainText('Home saved');expect((await state(page)).saved).toBe(true);await expect(page.getByRole('button',{name:'Saved',exact:true})).toHaveAttribute('aria-pressed','true');expect(await page.evaluate(()=>sessionStorage.getItem('haven.favorite-intent'))).toBeNull();}finally{await login(page,'buyer');await remove(page);}
 });
