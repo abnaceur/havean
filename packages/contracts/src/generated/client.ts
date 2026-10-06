@@ -37,6 +37,8 @@ export const sdk={
 "CrmController_note":call(operations["CrmController_note"]),
 "CrmController_queue":call(operations["CrmController_queue"]),
 "CrmController_timeline":call(operations["CrmController_timeline"]),
+"CrmExportsController_leads":call(operations["CrmExportsController_leads"]),
+"CrmExportsController_viewings":call(operations["CrmExportsController_viewings"]),
 "DevelopmentInventoryController_createType":call(operations["DevelopmentInventoryController_createType"]),
 "DevelopmentInventoryController_createUnit":call(operations["DevelopmentInventoryController_createUnit"]),
 "DevelopmentInventoryController_units":call(operations["DevelopmentInventoryController_units"]),
@@ -234,5 +236,8 @@ export const sdk={
 "ViewingCalendarController_opsSlots":call(operations["ViewingCalendarController_opsSlots"]),
 "ViewingCalendarController_reschedule":call(operations["ViewingCalendarController_reschedule"]),
 "ViewingCalendarController_slots":call(operations["ViewingCalendarController_slots"]),
-"ViewingCalendarController_terminal":call(operations["ViewingCalendarController_terminal"])
+"ViewingCalendarController_terminal":call(operations["ViewingCalendarController_terminal"]),
+"ViewingReminderWorkerController_deliver":call(operations["ViewingReminderWorkerController_deliver"]),
+"ViewingReminderWorkerController_due":call(operations["ViewingReminderWorkerController_due"]),
+"ViewingReminderWorkerController_read":call(operations["ViewingReminderWorkerController_read"])
 };

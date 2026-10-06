@@ -26,6 +26,7 @@ import {leadQueueFilters,leadStageUpdate,leadNoteCreate} from '../crm';
 import {availabilityUpdate,availabilityBlockCreate,availabilityBlockCancel,viewingSlotQuery} from '../viewing-availability';
 import {viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel} from '../viewing-bookings';
 import {viewingCalendarQuery,viewingRescheduleQuery,viewingReschedule,viewingTerminalAction} from '../viewing-calendar';
+import {leadExportQuery,viewingExportQuery} from '../crm-exports';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -68,6 +69,8 @@ export const operations={
 "CrmController_note":{method:"POST",path:"/api/v1/ops/leads/:id/notes",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leadNoteCreate,response:responses["CrmController_note"]},
 "CrmController_queue":{method:"GET",path:"/api/v1/ops/lead-queue",params:z.object({}),query:leadQueueFilters,body:z.undefined(),response:responses["CrmController_queue"]},
 "CrmController_timeline":{method:"GET",path:"/api/v1/ops/leads/:id/timeline",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["CrmController_timeline"]},
+"CrmExportsController_leads":{method:"GET",path:"/api/v1/ops/lead-queue/export",params:z.object({}),query:leadExportQuery,body:z.undefined(),response:responses["CrmExportsController_leads"]},
+"CrmExportsController_viewings":{method:"GET",path:"/api/v1/ops/viewings/export",params:z.object({}),query:viewingExportQuery,body:z.undefined(),response:responses["CrmExportsController_viewings"]},
 "DevelopmentInventoryController_createType":{method:"POST",path:"/api/v1/ops/developments/:id/floor-types",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:floorTypeCreate,response:responses["DevelopmentInventoryController_createType"]},
 "DevelopmentInventoryController_createUnit":{method:"POST",path:"/api/v1/ops/developments/:id/offered-units",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:offeredUnitCreate,response:responses["DevelopmentInventoryController_createUnit"]},
 "DevelopmentInventoryController_units":{method:"GET",path:"/api/v1/ops/developments/:id/offered-units",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DevelopmentInventoryController_units"]},
@@ -266,4 +269,7 @@ export const operations={
 "ViewingCalendarController_reschedule":{method:"POST",path:"/api/v1/viewings/:id/reschedule",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewingReschedule,response:responses["ViewingCalendarController_reschedule"]},
 "ViewingCalendarController_slots":{method:"GET",path:"/api/v1/viewings/:id/slots",params:z.object({"id":z.string().min(1)}),query:viewingRescheduleQuery,body:z.undefined(),response:responses["ViewingCalendarController_slots"]},
 "ViewingCalendarController_terminal":{method:"POST",path:"/api/v1/ops/viewings/:id/outcome",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewingTerminalAction,response:responses["ViewingCalendarController_terminal"]},
+"ViewingReminderWorkerController_deliver":{method:"POST",path:"/api/v1/internal/viewing-reminders/:id/deliver",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationVersion,response:responses["ViewingReminderWorkerController_deliver"]},
+"ViewingReminderWorkerController_due":{method:"GET",path:"/api/v1/internal/viewing-reminders/due",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ViewingReminderWorkerController_due"]},
+"ViewingReminderWorkerController_read":{method:"GET",path:"/api/v1/internal/viewing-reminders/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ViewingReminderWorkerController_read"]},
 } as const;

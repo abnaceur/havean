@@ -1,0 +1,5 @@
+'use client';
+import {useState} from 'react';
+import {api,csvExport} from '@haven/contracts';
+import {ErrorBox} from './index';
+export function CsvExport({path,label}:{path:string;label:string}){const [busy,setBusy]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState('');async function download(){setBusy(true);setError('');setNotice('');try{const result=csvExport.parse((await api(path)).data),url=URL.createObjectURL(new Blob(['\ufeff'+result.content],{type:'text/csv;charset=utf-8'})),link=document.createElement('a');link.href=url;link.download=result.filename;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);setNotice('Exported '+result.records+' '+result.scope+' records.');}catch(e){setError(e instanceof Error?e.message:'Export could not be created.');}finally{setBusy(false);}}return <div><button className="button secondary" type="button" disabled={busy} onClick={()=>void download()}>{busy?'Preparing export…':label}</button>{error&&<ErrorBox message={error}/>}<p role="status">{notice}</p></div>;}

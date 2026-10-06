@@ -1,0 +1,31 @@
+ Container haven-integration-tests-run-5d01bd8e2c3a Creating 
+ Container haven-integration-tests-run-5d01bd8e2c3a Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/viewing-calendar.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 4125[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 consumer atomically reschedules a confirmed viewing, requiring fresh confirmation; idempotent receipt preserves one event and row[33m 582[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 conflicting/stale/unauthorized reschedules and cancellations preserve the original confirmed interval[33m 462[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 assigned professional reschedule retains confirmation; professional cancellation releases the new slot[33m 594[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 outcomes require a scoped confirmed viewing whose actual interval has ended, then become terminal[33m 362[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 own withdrawn bookings remain visible with recorded zone and redacted property title; calendars never broaden assignment or ownership[33m 353[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 concurrent reschedules from the same version yield one change and one conflict[33m 505[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 calendar date filters use the recorded property date, including times on the previous UTC day[33m 473[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 property capacity remains reserved when assignment changes; the former appointment can be cancelled through actual professional scope[33m 703[2mms[22m[39m
+ [32m✓[39m tests/integration/notifications.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2070[2mms[22m[39m
+   [33m[2m✓[22m[39m A05 a real publication worker plans one daily digest; BullMQ delivers one provider-accepted email and one in-app notification; replay stays deduplicated[33m 835[2mms[22m[39m
+   [33m[2m✓[22m[39m A05 opt-out and paused searches cancel queued optional email; unverified email cannot opt in[33m 425[2mms[22m[39m
+ [32m✓[39m tests/integration/viewing-reminders.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 3138[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 confirmation schedules one versioned reminder; actual BullMQ and SMTP receipt replay produce one email and one native notification[33m 620[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 cancellation invalidates queued and failed reminders and all stale retries send no email[33m 712[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 lost post-SMTP acknowledgement reconciles the frozen provider receipt without duplicate sending[33m 416[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 rescheduling invalidates the former booking job and fresh confirmation schedules the new version; unsigned service calls and private table reads fail[33m 469[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 scoped reports share actual CRM filters, exclude foreign assignments and private note/message content, and neutralize all formula cells[33m 371[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 transactional reminders never email unverified accounts, and inactive accounts receive no reminder[33m 469[2mms[22m[39m
+ [32m✓[39m tests/integration/account-privacy.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 687[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m23 passed[39m[22m[90m (23)[39m
+[2m   Start at [22m 04:40:22
+[2m   Duration [22m 15.24s[2m (tests 68%, import 27%, transform 4%)[22m
+

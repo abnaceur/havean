@@ -1,0 +1,4 @@
+import {config,notificationWorkerHeaders} from '@haven/config';
+async function reminderCall(path:string,method='GET',body?:unknown){const env=config(),route='/api/v1/internal/viewing-reminders'+path,response=await fetch(env.API_INTERNAL_URL+route,{method,headers:{Origin:env.PUBLIC_WEB_URL,...notificationWorkerHeaders(method,route,body,env.SESSION_KEY),...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{}),signal:AbortSignal.timeout(30000)});if(!response.ok)throw Error('REMINDER_SERVICE_'+response.status);return(await response.json()).data;}
+export async function dueViewingReminders(){return reminderCall('/due') as Promise<{id:string;version:number}[]>;}
+export async function deliverViewingReminder(id:string){const current=await reminderCall('/'+id);return reminderCall('/'+id+'/deliver','POST',{version:current.version});}

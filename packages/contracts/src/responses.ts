@@ -1,3 +1,4 @@
+import {csvExport,viewingReminderSummary} from './crm-exports';
 import {calendarViewing} from './viewing-calendar';
 import {publicViewingSlots} from './viewing-availability';
 import {leadActivity} from './crm';
@@ -86,6 +87,7 @@ export const responses={
  EngagementController_inquiry:status.extend({created_at:s,conversationId:uuid}),EngagementController_inquiries:z.array(m.leads.pick({id:true,resource_id:true,status:true,created_at:true,message:true})),
  ViewingCalendarController_slots:publicViewingSlots,ViewingCalendarController_opsSlots:publicViewingSlots,ViewingCalendarController_reschedule:m.viewings,ViewingCalendarController_opsReschedule:m.viewings,ViewingCalendarController_cancel:m.viewings,ViewingCalendarController_terminal:m.viewings,
  ViewingAvailabilityController_slots:publicViewingSlots,ViewingAvailabilityController_listings:z.array(z.object({id:uuid,title:s,listing_version:n,agent_id:uuid,time_zone:s,schedule_version:n.nullable(),status:s.nullable()})),ViewingAvailabilityController_read:z.object({listing:z.object({id:uuid,version:n,organization_id:uuid,agent_id:uuid,time_zone:s}),policy:m.viewing_availability.nullable(),blocks:z.array(m.viewing_availability_blocks)}),ViewingAvailabilityController_save:m.viewing_availability,ViewingAvailabilityController_block:m.viewing_availability_blocks,ViewingAvailabilityController_cancelBlock:m.viewing_availability_blocks,
+ CrmExportsController_leads:csvExport,CrmExportsController_viewings:csvExport,ViewingReminderWorkerController_due:z.array(z.object({id:uuid,version:n.int()})),ViewingReminderWorkerController_read:viewingReminderSummary,ViewingReminderWorkerController_deliver:viewingReminderSummary,
  CrmController_queue:z.object({organizationId:uuid,scope:z.enum(['team','assigned']),page:n,hasMore:z.boolean(),records:z.array(m.leads)}),CrmController_detail:m.leads.extend({resourceLabel:s.nullable()}),CrmController_timeline:z.array(leadActivity),CrmController_note:z.object({lead:m.leads,note:leadActivity}),
  EngagementController_leads:z.array(m.leads),EngagementController_lead:m.leads,
  EngagementController_viewings:z.array(calendarViewing),EngagementController_opsViewings:z.array(calendarViewing),EngagementController_book:m.viewings,EngagementController_cancel:m.viewings,EngagementController_confirm:m.viewings,

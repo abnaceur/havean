@@ -87,3 +87,5 @@ Browser tests use real Keycloak, API, database and storage. Test traces can cont
 Account alerts are available at `/account/notifications`. Optional email and in-app alerts start off; saved-search cadence uses UTC calendar boundaries. Local email is captured by Mailpit at `http://localhost:8091`. Production requires a real sender and an HTTPS idempotent mail provider; see [notification delivery](docs/adr/notification-delivery.md) for configuration and receipt semantics.
 
 For approved English pixel regression on clean synthetic data, use `./test.sh pnpm test:visual`. CI runs visual comparisons before browser mutations, then desktop/mobile business journeys. Baselines are hash checked, pinned to the declared renderer and never automatically refreshed.
+
+Viewing calendars are available at `/account/viewings` and `/ops/viewings`. Confirmation schedules a necessary reminder 24 hours before the viewing (immediately when confirmed within that window). Cancelled or rescheduled bookings invalidate pending reminder jobs. Inquiry and viewing workspaces offer scoped, formula-safe CSV downloads; see [reminders and reports](docs/adr/viewing-reminders-and-exports.md).
