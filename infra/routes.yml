@@ -1,5 +1,15 @@
 http:
   routers:
+    conversation-web:
+      entryPoints: [web]
+      rule: PathPrefix(`/api/v1/realtime/conversations/`)
+      priority: 100
+      service: conversation-api
+    conversation-ops:
+      entryPoints: [ops]
+      rule: PathPrefix(`/api/v1/realtime/conversations/`)
+      priority: 100
+      service: conversation-api
     web:
       entryPoints: [web]
       rule: PathPrefix(`/`)
@@ -17,6 +27,9 @@ http:
       rule: PathPrefix(`/`)
       service: mail
   services:
+    conversation-api:
+      loadBalancer:
+        servers: [{url: 'http://api:4000'}]
     web:
       loadBalancer:
         servers: [{url: 'http://web:3000'}]

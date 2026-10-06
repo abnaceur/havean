@@ -89,3 +89,5 @@ Account alerts are available at `/account/notifications`. Optional email and in-
 For approved English pixel regression on clean synthetic data, use `./test.sh pnpm test:visual`. CI runs visual comparisons before browser mutations, then desktop/mobile business journeys. Baselines are hash checked, pinned to the declared renderer and never automatically refreshed.
 
 Viewing calendars are available at `/account/viewings` and `/ops/viewings`. Confirmation schedules a necessary reminder 24 hours before the viewing (immediately when confirmed within that window). Cancelled or rescheduled bookings invalidate pending reminder jobs. Inquiry and viewing workspaces offer scoped, formula-safe CSV downloads; see [reminders and reports](docs/adr/viewing-reminders-and-exports.md).
+
+Conversation participants and inquiry context are shown at `/account/messages` and `/ops/messages`. Current assignment/membership controls every read and authenticated socket subscription; see [conversation authorization](docs/adr/conversation-authorization.md).

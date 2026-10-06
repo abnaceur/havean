@@ -1,0 +1,54 @@
+ Container haven-api-run-3dc2341e7771 Creating 
+ Container haven-api-run-3dc2341e7771 Created 
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+packages/ui typecheck: Done
+apps/api typecheck: Done
+apps/ops typecheck$ tsc --noEmit
+apps/web typecheck$ tsc --noEmit
+apps/ops typecheck: Done
+apps/web typecheck: Done
+ Container haven-api-run-9bd74da86a34 Creating 
+ Container haven-api-run-9bd74da86a34 Created 
+
+> haven-real-estate@0.1.0 lint /workspace
+> eslint . && node scripts/boundaries.mjs
+
+Application import boundaries passed
+ Container haven-api-run-34bfeb0d1af0 Creating 
+ Container haven-api-run-34bfeb0d1af0 Created 
+
+> haven-real-estate@0.1.0 license:check /workspace
+> node scripts/licenses.mjs
+
+Licenses verified: 42 packages and 9 services
+ Container haven-api-run-172f0014c610 Creating 
+ Container haven-api-run-172f0014c610 Created 
+
+> haven-real-estate@0.1.0 contracts:check /workspace
+> node scripts/generate-contracts.mjs --check && tsx scripts/generate-openapi.ts --check
+
+Generated 239 typed API operations.
+OpenAPI matches canonical schemas
+ Container haven-api-run-51276125907a Creating 
+ Container haven-api-run-51276125907a Created 
+
+> haven-real-estate@0.1.0 task:validate /workspace
+> node scripts/tasks.mjs
+
+Validated 120 tasks; 78 done.

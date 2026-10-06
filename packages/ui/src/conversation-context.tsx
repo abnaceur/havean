@@ -1,0 +1,6 @@
+'use client';
+import {useEffect,useState} from 'react';
+import {sdk} from '@haven/contracts';
+import {Spinner,ErrorBox} from './index';
+type Context=Awaited<ReturnType<typeof sdk.ConversationsController_detail>>['data'];
+export function ConversationContext({id}:{id:string}){const [context,setContext]=useState<Context|null>(null),[error,setError]=useState('');useEffect(()=>{const abort=new AbortController();setContext(null);setError('');void sdk.ConversationsController_detail({params:{id},signal:abort.signal}).then(r=>setContext(r.data)).catch(e=>{if(!abort.signal.aborted)setError(e instanceof Error?e.message:'Conversation context unavailable.');});return()=>abort.abort();},[id]);return <section aria-label="Conversation participants">{error?<ErrorBox message={error}/>:!context?<Spinner/>:<><p>{context.resource_type==='agent'?'Agent inquiry':context.resource_type==='development'?'Development inquiry':context.resource_type==='provider'?'Service inquiry':context.resource_type==='listing'?'Property inquiry':'Historical conversation; resource context was not recorded.'}</p><p>Participants: {context.members.map(m=>m.display_name).join(', ')}.</p>{context.state!=='active'&&<p>This conversation is read-only.</p>}</>}</section>;}

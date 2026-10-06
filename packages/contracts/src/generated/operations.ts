@@ -65,6 +65,7 @@ export const operations={
 "BrowsingHistoryController_read":{method:"GET",path:"/api/v1/me/history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["BrowsingHistoryController_read"]},
 "BrowsingHistoryController_record":{method:"POST",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyView,response:responses["BrowsingHistoryController_record"]},
 "BrowsingHistoryController_remove":{method:"DELETE",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyVersion,response:responses["BrowsingHistoryController_remove"]},
+"ConversationsController_detail":{method:"GET",path:"/api/v1/conversations/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ConversationsController_detail"]},
 "CrmController_detail":{method:"GET",path:"/api/v1/ops/leads/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["CrmController_detail"]},
 "CrmController_note":{method:"POST",path:"/api/v1/ops/leads/:id/notes",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leadNoteCreate,response:responses["CrmController_note"]},
 "CrmController_queue":{method:"GET",path:"/api/v1/ops/lead-queue",params:z.object({}),query:leadQueueFilters,body:z.undefined(),response:responses["CrmController_queue"]},
