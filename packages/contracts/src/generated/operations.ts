@@ -43,6 +43,7 @@ import {tenantLeaseQuery} from '../tenant-leases';
 import {managementDashboardQuery} from '../management-dashboard';
 import {supportCreate,supportTriage,supportPageQuery,supportWorkflow,supportPublicAction} from '../support-cases';
 import {homeContentQuery,homeSectionCreate,homeSectionEdit,homeSectionAction,homeTaxonomySave} from '../home-content';
+import {platformUserQuery,platformAccountAction,platformStaffSave} from '../platform-administration';
 import {statementQuery} from '../statements';
 import {maintenanceCreate,maintenanceWorkflow,maintenancePageQuery,maintenanceOptionsQuery,maintenanceTenantAction} from '../maintenance';
 import {responses} from '../responses';
@@ -61,6 +62,7 @@ export const operations={
 "AdministrationController_homePublish":{method:"POST",path:"/api/v1/ops/home-content/:id/actions",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:homeSectionAction,response:responses["AdministrationController_homePublish"]},
 "AdministrationController_homeTaxonomy":{method:"POST",path:"/api/v1/ops/home-taxonomy",params:z.object({}),query:z.object({}),body:homeTaxonomySave,response:responses["AdministrationController_homeTaxonomy"]},
 "AdministrationController_memberships":{method:"GET",path:"/api/v1/ops/memberships",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_memberships"]},
+"AdministrationController_staff":{method:"POST",path:"/api/v1/ops/users/:id/staff",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:platformStaffSave,response:responses["AdministrationController_staff"]},
 "AdministrationController_support":{method:"POST",path:"/api/v1/support-cases",params:z.object({}),query:z.object({}),body:supportCreate,response:responses["AdministrationController_support"]},
 "AdministrationController_supportAction":{method:"POST",path:"/api/v1/ops/support-cases/:id/actions",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:supportWorkflow,response:responses["AdministrationController_supportAction"]},
 "AdministrationController_supportAssignees":{method:"GET",path:"/api/v1/ops/support-assignees",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_supportAssignees"]},
@@ -70,9 +72,10 @@ export const operations={
 "AdministrationController_supportProfessionalDetail":{method:"GET",path:"/api/v1/ops/support-cases/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_supportProfessionalDetail"]},
 "AdministrationController_supportPublicChange":{method:"PATCH",path:"/api/v1/support-cases/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:supportPublicAction,response:responses["AdministrationController_supportPublicChange"]},
 "AdministrationController_supportQueue":{method:"GET",path:"/api/v1/ops/support-cases",params:z.object({}),query:supportPageQuery,body:z.undefined(),response:responses["AdministrationController_supportQueue"]},
-"AdministrationController_suspend":{method:"POST",path:"/api/v1/ops/users/:id/suspend",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_suspend"]},
+"AdministrationController_suspend":{method:"POST",path:"/api/v1/ops/users/:id/suspend",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:platformAccountAction,response:responses["AdministrationController_suspend"]},
 "AdministrationController_updateSupport":{method:"PATCH",path:"/api/v1/ops/support-cases/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:supportTriage,response:responses["AdministrationController_updateSupport"]},
-"AdministrationController_users":{method:"GET",path:"/api/v1/ops/users",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_users"]},
+"AdministrationController_user":{method:"GET",path:"/api/v1/ops/users/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_user"]},
+"AdministrationController_users":{method:"GET",path:"/api/v1/ops/users",params:z.object({}),query:platformUserQuery,body:z.undefined(),response:responses["AdministrationController_users"]},
 "AgencyMembershipsController_decision":{method:"PATCH",path:"/api/v1/agency-invitations/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:agencyInviteDecision,response:responses["AgencyMembershipsController_decision"]},
 "AgencyMembershipsController_history":{method:"GET",path:"/api/v1/ops/membership-history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AgencyMembershipsController_history"]},
 "AgencyMembershipsController_invitations":{method:"GET",path:"/api/v1/ops/agency-invitations",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AgencyMembershipsController_invitations"]},

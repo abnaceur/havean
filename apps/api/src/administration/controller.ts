@@ -1,3 +1,5 @@
+import {platformUserQuery,platformAccountAction,platformStaffSave} from '@haven/contracts';
+import {platformUsers,platformUserRecord,platformAccount,platformStaff,platformAdmin} from './platform-users.js';
 import {homeContentQuery,homeSectionCreate,homeSectionEdit,homeSectionAction,homeTaxonomySave} from '@haven/contracts';
 import {contentWorkspace,contentCreate,contentEdit,contentAction,contentTaxonomy,contentEditor,contentRecord} from './home-content.js';
 import {supportCreate,supportTriage,supportWorkflow,supportPublicAction,supportPageQuery} from '@haven/contracts';
@@ -9,7 +11,6 @@ import {agencyMembers} from '../identity/agency-memberships.js';
 import {Controller,Get,Post,Patch,Param,Req,Body,Query,Res,Inject} from '@nestjs/common';
 import type {FastifyRequest,FastifyReply} from 'fastify';
 import {z} from 'zod';
-import {event} from '@haven/database';
 import {Identity,data,fail,transaction} from '../platform/core.js';
 @Controller('api/v1')
 export class AdministrationController{
@@ -31,9 +32,11 @@ export class AdministrationController{
  @Post('ops/home-content/:id/actions') async homePublish(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['editor','admin']),x=homeSectionAction.parse(body);return transaction(a,c=>contentAction(c,a,req,z.uuid().parse(id),x));}
  @Get('ops/home-content/:id/preview') async homePreview(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['editor','admin']);return transaction(a,async c=>{await contentEditor(c);return data(await contentRecord(c,z.uuid().parse(id)));});}
  @Post('ops/home-taxonomy') async homeTaxonomy(@Req() req:FastifyRequest,@Body() body:unknown){const a=await this.identity.actor(req,['editor','admin']),x=homeTaxonomySave.parse(body);return transaction(a,c=>contentTaxonomy(c,a,req,x));}
- @Get('ops/audit') async audit(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['admin']);return transaction(a,async c=>data((await c.query('SELECT id,actor_id,resource_id,action,created_at FROM audit_events ORDER BY created_at DESC LIMIT 200')).rows));}
- @Get('ops/users') async users(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['admin']);return transaction(a,async c=>data((await c.query('SELECT id,display_name,email,state FROM profiles ORDER BY display_name')).rows));}
- @Post('ops/users/:id/suspend') async suspend(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['admin']);if(a.id===id)fail(400,'You cannot suspend your own account');return transaction(a,async c=>{const r=await c.query("UPDATE profiles SET state='suspended' WHERE id=$1 RETURNING id,state",[id]);if(!r.rowCount)fail(404,'User not found');await c.query('DELETE FROM sessions WHERE user_id=$1',[id]);await event(c,a,id,'account.suspended');return data(r.rows[0]);});}
+ @Get('ops/audit') async audit(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['admin']);return transaction(a,async c=>{await platformAdmin(c);return data((await c.query('SELECT id,actor_id,resource_id,action,created_at FROM audit_events ORDER BY created_at DESC LIMIT 200')).rows);});}
+ @Get('ops/users') async users(@Req() req:FastifyRequest,@Query() input:unknown={}){const a=await this.identity.actor(req,['admin']),x=platformUserQuery.parse(input);return transaction(a,async c=>data(await platformUsers(c,x)));}
+ @Get('ops/users/:id') async user(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['admin']);return transaction(a,async c=>data(await platformUserRecord(c,z.uuid().parse(id))));}
+ @Post('ops/users/:id/suspend') async suspend(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['admin']),x=platformAccountAction.parse(body);return transaction(a,c=>platformAccount(c,a,req,z.uuid().parse(id),x));}
+ @Post('ops/users/:id/staff') async staff(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['admin']),x=platformStaffSave.parse(body);return transaction(a,c=>platformStaff(c,a,req,z.uuid().parse(id),x));}
  @Get('ops/memberships') async memberships(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['agency_manager','admin']);return transaction(a,async c=>data(await agencyMembers(c,a)));}
  @Get('ops/dashboard') async dashboard(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['agent','agency_manager','developer','property_manager','finance','vendor','moderator','support','admin']);if(a.roles.some(r=>['property_manager','finance'].includes(r)))return transaction(a,async c=>data(await managementDashboard(c)));if(a.roles.some(r=>['agent','agency_manager'].includes(r)))return new AgentDashboardController(this.identity).overview(req);return transaction(a,async c=>{const count=async(table:string,where='true',params:unknown[]=[])=>Number((await c.query(`SELECT count(*) FROM ${table} WHERE ${where}`,params)).rows[0].count);return data({listings:await count('listings',"organization_id=$1 AND status='published'",[a.orgId]),leads:await count('leads'),leases:await count('leases',"status='active'"),maintenance:await count('maintenance',"status<>'closed'"),asOf:new Date().toISOString(),definition:'Current authorized records; published listings, all leads, active leases, open maintenance.'});});}
 }

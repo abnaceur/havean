@@ -4527,6 +4527,352 @@
         ]
       }
     },
+    "/api/v1/ops/users/{id}/staff": {
+      "post": {
+        "operationId": "AdministrationController_staff",
+        "tags": [
+          "Administration"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "staff": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "moderator",
+                                  "support",
+                                  "editor",
+                                  "admin"
+                                ]
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "role",
+                              "status",
+                              "version"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "activity": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "kind": {
+                                "type": "string"
+                              },
+                              "actorId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "at": {
+                                "type": "string"
+                              },
+                              "reason": {
+                                "type": "string"
+                              },
+                              "before": {},
+                              "after": {}
+                            },
+                            "required": [
+                              "id",
+                              "kind",
+                              "actorId",
+                              "at",
+                              "reason",
+                              "before",
+                              "after"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "displayName",
+                        "email",
+                        "state",
+                        "version",
+                        "staff",
+                        "activity"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "profileVersion": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "moderator",
+                      "support",
+                      "editor",
+                      "admin"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "revoked"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 1000
+                  }
+                },
+                "required": [
+                  "version",
+                  "profileVersion",
+                  "role",
+                  "status",
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
     "/api/v1/ops/support-cases/{id}/actions": {
       "post": {
         "operationId": "AdministrationController_supportAction",
@@ -7665,13 +8011,437 @@
                           "format": "uuid",
                           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
                         },
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
                         "state": {
                           "type": "string"
+                        },
+                        "version": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "staff": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "moderator",
+                                  "support",
+                                  "editor",
+                                  "admin"
+                                ]
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "role",
+                              "status",
+                              "version"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "activity": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "kind": {
+                                "type": "string"
+                              },
+                              "actorId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "at": {
+                                "type": "string"
+                              },
+                              "reason": {
+                                "type": "string"
+                              },
+                              "before": {},
+                              "after": {}
+                            },
+                            "required": [
+                              "id",
+                              "kind",
+                              "actorId",
+                              "at",
+                              "reason",
+                              "before",
+                              "after"
+                            ],
+                            "additionalProperties": false
+                          }
                         }
                       },
                       "required": [
                         "id",
-                        "state"
+                        "displayName",
+                        "email",
+                        "state",
+                        "version",
+                        "staff",
+                        "activity"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "suspend",
+                      "reactivate"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 1000
+                  }
+                },
+                "required": [
+                  "version",
+                  "action",
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ops/users/{id}": {
+      "get": {
+        "operationId": "AdministrationController_user",
+        "tags": [
+          "Administration"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "staff": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "role": {
+                                "type": "string",
+                                "enum": [
+                                  "moderator",
+                                  "support",
+                                  "editor",
+                                  "admin"
+                                ]
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "role",
+                              "status",
+                              "version"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "activity": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "kind": {
+                                "type": "string"
+                              },
+                              "actorId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "at": {
+                                "type": "string"
+                              },
+                              "reason": {
+                                "type": "string"
+                              },
+                              "before": {},
+                              "after": {}
+                            },
+                            "required": [
+                              "id",
+                              "kind",
+                              "actorId",
+                              "at",
+                              "reason",
+                              "before",
+                              "after"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "displayName",
+                        "email",
+                        "state",
+                        "version",
+                        "staff",
+                        "activity"
                       ],
                       "additionalProperties": false
                     },
@@ -7838,7 +8608,41 @@
         "tags": [
           "Administration"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "default": "",
+              "type": "string",
+              "maxLength": 120
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "suspended"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful response",
@@ -7848,33 +8652,148 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "format": "uuid",
-                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                          },
-                          "display_name": {
-                            "type": "string"
-                          },
-                          "email": {
-                            "type": "string"
-                          },
-                          "state": {
-                            "type": "string"
-                          }
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
                         },
-                        "required": [
-                          "id",
-                          "display_name",
-                          "email",
-                          "state"
-                        ],
-                        "additionalProperties": false
-                      }
+                        "limit": {
+                          "type": "number",
+                          "enum": [
+                            20
+                          ]
+                        },
+                        "total": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "displayName": {
+                                "type": "string"
+                              },
+                              "email": {
+                                "type": "string"
+                              },
+                              "state": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "staff": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "format": "uuid",
+                                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                    },
+                                    "role": {
+                                      "type": "string",
+                                      "enum": [
+                                        "moderator",
+                                        "support",
+                                        "editor",
+                                        "admin"
+                                      ]
+                                    },
+                                    "status": {
+                                      "type": "string"
+                                    },
+                                    "version": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "exclusiveMinimum": true,
+                                      "maximum": 9007199254740991
+                                    }
+                                  },
+                                  "required": [
+                                    "id",
+                                    "role",
+                                    "status",
+                                    "version"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "activity": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string",
+                                      "format": "uuid",
+                                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                    },
+                                    "kind": {
+                                      "type": "string"
+                                    },
+                                    "actorId": {
+                                      "type": "string",
+                                      "format": "uuid",
+                                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                    },
+                                    "at": {
+                                      "type": "string"
+                                    },
+                                    "reason": {
+                                      "type": "string"
+                                    },
+                                    "before": {},
+                                    "after": {}
+                                  },
+                                  "required": [
+                                    "id",
+                                    "kind",
+                                    "actorId",
+                                    "at",
+                                    "reason",
+                                    "before",
+                                    "after"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "displayName",
+                              "email",
+                              "state",
+                              "version",
+                              "staff",
+                              "activity"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "page",
+                        "limit",
+                        "total",
+                        "items"
+                      ],
+                      "additionalProperties": false
                     },
                     "meta": {
                       "type": "object",

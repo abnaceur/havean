@@ -1,3 +1,4 @@
+import {platformUser,platformUserPage} from './platform-administration';
 import {homeContentWorkspace,homeSectionRecord,homeTaxonomyRecord} from './home-content';
 import {supportRecord,supportPage,supportAssignees} from './support-cases';
 import {managementDashboardRecord} from './management-dashboard';
@@ -138,6 +139,6 @@ export const responses={
  AssignmentDirectoryController_listings:z.array(m.listings.pick({id:true,title:true,status:true,agent_id:true,version:true})),LeadAssignmentsController_leads:z.array(m.leads.pick({id:true,name:true,status:true,agent_id:true,version:true})),AssignmentDirectoryController_agents:z.array(assignmentAgent),AssignmentDirectoryController_history:z.array(m.listing_assignment_history),LeadAssignmentsController_assign:assignmentResult,LeadAssignmentsController_history:z.array(m.lead_assignment_history),
  AgentDashboardController_overview:agentDashboard,AdministrationController_cases:supportPage,AdministrationController_support:supportRecord,AdministrationController_supportQueue:supportPage,AdministrationController_updateSupport:supportRecord,AdministrationController_supportDetail:supportRecord,AdministrationController_supportProfessionalDetail:supportRecord,AdministrationController_supportAssignees:supportAssignees,AdministrationController_supportAttachment:z.instanceof(Blob),AdministrationController_supportPublicChange:supportRecord,AdministrationController_supportAction:supportRecord,AdministrationController_supportExport:z.instanceof(Blob),
  AdministrationController_homeContent:homeContentWorkspace,AdministrationController_homeCreate:homeSectionRecord,AdministrationController_homeEdit:homeSectionRecord,AdministrationController_homePublish:homeSectionRecord,AdministrationController_homePreview:homeSectionRecord,AdministrationController_homeTaxonomy:homeTaxonomyRecord,
- AdministrationController_audit:z.array(m.audit_events),AdministrationController_users:z.array(m.profiles.pick({id:true,display_name:true,email:true,state:true})),AdministrationController_suspend:m.profiles.pick({id:true,state:true}),
+ AdministrationController_audit:z.array(m.audit_events),AdministrationController_users:platformUserPage,AdministrationController_user:platformUser,AdministrationController_suspend:platformUser,AdministrationController_staff:platformUser,
  AdministrationController_memberships:z.array(agencyMemberRecord),AdministrationController_dashboard:z.union([agentDashboard,managementDashboardRecord,z.object({listings:n,leads:n,leases:n,maintenance:n,asOf:s,definition:s})])
 } as const;

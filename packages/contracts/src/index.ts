@@ -87,3 +87,5 @@ export * from './management-dashboard';
 export * from './support-cases';
 
 export * from './home-content';
+
+export * from './platform-administration';
