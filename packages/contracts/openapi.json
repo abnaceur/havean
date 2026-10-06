@@ -51576,6 +51576,394 @@
         ]
       }
     },
+    "/api/v1/ops/leases/{id}/activate": {
+      "post": {
+        "operationId": "LeaseDraftsController_activate",
+        "tags": [
+          "LeaseDrafts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "unitId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "tenantId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        },
+                        "version": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "community": {
+                          "type": "string"
+                        },
+                        "tenant": {
+                          "type": "string"
+                        },
+                        "unitVersion": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "grantVersion": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "tenantVersion": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "exclusiveMinimum": true,
+                          "maximum": 9007199254740991
+                        },
+                        "startDate": {
+                          "type": "string"
+                        },
+                        "endDate": {
+                          "type": "string"
+                        },
+                        "rent": {
+                          "type": "string"
+                        },
+                        "currency": {
+                          "type": "string"
+                        },
+                        "rentPeriod": {
+                          "type": "string",
+                          "enum": [
+                            "month"
+                          ]
+                        },
+                        "dueDay": {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        "documents": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "assetId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "version": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "exclusiveMinimum": true,
+                                "maximum": 9007199254740991
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 2,
+                                "maxLength": 100
+                              },
+                              "url": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "assetId",
+                              "version",
+                              "label",
+                              "url"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "activity": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "version": {
+                                "type": "integer",
+                                "minimum": -9007199254740991,
+                                "maximum": 9007199254740991
+                              },
+                              "action": {
+                                "type": "string"
+                              },
+                              "at": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "version",
+                              "action",
+                              "at"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "unitId",
+                        "tenantId",
+                        "version",
+                        "status",
+                        "community",
+                        "tenant",
+                        "unitVersion",
+                        "grantVersion",
+                        "tenantVersion",
+                        "startDate",
+                        "endDate",
+                        "rent",
+                        "currency",
+                        "rentPeriod",
+                        "dueDay",
+                        "documents",
+                        "activity"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "unitVersion": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "grantVersion": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "tenantVersion": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "confirm": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  }
+                },
+                "required": [
+                  "version",
+                  "unitVersion",
+                  "grantVersion",
+                  "tenantVersion",
+                  "confirm"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
     "/api/v1/ops/leases": {
       "post": {
         "operationId": "LeaseDraftsController_create",
@@ -53464,283 +53852,6 @@
                   "documents"
                 ],
                 "additionalProperties": false
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "session": []
-          }
-        ]
-      }
-    },
-    "/api/v1/ops/leases/{id}/activate": {
-      "post": {
-        "operationId": "ManagementController_activate",
-        "tags": [
-          "Management"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "minLength": 1
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "format": "uuid",
-                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                        },
-                        "organization_id": {
-                          "type": "string",
-                          "format": "uuid",
-                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                        },
-                        "unit_id": {
-                          "type": "string",
-                          "format": "uuid",
-                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                        },
-                        "tenant_id": {
-                          "type": "string",
-                          "format": "uuid",
-                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                        },
-                        "start_date": {
-                          "type": "string"
-                        },
-                        "end_date": {
-                          "type": "string"
-                        },
-                        "rent": {
-                          "type": "string",
-                          "pattern": "^-?\\d+(\\.\\d+)?$"
-                        },
-                        "currency": {
-                          "type": "string"
-                        },
-                        "status": {
-                          "type": "string"
-                        },
-                        "version": {
-                          "type": "number"
-                        },
-                        "drafted_by": {
-                          "nullable": true,
-                          "type": "string",
-                          "format": "uuid",
-                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                        },
-                        "management_grant_id": {
-                          "nullable": true,
-                          "type": "string",
-                          "format": "uuid",
-                          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-                        },
-                        "grant_version": {
-                          "nullable": true,
-                          "type": "number"
-                        },
-                        "unit_version": {
-                          "nullable": true,
-                          "type": "number"
-                        },
-                        "tenant_version": {
-                          "nullable": true,
-                          "type": "number"
-                        },
-                        "rent_period": {
-                          "type": "string"
-                        },
-                        "due_day": {
-                          "nullable": true,
-                          "type": "number"
-                        }
-                      },
-                      "required": [
-                        "id",
-                        "organization_id",
-                        "unit_id",
-                        "tenant_id",
-                        "start_date",
-                        "end_date",
-                        "rent",
-                        "currency",
-                        "status",
-                        "version",
-                        "drafted_by",
-                        "management_grant_id",
-                        "grant_version",
-                        "unit_version",
-                        "tenant_version",
-                        "rent_period",
-                        "due_day"
-                      ],
-                      "additionalProperties": false
-                    },
-                    "meta": {
-                      "type": "object",
-                      "additionalProperties": {
-                        "$ref": "#/definitions/__schema0"
-                      }
-                    }
-                  },
-                  "required": [
-                    "data"
-                  ],
-                  "additionalProperties": false,
-                  "definitions": {
-                    "__schema0": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "boolean"
-                        },
-                        {
-                          "type": "string",
-                          "nullable": true,
-                          "enum": [
-                            null
-                          ]
-                        },
-                        {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/definitions/__schema0"
-                          }
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "$ref": "#/definitions/__schema0"
-                          }
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Stable API error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Stable API error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Stable API error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Stable API error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Stable API error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "413": {
-            "description": "Stable API error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "416": {
-            "description": "Stable API error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Stable API error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Stable API error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Stable API error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiError"
-                }
               }
             }
           }

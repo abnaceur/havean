@@ -71,3 +71,4 @@ export * from './quotes';
 export * from './management-grants';
 export * from './tenant-links';
 export * from './lease-drafts';
+export * from './lease-workflow';
