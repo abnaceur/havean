@@ -1,0 +1,2 @@
+import type pg from 'pg';
+export async function publicAgentInventory(c:pg.PoolClient,id:string,city:string,page:number,limit:number){const source=`FROM public_listings p WHERE p.city=$2 AND p."agentId"=$1 AND EXISTS(SELECT 1 FROM public_listing_agents(p.id) eligible WHERE eligible.id=$1)`,values=[id,city];return {total:(await c.query(`SELECT count(*)::int total ${source}`,values)).rows[0].total,rows:(await c.query(`SELECT p.* ${source} ORDER BY p."publishedAt" DESC,p.id LIMIT $3 OFFSET $4`,[...values,limit,(page-1)*limit])).rows};}

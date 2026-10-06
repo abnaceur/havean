@@ -15,6 +15,7 @@ import {deletionRequest} from '../account-privacy';
 import {profileUpdate} from '../account-profile';
 import {mortgageSchema} from '../mortgage';
 import {draftCreate,draftUpdate} from '../inventory-drafts';
+import {agentDirectoryFilters} from '../agent-directory';
 import {agentProfileCreate,agentProfileUpdate,agentCredentialSubmit,agentCredentialReview,agentCredentialFilters} from '../agent-credentials';
 import {ownerPriceChange,ownerLifecycleAction} from '../owner-lifecycle';
 import {ownerWizardCreate,ownerWizardUpdate,ownerWizardSubmit} from '../owner-wizard';
@@ -66,7 +67,8 @@ export const operations={
 "DevelopmentReviewController_read":{method:"GET",path:"/api/v1/ops/developments/:id/publication",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DevelopmentReviewController_read"]},
 "DevelopmentReviewController_submit":{method:"POST",path:"/api/v1/ops/developments/:id/submit",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:developmentReviewSubmit,response:responses["DevelopmentReviewController_submit"]},
 "DiscoveryController_agent":{method:"GET",path:"/api/v1/agents/:id",params:z.object({"id":z.string().min(1)}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_agent"]},
-"DiscoveryController_agents":{method:"GET",path:"/api/v1/agents",params:z.object({}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_agents"]},
+"DiscoveryController_agentListings":{method:"GET",path:"/api/v1/agents/:id/listings",params:z.object({"id":z.string().min(1)}),query:agentDirectoryFilters,body:z.undefined(),response:responses["DiscoveryController_agentListings"]},
+"DiscoveryController_agents":{method:"GET",path:"/api/v1/agents",params:z.object({}),query:agentDirectoryFilters,body:z.undefined(),response:responses["DiscoveryController_agents"]},
 "DiscoveryController_cities":{method:"GET",path:"/api/v1/cities",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_cities"]},
 "DiscoveryController_communities":{method:"GET",path:"/api/v1/communities",params:z.object({}),query:geographyFilters,body:z.undefined(),response:responses["DiscoveryController_communities"]},
 "DiscoveryController_community":{method:"GET",path:"/api/v1/communities/:id",params:z.object({"id":z.string().min(1)}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_community"]},

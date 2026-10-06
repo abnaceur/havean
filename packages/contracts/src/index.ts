@@ -45,3 +45,5 @@ export * from './owner-wizard';
 export * from './owner-lifecycle';
 
 export * from './agent-credentials';
+
+export * from './agent-directory';

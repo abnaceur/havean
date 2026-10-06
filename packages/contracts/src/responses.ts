@@ -1,3 +1,4 @@
+import {agentStatistics} from './agent-directory';
 import {ownedAgentProfile,ownedAgentCredential,credentialReviewRow,credentialBadge} from './agent-credentials';
 import {ownerListingRecord} from './owner-lifecycle';
 import {commercialRecord} from './commercial';
@@ -21,7 +22,7 @@ const unavailableProperty=z.object({id:uuid,available:z.literal(false),title:s})
 export const savedProperty=z.union([publicListing.extend({available:z.literal(true)}),unavailableProperty]);
 export const historyCollection=z.object({enabled:bool,version:n.int().nonnegative(),entries:z.array(z.object({listing:savedProperty,viewedAt:s}))});
 const community=z.object({id:uuid,slug:s,name:s,address:s,builtYear:n.nullable(),amenities:z.array(s),photos:z.array(s),district:s,districtId:uuid,city:s,latitude:n.nullable(),longitude:n.nullable()});
-const agent=z.object({id:uuid,name:s,slug:s,biography:s,languages:z.array(s),districts:z.array(s),verifiedUntil:s.nullable(),credentialStatus:credentialBadge.optional(),photo:s.nullable(),publicEmail:s.nullable()});
+const agent=z.object({id:uuid,name:s,slug:s,biography:s,languages:z.array(s),districts:z.array(s),verifiedUntil:s.nullable(),credentialStatus:credentialBadge.optional(),version:n.int().positive().optional(),city:s.optional(),canContact:bool.optional(),photo:s.nullable(),publicEmail:s.nullable()});
 const development=m.developments.omit({organization_id:true}).extend({community:s,district:s,sponsored:bool.optional(),curationLabel:s.nullable().optional()});
 const recommendedDevelopment=development.omit({community_id:true,version:true}).extend({rankingScore:n,sponsored:bool,curationLabel:s.nullable()});
 const provider=m.providers.omit({organization_id:true,status:true});
@@ -68,7 +69,7 @@ export const responses={
  DiscoveryController_mapConfiguration:z.object({style:s.url().nullable(),attribution:s}),DiscoveryController_mapListings:z.array(publicListing.pick({id:true,slug:true,title:true,transaction:true,segment:true,price:true,currency:true,rentPeriod:true,area:true,beds:true,livingRooms:true,community:true,district:true,city:true,latitude:true,longitude:true,sponsored:true,curationLabel:true}).extend({latitude:n,longitude:n})),
  DiscoveryController_facets:z.object({finishing:z.array(s),heating:z.array(s),furnishing:z.array(s),buildingType:z.array(s),features:z.array(s),ownership:z.array(s),holdingPeriod:z.array(s)}),DiscoveryController_listings:z.array(publicListing),DiscoveryController_listing:publicListing.extend({rentalTerms:publicRentalTerms.nullable()}),DiscoveryController_similar:z.array(publicListing),
  DiscoveryController_suggestions:z.array(z.object({id:uuid,name:s,slug:s,kind:z.enum(['community','district','neighborhood']),city:s})),DiscoveryController_communities:z.array(community),DiscoveryController_community:community,
- DiscoveryController_listingAgents:z.array(agent),DiscoveryController_agents:z.array(agent),DiscoveryController_agent:agent,DiscoveryController_developments:z.array(development.extend({availableTypes:n.int().nonnegative()})),
+ DiscoveryController_listingAgents:z.array(agent),DiscoveryController_agents:z.array(agent),DiscoveryController_agent:agent.extend({statistics:agentStatistics}),DiscoveryController_agentListings:z.array(publicListing),DiscoveryController_developments:z.array(development.extend({availableTypes:n.int().nonnegative()})),
  DiscoveryController_development:development.extend({latitude:n.nullable(),longitude:n.nullable(),floorPlans:z.array(m.floor_plans),phases:z.array(z.object({id:uuid,name:s,status:z.enum(['coming_soon','on_sale','sold_out'])}))}),
  DiscoveryController_providers:z.array(provider),DiscoveryController_provider:provider,
  DiscoveryController_estimate:z.object({principal:decimal,monthlyPayment:decimal,totalInterest:decimal,totalRepaid:decimal,schedule:z.array(z.object({month:n,principal:decimal,interest:decimal,payment:decimal,balance:decimal})),assumptions:s}),

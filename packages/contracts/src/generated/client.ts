@@ -43,6 +43,7 @@ export const sdk={
 "DevelopmentReviewController_read":call(operations["DevelopmentReviewController_read"]),
 "DevelopmentReviewController_submit":call(operations["DevelopmentReviewController_submit"]),
 "DiscoveryController_agent":call(operations["DiscoveryController_agent"]),
+"DiscoveryController_agentListings":call(operations["DiscoveryController_agentListings"]),
 "DiscoveryController_agents":call(operations["DiscoveryController_agents"]),
 "DiscoveryController_cities":call(operations["DiscoveryController_cities"]),
 "DiscoveryController_communities":call(operations["DiscoveryController_communities"]),
