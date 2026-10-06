@@ -31,6 +31,11 @@ check licenses pnpm license:check
 check lint pnpm lint
 check types pnpm typecheck
 check unit pnpm test:unit
+# Capture the untouched seed before integration/browser mutation journeys.
+# A pending visual review still fails CI, while independent backend gates run.
+visual_status=0
+if ! check visual pnpm test:visual; then visual_status=1; fi
 check integration pnpm test:integration
-check browser pnpm test:e2e
+check browser pnpm exec playwright test --project=desktop --project=mobile
 check build env NODE_ENV=production NEXT_DIST_DIR=.next-ci pnpm build
+exit "$visual_status"

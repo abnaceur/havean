@@ -1,0 +1,8 @@
+import {describe,it,expect} from 'vitest';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+describe('Q02 pristine visual CI boundary',()=>{
+ for(const failure of ['','test:visual','test:integration'])it('preserves '+(failure||'successful')+' exit status and prerequisite order',()=>{const dir=fs.mkdtempSync(path.join(os.tmpdir(),'haven-ci-order-'));try{const bin=path.join(dir,'bin');fs.mkdirSync(bin);const calls=path.join(dir,'calls');for(const command of ['pnpm','node'])fs.writeFileSync(path.join(bin,command),'#!/bin/sh\nprintf "%s %s\\n" "'+command+'" "$*" >> "$HAVEN_POLICY_CALLS"\nif [ "'+command+'" = pnpm ] && [ "$*" = "$HAVEN_POLICY_FAILURE" ]; then exit 7; fi\n',{mode:0o755});fs.writeFileSync(path.join(dir,'ci.sh'),fs.readFileSync('scripts/ci-check.sh'));const result=spawnSync('sh',['ci.sh'],{cwd:dir,encoding:'utf8',env:{...process.env,PATH:bin+':'+process.env.PATH,HAVEN_POLICY_CALLS:calls,HAVEN_POLICY_FAILURE:failure,HAVEN_CI_NEGATIVE:'0'}});const executed=fs.readFileSync(calls,'utf8').split('\n');expect(result.status).toBe(failure?1:0);expect(executed.indexOf('pnpm test:visual')).toBeLessThan(executed.indexOf('pnpm test:integration'));expect(executed).not.toContain('pnpm test:e2e');expect(executed.some(x=>x.startsWith('pnpm exec playwright test'))).toBe(failure!=='test:integration');expect(executed).toContain('node scripts/sanitize-ci.mjs');expect(executed).toContain('pnpm exec tsx scripts/publish-ci-report.ts');if(failure==='test:visual')expect(executed).toContain('pnpm build');}finally{fs.rmSync(dir,{recursive:true,force:true});}});
+});
