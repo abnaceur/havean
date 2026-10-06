@@ -67,8 +67,8 @@
 - [x] **O03 Upload private ownership evidence** — done; dependencies: O02, I08, A06, R04
 - [x] **O04 Assign agent and track submission** — done; dependencies: O03, I08, A06, R04
 - [x] **O05 Build owner listing lifecycle controls** — done; dependencies: O04, I08, A06, R04
-- [ ] **B01 Onboard agents and verify credentials** — in_progress; dependencies: I08, A06, U07
-- [ ] **B02 Build agent directory and profiles** — todo; dependencies: B01, I08, A06, U07
+- [x] **B01 Onboard agents and verify credentials** — done; dependencies: I08, A06, U07
+- [ ] **B02 Build agent directory and profiles** — in_progress; dependencies: B01, I08, A06, U07
 - [ ] **B03 Manage agency members and roles** — todo; dependencies: B02, I08, A06, U07
 - [ ] **B04 Assign inventory and leads** — todo; dependencies: B03, I08, A06, U07
 - [ ] **B05 Build agent dashboard** — todo; dependencies: B04, I08, A06, U07
