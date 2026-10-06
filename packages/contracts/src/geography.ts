@@ -1,3 +1,4 @@
+import {extraMarketPolicy,marketCountry,marketCurrency,marketTimezone} from './market-policy';
 import {z} from 'zod';
 import {money} from './domain';
 import Decimal from 'decimal.js';
@@ -5,8 +6,7 @@ export const geographyKind=z.enum(['cities','districts','neighborhoods','lines',
 const slug=z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(100);
 const base=z.object({name:z.string().trim().min(2).max(120),slug,aliases:z.array(z.string().trim().min(1).max(100)).max(12).default([])});
 const identifier=z.string().uuid();
-const timezone=z.string().max(80).refine(value=>{try{new Intl.DateTimeFormat('en',{timeZone:value});return true;}catch{return false;}},'Choose a valid IANA timezone');
-const city=base.extend({kind:z.literal('cities'),country:z.string().regex(/^[A-Z]{2}$/),currency:z.string().regex(/^[A-Z]{3}$/),timezone});
+const city=base.extend({kind:z.literal('cities'),country:marketCountry,currency:marketCurrency,timezone:marketTimezone});
 const district=base.extend({kind:z.literal('districts'),cityId:identifier});
 const neighborhood=base.extend({kind:z.literal('neighborhoods'),districtId:identifier});
 const line=base.extend({kind:z.literal('lines'),cityId:identifier});
@@ -17,4 +17,4 @@ export const geographyCreate=z.discriminatedUnion('kind',[city,district,neighbor
 export const geographyUpdate=z.discriminatedUnion('kind',[city.extend({version:z.number().int().positive()}),district.extend({version:z.number().int().positive()}),neighborhood.extend({version:z.number().int().positive()}),line.extend({version:z.number().int().positive()}),station.extend({version:z.number().int().positive()}),community.extend({version:z.number().int().positive()}),building.extend({version:z.number().int().positive()})]);
 export const geographyFilters=z.object({city:z.string().min(1).max(100).default('bj'),districtId:identifier.optional(),text:z.string().max(120).default(''),page:z.coerce.number().int().min(1).max(500).default(1),limit:z.coerce.number().int().min(1).max(50).default(20)});
 export const pricePreset=z.object({label:z.string().min(1).max(80),transaction:z.enum(['sale','rent']),min:money.optional(),max:money.optional()}).refine(x=>x.min===undefined||x.max===undefined||new Decimal(x.min).lte(x.max),'Invalid price preset range');
-export const marketSettings=z.object({version:z.number().int().positive(),chargeProration:z.enum(['calendar_days','full_month']).default('calendar_days'),legacyChargeDueDay:z.number().int().min(1).max(28).default(1),areaUnit:z.enum(['m²','sq ft']),annualRate:z.string().regex(/^\d{1,2}(\.\d{1,4})?$/).refine(value=>Number(value)<=30),rentPeriod:z.enum(['month','year','day']),supportEmail:z.string().email(),mortgageEstimateNotes:z.string().trim().min(10).max(1000).optional(),demo:z.boolean(),pricePresets:z.array(pricePreset).max(12).default([]),requiredOwnerEvidenceTypes:z.array(z.enum(['ownership','authorization'])).max(2).refine(values=>new Set(values).size===values.length,'Choose each document type once').default(['ownership'])});
+export const marketSettings=z.object({...extraMarketPolicy,version:z.number().int().positive(),chargeProration:z.enum(['calendar_days','full_month']).default('calendar_days'),legacyChargeDueDay:z.number().int().min(1).max(28).default(1),areaUnit:z.enum(['m²','sq ft']),annualRate:z.string().regex(/^\d{1,2}(\.\d{1,4})?$/).refine(value=>Number(value)<=30),rentPeriod:z.enum(['month','year','day']),supportEmail:z.string().email(),mortgageEstimateNotes:z.string().trim().min(10).max(1000).optional(),demo:z.boolean(),pricePresets:z.array(pricePreset).max(12).default([]),requiredOwnerEvidenceTypes:z.array(z.enum(['ownership','authorization'])).max(2).refine(values=>new Set(values).size===values.length,'Choose each document type once').default(['ownership'])}).strict();

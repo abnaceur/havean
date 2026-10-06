@@ -33536,6 +33536,131 @@
                         "data": {
                           "type": "object",
                           "properties": {
+                            "country": {
+                              "type": "string"
+                            },
+                            "credentialRules": {
+                              "default": {
+                                "holderMinLength": 2,
+                                "registrationMinLength": 3,
+                                "issuerMinLength": 2,
+                                "maxValidityDays": 36500
+                              },
+                              "type": "object",
+                              "properties": {
+                                "holderMinLength": {
+                                  "default": 2,
+                                  "type": "integer",
+                                  "minimum": 2,
+                                  "maximum": 120
+                                },
+                                "registrationMinLength": {
+                                  "default": 3,
+                                  "type": "integer",
+                                  "minimum": 3,
+                                  "maximum": 100
+                                },
+                                "issuerMinLength": {
+                                  "default": 2,
+                                  "type": "integer",
+                                  "minimum": 2,
+                                  "maximum": 120
+                                },
+                                "maxValidityDays": {
+                                  "default": 36500,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 36500
+                                }
+                              },
+                              "required": [
+                                "holderMinLength",
+                                "registrationMinLength",
+                                "issuerMinLength",
+                                "maxValidityDays"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "ownershipTags": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                                  },
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 2,
+                                    "maxLength": 80
+                                  },
+                                  "explanation": {
+                                    "type": "string",
+                                    "minLength": 5,
+                                    "maxLength": 300
+                                  }
+                                },
+                                "required": [
+                                  "key",
+                                  "label",
+                                  "explanation"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "contactLinks": {
+                              "default": {
+                                "supportPhone": null,
+                                "supportWebsite": null,
+                                "iosApp": null,
+                                "androidApp": null
+                              },
+                              "type": "object",
+                              "properties": {
+                                "supportPhone": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "pattern": "^\\+[1-9][0-9 -]{5,24}$"
+                                },
+                                "supportWebsite": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "iosApp": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "androidApp": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uri"
+                                }
+                              },
+                              "required": [
+                                "supportPhone",
+                                "supportWebsite",
+                                "iosApp",
+                                "androidApp"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "chargeProration": {
+                              "type": "string",
+                              "enum": [
+                                "calendar_days",
+                                "full_month"
+                              ]
+                            },
+                            "legacyChargeDueDay": {
+                              "type": "number"
+                            },
                             "name": {
                               "type": "string"
                             },
@@ -33546,7 +33671,11 @@
                               "type": "string"
                             },
                             "areaUnit": {
-                              "type": "string"
+                              "type": "string",
+                              "enum": [
+                                "m²",
+                                "sq ft"
+                              ]
                             },
                             "annualRate": {
                               "type": "string",
@@ -33614,6 +33743,12 @@
                             }
                           },
                           "required": [
+                            "country",
+                            "credentialRules",
+                            "ownershipTags",
+                            "contactLinks",
+                            "chargeProration",
+                            "legacyChargeDueDay",
                             "name",
                             "currency",
                             "timezone",
@@ -47830,6 +47965,131 @@
                         "data": {
                           "type": "object",
                           "properties": {
+                            "country": {
+                              "type": "string"
+                            },
+                            "credentialRules": {
+                              "default": {
+                                "holderMinLength": 2,
+                                "registrationMinLength": 3,
+                                "issuerMinLength": 2,
+                                "maxValidityDays": 36500
+                              },
+                              "type": "object",
+                              "properties": {
+                                "holderMinLength": {
+                                  "default": 2,
+                                  "type": "integer",
+                                  "minimum": 2,
+                                  "maximum": 120
+                                },
+                                "registrationMinLength": {
+                                  "default": 3,
+                                  "type": "integer",
+                                  "minimum": 3,
+                                  "maximum": 100
+                                },
+                                "issuerMinLength": {
+                                  "default": 2,
+                                  "type": "integer",
+                                  "minimum": 2,
+                                  "maximum": 120
+                                },
+                                "maxValidityDays": {
+                                  "default": 36500,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 36500
+                                }
+                              },
+                              "required": [
+                                "holderMinLength",
+                                "registrationMinLength",
+                                "issuerMinLength",
+                                "maxValidityDays"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "ownershipTags": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                                  },
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 2,
+                                    "maxLength": 80
+                                  },
+                                  "explanation": {
+                                    "type": "string",
+                                    "minLength": 5,
+                                    "maxLength": 300
+                                  }
+                                },
+                                "required": [
+                                  "key",
+                                  "label",
+                                  "explanation"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "contactLinks": {
+                              "default": {
+                                "supportPhone": null,
+                                "supportWebsite": null,
+                                "iosApp": null,
+                                "androidApp": null
+                              },
+                              "type": "object",
+                              "properties": {
+                                "supportPhone": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "pattern": "^\\+[1-9][0-9 -]{5,24}$"
+                                },
+                                "supportWebsite": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "iosApp": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "androidApp": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uri"
+                                }
+                              },
+                              "required": [
+                                "supportPhone",
+                                "supportWebsite",
+                                "iosApp",
+                                "androidApp"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "chargeProration": {
+                              "type": "string",
+                              "enum": [
+                                "calendar_days",
+                                "full_month"
+                              ]
+                            },
+                            "legacyChargeDueDay": {
+                              "type": "number"
+                            },
                             "name": {
                               "type": "string"
                             },
@@ -47840,7 +48100,11 @@
                               "type": "string"
                             },
                             "areaUnit": {
-                              "type": "string"
+                              "type": "string",
+                              "enum": [
+                                "m²",
+                                "sq ft"
+                              ]
                             },
                             "annualRate": {
                               "type": "string",
@@ -47908,6 +48172,12 @@
                             }
                           },
                           "required": [
+                            "country",
+                            "credentialRules",
+                            "ownershipTags",
+                            "contactLinks",
+                            "chargeProration",
+                            "legacyChargeDueDay",
                             "name",
                             "currency",
                             "timezone",
@@ -48089,6 +48359,126 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "country": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{2}$"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{3}$"
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "cityVersion": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "exclusiveMinimum": true,
+                    "maximum": 9007199254740991
+                  },
+                  "credentialRules": {
+                    "default": {
+                      "holderMinLength": 2,
+                      "registrationMinLength": 3,
+                      "issuerMinLength": 2,
+                      "maxValidityDays": 36500
+                    },
+                    "type": "object",
+                    "properties": {
+                      "holderMinLength": {
+                        "default": 2,
+                        "type": "integer",
+                        "minimum": 2,
+                        "maximum": 120
+                      },
+                      "registrationMinLength": {
+                        "default": 3,
+                        "type": "integer",
+                        "minimum": 3,
+                        "maximum": 100
+                      },
+                      "issuerMinLength": {
+                        "default": 2,
+                        "type": "integer",
+                        "minimum": 2,
+                        "maximum": 120
+                      },
+                      "maxValidityDays": {
+                        "default": 36500,
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 36500
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "ownershipTags": {
+                    "default": [],
+                    "maxItems": 16,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 2,
+                          "maxLength": 80
+                        },
+                        "explanation": {
+                          "type": "string",
+                          "minLength": 5,
+                          "maxLength": 300
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "label",
+                        "explanation"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "contactLinks": {
+                    "default": {
+                      "supportPhone": null,
+                      "supportWebsite": null,
+                      "iosApp": null,
+                      "androidApp": null
+                    },
+                    "type": "object",
+                    "properties": {
+                      "supportPhone": {
+                        "default": null,
+                        "nullable": true,
+                        "type": "string",
+                        "pattern": "^\\+[1-9][0-9 -]{5,24}$"
+                      },
+                      "supportWebsite": {
+                        "default": null,
+                        "nullable": true,
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "iosApp": {
+                        "default": null,
+                        "nullable": true,
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "androidApp": {
+                        "default": null,
+                        "nullable": true,
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    },
+                    "additionalProperties": false
+                  },
                   "version": {
                     "type": "integer",
                     "minimum": 0,
@@ -48197,7 +48587,656 @@
                   "rentPeriod",
                   "supportEmail",
                   "demo"
-                ]
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "GeographyController_marketRead",
+        "tags": [
+          "Geography"
+        ],
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "country": {
+                              "type": "string"
+                            },
+                            "credentialRules": {
+                              "default": {
+                                "holderMinLength": 2,
+                                "registrationMinLength": 3,
+                                "issuerMinLength": 2,
+                                "maxValidityDays": 36500
+                              },
+                              "type": "object",
+                              "properties": {
+                                "holderMinLength": {
+                                  "default": 2,
+                                  "type": "integer",
+                                  "minimum": 2,
+                                  "maximum": 120
+                                },
+                                "registrationMinLength": {
+                                  "default": 3,
+                                  "type": "integer",
+                                  "minimum": 3,
+                                  "maximum": 100
+                                },
+                                "issuerMinLength": {
+                                  "default": 2,
+                                  "type": "integer",
+                                  "minimum": 2,
+                                  "maximum": 120
+                                },
+                                "maxValidityDays": {
+                                  "default": 36500,
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 36500
+                                }
+                              },
+                              "required": [
+                                "holderMinLength",
+                                "registrationMinLength",
+                                "issuerMinLength",
+                                "maxValidityDays"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "ownershipTags": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "key": {
+                                    "type": "string",
+                                    "pattern": "^[a-z][a-z0-9_]{1,39}$"
+                                  },
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 2,
+                                    "maxLength": 80
+                                  },
+                                  "explanation": {
+                                    "type": "string",
+                                    "minLength": 5,
+                                    "maxLength": 300
+                                  }
+                                },
+                                "required": [
+                                  "key",
+                                  "label",
+                                  "explanation"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "contactLinks": {
+                              "default": {
+                                "supportPhone": null,
+                                "supportWebsite": null,
+                                "iosApp": null,
+                                "androidApp": null
+                              },
+                              "type": "object",
+                              "properties": {
+                                "supportPhone": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "pattern": "^\\+[1-9][0-9 -]{5,24}$"
+                                },
+                                "supportWebsite": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "iosApp": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "androidApp": {
+                                  "default": null,
+                                  "nullable": true,
+                                  "type": "string",
+                                  "format": "uri"
+                                }
+                              },
+                              "required": [
+                                "supportPhone",
+                                "supportWebsite",
+                                "iosApp",
+                                "androidApp"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "chargeProration": {
+                              "type": "string",
+                              "enum": [
+                                "calendar_days",
+                                "full_month"
+                              ]
+                            },
+                            "legacyChargeDueDay": {
+                              "type": "number"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "currency": {
+                              "type": "string"
+                            },
+                            "timezone": {
+                              "type": "string"
+                            },
+                            "areaUnit": {
+                              "type": "string",
+                              "enum": [
+                                "m²",
+                                "sq ft"
+                              ]
+                            },
+                            "annualRate": {
+                              "type": "string",
+                              "pattern": "^-?\\d+(\\.\\d+)?$"
+                            },
+                            "mortgageEstimateNotes": {
+                              "default": "Planning estimate only. Taxes and lender fees are excluded. Contact a lender for actual terms.",
+                              "type": "string"
+                            },
+                            "rentPeriod": {
+                              "type": "string"
+                            },
+                            "supportEmail": {
+                              "type": "string"
+                            },
+                            "demo": {
+                              "type": "boolean"
+                            },
+                            "pricePresets": {
+                              "default": [],
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "label": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 80
+                                  },
+                                  "transaction": {
+                                    "type": "string",
+                                    "enum": [
+                                      "sale",
+                                      "rent"
+                                    ]
+                                  },
+                                  "min": {
+                                    "type": "string",
+                                    "pattern": "^\\d+(\\.\\d{1,2})?$"
+                                  },
+                                  "max": {
+                                    "type": "string",
+                                    "pattern": "^\\d+(\\.\\d{1,2})?$"
+                                  }
+                                },
+                                "required": [
+                                  "label",
+                                  "transaction"
+                                ],
+                                "additionalProperties": false
+                              }
+                            },
+                            "requiredOwnerEvidenceTypes": {
+                              "default": [
+                                "ownership"
+                              ],
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "ownership",
+                                  "authorization"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "country",
+                            "credentialRules",
+                            "ownershipTags",
+                            "contactLinks",
+                            "chargeProration",
+                            "legacyChargeDueDay",
+                            "name",
+                            "currency",
+                            "timezone",
+                            "areaUnit",
+                            "annualRate",
+                            "mortgageEstimateNotes",
+                            "rentPeriod",
+                            "supportEmail",
+                            "demo",
+                            "pricePresets",
+                            "requiredOwnerEvidenceTypes"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "version": {
+                          "type": "number"
+                        },
+                        "cityVersion": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "data",
+                        "version",
+                        "cityVersion"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "session": []
+          }
+        ]
+      }
+    },
+    "/api/v1/ops/cities/{city}/market-history": {
+      "get": {
+        "operationId": "GeographyController_marketHistory",
+        "tags": [
+          "Geography"
+        ],
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "exclusiveMinimum": true,
+                            "maximum": 9007199254740991
+                          },
+                          "actorId": {
+                            "nullable": true,
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "at": {
+                            "nullable": true,
+                            "type": "string"
+                          },
+                          "historical": {
+                            "type": "boolean"
+                          },
+                          "data": {
+                            "type": "object",
+                            "additionalProperties": {}
+                          }
+                        },
+                        "required": [
+                          "version",
+                          "actorId",
+                          "at",
+                          "historical",
+                          "data"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/definitions/__schema0"
+                      }
+                    }
+                  },
+                  "required": [
+                    "data"
+                  ],
+                  "additionalProperties": false,
+                  "definitions": {
+                    "__schema0": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "string",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        },
+                        {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        },
+                        {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/__schema0"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "416": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Stable API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
               }
             }
           }

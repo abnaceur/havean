@@ -1,3 +1,4 @@
+import {publicMarket} from './market-policy.js';
 import {publicProviders,publicProvider} from '../services/provider-catalog.js';
 import {providerFilters} from '@haven/contracts';
 import {agentDirectoryFilters} from '@haven/contracts';
@@ -20,7 +21,7 @@ import {pool,data,fail,transaction,env} from '../platform/core.js';
 export class DiscoveryController{
  @Get('cities') async cities(){return data((await pool.query('SELECT * FROM cities ORDER BY name')).rows);}
  @Get('cities/:id/districts') async districts(@Param('id') id:string){return data((await pool.query('SELECT d.* FROM districts d JOIN cities c ON c.id=d.city_id WHERE c.slug=$1 OR c.id::text=$1 ORDER BY d.name',[id])).rows);}
- @Get('config') async market(@Query('city') selected='bj'){const result=(await pool.query('SELECT m.data,m.version FROM market_config m JOIN cities c ON c.slug=m.id WHERE c.slug=$1',[selected])).rows[0];if(!result)fail(404,'Market settings are not available','NOT_FOUND');return data(result);}
+ @Get('config') async market(@Query('city') selected='bj'){return transaction(null,async c=>data(await publicMarket(c,selected)));}
  @Get('listings') async listings(@Query() input:unknown){const q=listingFilters.parse(input);return searchListings(q);}
  @Get('listings/map') async mapListings(@Query() input:unknown){return mapListings(listingFilters.parse(input));}
  @Get('map/config') mapConfiguration(){return data({style:env.MAP_STYLE_URL||null,attribution:env.MAP_ATTRIBUTION||(env.MAP_STYLE_URL?'Community positions rounded to 3 decimal places':'Local synthetic map · Community positions rounded to 3 decimal places')});}

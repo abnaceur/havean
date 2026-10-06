@@ -89,3 +89,6 @@ export * from './support-cases';
 export * from './home-content';
 
 export * from './platform-administration';
+
+export * from './market-policy';
+export * from './area-display';

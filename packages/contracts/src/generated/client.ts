@@ -133,6 +133,8 @@ export const sdk={
 "GeographyController_geography":call(operations["GeographyController_geography"]),
 "GeographyController_listings":call(operations["GeographyController_listings"]),
 "GeographyController_market":call(operations["GeographyController_market"]),
+"GeographyController_marketHistory":call(operations["GeographyController_marketHistory"]),
+"GeographyController_marketRead":call(operations["GeographyController_marketRead"]),
 "GeographyController_records":call(operations["GeographyController_records"]),
 "GeographyController_statistics":call(operations["GeographyController_statistics"]),
 "GeographyController_update":call(operations["GeographyController_update"]),
