@@ -109,8 +109,8 @@
 - [x] **S04 Manage platform users and verification** — done; dependencies: S03, L06, M04, V03, I08
 - [x] **S05 Manage market configuration** — done; dependencies: S04, L06, M04, V03, I08
 - [x] **S06 Publish scoped analytics and audit** — done; dependencies: S05, L06, M04, V03, I08
-- [ ] **Q01 Complete SEO and routing behavior** — in_progress; dependencies: G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
-- [ ] **Q02 Audit full English visual parity** — todo; dependencies: Q01, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [x] **Q01 Complete SEO and routing behavior** — done; dependencies: G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [ ] **Q02 Audit full English visual parity** — in_progress; dependencies: Q01, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
 - [ ] **Q03 Audit responsive accessibility** — todo; dependencies: Q02, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
 - [ ] **Q04 Run marketplace critical journeys** — todo; dependencies: Q03, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
 - [ ] **Q05 Run management integrity journeys** — todo; dependencies: Q04, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06

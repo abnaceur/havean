@@ -1,0 +1,64 @@
+ Container haven-p09-runtime-tests-run-086f380492a6 Creating
+ Container haven-p09-runtime-tests-run-086f380492a6 Created
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/seo.spec.ts:5:1 › Q01 real HTTP sitemap, English metadata, escaped structured data, canonical aliases and withdrawal/private noindex (820ms)
+  ✘  2 [mobile] › tests/e2e/seo.spec.ts:5:1 › Q01 real HTTP sitemap, English metadata, escaped structured data, canonical aliases and withdrawal/private noindex (409ms)
+
+
+  1) [desktop] › tests/e2e/seo.spec.ts:5:1 › Q01 real HTTP sitemap, English metadata, escaped structured data, canonical aliases and withdrawal/private noindex
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 308
+    Received: 200
+
+      3 | import {createRequire} from 'node:module';
+      4 | const {Pool}=createRequire(new URL('../../packages/database/package.json',import.meta.url))('pg'),fixtures=new Pool({connectionString:process.env.MIGRATION_DATABASE_URL}),WEB=process.env.PUBLIC_WEB_URL||'http://localhost:8088',OPS=process.env.PUBLIC_OPS_URL||'http://localhost:8089';test.afterAll(()=>fixtures.end());
+    > 5 | test('Q01 real HTTP sitemap, English metadata, escaped structured data, canonical aliases and withdrawal/private noindex',async({request})=>{test.setTimeout(90000);const c=await fixtures.connect(),slug='q01-web-'+crypto.randomUUID();let listing:any;try{await c.query('BEGIN');const u=(await c.query("INSERT INTO units(community_id,organization_id,area,beds,living_rooms,baths) SELECT community_id,organization_id,'80.00',2,1,1 FROM units LIMIT 1 RETURNING id")).rows[0];listing=(await c.query("INSERT INTO listings(unit_id,organization_id,owner_id,agent_id,slug,title,description,transaction,segment,currency,price,status,published_at) SELECT $1,organization_id,owner_id,agent_id,$2,'Q01 native SEO synthetic home',description,'sale','residential','CNY','123456.78','published',now() FROM listings LIMIT 1 RETURNING id",[u.id,slug])).rows[0];await c.query('COMMIT');}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}const url=WEB+'/bj/buy/'+slug;const sitemap=await request.get(WEB+'/sitemap.xml');expect(sitemap.status()).toBe(200);expect(sitemap.headers()['content-type']).toContain('xml');expect(await sitemap.text()).toContain(url);let response=await request.get(url),html=await response.text();expect(response.status()).toBe(200);expect(html).toContain('Q01 native SEO synthetic home');expect(html).toContain('rel="canonical" href="'+url+'"');expect(html).toContain('application/ld+json');expect(html).toContain('BreadcrumbList');expect(html).not.toMatch(/private_address|owner_id|organization_id/);for(const alias of ['/bj/buy/'+listing.id,'/bj/rent/'+slug]){const redirected=await request.get(WEB+alias,{maxRedirects:0});expect(redirected.status()).toBe(308);expect(redirected.headers().location).toBe('/bj/buy/'+slug);}const filtered=await request.get(WEB+'/bj/buy?minPrice=100000');expect(await filtered.text()).toMatch(/name="robots" content="noindex, follow"/);for(const path of ['/account','/tenant/leases']){const privateResponse=await request.get(WEB+path);expect(privateResponse.headers()['x-robots-tag']).toContain('noindex');expect(await privateResponse.text()).toMatch(/name="robots" content="noindex, nofollow"/);}const ops=await request.get(OPS+'/ops/analytics');expect(ops.headers()['x-robots-tag']).toContain('noindex');expect(await ops.text()).toMatch(/name="robots" content="noindex, nofollow"/);expect(await (await request.get(WEB+'/robots.txt')).text()).toContain('Disallow: /account');expect(await (await request.get(OPS+'/robots.txt')).text()).toContain('Disallow: /');await fixtures.query("UPDATE listings SET status='paused',version=version+1 WHERE id=$1",[listing.id]);expect(await (await request.get(WEB+'/sitemap.xml')).text()).not.toContain(url);response=await request.get(url);expect(response.status()).toBe(404);html=await response.text();expect(html).toMatch(/name="robots" content="noindex"/);expect(html).not.toContain('Q01 native SEO synthetic home');});
+        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^
+      6 |
+        at /workspace/tests/e2e/seo.spec.ts:5:1673
+
+    Error Context: ../artifacts/seo-final/seo-Q01-real-HTTP-sitemap--fe61b--withdrawal-private-noindex-desktop/error-context.md
+
+    Error Context: ../artifacts/seo-final/seo-Q01-real-HTTP-sitemap--fe61b--withdrawal-private-noindex-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/seo-final/seo-Q01-real-HTTP-sitemap--fe61b--withdrawal-private-noindex-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/seo-final/seo-Q01-real-HTTP-sitemap--fe61b--withdrawal-private-noindex-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/seo.spec.ts:5:1 › Q01 real HTTP sitemap, English metadata, escaped structured data, canonical aliases and withdrawal/private noindex
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 308
+    Received: 200
+
+      3 | import {createRequire} from 'node:module';
+      4 | const {Pool}=createRequire(new URL('../../packages/database/package.json',import.meta.url))('pg'),fixtures=new Pool({connectionString:process.env.MIGRATION_DATABASE_URL}),WEB=process.env.PUBLIC_WEB_URL||'http://localhost:8088',OPS=process.env.PUBLIC_OPS_URL||'http://localhost:8089';test.afterAll(()=>fixtures.end());
+    > 5 | test('Q01 real HTTP sitemap, English metadata, escaped structured data, canonical aliases and withdrawal/private noindex',async({request})=>{test.setTimeout(90000);const c=await fixtures.connect(),slug='q01-web-'+crypto.randomUUID();let listing:any;try{await c.query('BEGIN');const u=(await c.query("INSERT INTO units(community_id,organization_id,area,beds,living_rooms,baths) SELECT community_id,organization_id,'80.00',2,1,1 FROM units LIMIT 1 RETURNING id")).rows[0];listing=(await c.query("INSERT INTO listings(unit_id,organization_id,owner_id,agent_id,slug,title,description,transaction,segment,currency,price,status,published_at) SELECT $1,organization_id,owner_id,agent_id,$2,'Q01 native SEO synthetic home',description,'sale','residential','CNY','123456.78','published',now() FROM listings LIMIT 1 RETURNING id",[u.id,slug])).rows[0];await c.query('COMMIT');}catch(e){await c.query('ROLLBACK');throw e;}finally{c.release();}const url=WEB+'/bj/buy/'+slug;const sitemap=await request.get(WEB+'/sitemap.xml');expect(sitemap.status()).toBe(200);expect(sitemap.headers()['content-type']).toContain('xml');expect(await sitemap.text()).toContain(url);let response=await request.get(url),html=await response.text();expect(response.status()).toBe(200);expect(html).toContain('Q01 native SEO synthetic home');expect(html).toContain('rel="canonical" href="'+url+'"');expect(html).toContain('application/ld+json');expect(html).toContain('BreadcrumbList');expect(html).not.toMatch(/private_address|owner_id|organization_id/);for(const alias of ['/bj/buy/'+listing.id,'/bj/rent/'+slug]){const redirected=await request.get(WEB+alias,{maxRedirects:0});expect(redirected.status()).toBe(308);expect(redirected.headers().location).toBe('/bj/buy/'+slug);}const filtered=await request.get(WEB+'/bj/buy?minPrice=100000');expect(await filtered.text()).toMatch(/name="robots" content="noindex, follow"/);for(const path of ['/account','/tenant/leases']){const privateResponse=await request.get(WEB+path);expect(privateResponse.headers()['x-robots-tag']).toContain('noindex');expect(await privateResponse.text()).toMatch(/name="robots" content="noindex, nofollow"/);}const ops=await request.get(OPS+'/ops/analytics');expect(ops.headers()['x-robots-tag']).toContain('noindex');expect(await ops.text()).toMatch(/name="robots" content="noindex, nofollow"/);expect(await (await request.get(WEB+'/robots.txt')).text()).toContain('Disallow: /account');expect(await (await request.get(OPS+'/robots.txt')).text()).toContain('Disallow: /');await fixtures.query("UPDATE listings SET status='paused',version=version+1 WHERE id=$1",[listing.id]);expect(await (await request.get(WEB+'/sitemap.xml')).text()).not.toContain(url);response=await request.get(url);expect(response.status()).toBe(404);html=await response.text();expect(html).toMatch(/name="robots" content="noindex"/);expect(html).not.toContain('Q01 native SEO synthetic home');});
+        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ^
+      6 |
+        at /workspace/tests/e2e/seo.spec.ts:5:1673
+
+    Error Context: ../artifacts/seo-final/seo-Q01-real-HTTP-sitemap--fe61b--withdrawal-private-noindex-mobile/error-context.md
+
+    Error Context: ../artifacts/seo-final/seo-Q01-real-HTTP-sitemap--fe61b--withdrawal-private-noindex-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/seo-final/seo-Q01-real-HTTP-sitemap--fe61b--withdrawal-private-noindex-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/seo-final/seo-Q01-real-HTTP-sitemap--fe61b--withdrawal-private-noindex-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/seo.spec.ts:5:1 › Q01 real HTTP sitemap, English metadata, escaped structured data, canonical aliases and withdrawal/private noindex
+    [mobile] › tests/e2e/seo.spec.ts:5:1 › Q01 real HTTP sitemap, English metadata, escaped structured data, canonical aliases and withdrawal/private noindex
