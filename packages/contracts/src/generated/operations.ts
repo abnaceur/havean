@@ -39,6 +39,7 @@ import {paymentEvidenceCreate,paymentEvidenceUpdate,paymentEvidencePost} from '.
 import {paymentAllocation,allocationLedgerQuery} from '../payment-allocations';
 import {financialReversal} from '../financial-reversals';
 import {depositMovement,depositLedgerQuery} from '../deposits';
+import {tenantLeaseQuery} from '../tenant-leases';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -305,6 +306,9 @@ export const operations={
 "ServicesController_ownDetail":{method:"GET",path:"/api/v1/me/quotes/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ServicesController_ownDetail"]},
 "ServicesController_quote":{method:"POST",path:"/api/v1/quote-requests",params:z.object({}),query:z.object({}),body:quoteCreate,response:responses["ServicesController_quote"]},
 "ServicesController_quotes":{method:"GET",path:"/api/v1/ops/quotes",params:z.object({}),query:quoteFilters,body:z.undefined(),response:responses["ServicesController_quotes"]},
+"TenantLeasesController_download":{method:"GET",path:"/api/v1/tenant/leases/:leaseId/documents/:id",params:z.object({"leaseId":z.string().min(1),"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["TenantLeasesController_download"]},
+"TenantLeasesController_list":{method:"GET",path:"/api/v1/tenant/leases",params:z.object({}),query:tenantLeaseQuery,body:z.undefined(),response:responses["TenantLeasesController_list"]},
+"TenantLeasesController_read":{method:"GET",path:"/api/v1/tenant/leases/:id",params:z.object({"id":z.string().min(1)}),query:tenantLeaseQuery,body:z.undefined(),response:responses["TenantLeasesController_read"]},
 "TenantLinksController_decide":{method:"PATCH",path:"/api/v1/tenant-invitations/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:tenantInviteDecision,response:responses["TenantLinksController_decide"]},
 "TenantLinksController_invitations":{method:"GET",path:"/api/v1/ops/tenant-invitations",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["TenantLinksController_invitations"]},
 "TenantLinksController_invite":{method:"POST",path:"/api/v1/ops/tenant-invitations",params:z.object({}),query:z.object({}),body:tenantInvite,response:responses["TenantLinksController_invite"]},

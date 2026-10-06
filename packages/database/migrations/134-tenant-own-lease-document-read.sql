@@ -1,0 +1,7 @@
+CREATE FUNCTION tenant_lease_access(target uuid) RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public,pg_temp AS $$ SELECT EXISTS(SELECT 1 FROM leases l JOIN tenants t ON t.id=l.tenant_id JOIN profiles p ON p.id=t.user_id WHERE l.id=target AND l.status IN ('active','ended') AND t.user_id=actor_id() AND p.state='active' AND p.email_verified=true) $$;
+CREATE FUNCTION tenant_lease_document(target_lease uuid,target_asset uuid) RETURNS TABLE(id uuid,version int,object_key text,mime text) LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public,pg_temp AS $$ SELECT a.id,a.version,a.object_key,a.mime FROM lease_documents d JOIN media_assets a ON a.id=d.asset_id AND a.version=d.asset_version WHERE d.lease_id=target_lease AND d.asset_id=target_asset AND tenant_lease_access(target_lease) AND a.status='approved' AND a.scan_at IS NOT NULL AND a.visibility='private' AND a.purpose='document' AND a.mime='application/pdf' $$;
+CREATE POLICY tenant_lease_documents_read ON lease_documents FOR SELECT USING(tenant_lease_access(lease_id));
+REVOKE ALL ON FUNCTION tenant_lease_access(uuid),tenant_lease_document(uuid,uuid) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION tenant_lease_access(uuid),tenant_lease_document(uuid,uuid) TO haven_app;
+-- The lease-scoped document port returns only the exact currently approved binding;
+-- it does not grant general media inventory, mutation or ownership evidence access.

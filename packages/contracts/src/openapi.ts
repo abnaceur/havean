@@ -4,7 +4,7 @@ export const errorSchema=z.object({error:z.object({code:z.string(),message:z.str
 export function createOpenApi(){
  const paths:Record<string,Record<string,object>>={};
  for(const [id,op] of Object.entries(operations)){
-  const route=op.path.replace(/:(\w+)/g,'{$1}'),binary=['MediaController_view','MediaController_video','MediaController_download','LeaseDraftsController_download'].includes(id),redirect=['IdentityController_login','IdentityController_callback'].includes(id);
+  const route=op.path.replace(/:(\w+)/g,'{$1}'),binary=['MediaController_view','MediaController_video','MediaController_download','LeaseDraftsController_download','TenantLeasesController_download'].includes(id),redirect=['IdentityController_login','IdentityController_callback'].includes(id);
   const query=z.toJSONSchema(op.query,{io:'input',target:'openapi-3.0'}),params=z.toJSONSchema(op.params,{io:'input',target:'openapi-3.0'});
   const parameters=[];for(const [location,schema] of [['path',params],['query',query]] as const)for(const [name,value] of Object.entries(schema.properties||{}))parameters.push({name,in:location,required:location==='path'||schema.required?.includes(name)||false,schema:value});
   if(id.startsWith('NotificationWorkerController_'))parameters.push({name:'x-alert-timestamp',in:'header',required:true,schema:{type:'string',pattern:'^[0-9]{13}$'}});

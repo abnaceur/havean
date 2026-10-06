@@ -77,3 +77,4 @@ export * from './payment-evidence';
 export * from './payment-allocations';
 export * from './financial-reversals';
 export * from './deposits';
+export * from './tenant-leases';
