@@ -83,8 +83,8 @@
 - [x] **M03 Build inbox and chat interface** — done; dependencies: M02, L06, F12
 - [x] **M04 Recover realtime sessions** — done; dependencies: M03, L06, F12
 - [x] **V01 Create service provider catalog** — done; dependencies: A06, L06, U07
-- [ ] **V02 Build provider discovery and detail** — in_progress; dependencies: V01, A06, L06, U07
-- [ ] **V03 Implement renovation quote workflow** — todo; dependencies: V02, A06, L06, U07
+- [x] **V02 Build provider discovery and detail** — done; dependencies: V01, A06, L06, U07
+- [ ] **V03 Implement renovation quote workflow** — in_progress; dependencies: V02, A06, L06, U07
 - [ ] **T01 Implement mortgage calculation engine** — todo; dependencies: F08, U07
 - [ ] **T02 Build mortgage interface** — todo; dependencies: T01, F08, U07
 - [ ] **T03 Export repayment schedule** — todo; dependencies: T02, F08, U07
