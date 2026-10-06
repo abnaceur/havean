@@ -1,6 +1,6 @@
 # Progress — 6 October 2026
 
-Current specification status: **69/120 verified; 51 remain. B03 is in progress.** Agent directory filters, assigned inventory, declared counts and consented current-profile contact pass six focused integration checks and four final desktop/mobile journeys; all builds and required gates pass. Full release validation requires the remaining specification tasks.
+Current specification status: **70/120 verified; 50 remain. B04 is in progress.** Agency invitations, versioned role changes, private membership audit and immediate session access revocation pass six integration and ten desktop/mobile checks; lint, types, contracts and all builds pass. Full release validation requires the remaining specification tasks.
 
 ## Earlier implementation and verification history
 
@@ -115,3 +115,5 @@ B01 complete: separate public profile/private credential onboarding, owned scann
 B02 complete: canonical agent city/name/service-area/language filters, bounded stable pages, current public assigned inventory/read-port counts and versioned city-scoped consented inquiry routing to the actual agent. Six B02/B01 integration and four final B02 desktop/mobile journeys, two adjacent credential journeys, lint/types/contracts and all builds pass. Implementation 7ba953f; see evidence/tasks/B02.md. 69/120 tasks verified. Continue B03 manager invitations, versioned role grants/removal and membership audit. Original parity/new baseline approval/production launch remain unverified.
 
 Human visual approval update: the user explicitly approved the nine D08 proposal home/city-picker/detail PNGs. Their hashes were checked and those exact bytes promoted to candidates; the original 33-screen set is preserved in evidence/visual/history/initial and Git history. Approval is local English baseline approval, not original-site parity or approval of subsequent feature changes. A root-owned proposal manifest initially prevented the ledger update; the correction now passes the hash/approval policy. No live pixel-gate pass is inferred from approval.
+
+B03 complete: manager invitations, verified recipient acceptance/decline, versioned scoped role changes/removal and retained actual membership audit/outbox are implemented. Actual nonstaff OTP sign-in grants ACR 2 before invitation acceptance; unenrolled consumer registration/recovery remains working. Six integration/privacy checks, ten desktop/mobile B03/account checks, boundaries/types/contracts and all four builds pass. Implementation `f8fd45a`; see evidence/tasks/B03.md. 70/120 complete. Continue B04 inventory/lead assignment and immediate assignment isolation. No new original-site parity or remote-green result is claimed.
