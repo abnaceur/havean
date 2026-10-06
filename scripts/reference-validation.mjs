@@ -11,6 +11,15 @@ export function validateScreens(screens){
  }
  return screens.length;
 }
+export function validateExactParity(screens){
+ validateScreens(screens);
+ const required=screens.filter(screen=>screen.evidenceLabel!=='P');
+ if(!required.length)throw Error('No required reference captures');
+ const gaps=required.filter(screen=>screen.evidenceLabel!=='O'||screen.parityStatus!=='verified'||!screen.referenceScreenshot||!screen.localScreenshot||!screen.captureDate||!screen.approvedEnglishCopy||!Object.keys(screen.measuredBoxes||{}).length||!Object.keys(screen.typography||{}).length||!Object.keys(screen.spacing||{}).length||!Object.keys(screen.colors||{}).length);
+ if(gaps.length)throw Error('Exact parity remains unverified: '+gaps.map(screen=>screen.id).join(', '));
+ for(const screen of required)for(const [name,box] of Object.entries(screen.measuredBoxes))for(const coordinate of ['x','y','width','height'])if(!Number.isFinite(box[coordinate]))throw Error('Unmeasured reference anchor: '+screen.id+'.'+name+'.'+coordinate);
+ return required.length;
+}
 export function validateTokens(tokens){
  for(const [name,token] of Object.entries(tokens)){
   if(!token.value||!['P','O'].includes(token.evidenceLabel)||!token.source)throw Error('Untraceable token: '+name);
@@ -18,4 +27,4 @@ export function validateTokens(tokens){
  }
  return Object.keys(tokens).length;
 }
-if(process.argv[1]?.endsWith('reference-validation.mjs')){const screens=validateScreens(JSON.parse(fs.readFileSync('docs/reference/screens.json')));const tokens=validateTokens(JSON.parse(fs.readFileSync('docs/reference/tokens.json')));console.log(`Validated ${screens} reference states and ${tokens} traced tokens`);}
+if(process.argv[1]?.endsWith('reference-validation.mjs')){const screens=validateScreens(JSON.parse(fs.readFileSync('docs/reference/screens.json')));const tokens=validateTokens(JSON.parse(fs.readFileSync('docs/reference/tokens.json')));if(process.argv.includes('--exact'))validateExactParity(JSON.parse(fs.readFileSync('docs/reference/screens.json')));console.log(`Validated ${screens} reference states and ${tokens} traced tokens`);}
