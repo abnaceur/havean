@@ -1,0 +1,69 @@
+ Container haven-p09-runtime-tests-run-075915ef793c Creating
+ Container haven-p09-runtime-tests-run-075915ef793c Created
+
+Running 2 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/maintenance-workbench.spec.ts:8:1 › P13 native resolution, private notes and tenant reopen retain current authority (1.5m)
+  ✘  2 [mobile] › tests/e2e/maintenance-workbench.spec.ts:8:1 › P13 native resolution, private notes and tenant reopen retain current authority (4.0m)
+
+
+  1) [mobile] › tests/e2e/maintenance-workbench.spec.ts:8:1 › P13 native resolution, private notes and tenant reopen retain current authority
+
+    Test timeout of 240000ms exceeded.
+
+    Error: locator.click: Test timeout of 240000ms exceeded.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'Maintenance request', exact: true }).getByRole('button', { name: 'Close dialog', exact: true })
+        - locator resolved to <button class="icon-button" aria-label="Close dialog">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="dialog-head">…</div> intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div class="dialog-head">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        307 × waiting for element to be visible, enabled and stable
+            - element is visible, enabled and stable
+            - scrolling into view if needed
+            - done scrolling
+            - <div class="dialog-head">…</div> intercepts pointer events
+          - retrying click action
+            - waiting 500ms
+
+
+      11 |  await login(page,'manager',OPS,'/ops/management');const options=(await (await page.request.get(OPS+'/api/v1/ops/lease-draft-options/'+unit)).json()).data,create=await page.request.post(OPS+'/api/v1/ops/leases',{headers:{Origin:OPS,'Idempotency-Key':crypto.randomUUID()},data:{version:0,unitId:unit,tenantId,unitVersion:options.unitVersion,grantVersion:options.grantVersion,tenantVersion:options.tenants.find((t:any)=>t.id===tenantId).version,startDate:'2028-02-15',endDate:'2028-03-17',rent:'1234.56',currency:'CNY',rentPeriod:'month',dueDay:5,documents:[]}});expect(create.ok()).toBe(true);const lease=(await create.json()).data;const headers={Origin:OPS,'Idempotency-Key':crypto.randomUUID()},activation=await page.request.post(OPS+'/api/v1/ops/leases/'+lease.id+'/activate',{headers,data:{version:lease.version,unitVersion:lease.unitVersion,grantVersion:lease.grantVersion,tenantVersion:lease.tenantVersion,confirm:true}});expect(activation.ok()).toBe(true);
+      12 |  const title='P13 synthetic inspection '+crypto.randomUUID(),sentinel='P13 PRIVATE UI SENTINEL '+crypto.randomUUID();await login(page,'tenant',WEB,'/tenant/maintenance?lease='+lease.id);const source=(await (await page.request.get(WEB+'/api/v1/me/maintenance-options?leaseId='+lease.id)).json()).data[0],created=await page.request.post(WEB+'/api/v1/me/maintenance',{headers:{Origin:WEB,'Idempotency-Key':crypto.randomUUID()},data:{version:0,leaseId:lease.id,leaseVersion:source.leaseVersion,unitVersion:source.unitVersion,grantVersion:source.grantVersion,title,description:'A synthetic request for the maintenance workbench resolution and reopening journey.',category:'Plumbing',urgency:'Routine',photos:[],confirm:true}});expect(created.ok()).toBe(true);const id=(await created.json()).data.id;
+    > 13 |  await login(page,'manager',OPS,'/ops/management?tab=maintenance&request='+id);let dialog=page.getByRole('dialog',{name:'Maintenance request',exact:true});await expect(dialog).toContainText(title);await dialog.getByLabel('Tenant-visible maintenance update',{exact:true}).fill('Public inspection scheduled by the authorized management team.');await dialog.getByLabel('Private maintenance team note',{exact:true}).fill(sentinel);await dialog.getByRole('button',{name:'Triage request',exact:true}).click();await expect(dialog).toContainText('Version 2');await expect(dialog.getByRole('region',{name:'Private maintenance notes',exact:true})).toContainText(sentinel);await dialog.getByLabel('Maintenance assignee',{exact:true}).selectOption('00000000-0000-4000-8000-000000000004');await dialog.getByRole('button',{name:'Assign request',exact:true}).click();await expect(dialog).toContainText('Version 3');await dialog.getByRole('button',{name:'Start work',exact:true}).click();await expect(dialog).toContainText('Version 4');await dialog.getByLabel('Tenant-visible maintenance update',{exact:true}).fill('The recorded synthetic repair is complete. Please check the tap.');await dialog.getByRole('button',{name:'Resolve request',exact:true}).click();await expect(dialog).toContainText('Version 5');await dialog.getByRole('button',{name:'Close dialog',exact:true}).click();await page.getByLabel('Maintenance status filter',{exact:true}).selectOption('resolved');await page.getByLabel('Maintenance category filter',{exact:true}).selectOption('Plumbing');await expect(page.getByRole('button',{name:'View maintenance request '+id,exact:true})).toBeVisible();await page.reload();await expect(page.getByLabel('Maintenance status filter',{exact:true})).toHaveValue('resolved');await expect(page.getByRole('button',{name:'View maintenance request '+id,exact:true})).toBeVisible();
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ^
+      14 |  await login(page,'tenant',WEB,'/tenant/maintenance?request='+id);dialog=page.getByRole('dialog',{name:'Maintenance request',exact:true});await expect(dialog).toContainText('resolved');await expect(dialog).not.toContainText(sentinel);await expect(dialog.getByRole('region',{name:'Private maintenance notes',exact:true})).toHaveCount(0);const detail=await page.request.get(WEB+'/api/v1/me/maintenance/'+id);expect(await detail.text()).not.toContain(sentinel);expect(await detail.text()).not.toContain('internalNotes');expect(await (await page.request.get(WEB+'/api/v1/me/maintenance')).text()).not.toContain(sentinel);await dialog.getByLabel('Maintenance public comment',{exact:true}).fill('The synthetic tap still leaks after the recorded repair; please inspect it again.');let lost=false;await page.route('**/api/v1/me/maintenance/'+id,async route=>{if(route.request().method()==='PATCH'&&!lost){lost=true;const r=await route.fetch();expect(r.ok(),await r.text()).toBe(true);expect((await r.json()).data.version).toBe(6);await route.abort();}else await route.continue();});await dialog.getByRole('button',{name:'Reopen resolved request',exact:true}).click();await expect(dialog.getByRole('alert')).toBeVisible();await expect(dialog.getByLabel('Maintenance public comment',{exact:true})).toHaveValue(/still leaks/);await dialog.getByRole('button',{name:'Reopen resolved request',exact:true}).click();await expect(dialog).toContainText('Version 6');await expect(dialog).toContainText('reopened');await expect(dialog.getByRole('button',{name:'Reopen resolved request',exact:true})).toHaveCount(0);await dialog.getByLabel('Maintenance public comment',{exact:true}).fill('The authorized tenant confirms availability for another synthetic inspection.');await dialog.getByRole('button',{name:'Send public comment',exact:true}).click();await expect(dialog).toContainText('Version 7');expect((await new AxeBuilder({page}).include('dialog').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/p13-maintenance-${info.project.name}.png`,scale:'css'});
+      15 |  await login(page,'buyer',WEB,'/tenant/maintenance');expect((await page.request.get(WEB+'/api/v1/me/maintenance/'+id)).status()).toBe(404);const unauthorized=await page.request.patch(WEB+'/api/v1/me/maintenance/'+id,{headers:{Origin:WEB,'Idempotency-Key':crypto.randomUUID()},data:{version:7,leaseVersion:source.leaseVersion,unitVersion:source.unitVersion,grantVersion:source.grantVersion,action:'comment',publicNote:'A foreign account must not append this comment.'}});expect(unauthorized.status()).toBe(404);
+      16 | });
+        at /workspace/tests/e2e/maintenance-workbench.spec.ts:13:1359
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/workbench-clean/maintenance-workbench-P13--c99f3-en-retain-current-authority-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/workbench-clean/maintenance-workbench-P13--c99f3-en-retain-current-authority-mobile/error-context.md
+
+    Error Context: ../artifacts/workbench-clean/maintenance-workbench-P13--c99f3-en-retain-current-authority-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/workbench-clean/maintenance-workbench-P13--c99f3-en-retain-current-authority-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/workbench-clean/maintenance-workbench-P13--c99f3-en-retain-current-authority-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile] › tests/e2e/maintenance-workbench.spec.ts:8:1 › P13 native resolution, private notes and tenant reopen retain current authority
+  1 passed (5.6m)

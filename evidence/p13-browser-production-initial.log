@@ -1,0 +1,49 @@
+ Container haven-p09-runtime-tests-run-f404c1a481d8 Creating
+ Container haven-p09-runtime-tests-run-f404c1a481d8 Created
+
+Running 4 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/maintenance-requests.spec.ts:8:1 › P12 tenant private photo request and manager assignment retain versions after lost acknowledgements (1.6m)
+  ✓  2 [desktop] › tests/e2e/maintenance-workbench.spec.ts:8:1 › P13 native resolution, private notes and tenant reopen retain current authority (1.9m)
+  ✘  3 [mobile] › tests/e2e/maintenance-requests.spec.ts:8:1 › P12 tenant private photo request and manager assignment retain versions after lost acknowledgements (30.0s)
+  ✓  4 [mobile] › tests/e2e/maintenance-workbench.spec.ts:8:1 › P13 native resolution, private notes and tenant reopen retain current authority (1.8m)
+
+
+  1) [mobile] › tests/e2e/maintenance-requests.spec.ts:8:1 › P12 tenant private photo request and manager assignment retain versions after lost acknowledgements
+
+    Error: page.waitForFunction: TypeError: Cannot read properties of null (reading 'innerText')
+        at eval (eval at predicate (eval at evaluate (:311:30)), <anonymous>:1:63)
+        at predicate (eval at evaluate (:311:30), <anonymous>:7:27)
+        at next (eval at evaluate (:311:30), <anonymous>:29:33)
+        at eval (eval at evaluate (:311:30), <anonymous>:42:13)
+        at UtilityScript.evaluate (<anonymous>:313:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at predicate (eval at evaluate (:311:30)), <anonymous>:1:63)
+        at predicate (eval at evaluate (:311:30), <anonymous>:7:27)
+        at next (eval at evaluate (:311:30), <anonymous>:29:33)
+        at eval (eval at evaluate (:311:30), <anonymous>:42:13)
+        at UtilityScript.evaluate (<anonymous>:313:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at completeOtp (/workspace/tests/support/totp.ts:19:14)
+        at login (/workspace/tests/support/browser.ts:5:711)
+        at /workspace/tests/e2e/maintenance-requests.spec.ts:12:2
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/workbench-production/maintenance-requests-P12-t-ca53f-after-lost-acknowledgements-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/workbench-production/maintenance-requests-P12-t-ca53f-after-lost-acknowledgements-mobile/error-context.md
+
+    Error Context: ../artifacts/workbench-production/maintenance-requests-P12-t-ca53f-after-lost-acknowledgements-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/workbench-production/maintenance-requests-P12-t-ca53f-after-lost-acknowledgements-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/workbench-production/maintenance-requests-P12-t-ca53f-after-lost-acknowledgements-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile] › tests/e2e/maintenance-requests.spec.ts:8:1 › P12 tenant private photo request and manager assignment retain versions after lost acknowledgements
+  3 passed (5.8m)

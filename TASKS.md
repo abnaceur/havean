@@ -100,8 +100,8 @@
 - [x] **P10 Track deposits separately** — done; dependencies: P09, R04, O05, B05, F12
 - [x] **P11 Build tenant lease and balance portal** — done; dependencies: P10, R04, O05, B05, F12
 - [x] **P12 Create maintenance requests** — done; dependencies: P11, R04, O05, B05, F12
-- [ ] **P13 Build maintenance workbench and timeline** — in_progress; dependencies: P12, R04, O05, B05, F12
-- [ ] **P14 Generate owner and tenant statements** — todo; dependencies: P13, R04, O05, B05, F12
+- [x] **P13 Build maintenance workbench and timeline** — done; dependencies: P12, R04, O05, B05, F12
+- [ ] **P14 Generate owner and tenant statements** — in_progress; dependencies: P13, R04, O05, B05, F12
 - [ ] **P15 Build management dashboards** — todo; dependencies: P14, R04, O05, B05, F12
 - [ ] **S01 Create support cases and complaints** — todo; dependencies: L06, M04, V03, I08
 - [ ] **S02 Build support workbench** — todo; dependencies: S01, L06, M04, V03, I08
