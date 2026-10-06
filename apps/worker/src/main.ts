@@ -1,3 +1,4 @@
+import {projectAnalytics} from './analytics.js';
 import {dueViewingReminders,deliverViewingReminder} from './viewing-reminders.js';
 import {dueAlertDigests,deliverAlertDigest} from './alerts.js';
 import {createServer} from 'node:http';
@@ -18,6 +19,7 @@ let running=false;
 async function dispatch(){
  if(running)return;running=true;
  try{
+  try{await projectAnalytics();}catch{console.error(JSON.stringify({event:'analytics_projection.unavailable'}));}
   try{for(const row of await dueAlertDigests()){const jobId='alert-'+row.id+'-'+row.version;const prior=await queue.getJob(jobId);if(prior&&(await prior.getState())==='failed')await prior.retry();await queue.add('alert',{id:row.id},{jobId,attempts:5,backoff:{type:'exponential',delay:1000},removeOnComplete:{age:86400}});}}catch{console.error(JSON.stringify({event:'alert_dispatcher.unavailable'}));}
   try{for(const row of await dueViewingReminders()){const jobId='reminder-'+row.id+'-'+row.version;const prior=await queue.getJob(jobId);if(prior&&(await prior.getState())==='failed')await prior.retry();await queue.add('viewing-reminder',{id:row.id},{jobId,attempts:5,backoff:{type:'exponential',delay:1000},removeOnComplete:{age:86400}});}}catch{console.error(JSON.stringify({event:'reminder_dispatcher.unavailable'}));}
   for(const row of await dueExpirations()){const jobId='expiration-'+row.id+'-'+row.version;const prior=await queue.getJob(jobId);if(prior&&(await prior.getState())==='failed')await prior.retry();await queue.add('expiration',{id:row.id,deadline:row.deadline},{jobId,attempts:5,backoff:{type:'exponential',delay:1000},removeOnComplete:{age:86400}});}

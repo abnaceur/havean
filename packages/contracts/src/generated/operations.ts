@@ -44,6 +44,7 @@ import {managementDashboardQuery} from '../management-dashboard';
 import {supportCreate,supportTriage,supportPageQuery,supportWorkflow,supportPublicAction} from '../support-cases';
 import {homeContentQuery,homeSectionCreate,homeSectionEdit,homeSectionAction,homeTaxonomySave} from '../home-content';
 import {platformUserQuery,platformAccountAction,platformStaffSave} from '../platform-administration';
+import {analyticsConsent,analyticsFilters,auditFilters} from '../analytics';
 import {statementQuery} from '../statements';
 import {maintenanceCreate,maintenanceWorkflow,maintenancePageQuery,maintenanceOptionsQuery,maintenanceTenantAction} from '../maintenance';
 import {responses} from '../responses';
@@ -52,7 +53,9 @@ import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geograph
 const kind=z.enum(['photo','floor_plan','panorama','video']);
 const metadata=propertyMediaMetadata;
 export const operations={
-"AdministrationController_audit":{method:"GET",path:"/api/v1/ops/audit",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_audit"]},
+"AdministrationController_analytics":{method:"GET",path:"/api/v1/ops/analytics",params:z.object({}),query:analyticsFilters,body:z.undefined(),response:responses["AdministrationController_analytics"]},
+"AdministrationController_analyticsExport":{method:"GET",path:"/api/v1/ops/analytics/export",params:z.object({}),query:analyticsFilters,body:z.undefined(),response:responses["AdministrationController_analyticsExport"]},
+"AdministrationController_audit":{method:"GET",path:"/api/v1/ops/audit",params:z.object({}),query:auditFilters,body:z.undefined(),response:responses["AdministrationController_audit"]},
 "AdministrationController_cases":{method:"GET",path:"/api/v1/support-cases",params:z.object({}),query:supportPageQuery,body:z.undefined(),response:responses["AdministrationController_cases"]},
 "AdministrationController_dashboard":{method:"GET",path:"/api/v1/ops/dashboard",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_dashboard"]},
 "AdministrationController_homeContent":{method:"GET",path:"/api/v1/ops/home-content",params:z.object({}),query:homeContentQuery,body:z.undefined(),response:responses["AdministrationController_homeContent"]},
@@ -151,6 +154,9 @@ export const operations={
 "DiscoveryController_providers":{method:"GET",path:"/api/v1/renovation/providers",params:z.object({}),query:providerFilters,body:z.undefined(),response:responses["DiscoveryController_providers"]},
 "DiscoveryController_similar":{method:"GET",path:"/api/v1/listings/:id/similar",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_similar"]},
 "DiscoveryController_suggestions":{method:"GET",path:"/api/v1/search/suggest",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj'),q:z.string().trim().max(120).default('')}),body:z.undefined(),response:responses["DiscoveryController_suggestions"]},
+"DiscoveryEventsController_changeConsent":{method:"PATCH",path:"/api/v1/me/analytics-consent",params:z.object({}),query:z.object({}),body:analyticsConsent,response:responses["DiscoveryEventsController_changeConsent"]},
+"DiscoveryEventsController_consent":{method:"GET",path:"/api/v1/me/analytics-consent",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryEventsController_consent"]},
+"DiscoveryEventsController_impression":{method:"POST",path:"/api/v1/listings/:id/impression",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewSignal,response:responses["DiscoveryEventsController_impression"]},
 "DiscoveryEventsController_view":{method:"POST",path:"/api/v1/listings/:id/view",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:viewSignal,response:responses["DiscoveryEventsController_view"]},
 "DraftInventoryController_create":{method:"POST",path:"/api/v1/ops/listings",params:z.object({}),query:z.object({}),body:draftCreate,response:responses["DraftInventoryController_create"]},
 "DraftInventoryController_grants":{method:"GET",path:"/api/v1/me/owner-grants",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DraftInventoryController_grants"]},

@@ -92,3 +92,5 @@ export * from './platform-administration';
 
 export * from './market-policy';
 export * from './area-display';
+
+export * from './analytics';

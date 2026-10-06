@@ -2,6 +2,8 @@
 import {operations} from './operations';
 import {call} from '../transport';
 export const sdk={
+"AdministrationController_analytics":call(operations["AdministrationController_analytics"]),
+"AdministrationController_analyticsExport":call(operations["AdministrationController_analyticsExport"]),
 "AdministrationController_audit":call(operations["AdministrationController_audit"]),
 "AdministrationController_cases":call(operations["AdministrationController_cases"]),
 "AdministrationController_dashboard":call(operations["AdministrationController_dashboard"]),
@@ -101,6 +103,9 @@ export const sdk={
 "DiscoveryController_providers":call(operations["DiscoveryController_providers"]),
 "DiscoveryController_similar":call(operations["DiscoveryController_similar"]),
 "DiscoveryController_suggestions":call(operations["DiscoveryController_suggestions"]),
+"DiscoveryEventsController_changeConsent":call(operations["DiscoveryEventsController_changeConsent"]),
+"DiscoveryEventsController_consent":call(operations["DiscoveryEventsController_consent"]),
+"DiscoveryEventsController_impression":call(operations["DiscoveryEventsController_impression"]),
 "DiscoveryEventsController_view":call(operations["DiscoveryEventsController_view"]),
 "DraftInventoryController_create":call(operations["DraftInventoryController_create"]),
 "DraftInventoryController_grants":call(operations["DraftInventoryController_grants"]),

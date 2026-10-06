@@ -1,3 +1,5 @@
+import {analyticsFilters,auditFilters} from '@haven/contracts';
+import {analyticsRead,auditRead,analyticsCSV} from './analytics.js';
 import {platformUserQuery,platformAccountAction,platformStaffSave} from '@haven/contracts';
 import {platformUsers,platformUserRecord,platformAccount,platformStaff,platformAdmin} from './platform-users.js';
 import {homeContentQuery,homeSectionCreate,homeSectionEdit,homeSectionAction,homeTaxonomySave} from '@haven/contracts';
@@ -32,7 +34,9 @@ export class AdministrationController{
  @Post('ops/home-content/:id/actions') async homePublish(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['editor','admin']),x=homeSectionAction.parse(body);return transaction(a,c=>contentAction(c,a,req,z.uuid().parse(id),x));}
  @Get('ops/home-content/:id/preview') async homePreview(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['editor','admin']);return transaction(a,async c=>{await contentEditor(c);return data(await contentRecord(c,z.uuid().parse(id)));});}
  @Post('ops/home-taxonomy') async homeTaxonomy(@Req() req:FastifyRequest,@Body() body:unknown){const a=await this.identity.actor(req,['editor','admin']),x=homeTaxonomySave.parse(body);return transaction(a,c=>contentTaxonomy(c,a,req,x));}
- @Get('ops/audit') async audit(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['admin']);return transaction(a,async c=>{await platformAdmin(c);return data((await c.query('SELECT id,actor_id,resource_id,action,created_at FROM audit_events ORDER BY created_at DESC LIMIT 200')).rows);});}
+ @Get('ops/analytics') async analytics(@Req() req:FastifyRequest,@Query() input:unknown){const a=await this.identity.actor(req,['admin']),x=analyticsFilters.parse(input);return transaction(a,async c=>{await platformAdmin(c);return data(await analyticsRead(c,x));});}
+ @Get('ops/analytics/export') async analyticsExport(@Req() req:FastifyRequest,@Query() input:unknown,@Res() reply:FastifyReply){const a=await this.identity.actor(req,['admin']),x=analyticsFilters.parse(input);return transaction(a,async c=>{await platformAdmin(c);return reply.header('Content-Type','text/csv; charset=utf-8').header('Cache-Control','no-store').header('Content-Disposition','attachment; filename="consented-funnel.csv"').send(analyticsCSV(await analyticsRead(c,x)));});}
+ @Get('ops/audit') async audit(@Req() req:FastifyRequest,@Query() input:unknown={}){const a=await this.identity.actor(req,['admin']),x=auditFilters.parse(input);return transaction(a,async c=>{await platformAdmin(c);return data(await auditRead(c,x));});}
  @Get('ops/users') async users(@Req() req:FastifyRequest,@Query() input:unknown={}){const a=await this.identity.actor(req,['admin']),x=platformUserQuery.parse(input);return transaction(a,async c=>data(await platformUsers(c,x)));}
  @Get('ops/users/:id') async user(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['admin']);return transaction(a,async c=>data(await platformUserRecord(c,z.uuid().parse(id))));}
  @Post('ops/users/:id/suspend') async suspend(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['admin']),x=platformAccountAction.parse(body);return transaction(a,c=>platformAccount(c,a,req,z.uuid().parse(id),x));}

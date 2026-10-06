@@ -27,6 +27,7 @@ const datasets:Record<string,string>={
  ownedPrivateUnits:'SELECT d.unit_id,d.private_address,d.version,d.private_latitude::text,d.private_longitude::text FROM unit_private_details d WHERE EXISTS(SELECT 1 FROM listings l WHERE l.unit_id=d.unit_id AND l.owner_id=$1) ORDER BY d.unit_id',
  ownedUnits:'SELECT u.id,u.area::text,u.beds,u.living_rooms,u.baths,u.orientation,u.floor,u.elevator FROM units u WHERE EXISTS(SELECT 1 FROM listings l WHERE l.unit_id=u.id AND l.owner_id=$1) ORDER BY u.id',
  mediaMetadata:'SELECT id,listing_id,mime,size::text,rights,visibility,status,width,height,purpose,duration::text,created_at FROM media_assets WHERE owner_id=$1 ORDER BY id',
+ analyticsConsent:'SELECT enabled,version,updated_at FROM analytics_consent WHERE user_id=$1',
  listingViewActivity:'SELECT id,listing_id,listing_version,recorded_at,view_day FROM listing_view_events WHERE user_id=$1 ORDER BY id',
  tenantInvitations: 'SELECT id,organization_id,unit_id,name,status,version,expires_at,created_at FROM tenant_invitations WHERE tenant_invitation_recipient(email) ORDER BY id',
  tenantProfiles:'SELECT id,name,email FROM tenants WHERE user_id=$1 ORDER BY id',

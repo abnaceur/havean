@@ -1,0 +1,7 @@
+import {z} from 'zod';
+export const analyticsKind=z.enum(['listing_impression','listing_view','favorite_added','inquiry_submitted','viewing_requested','quote_requested']);
+export const analyticsConsent=z.object({version:z.number().int().nonnegative(),enabled:z.boolean()}).strict();
+export const analyticsFilters=z.object({city:z.string().regex(/^[a-z0-9-]{1,50}$/).optional(),category:z.enum(['resale','rent','commercial','new-homes','renovation','agents']).optional(),from:z.iso.date(),to:z.iso.date()}).strict().refine(x=>x.from<=x.to&&Date.parse(x.to)-Date.parse(x.from)<=365*86400000,'Choose an ordered period of at most 366 days');
+export const auditFilters=z.object({action:z.string().regex(/^[a-z][a-z0-9_.]{0,79}$/).optional(),actorId:z.uuid().optional(),resourceId:z.uuid().optional(),from:z.iso.date().optional(),to:z.iso.date().optional(),page:z.coerce.number().int().min(1).max(10000).default(1)}).strict().refine(x=>!x.from||!x.to||x.from<=x.to,'Choose an ordered date period');
+export const analyticsReport=z.object({asOf:z.string(),projectionLag:z.number().int().nonnegative(),scope:z.object({city:z.string().nullable(),category:z.string().nullable(),from:z.string(),to:z.string()}),rows:z.array(z.object({kind:analyticsKind,count:z.number().int().nonnegative(),definition:z.string()})),definition:z.string()});
+export const auditReport=z.object({page:z.number().int(),total:z.number().int(),rows:z.array(z.object({id:z.uuid(),actorId:z.uuid().nullable(),resourceId:z.uuid().nullable(),action:z.string(),at:z.string()}))});
