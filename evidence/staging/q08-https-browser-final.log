@@ -1,0 +1,87 @@
+time="2026-10-07T03:07:39+04:00" level=warning msg="Found orphan containers ([haven-p09-runtime-tests-run-82341d9500d0 haven-p09-runtime-web-1 haven-p09-runtime-api-1 haven-p09-runtime-ops-1 haven-p09-runtime-q04-worker-1 haven-p09-runtime-q04final-search-1 haven-p09-runtime-q04final-cache-1 haven-p09-runtime-q04-search-1 haven-p09-runtime-q04v-search-1 haven-p09-runtime-q04v-cache-1 haven-p09-runtime-q04-mail-1 haven-p09-runtime-q04-cache-1 haven-p09-runtime-q03-proxy-1 haven-p09-runtime-q02-search-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-p09-runtime-tests-run-d4267fab490e Creating
+ Container haven-p09-runtime-tests-run-d4267fab490e Created
+
+Running 4 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/staging-https.spec.ts:8:1 › Q08 real HTTPS inquiry persists with a native receipt and secure guest cookies (3.8s)
+  ✓  2 [desktop] › tests/e2e/staging-https.spec.ts:11:1 › Q08 production staff MFA and scanned private document remain scoped through HTTPS (4.7s)
+  ✘  3 [mobile] › tests/e2e/staging-https.spec.ts:8:1 › Q08 real HTTPS inquiry persists with a native receipt and secure guest cookies (1.5m)
+  ✓  4 [mobile] › tests/e2e/staging-https.spec.ts:11:1 › Q08 production staff MFA and scanned private document remain scoped through HTTPS (3.5s)
+
+
+  1) [desktop] › tests/e2e/staging-https.spec.ts:8:1 › Q08 real HTTPS inquiry persists with a native receipt and secure guest cookies
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 6
+    + Received  + 1
+
+    - Array [
+    -   Object {
+    -     "email": "q08-31202f52-67d0-41b5-ac74-270974a53bc8@example.test",
+    -     "user_id": null,
+    -   },
+    - ]
+    + Array []
+
+       7 | const web=process.env.PUBLIC_WEB_URL!,ops=process.env.PUBLIC_OPS_URL!;
+       8 | test('Q08 real HTTPS inquiry persists with a native receipt and secure guest cookies',async({page},info)=>{
+    >  9 |  expect(web.startsWith('https://')).toBe(true);await page.goto(web+'/bj/buy/home-1');await expect(page.locator('#main')).toBeVisible();const contact=page.getByRole('button',{name:'Send an inquiry',exact:true});await contact.click();const dialog=page.getByRole('dialog'),email='q08-'+crypto.randomUUID()+'@example.test';for(const [name,value] of [['Your name','Q08 HTTPS '+info.project.name],['Email address',email],['Phone number','+86 138 0000 0000'],['How can we help?','Authorized synthetic HTTPS staging inquiry.']])await dialog.getByLabel(name,{exact:true}).fill(value);await dialog.getByRole('checkbox').check();const response=page.waitForResponse(r=>r.url().endsWith('/api/v1/guest-inquiries')&&r.request().method()==='POST');await dialog.getByRole('button',{name:'Send inquiry',exact:true}).click();const actual=await response;expect(actual.status()).toBe(201);const id=(await actual.json()).data.id;await expect(dialog.getByRole('heading',{name:'Your inquiry is saved.',exact:true})).toBeVisible();const row=await pool.query('SELECT email,user_id FROM leads WHERE id=$1',[id]);expect(row.rows).toEqual([{email,user_id:null}]);const cookies=await page.context().cookies();expect(cookies.find(c=>c.name==='haven_inquiry')).toMatchObject({secure:true,httpOnly:true,sameSite:'Lax'});await page.screenshot({path:'evidence/q08-https-inquiry-'+info.project.name+'.png',scale:'css'});fs.writeFileSync('evidence/q08-https-inquiry-'+info.project.name+'.json',JSON.stringify({label:'P',positiveMocked:false,protocol:'HTTPS',certificateTrust:'Browser pins the exact generated leaf SPKI; separate curl verifies private CA and hostname',receipt:id,nativeLeadMatched:true},null,2)+'\n');
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ^
+      10 | });
+      11 | test('Q08 production staff MFA and scanned private document remain scoped through HTTPS',async({page,browser},info)=>{
+      12 |  test.setTimeout(180000);await login(page,'manager',ops,'/ops/management');const own=(await(await page.request.get(ops+'/api/v1/me')).json()).data;expect(own.roles).toContain('property_manager');expect((await page.context().cookies()).find(c=>c.name==='haven_session')?.secure).toBe(true);const pdf=Buffer.from('%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF');const intent=await page.request.post(ops+'/api/v1/media/upload-intents',{headers:{Origin:ops},data:{mime:'application/pdf',size:pdf.length,rights:'Authorized synthetic private PDF for staging recovery verification.',visibility:'private',purpose:'document'}});expect(intent.ok()).toBe(true);const asset=(await intent.json()).data;const uploaded=await page.request.put(ops+asset.uploadUrl,{headers:{Origin:ops,'Content-Type':'application/pdf'},data:pdf});expect(uploaded.ok()).toBe(true);const status=(await(await page.request.get(ops+'/api/v1/media/'+asset.id+'/status')).json()).data;expect(status.status).toBe('approved');expect(status.scan_at).toBeTruthy();const link=await page.request.post(ops+'/api/v1/documents/'+asset.id+'/download-link',{headers:{Origin:ops}});expect(link.ok()).toBe(true);const ticket=(await link.json()).data.url,document=await page.request.get(ops+ticket);expect(document.ok()).toBe(true);expect(await document.body()).toEqual(pdf);const consumer=await browser.newContext({...info.project.use,baseURL:web});try{const buyer=await consumer.newPage();await login(buyer,'buyer',web,'/account');expect((await buyer.request.get(web+ticket)).status()).toBe(403);}finally{await consumer.close();}await page.screenshot({path:'evidence/q08-https-staff-'+info.project.name+'.png',scale:'css'});fs.writeFileSync('evidence/q08-https-staff-'+info.project.name+'.json',JSON.stringify({label:'P',positiveMocked:false,protocol:'HTTPS',staffMfa:'Actual OTP-required identity login and production actor admission',asset:asset.id,scanned:true,nativeBytesMatched:true,foreignTicketStatus:403},null,2)+'\n');
+        at /workspace/tests/e2e/staging-https.spec.ts:9:1104
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/staging-https-Q08-real-HTT-65b1b-pt-and-secure-guest-cookies-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/staging-https-Q08-real-HTT-65b1b-pt-and-secure-guest-cookies-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/staging-https-Q08-real-HTT-65b1b-pt-and-secure-guest-cookies-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/staging-https-Q08-real-HTT-65b1b-pt-and-secure-guest-cookies-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/staging-https.spec.ts:8:1 › Q08 real HTTPS inquiry persists with a native receipt and secure guest cookies
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.fill: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('dialog').getByLabel('Your name', { exact: true })
+
+
+       7 | const web=process.env.PUBLIC_WEB_URL!,ops=process.env.PUBLIC_OPS_URL!;
+       8 | test('Q08 real HTTPS inquiry persists with a native receipt and secure guest cookies',async({page},info)=>{
+    >  9 |  expect(web.startsWith('https://')).toBe(true);await page.goto(web+'/bj/buy/home-1');await expect(page.locator('#main')).toBeVisible();const contact=page.getByRole('button',{name:'Send an inquiry',exact:true});await contact.click();const dialog=page.getByRole('dialog'),email='q08-'+crypto.randomUUID()+'@example.test';for(const [name,value] of [['Your name','Q08 HTTPS '+info.project.name],['Email address',email],['Phone number','+86 138 0000 0000'],['How can we help?','Authorized synthetic HTTPS staging inquiry.']])await dialog.getByLabel(name,{exact:true}).fill(value);await dialog.getByRole('checkbox').check();const response=page.waitForResponse(r=>r.url().endsWith('/api/v1/guest-inquiries')&&r.request().method()==='POST');await dialog.getByRole('button',{name:'Send inquiry',exact:true}).click();const actual=await response;expect(actual.status()).toBe(201);const id=(await actual.json()).data.id;await expect(dialog.getByRole('heading',{name:'Your inquiry is saved.',exact:true})).toBeVisible();const row=await pool.query('SELECT email,user_id FROM leads WHERE id=$1',[id]);expect(row.rows).toEqual([{email,user_id:null}]);const cookies=await page.context().cookies();expect(cookies.find(c=>c.name==='haven_inquiry')).toMatchObject({secure:true,httpOnly:true,sameSite:'Lax'});await page.screenshot({path:'evidence/q08-https-inquiry-'+info.project.name+'.png',scale:'css'});fs.writeFileSync('evidence/q08-https-inquiry-'+info.project.name+'.json',JSON.stringify({label:'P',positiveMocked:false,protocol:'HTTPS',certificateTrust:'Browser pins the exact generated leaf SPKI; separate curl verifies private CA and hostname',receipt:id,nativeLeadMatched:true},null,2)+'\n');
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ^
+      10 | });
+      11 | test('Q08 production staff MFA and scanned private document remain scoped through HTTPS',async({page,browser},info)=>{
+      12 |  test.setTimeout(180000);await login(page,'manager',ops,'/ops/management');const own=(await(await page.request.get(ops+'/api/v1/me')).json()).data;expect(own.roles).toContain('property_manager');expect((await page.context().cookies()).find(c=>c.name==='haven_session')?.secure).toBe(true);const pdf=Buffer.from('%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF');const intent=await page.request.post(ops+'/api/v1/media/upload-intents',{headers:{Origin:ops},data:{mime:'application/pdf',size:pdf.length,rights:'Authorized synthetic private PDF for staging recovery verification.',visibility:'private',purpose:'document'}});expect(intent.ok()).toBe(true);const asset=(await intent.json()).data;const uploaded=await page.request.put(ops+asset.uploadUrl,{headers:{Origin:ops,'Content-Type':'application/pdf'},data:pdf});expect(uploaded.ok()).toBe(true);const status=(await(await page.request.get(ops+'/api/v1/media/'+asset.id+'/status')).json()).data;expect(status.status).toBe('approved');expect(status.scan_at).toBeTruthy();const link=await page.request.post(ops+'/api/v1/documents/'+asset.id+'/download-link',{headers:{Origin:ops}});expect(link.ok()).toBe(true);const ticket=(await link.json()).data.url,document=await page.request.get(ops+ticket);expect(document.ok()).toBe(true);expect(await document.body()).toEqual(pdf);const consumer=await browser.newContext({...info.project.use,baseURL:web});try{const buyer=await consumer.newPage();await login(buyer,'buyer',web,'/account');expect((await buyer.request.get(web+ticket)).status()).toBe(403);}finally{await consumer.close();}await page.screenshot({path:'evidence/q08-https-staff-'+info.project.name+'.png',scale:'css'});fs.writeFileSync('evidence/q08-https-staff-'+info.project.name+'.json',JSON.stringify({label:'P',positiveMocked:false,protocol:'HTTPS',staffMfa:'Actual OTP-required identity login and production actor admission',asset:asset.id,scanned:true,nativeBytesMatched:true,foreignTicketStatus:403},null,2)+'\n');
+        at /workspace/tests/e2e/staging-https.spec.ts:9:564
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/staging-https-Q08-real-HTT-65b1b-pt-and-secure-guest-cookies-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/staging-https-Q08-real-HTT-65b1b-pt-and-secure-guest-cookies-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/staging-https-Q08-real-HTT-65b1b-pt-and-secure-guest-cookies-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/staging-https-Q08-real-HTT-65b1b-pt-and-secure-guest-cookies-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/staging-https.spec.ts:8:1 › Q08 real HTTPS inquiry persists with a native receipt and secure guest cookies
+    [mobile] › tests/e2e/staging-https.spec.ts:8:1 › Q08 real HTTPS inquiry persists with a native receipt and secure guest cookies
+  2 passed (1.8m)
+

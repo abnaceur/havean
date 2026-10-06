@@ -1,0 +1,4 @@
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+const folder='packages/database/migrations',files=fs.readdirSync(folder).filter(n=>/^\d{3}-.*\.sql$/.test(n)).sort(),destination=process.argv[2]||'infra/production/schema-compatibility.json';
+if(!files.length)throw Error('Missing schema migrations');const sha256=Object.fromEntries(files.map(name=>[name,createHash('sha256').update(fs.readFileSync(folder+'/'+name)).digest('hex')]));fs.mkdirSync(destination.slice(0,destination.lastIndexOf('/'))||'.',{recursive:true});fs.writeFileSync(destination,JSON.stringify({version:1,required:files,permittedAdditional:[],sha256,lastMigration:files.at(-1),policy:'Forward migrations only. Additional schema changes require explicit review for the previous image; no automatic reset or down migration.'},null,2)+'\n');console.log('Generated schema compatibility manifest for '+files.length+' migrations');

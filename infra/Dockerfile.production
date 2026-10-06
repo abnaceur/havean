@@ -1,0 +1,53 @@
+FROM node:24.21.0-alpine3.23@sha256:9ec4a2e289874ed0d722e1772ec2de45d2801541db8612f3638b26f128c69ac2 AS builder
+WORKDIR /workspace
+ENV NEXT_TELEMETRY_DISABLED=1 npm_config_manage_package_manager_versions=false npm_config_package_manager_strict=false BUILD_STANDALONE=true
+RUN npm install --global pnpm@10.34.5
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/api/package.json ./apps/api/package.json
+COPY apps/worker/package.json ./apps/worker/package.json
+COPY apps/web/package.json ./apps/web/package.json
+COPY apps/ops/package.json ./apps/ops/package.json
+COPY packages/config/package.json ./packages/config/package.json
+COPY packages/contracts/package.json ./packages/contracts/package.json
+COPY packages/database/package.json ./packages/database/package.json
+COPY packages/ui/package.json ./packages/ui/package.json
+COPY packages/test-support/package.json ./packages/test-support/package.json
+RUN pnpm install --frozen-lockfile
+COPY . .
+RUN pnpm typecheck && pnpm --filter @haven/config build && pnpm --filter @haven/contracts build && pnpm --filter @haven/database build && pnpm --filter @haven/api build && pnpm --filter @haven/worker build
+RUN node scripts/package-runtime.mjs /opt/runtime
+RUN pnpm --filter @haven/web build && pnpm --filter @haven/ops build
+
+FROM node:24.21.0-alpine3.23@sha256:9ec4a2e289874ed0d722e1772ec2de45d2801541db8612f3638b26f128c69ac2 AS runtime
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
+WORKDIR /workspace
+USER node
+
+FROM runtime AS api
+USER root
+RUN apk add --no-cache ffmpeg=8.0.1-r1
+USER node
+COPY --from=builder --chown=node:node /opt/runtime /workspace
+CMD ["node","apps/api/dist/apps/api/src/main.js"]
+
+FROM runtime AS worker
+COPY --from=builder --chown=node:node /opt/runtime /workspace
+CMD ["node","apps/worker/dist/apps/worker/src/main.js"]
+
+FROM runtime AS migrate
+COPY --from=builder --chown=node:node /opt/runtime /workspace
+CMD ["node","packages/database/dist/migrate.js"]
+
+FROM runtime AS web
+ENV HOSTNAME=0.0.0.0 PORT=3000
+COPY --from=builder --chown=node:node /workspace/apps/web/.next/standalone /workspace
+COPY --from=builder --chown=node:node /workspace/apps/web/.next/static /workspace/apps/web/.next/static
+COPY --from=builder --chown=node:node /workspace/apps/web/public /workspace/apps/web/public
+CMD ["node","apps/web/server.js"]
+
+FROM runtime AS ops
+ENV HOSTNAME=0.0.0.0 PORT=3001
+COPY --from=builder --chown=node:node /workspace/apps/ops/.next/standalone /workspace
+COPY --from=builder --chown=node:node /workspace/apps/ops/.next/static /workspace/apps/ops/.next/static
+CMD ["node","apps/ops/server.js"]

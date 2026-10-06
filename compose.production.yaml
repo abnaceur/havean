@@ -1,0 +1,372 @@
+name: ${COMPOSE_PROJECT_NAME:-haven-staging}
+services:
+  db:
+    image: postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6
+    environment:
+      POSTGRES_DB: haven
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run ./dev.sh to generate secrets}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?Missing APP_DB_PASSWORD}
+      IDENTITY_DB_PASSWORD: ${IDENTITY_DB_PASSWORD:?Missing IDENTITY_DB_PASSWORD}
+    volumes:
+    - database:/var/lib/postgresql/data
+    - ./infra/init-db.sh:/docker-entrypoint-initdb.d/01-roles.sh:ro
+    - wal-archive:/var/lib/postgresql/wal-archive
+    networks:
+    - private
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U postgres -d haven
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    cpus: '4.0'
+    mem_limit: 2g
+    restart: unless-stopped
+    security_opt:
+    - no-new-privileges:true
+    command:
+    - postgres
+    - -c
+    - wal_level=replica
+    - -c
+    - archive_mode=on
+    - -c
+    - archive_timeout=300s
+    - -c
+    - archive_command=test -f /var/lib/postgresql/wal-archive/%f || cp %p /var/lib/postgresql/wal-archive/%f
+    depends_on:
+      archive-init:
+        condition: service_completed_successfully
+  identity:
+    image: quay.io/keycloak/keycloak:26.4.7@sha256:9409c59bdfb65dbffa20b11e6f18b8abb9281d480c7ca402f51ed3d5977e6007
+    group_add:
+    - '1000'
+    command:
+    - start
+    - --import-realm
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/haven_identity
+      KC_DB_USERNAME: haven_identity
+      KC_DB_PASSWORD: ${IDENTITY_DB_PASSWORD:?Missing IDENTITY_DB_PASSWORD}
+      KC_HOSTNAME: ${PUBLIC_IDENTITY_URL:?Missing public HTTPS identity URL}
+      KC_HTTP_ENABLED: 'true'
+      KC_PROXY_HEADERS: xforwarded
+      KC_HEALTH_ENABLED: 'true'
+      KC_BOOTSTRAP_ADMIN_USERNAME: local-admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?Missing identity administrator
+        secret}
+    volumes:
+    - ${IDENTITY_IMPORT_FILE:?Missing protected realm import}:/opt/keycloak/data/import/haven-realm.json:ro
+    networks:
+    - private
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - bash -c 'exec 3<>/dev/tcp/localhost/9000; printf "GET /health/ready HTTP/1.0\r\n\r\n"
+        >&3; grep -q UP <&3'
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    cpus: '2.0'
+    mem_limit: 2g
+    restart: unless-stopped
+    security_opt:
+    - no-new-privileges:true
+  search:
+    image: getmeili/meilisearch:v1.37.0@sha256:9cde2774864e6c19cdd09fcd2950bc01ac9a0454b6f343fffafa14faae6eb7ea
+    environment:
+      MEILI_MASTER_KEY: ${SEARCH_KEY:?Missing SEARCH_KEY}
+      MEILI_NO_ANALYTICS: 'true'
+      MEILI_ENV: production
+    volumes:
+    - search:/meili_data
+    networks:
+    - private
+    healthcheck:
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost:7700/health
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    cpus: '2.0'
+    mem_limit: 2g
+    restart: unless-stopped
+    security_opt:
+    - no-new-privileges:true
+  cache:
+    image: valkey/valkey:8.1.6-alpine@sha256:1cb6b20b70d927560cc4cc5397b5f045e74aa603ff7696274778880bb6fadc75
+    command: valkey-server --appendonly yes
+    volumes:
+    - cache:/data
+    networks:
+    - private
+    healthcheck:
+      test:
+      - CMD
+      - valkey-cli
+      - ping
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    cpus: '2.0'
+    mem_limit: 2g
+    restart: unless-stopped
+    security_opt:
+    - no-new-privileges:true
+  storage:
+    image: chrislusf/seaweedfs:4.46@sha256:08d516132314207d10c8e37cbffc1f32b147d870169688734cc61c6231625b62
+    command: server -s3 -s3.config=/etc/seaweedfs/s3.json -dir=/data -ip=storage -volume.max=20
+      -master.volumeSizeLimitMB=100
+    volumes:
+    - objects:/data
+    - ${S3_CONFIG_FILE:?Missing protected S3 configuration}:/etc/seaweedfs/s3.json:ro
+    networks:
+    - private
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - wget -q -O /dev/null http://storage:9333/cluster/status && (wget -S -O /dev/null
+        http://storage:8333 2>&1 | grep -q "403 Forbidden")
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    cpus: '2.0'
+    mem_limit: 2g
+    restart: unless-stopped
+    security_opt:
+    - no-new-privileges:true
+  scanner:
+    image: clamav/clamav:1.4.3@sha256:75fb5fd95fcbe1d7e6d240c369c1572b686ee2c95949d1042b5148de8eddebb4
+    networks:
+    - private
+    volumes:
+    - virus-signatures:/var/lib/clamav
+    healthcheck:
+      test:
+      - CMD
+      - clamdscan
+      - --ping
+      - '1'
+      interval: 10s
+      timeout: 5s
+      retries: 40
+      start_period: 90s
+    cpus: '4.0'
+    mem_limit: 3g
+    restart: unless-stopped
+    security_opt:
+    - no-new-privileges:true
+  api:
+    image: ${HAVEN_API_IMAGE:?Set an immutable image digest}
+    env_file:
+    - ${APP_ENV_FILE:?Missing protected application environment}
+    init: true
+    networks:
+    - private
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+    - /tmp:rw,noexec,nosuid,size=128m
+    cap_drop:
+    - ALL
+    security_opt:
+    - no-new-privileges:true
+    cpus: '2.0'
+    mem_limit: 2g
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - fetch('http://localhost:4000/api/v1/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    depends_on:
+      db:
+        condition: service_healthy
+      identity:
+        condition: service_healthy
+      storage:
+        condition: service_healthy
+      scanner:
+        condition: service_healthy
+  worker:
+    image: ${HAVEN_WORKER_IMAGE:?Set an immutable image digest}
+    env_file:
+    - ${APP_ENV_FILE:?Missing protected application environment}
+    init: true
+    networks:
+    - private
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+    - /tmp:rw,noexec,nosuid,size=128m
+    cap_drop:
+    - ALL
+    security_opt:
+    - no-new-privileges:true
+    cpus: '2.0'
+    mem_limit: 2g
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+      search:
+        condition: service_healthy
+  web:
+    image: ${HAVEN_WEB_IMAGE:?Set an immutable image digest}
+    env_file:
+    - ${APP_ENV_FILE:?Missing protected application environment}
+    init: true
+    networks:
+    - private
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+    - /tmp:rw,noexec,nosuid,size=128m
+    - /workspace/apps/web/.next/cache:rw,noexec,nosuid,uid=1000,gid=1000,size=256m
+    cap_drop:
+    - ALL
+    security_opt:
+    - no-new-privileges:true
+    cpus: '2.0'
+    mem_limit: 2g
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - fetch('http://localhost:3000/bj').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 10s
+      retries: 20
+    depends_on:
+      api:
+        condition: service_healthy
+  ops:
+    image: ${HAVEN_OPS_IMAGE:?Set an immutable image digest}
+    env_file:
+    - ${APP_ENV_FILE:?Missing protected application environment}
+    init: true
+    networks:
+    - private
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+    - /tmp:rw,noexec,nosuid,size=128m
+    - /workspace/apps/ops/.next/cache:rw,noexec,nosuid,uid=1000,gid=1000,size=256m
+    cap_drop:
+    - ALL
+    security_opt:
+    - no-new-privileges:true
+    cpus: '2.0'
+    mem_limit: 2g
+    healthcheck:
+      test:
+      - CMD
+      - node
+      - -e
+      - fetch('http://localhost:3001/ops').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 10s
+      retries: 20
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      PUBLIC_APP_URL: ${PUBLIC_OPS_URL:?Missing operations HTTPS origin}
+  migrate:
+    image: ${HAVEN_MIGRATE_IMAGE:?Set an immutable image digest}
+    env_file:
+    - ${APP_ENV_FILE:?Missing protected application environment}
+    init: true
+    networks:
+    - private
+    restart: 'no'
+    read_only: true
+    tmpfs:
+    - /tmp:rw,noexec,nosuid,size=128m
+    cap_drop:
+    - ALL
+    security_opt:
+    - no-new-privileges:true
+    cpus: '2.0'
+    mem_limit: 2g
+    environment:
+      MIGRATION_DATABASE_URL: ${MIGRATION_DATABASE_URL:?Missing separate migration
+        credentials}
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles:
+    - maintenance
+  proxy:
+    image: traefik:v3.6.1@sha256:fd5932c796f7e2db9fd6bff485ef693d53797f0ee8ad03dc68aa424ea6f21958
+    command:
+    - --configFile=/etc/traefik/production.yaml
+    ports:
+    - ${HTTPS_BIND_ADDRESS:-127.0.0.1}:${HTTPS_PORT:-8443}:8443
+    volumes:
+    - ./infra/production/traefik.yaml:/etc/traefik/production.yaml:ro
+    - ${TLS_ROUTES_FILE:?Missing generated TLS routes}:/etc/traefik/routes.yaml:ro
+    - ${TLS_CERT_FILE:?Missing TLS certificate}:/run/tls/cert.pem:ro
+    - ${TLS_KEY_FILE:?Missing TLS private key}:/run/tls/key.pem:ro
+    networks:
+    - private
+    depends_on:
+    - web
+    - ops
+    - identity
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+    - /tmp:rw,noexec,nosuid,size=16m
+    security_opt:
+    - no-new-privileges:true
+    cap_drop:
+    - ALL
+    cpus: '1.0'
+    mem_limit: 256m
+    user: 1000:1000
+  archive-init:
+    image: postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6
+    entrypoint:
+    - /bin/sh
+    - -c
+    command:
+    - chown postgres:postgres /archive && chmod 700 /archive
+    user: 0:0
+    restart: 'no'
+    network_mode: none
+    volumes:
+    - wal-archive:/archive
+    cap_drop:
+    - ALL
+    cap_add:
+    - CHOWN
+    - FOWNER
+    security_opt:
+    - no-new-privileges:true
+    cpus: '0.5'
+    mem_limit: 64m
+networks:
+  private: {}
+volumes:
+  database: {}
+  wal-archive: {}
+  objects: {}
+  cache: {}
+  search: {}
+  virus-signatures: {}

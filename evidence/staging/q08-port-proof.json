@@ -1,0 +1,145 @@
+{
+  "label": "P",
+  "scope": "Owned isolated staging published bindings and host-side TCP probes; unrelated development services are not included; no off-host network scan claim",
+  "services": [
+    {
+      "service": "web",
+      "image": "sha256:1f9cb4a5722be3f6727386a08d33ee1c51caf2ee65b66f816897cca99b5fa3c5",
+      "published": []
+    },
+    {
+      "service": "ops",
+      "image": "sha256:138e74b2435b729ee3a0c928db1620d7bdd1a3ef826a22da4f9f3e669bfdf89f",
+      "published": []
+    },
+    {
+      "service": "api",
+      "image": "sha256:261820996aab14c2c3da254ba5f732da8e407ef0ff687cf1e296c129ca4313d8",
+      "published": []
+    },
+    {
+      "service": "worker",
+      "image": "sha256:ee4daaf6210a524fd2fb2ad355f80a24492e83802059b784549840ff818cf2f8",
+      "published": []
+    },
+    {
+      "service": "proxy",
+      "image": "sha256:fd5932c796f7e2db9fd6bff485ef693d53797f0ee8ad03dc68aa424ea6f21958",
+      "published": [
+        {
+          "containerPort": "8443/tcp",
+          "hostAddress": "127.0.0.1",
+          "hostPort": "8443"
+        }
+      ]
+    },
+    {
+      "service": "identity",
+      "image": "sha256:9409c59bdfb65dbffa20b11e6f18b8abb9281d480c7ca402f51ed3d5977e6007",
+      "published": []
+    },
+    {
+      "service": "db",
+      "image": "sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6",
+      "published": []
+    },
+    {
+      "service": "mail-provider",
+      "image": "sha256:3cd71ca0c54e9992ad4c0159f9ab453e5379b19804f276f4564dc1c8c830f31f",
+      "published": []
+    },
+    {
+      "service": "archive-init",
+      "image": "sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6",
+      "published": []
+    },
+    {
+      "service": "search",
+      "image": "sha256:9cde2774864e6c19cdd09fcd2950bc01ac9a0454b6f343fffafa14faae6eb7ea",
+      "published": []
+    },
+    {
+      "service": "mail",
+      "image": "sha256:6abc8e633df15eaf785cfcf38bae48e66f64beecdc03121e249d0f9ec15f0707",
+      "published": []
+    },
+    {
+      "service": "scanner",
+      "image": "sha256:75fb5fd95fcbe1d7e6d240c369c1572b686ee2c95949d1042b5148de8eddebb4",
+      "published": []
+    },
+    {
+      "service": "cache",
+      "image": "sha256:1cb6b20b70d927560cc4cc5397b5f045e74aa603ff7696274778880bb6fadc75",
+      "published": []
+    },
+    {
+      "service": "storage",
+      "image": "sha256:08d516132314207d10c8e37cbffc1f32b147d870169688734cc61c6231625b62",
+      "published": []
+    }
+  ],
+  "hostProbes": [
+    {
+      "address": "127.0.0.1",
+      "port": 8443,
+      "open": true
+    },
+    {
+      "address": "127.0.0.1",
+      "port": 5432,
+      "open": false
+    },
+    {
+      "address": "127.0.0.1",
+      "port": 6379,
+      "open": false
+    },
+    {
+      "address": "127.0.0.1",
+      "port": 7700,
+      "open": false
+    },
+    {
+      "address": "127.0.0.1",
+      "port": 4000,
+      "open": false
+    },
+    {
+      "address": "127.0.0.1",
+      "port": 8333,
+      "open": false
+    },
+    {
+      "address": "127.0.0.1",
+      "port": 9333,
+      "open": false
+    },
+    {
+      "address": "127.0.0.1",
+      "port": 3310,
+      "open": false
+    },
+    {
+      "address": "127.0.0.1",
+      "port": 8025,
+      "open": false
+    },
+    {
+      "address": "127.0.0.1",
+      "port": 1025,
+      "open": false
+    },
+    {
+      "address": "127.0.0.1",
+      "port": 8080,
+      "open": false
+    },
+    {
+      "address": "127.0.0.1",
+      "port": 9000,
+      "open": false
+    }
+  ],
+  "onlyOwnedGatewayPublished": true
+}

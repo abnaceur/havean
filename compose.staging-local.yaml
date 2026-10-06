@@ -1,0 +1,66 @@
+services:
+  api:
+    volumes:
+    - ${EXTRA_CA_CERT_FILE:?Missing private staging CA}:/run/tls/ca.pem:ro
+  worker:
+    volumes:
+    - ${EXTRA_CA_CERT_FILE:?Missing private staging CA}:/run/tls/ca.pem:ro
+  web:
+    volumes:
+    - ${EXTRA_CA_CERT_FILE:?Missing private staging CA}:/run/tls/ca.pem:ro
+  ops:
+    volumes:
+    - ${EXTRA_CA_CERT_FILE:?Missing private staging CA}:/run/tls/ca.pem:ro
+  mail:
+    environment:
+      MP_DATABASE: /data/mailpit.db
+    volumes:
+    - mail-data:/data
+    image: axllent/mailpit:v1.27.8@sha256:6abc8e633df15eaf785cfcf38bae48e66f64beecdc03121e249d0f9ec15f0707
+    networks:
+    - private
+    healthcheck:
+      test:
+      - CMD
+      - /mailpit
+      - readyz
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    cpus: '0.5'
+    mem_limit: 256m
+  mail-provider:
+    image: ${HAVEN_API_IMAGE:?Missing immutable API image}
+    command:
+    - node
+    - /run/staging-mail-provider.mjs
+    env_file:
+    - ${STAGING_MAIL_ENV_FILE:?Missing protected staging mail adapter environment}
+    environment:
+      HAVEN_SYNTHETIC_STAGING: 'true'
+    volumes:
+    - ./scripts/staging-mail-provider.mjs:/run/staging-mail-provider.mjs:ro
+    - ${TLS_CERT_FILE:?Missing TLS cert}:/run/tls/cert.pem:ro
+    - ${TLS_KEY_FILE:?Missing TLS key}:/run/tls/key.pem:ro
+    - ${EXTRA_CA_CERT_FILE:?Missing private staging CA}:/run/tls/ca.pem:ro
+    networks:
+    - private
+    depends_on:
+      mail:
+        condition: service_healthy
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+    - /tmp:rw,noexec,nosuid,size=16m
+    cap_drop:
+    - ALL
+    security_opt:
+    - no-new-privileges:true
+    cpus: '0.5'
+    mem_limit: 256m
+  migrate:
+    volumes:
+    - ${EXTRA_CA_CERT_FILE:?Missing private staging CA}:/run/tls/ca.pem:ro
+volumes:
+  mail-data: {}

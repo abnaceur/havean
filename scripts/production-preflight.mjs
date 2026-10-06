@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const required=['HAVEN_API_IMAGE','HAVEN_WORKER_IMAGE','HAVEN_WEB_IMAGE','HAVEN_OPS_IMAGE','HAVEN_MIGRATE_IMAGE','APP_ENV_FILE','TLS_CERT_FILE','TLS_KEY_FILE','TLS_ROUTES_FILE','IDENTITY_IMPORT_FILE','S3_CONFIG_FILE','PUBLIC_WEB_URL','PUBLIC_OPS_URL','PUBLIC_IDENTITY_URL'];
+const failures=[];
+for(const key of required)if(!process.env[key])failures.push('Missing '+key);
+for(const key of required.filter(k=>k.endsWith('_IMAGE')))if(process.env[key]&&!/^(?:[^\s]+@)?sha256:[a-f0-9]{64}$/.test(process.env[key]))failures.push(key+' must identify an immutable SHA-256 image');
+for(const key of ['PUBLIC_WEB_URL','PUBLIC_OPS_URL','PUBLIC_IDENTITY_URL'])if(process.env[key]){try{const u=new URL(process.env[key]);if(u.protocol!=='https:'||u.username||u.password||u.pathname!=='/'||u.search||u.hash)throw Error();}catch{failures.push(key+' must be a credential-free HTTPS origin');}}
+for(const key of ['APP_ENV_FILE','TLS_CERT_FILE','TLS_KEY_FILE','TLS_ROUTES_FILE','IDENTITY_IMPORT_FILE','S3_CONFIG_FILE'])if(process.env[key]){try{const stat=fs.statSync(path.resolve(process.env[key]));if(!stat.isFile())throw Error();if(['APP_ENV_FILE','TLS_KEY_FILE','IDENTITY_IMPORT_FILE','S3_CONFIG_FILE'].includes(key)&&(stat.mode&0o077))failures.push(key+' must not be readable by group or others');}catch{failures.push('Missing readable '+key+' file');}}
+if(process.env.APP_ENV_FILE&&fs.existsSync(process.env.APP_ENV_FILE)){const text=fs.readFileSync(process.env.APP_ENV_FILE,'utf8');for(const key of ['DEV_PASSWORD','MIGRATION_DATABASE_URL','POSTGRES_PASSWORD','APP_DB_PASSWORD','IDENTITY_DB_PASSWORD','KEYCLOAK_ADMIN_PASSWORD'])if(new RegExp('^'+key+'=','m').test(text))failures.push('Application environment must exclude '+key);if(!/^NODE_ENV=production$/m.test(text))failures.push('Application environment must declare NODE_ENV=production');}
+if(failures.length){console.error(JSON.stringify({status:'refused',failures}));process.exitCode=1;}else console.log(JSON.stringify({status:'passed',immutableImages:5,publicProtocol:'HTTPS',secretValuesLogged:false}));

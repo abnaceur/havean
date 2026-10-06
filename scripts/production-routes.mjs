@@ -1,0 +1,8 @@
+import fs from 'node:fs';
+const destination=process.argv[2];if(!destination)throw Error('Provide generated TLS routes path');
+const hosts={web:process.env.PUBLIC_WEB_URL,ops:process.env.PUBLIC_OPS_URL,identity:process.env.PUBLIC_IDENTITY_URL};
+for(const [name,value] of Object.entries(hosts)){const u=new URL(value||'');if(u.protocol!=='https:'||u.username||u.password||u.pathname!=='/'||u.search||u.hash||!/^[-a-z0-9.]+$/i.test(u.hostname))throw Error('Declare a plain HTTPS '+name+' origin');hosts[name]=u.hostname;}
+if(new Set(Object.values(hosts)).size!==3)throw Error('Web, operations and identity require distinct hosts');
+const routers={},services={};for(const [name,host] of Object.entries(hosts)){routers[name]={entryPoints:['https'],rule:'Host(`'+host+'`)'+(name==='identity'?' && (PathPrefix(`/realms/haven`) || PathPrefix(`/resources`))':''),tls:{options:'strict'},service:name};services[name]={loadBalancer:{servers:[{url:name==='identity'?'http://identity:8080':'http://'+name+':'+(name==='web'?3000:3001)}]}};}
+routers.conversations={entryPoints:['https'],rule:'(Host(`'+hosts.web+'`) || Host(`'+hosts.ops+'`)) && PathPrefix(`/api/v1/realtime/conversations/`)',priority:100,tls:{options:'strict'},service:'conversation-api'};services['conversation-api']={loadBalancer:{servers:[{url:'http://api:4000'}]}};
+fs.writeFileSync(destination,JSON.stringify({http:{routers,services},tls:{certificates:[{certFile:'/run/tls/cert.pem',keyFile:'/run/tls/key.pem'}],options:{strict:{minVersion:'VersionTLS12',sniStrict:true}}}},null,2)+'\n',{mode:0o600});console.log('Generated host-scoped HTTPS routes');
