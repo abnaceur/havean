@@ -1,0 +1,28 @@
+ Container haven-p02-api-run-5216f314a44c Creating
+ Container haven-p02-api-run-5216f314a44c Created
+
+ RUN  v5.0.3 /workspace
+
+ ❯ tests/integration/analytics.test.ts (2 tests | 1 failed) 160ms
+   × S06 six declared consented source events project exact unique counts; retries, repeated-source events and concurrent workers cannot double count or expose private text 125ms
+   ✓ S06 actual administrator scope, explicit consent/version/state, validated filters and private projection policies deny forged access 32ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/analytics.test.ts > S06 six declared consented source events project exact unique counts; retries, repeated-source events and concurrent workers cannot double count or expose private text
+error: column reference "subject" is ambiguous
+ ❯ node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+ ❯ event packages/database/src/index.ts:8:228
+
+ ❯ apps/api/src/engagement/discovery-events.ts:12:671
+ ❯ idempotent apps/api/src/platform/core.ts:22:1047
+ ❯ transaction packages/database/src/index.ts:7:1159
+ ❯ tests/integration/analytics.test.ts:17:131
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  17:45:25
+   Duration  2.03s (import 61%, transform 30%, tests 9%)

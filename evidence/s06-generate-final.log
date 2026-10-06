@@ -1,0 +1,25 @@
+ Container haven-p02-api-run-86ff9568fee9 Creating
+ Container haven-p02-api-run-86ff9568fee9 Created
+
+> haven-real-estate@0.1.0 contracts:generate /workspace
+> node scripts/generate-contracts.mjs && tsx scripts/generate-openapi.ts && tsx scripts/generate-digitization-schemas.ts
+
+Generated 333 typed API operations.
+file:///workspace/node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/to-json-schema.js:58
+        throw new Error(message);
+              ^
+
+Error: Custom types cannot be represented in JSON Schema
+    at handleUnrepresentable (file:///workspace/node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/to-json-schema.js:58:15)
+    at Module.customProcessor (file:///workspace/node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/json-schema-processors.js:334:5)
+    at inst._zod.processJSONSchema (file:///workspace/node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/classic/schemas.js:1460:69)
+    at processSchema (file:///workspace/node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/to-json-schema.js:94:25)
+    at Module.objectProcessor (file:///workspace/node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/json-schema-processors.js:392:42)
+    at inst._zod.processJSONSchema (file:///workspace/node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/classic/schemas.js:853:69)
+    at processSchema (file:///workspace/node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/to-json-schema.js:94:25)
+    at Module.toJSONSchema (file:///workspace/node_modules/.pnpm/zod@4.6.5/node_modules/zod/v4/core/json-schema-processors.js:840:5)
+    at createOpenApi (/workspace/packages/contracts/src/openapi.ts:16:245)
+    at <anonymous> (/workspace/scripts/generate-openapi.ts:3:29)
+
+Node.js v24.21.0
+ ELIFECYCLE  Command failed with exit code 1.

@@ -1,0 +1,80 @@
+ Container haven-p09-runtime-tests-run-281e595488a2 Creating
+ Container haven-p09-runtime-tests-run-281e595488a2 Created
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/analytics.spec.ts:6:1 › S06 real consumer consent, property view/impression, admin scoped counts, native CSV and redacted audit search (24.0s)
+  ✘  2 [mobile] › tests/e2e/analytics.spec.ts:6:1 › S06 real consumer consent, property view/impression, admin scoped counts, native CSV and redacted audit search (27.7s)
+
+
+  1) [desktop] › tests/e2e/analytics.spec.ts:6:1 › S06 real consumer consent, property view/impression, admin scoped counts, native CSV and redacted audit search
+
+    TimeoutError: page.waitForEvent: Timeout 15000ms exceeded while waiting for event "download"
+    =========================== logs ===========================
+    waiting for event "download"
+    ============================================================
+
+       6 | test('S06 real consumer consent, property view/impression, admin scoped counts, native CSV and redacted audit search',async({page,browser},info)=>{
+       7 |  test.setTimeout(180000);page.setDefaultTimeout(15000);const context=await browser.newContext({viewport:page.viewportSize()!,isMobile:info.project.name==='mobile',hasTouch:info.project.name==='mobile'}),consumer=await context.newPage();consumer.setDefaultTimeout(15000);await login(consumer,'buyer',WEB,'/bj/buy');const cards=consumer.locator('article.listing-card');await expect(cards.first()).toBeVisible();const id=await cards.first().getAttribute('data-listing-id'),href=await cards.first().locator('a.card-title').getAttribute('href');await consumer.goto(WEB+href);const consent=consumer.getByRole('checkbox',{name:'Allow my property activity to contribute to recommendations',exact:true});await expect(consent).toBeEnabled();const old=(await (await consumer.request.get(WEB+'/api/v1/me/analytics-consent')).json()).data;try{
+    >  8 |  if(old.enabled)await consent.uncheck();await consent.check();await expect(consumer.getByRole('status').filter({hasText:/Your permitted activity was recorded|already counted/})).toBeVisible();await consumer.goto(WEB+'/bj/buy');await expect(consumer.locator('article.listing-card[data-listing-id="'+id+'"]')).toBeVisible();await expect.poll(async()=>{const response=await consumer.request.get(WEB+'/api/v1/me/analytics-consent');return (await response.json()).data.enabled;}).toBe(true);await login(page,'admin',OPS,'/ops/analytics');const report=page.getByRole('region',{name:'Consented event analytics',exact:true});await report.getByLabel('Analytics city',{exact:true}).fill('bj');await report.getByLabel('Analytics category',{exact:true}).selectOption('resale');await report.getByRole('button',{name:'Apply analytics filters',exact:true}).click();await expect(report).toContainText('one account/property/UTC day');await expect.poll(async()=>{await report.getByRole('button',{name:'Refresh projection',exact:true}).click();return await report.getByLabel('listing_view count',{exact:true}).textContent();},{timeout:30000}).not.toBe('0');const downloadPromise=page.waitForEvent('download');await report.getByRole('link',{name:'Download filtered aggregate CSV',exact:true}).click();const download=await downloadPromise;expect(download.suggestedFilename()).toBe('consented-funnel.csv');const stream=await download.createReadStream();let csv='';for await(const b of stream!)csv+=b.toString();expect(csv).toContain('listing_view');expect(csv).toContain('"bj","resale"');expect(csv).not.toMatch(/@|contactName|message|documentId|private_address/);const audit=report.getByRole('region',{name:'Redacted audit search',exact:true});await audit.getByLabel('Audit resourceId',{exact:true}).fill(id!);await audit.getByLabel('Audit action',{exact:true}).fill('discovery.listing_viewed');await audit.getByRole('button',{name:'Search audit metadata',exact:true}).click();await expect(audit).toContainText('discovery.listing_viewed');await expect(audit).toContainText(id!);expect((await new AxeBuilder({page}).analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width);await page.screenshot({path:`evidence/s06-analytics-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ^
+       9 |  await consumer.goto(WEB+href);await consent.uncheck();await expect(consent).not.toBeChecked();const listing=(await (await consumer.request.get(WEB+'/api/v1/listings/'+id+'?city=bj')).json()).data;expect((await consumer.request.post(WEB+'/api/v1/listings/'+id+'/impression',{headers:{Origin:WEB,'Idempotency-Key':crypto.randomUUID()},data:{eventId:crypto.randomUUID(),version:listing.version,consent:true}})).status()).toBe(403);expect((await consumer.request.get(WEB+'/api/v1/ops/analytics?from=2026-10-06&to=2026-10-06')).status()).toBe(403);await consumer.screenshot({path:`evidence/s06-consent-${info.project.name}.png`,scale:'css'});
+      10 |  }finally{const now=(await (await consumer.request.get(WEB+'/api/v1/me/analytics-consent')).json()).data;if(now.enabled!==old.enabled)await consumer.request.patch(WEB+'/api/v1/me/analytics-consent',{headers:{Origin:WEB,'Idempotency-Key':crypto.randomUUID()},data:{version:now.version,enabled:old.enabled}});await context.close();}
+      11 | });
+        at /workspace/tests/e2e/analytics.spec.ts:8:1166
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/analytics-final/analytics-S06-real-consume-ebddc-V-and-redacted-audit-search-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/analytics-final/analytics-S06-real-consume-ebddc-V-and-redacted-audit-search-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/analytics-final/analytics-S06-real-consume-ebddc-V-and-redacted-audit-search-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/analytics-final/analytics-S06-real-consume-ebddc-V-and-redacted-audit-search-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/analytics-final/analytics-S06-real-consume-ebddc-V-and-redacted-audit-search-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/analytics.spec.ts:6:1 › S06 real consumer consent, property view/impression, admin scoped counts, native CSV and redacted audit search
+
+    TimeoutError: page.waitForEvent: Timeout 15000ms exceeded while waiting for event "download"
+    =========================== logs ===========================
+    waiting for event "download"
+    ============================================================
+
+       6 | test('S06 real consumer consent, property view/impression, admin scoped counts, native CSV and redacted audit search',async({page,browser},info)=>{
+       7 |  test.setTimeout(180000);page.setDefaultTimeout(15000);const context=await browser.newContext({viewport:page.viewportSize()!,isMobile:info.project.name==='mobile',hasTouch:info.project.name==='mobile'}),consumer=await context.newPage();consumer.setDefaultTimeout(15000);await login(consumer,'buyer',WEB,'/bj/buy');const cards=consumer.locator('article.listing-card');await expect(cards.first()).toBeVisible();const id=await cards.first().getAttribute('data-listing-id'),href=await cards.first().locator('a.card-title').getAttribute('href');await consumer.goto(WEB+href);const consent=consumer.getByRole('checkbox',{name:'Allow my property activity to contribute to recommendations',exact:true});await expect(consent).toBeEnabled();const old=(await (await consumer.request.get(WEB+'/api/v1/me/analytics-consent')).json()).data;try{
+    >  8 |  if(old.enabled)await consent.uncheck();await consent.check();await expect(consumer.getByRole('status').filter({hasText:/Your permitted activity was recorded|already counted/})).toBeVisible();await consumer.goto(WEB+'/bj/buy');await expect(consumer.locator('article.listing-card[data-listing-id="'+id+'"]')).toBeVisible();await expect.poll(async()=>{const response=await consumer.request.get(WEB+'/api/v1/me/analytics-consent');return (await response.json()).data.enabled;}).toBe(true);await login(page,'admin',OPS,'/ops/analytics');const report=page.getByRole('region',{name:'Consented event analytics',exact:true});await report.getByLabel('Analytics city',{exact:true}).fill('bj');await report.getByLabel('Analytics category',{exact:true}).selectOption('resale');await report.getByRole('button',{name:'Apply analytics filters',exact:true}).click();await expect(report).toContainText('one account/property/UTC day');await expect.poll(async()=>{await report.getByRole('button',{name:'Refresh projection',exact:true}).click();return await report.getByLabel('listing_view count',{exact:true}).textContent();},{timeout:30000}).not.toBe('0');const downloadPromise=page.waitForEvent('download');await report.getByRole('link',{name:'Download filtered aggregate CSV',exact:true}).click();const download=await downloadPromise;expect(download.suggestedFilename()).toBe('consented-funnel.csv');const stream=await download.createReadStream();let csv='';for await(const b of stream!)csv+=b.toString();expect(csv).toContain('listing_view');expect(csv).toContain('"bj","resale"');expect(csv).not.toMatch(/@|contactName|message|documentId|private_address/);const audit=report.getByRole('region',{name:'Redacted audit search',exact:true});await audit.getByLabel('Audit resourceId',{exact:true}).fill(id!);await audit.getByLabel('Audit action',{exact:true}).fill('discovery.listing_viewed');await audit.getByRole('button',{name:'Search audit metadata',exact:true}).click();await expect(audit).toContainText('discovery.listing_viewed');await expect(audit).toContainText(id!);expect((await new AxeBuilder({page}).analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width);await page.screenshot({path:`evidence/s06-analytics-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ^
+       9 |  await consumer.goto(WEB+href);await consent.uncheck();await expect(consent).not.toBeChecked();const listing=(await (await consumer.request.get(WEB+'/api/v1/listings/'+id+'?city=bj')).json()).data;expect((await consumer.request.post(WEB+'/api/v1/listings/'+id+'/impression',{headers:{Origin:WEB,'Idempotency-Key':crypto.randomUUID()},data:{eventId:crypto.randomUUID(),version:listing.version,consent:true}})).status()).toBe(403);expect((await consumer.request.get(WEB+'/api/v1/ops/analytics?from=2026-10-06&to=2026-10-06')).status()).toBe(403);await consumer.screenshot({path:`evidence/s06-consent-${info.project.name}.png`,scale:'css'});
+      10 |  }finally{const now=(await (await consumer.request.get(WEB+'/api/v1/me/analytics-consent')).json()).data;if(now.enabled!==old.enabled)await consumer.request.patch(WEB+'/api/v1/me/analytics-consent',{headers:{Origin:WEB,'Idempotency-Key':crypto.randomUUID()},data:{version:now.version,enabled:old.enabled}});await context.close();}
+      11 | });
+        at /workspace/tests/e2e/analytics.spec.ts:8:1166
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/analytics-final/analytics-S06-real-consume-ebddc-V-and-redacted-audit-search-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../artifacts/analytics-final/analytics-S06-real-consume-ebddc-V-and-redacted-audit-search-mobile/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../artifacts/analytics-final/analytics-S06-real-consume-ebddc-V-and-redacted-audit-search-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../artifacts/analytics-final/analytics-S06-real-consume-ebddc-V-and-redacted-audit-search-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace ../artifacts/analytics-final/analytics-S06-real-consume-ebddc-V-and-redacted-audit-search-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/analytics.spec.ts:6:1 › S06 real consumer consent, property view/impression, admin scoped counts, native CSV and redacted audit search
+    [mobile] › tests/e2e/analytics.spec.ts:6:1 › S06 real consumer consent, property view/impression, admin scoped counts, native CSV and redacted audit search
