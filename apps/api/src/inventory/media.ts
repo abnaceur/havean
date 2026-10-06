@@ -8,6 +8,7 @@ import {event} from '@haven/database';
 import {canReadPrivateEvidence} from './moderation-evidence.js';
 import {scanFile} from './scanner.js';
 import {transcodeVideo} from './video.js';
+export async function readPrivateObject(key:string){const result=await s3.send(new GetObjectCommand({Bucket:bucket,Key:key}));return Buffer.from(await result.Body!.transformToByteArray());}
 const bucket='haven-private';
 const s3=new S3Client({requestChecksumCalculation:'WHEN_REQUIRED',responseChecksumValidation:'WHEN_REQUIRED',region:'us-east-1',endpoint:env.S3_ENDPOINT,forcePathStyle:true,credentials:{accessKeyId:env.S3_ACCESS_KEY,secretAccessKey:env.S3_SECRET_KEY}});
 @Controller('api/v1')
@@ -19,17 +20,18 @@ export class MediaController{
   const purpose=x.purpose||(x.mime.startsWith('video/')?'video':x.mime==='application/pdf'?'document':'photo');
   const limit=purpose==='video'?40*1024*1024:purpose==='panorama'||purpose==='document'?20*1024*1024:10*1024*1024;
   if(x.size>limit||(purpose==='video'?!x.mime.startsWith('video/'):purpose==='document'?x.mime!=='application/pdf':!x.mime.startsWith('image/'))||(x.visibility==='public'&&purpose==='document'))fail(400,'Unsupported file type, purpose, visibility or upload size');
-  return transaction(a,async c=>{const r=await c.query('INSERT INTO media_assets(owner_id,object_key,mime,size,rights,visibility,purpose) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING id',[a.id,crypto.randomUUID(),x.mime,x.size,x.rights,x.visibility,purpose]);const id=r.rows[0].id,signature=encrypt({assetId:id,actorId:a.id,expires:Date.now()+600000});return data({id,uploadUrl:'/api/v1/media/'+id+'/content?signature='+signature,method:'PUT',expiresIn:600});});
+  return transaction(a,async c=>{const r=await c.query('INSERT INTO media_assets(owner_id,object_key,mime,size,rights,visibility,purpose) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING id,version',[a.id,crypto.randomUUID(),x.mime,x.size,x.rights,x.visibility,purpose]);const id=r.rows[0].id,signature=encrypt({assetId:id,actorId:a.id,assetVersion:r.rows[0].version,expires:Date.now()+600000});return data({id,uploadUrl:'/api/v1/media/'+id+'/content?signature='+signature,method:'PUT',expiresIn:600});});
  }
- @Get('media/:id/status') async status(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);return transaction(a,async c=>{const m=(await c.query('SELECT id,status,purpose,width,height,duration,scan_at FROM media_assets WHERE id=$1 AND owner_id=$2',[id,a.id])).rows[0];if(!m)fail(404,'Owned upload not found');return data(m);});}
+ @Get('media/:id/status') async status(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);return transaction(a,async c=>{const m=(await c.query('SELECT id,status,purpose,width,height,duration,scan_at,version FROM media_assets WHERE id=$1 AND owner_id=$2',[id,a.id])).rows[0];if(!m)fail(404,'Owned upload not found');return data(m);});}
  @Put('media/:id/content') async content(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:Buffer){
   const a=await this.identity.actor(req);let signature;
-  try{signature=decrypt<{assetId:string;actorId:string;expires:number}>((req.query as any).signature||'');}catch{fail(400,'The signed upload link is invalid');}
+  try{signature=decrypt<{assetId:string;actorId:string;assetVersion?:number;conversationId?:string;conversationVersion?:number;expires:number}>((req.query as any).signature||'');}catch{fail(400,'The signed upload link is invalid');}
   if(signature.assetId!==id||signature.actorId!==a.id||signature.expires<Date.now())fail(400,'The signed upload link is invalid or expired');
   if(!Buffer.isBuffer(body))fail(400,'Upload binary file content');
   return transaction(a,async c=>{
    const m=(await c.query("SELECT * FROM media_assets WHERE id=$1 AND owner_id=$2 AND status='quarantined' AND created_at>now()-interval '1 hour' FOR UPDATE",[id,a.id])).rows[0];
    if(!m)fail(404,'Valid upload intent not found');
+   if(signature.assetVersion!==undefined&&m.version!==signature.assetVersion)fail(409,'Upload changed');if(signature.conversationId){const context=(await c.query("SELECT c.version FROM conversations c JOIN conversation_uploads cu ON cu.conversation_id=c.id AND cu.asset_id=$2 AND cu.creator_id=$3 WHERE c.id=$1 AND c.state='active' AND conversation_scope(c.id) FOR SHARE OF c",[signature.conversationId,id,a.id])).rows[0];if(!context||context.version!==signature.conversationVersion)fail(409,'Conversation access changed before attachment upload');}
    if(body.length!==Number(m.size)||body.length>40*1024*1024||req.headers['content-type']!==m.mime)fail(400,'File size or content type does not match the upload intent');
    try{await s3.send(new CreateBucketCommand({Bucket:bucket}));}catch(e:any){if(!['BucketAlreadyOwnedByYou','BucketAlreadyExists'].includes(e.name)&&e.$metadata?.httpStatusCode!==409)throw e;}
    await s3.send(new PutObjectCommand({Bucket:bucket,Key:'quarantine/'+m.object_key,Body:body,ContentType:m.mime}));
@@ -54,8 +56,8 @@ export class MediaController{
     await s3.send(new PutObjectCommand({Bucket:bucket,Key:variants.video,Body:result.video,ContentType:'video/mp4'}));
     await s3.send(new PutObjectCommand({Bucket:bucket,Key:variants.display,Body:result.poster,ContentType:'image/webp'}));
    }else if(!body.subarray(0,5).equals(Buffer.from('%PDF-'))||!body.includes(Buffer.from('%%EOF'))||/\/JavaScript|\/JS\b|\/Launch|\/EmbeddedFile|\/Encrypt/.test(body.toString('latin1')))fail(400,'Only unencrypted PDF documents without active content are accepted');
-   await c.query("UPDATE media_assets SET status='approved',width=$2,height=$3,variants=$4,duration=$5,scan_at=now() WHERE id=$1",[id,width,height,JSON.stringify(variants),duration]);
-   await event(c,a,id,'media.approved');return data({id,status:'approved',visibility:m.visibility,purpose:m.purpose});
+   await c.query("UPDATE media_assets SET status='approved',version=version+1,width=$2,height=$3,variants=$4,duration=$5,scan_at=now() WHERE id=$1",[id,width,height,JSON.stringify(variants),duration]);
+   await event(c,a,id,'media.approved');return data({id,status:'approved',visibility:m.visibility,purpose:m.purpose,version:m.version+1});
   });
  }
  @Get('media/:id/view') async view(@Req() req:FastifyRequest,@Param('id') id:string,@Res() reply:FastifyReply){const a=req.headers.cookie?.includes('haven_session=')?await this.identity.actor(req).catch(()=>null):null;return transaction(a,async c=>{const m=(await c.query("SELECT variants FROM media_assets WHERE id=$1 AND visibility='public' AND status='approved' AND scan_at IS NOT NULL",[id])).rows[0];if(!m?.variants.display)fail(404,'Public image not found');const result=await s3.send(new GetObjectCommand({Bucket:bucket,Key:m.variants.display}));reply.header('Content-Type','image/webp');reply.header('Cache-Control','private,no-store');return reply.send(Buffer.from(await result.Body!.transformToByteArray()));});}

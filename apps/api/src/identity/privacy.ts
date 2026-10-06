@@ -12,6 +12,8 @@ export const accountRetention={version:1 as const,exportRecordLimit:2000,classes
 ]};
 // Explicit personal-data projections. Organization access never broadens a personal export.
 const datasets:Record<string,string>={
+ chatUploads:'SELECT asset_id,conversation_id,filename,mime,version,created_at FROM conversation_uploads WHERE creator_id=$1 ORDER BY asset_id',
+ sentMessageAttachments:'SELECT ma.message_id,ma.asset_id,ma.asset_version,ma.position FROM message_attachments ma JOIN messages m ON m.id=ma.message_id JOIN conversations c ON c.id=m.conversation_id WHERE m.sender_id=$1 AND c.user_id=$1 ORDER BY ma.message_id,ma.position',
  viewingReminders:'SELECT * FROM own_viewing_reminders() WHERE EXISTS(SELECT 1 FROM viewings v WHERE v.id=viewing_id AND v.user_id=$1)',
  agentProfiles:'SELECT id,name,slug,biography,languages,districts,city,public_email,version FROM agents WHERE user_id=$1 ORDER BY id',
  agentCredentials:'SELECT c.id,c.agent_id,c.city,c.holder_name,c.registration_reference,c.issuer,c.expires_on,c.document_id,c.status,c.version,c.created_at,c.reviewed_at FROM agent_credentials c JOIN agents a ON a.id=c.agent_id WHERE a.user_id=$1 ORDER BY c.id',

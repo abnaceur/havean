@@ -16,3 +16,4 @@ export {ViewingCalendar} from './viewing-calendar';
 
 export {CsvExport} from './csv-export';
 export {ConversationContext} from './conversation-context';
+export {ChatComposer,ChatMessage} from './chat-composer';

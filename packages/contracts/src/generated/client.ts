@@ -33,6 +33,8 @@ export const sdk={
 "BrowsingHistoryController_read":call(operations["BrowsingHistoryController_read"]),
 "BrowsingHistoryController_record":call(operations["BrowsingHistoryController_record"]),
 "BrowsingHistoryController_remove":call(operations["BrowsingHistoryController_remove"]),
+"ChatMediaController_download":call(operations["ChatMediaController_download"]),
+"ChatMediaController_intent":call(operations["ChatMediaController_intent"]),
 "ConversationsController_detail":call(operations["ConversationsController_detail"]),
 "CrmController_detail":call(operations["CrmController_detail"]),
 "CrmController_note":call(operations["CrmController_note"]),

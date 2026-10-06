@@ -1,4 +1,4 @@
-import {conversationGrant} from './conversations.js';
+import {readMessages,persistMessage} from './messages.js';
 import {viewingCalendar} from './viewing-calendar.js';
 import {reserveViewing,confirmViewing,cancelOwnViewing} from './viewing-bookings.js';
 import {changeLeadStage,crmAuthority} from './crm.js';
@@ -6,7 +6,7 @@ import {submitAccountInquiry} from './inquiries.js';
 import {Controller,Get,Post,Put,Delete,Patch,Param,Req,Body,Query,Inject} from '@nestjs/common';
 import type {FastifyRequest} from 'fastify';
 import {z} from 'zod';
-import {favoriteMutation,inquirySchema,leadStageUpdate,viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel,viewingCalendarQuery} from '@haven/contracts';
+import {messageCreate,favoriteMutation,inquirySchema,leadStageUpdate,viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel,viewingCalendarQuery} from '@haven/contracts';
 import {event} from '@haven/database';
 import {Identity,data,fail,transaction,idempotent} from '../platform/core.js';
 @Controller('api/v1')
@@ -35,6 +35,6 @@ export class EngagementController{
  @Post('viewings/:id/cancel') async cancel(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req),x=viewingBookingCancel.parse(body);z.uuid().parse(id);return cancelOwnViewing(a,req,id,x);}
  @Post('ops/viewings/:id/confirm') async confirm(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager','admin']),x=viewingBookingConfirm.parse(body);z.uuid().parse(id);return confirmViewing(a,req,id,x);}
  @Get('conversations') async conversations(@Req() req:FastifyRequest){const a=await this.identity.actor(req);return transaction(a,async c=>data((await c.query('SELECT id,resource_id,created_at FROM conversations WHERE conversation_scope(id) ORDER BY created_at DESC,id LIMIT 100')).rows));}
- @Get('conversations/:id/messages') async messages(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);return transaction(a,async c=>{await conversationGrant(c,id);return data((await c.query('SELECT id,sender_id,sequence,body,created_at FROM messages WHERE conversation_id=$1 ORDER BY sequence LIMIT 500',[id])).rows);});}
- @Post('conversations/:id/messages') async message(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req);const x=z.object({body:z.string().trim().min(1).max(4000),clientId:z.string().uuid()}).parse(body);return transaction(a,async c=>{const thread=await conversationGrant(c,id,true);if(thread.state!=='active')fail(409,'Historical or closed conversations cannot receive messages');const r=await c.query('INSERT INTO messages(conversation_id,sender_id,client_id,sequence,body) VALUES($1,$2,$3,(SELECT coalesce(max(sequence),0)+1 FROM messages WHERE conversation_id=$1),$4) ON CONFLICT(sender_id,client_id) DO UPDATE SET client_id=EXCLUDED.client_id RETURNING id,sender_id,sequence,body,created_at',[id,a.id,x.clientId,x.body]);await event(c,a,id,'message.persisted');return data(r.rows[0]);});}
+ @Get('conversations/:id/messages') async messages(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);return readMessages(a,id);}
+ @Post('conversations/:id/messages') async message(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req),x=messageCreate.parse(body);return persistMessage(a,id,x);}
 }

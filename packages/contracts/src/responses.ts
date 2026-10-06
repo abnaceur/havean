@@ -1,3 +1,4 @@
+import {chatMessage} from './chat';
 import {csvExport,viewingReminderSummary} from './crm-exports';
 import {calendarViewing} from './viewing-calendar';
 import {publicViewingSlots} from './viewing-availability';
@@ -34,7 +35,7 @@ const agent=z.object({id:uuid,name:s,slug:s,biography:s,languages:z.array(s),dis
 const development=m.developments.omit({organization_id:true}).extend({community:s,district:s,sponsored:bool.optional(),curationLabel:s.nullable().optional()});
 const recommendedDevelopment=development.omit({community_id:true,version:true}).extend({rankingScore:n,sponsored:bool,curationLabel:s.nullable()});
 const provider=m.providers.omit({organization_id:true,status:true});
-const message=m.messages.pick({id:true,sender_id:true,sequence:true,body:true,created_at:true});
+const message=chatMessage;
 const leaseSummary=m.leases.pick({id:true,start_date:true,end_date:true,rent:true,currency:true,status:true}).extend({community:s});
 const chargeSummary=m.charges.pick({id:true,period:true,due_date:true,amount:true,currency:true,kind:true,reverses_id:true});
 const paymentSummary=m.payments.pick({id:true,amount:true,currency:true,source:true,reference:true,reverses_id:true,created_at:true});
@@ -91,6 +92,7 @@ export const responses={
  CrmController_queue:z.object({organizationId:uuid,scope:z.enum(['team','assigned']),page:n,hasMore:z.boolean(),records:z.array(m.leads)}),CrmController_detail:m.leads.extend({resourceLabel:s.nullable()}),CrmController_timeline:z.array(leadActivity),CrmController_note:z.object({lead:m.leads,note:leadActivity}),
  EngagementController_leads:z.array(m.leads),EngagementController_lead:m.leads,
  EngagementController_viewings:z.array(calendarViewing),EngagementController_opsViewings:z.array(calendarViewing),EngagementController_book:m.viewings,EngagementController_cancel:m.viewings,EngagementController_confirm:m.viewings,
+ ChatMediaController_intent:z.object({id:uuid,uploadUrl:s,method:z.literal('PUT'),expiresIn:n}),ChatMediaController_download:z.unknown(),
  ConversationsController_detail:m.conversations.extend({members:z.array(z.object({user_id:uuid,kind:z.enum(['customer','agent','team']),status:z.literal('active'),display_name:s}))}),
  EngagementController_conversations:z.array(m.conversations.pick({id:true,resource_id:true,created_at:true})),EngagementController_messages:z.array(message),EngagementController_message:message,
  InventoryController_ownedListings:z.array(ownerListingRecord),InventoryController_ownerPrice:versioned,InventoryController_ownerAction:versioned,InventoryController_ownerProgress:z.array(z.object({id:uuid,version:n,kind:z.enum(['submitted','assigned','approved','rejected']),agent_name:s.nullable(),created_at:s})),InventoryController_ownerAgents:z.array(z.object({id:uuid,name:s,organization_id:uuid})),InventoryController_ownerAssignmentQueue:z.array(z.object({id:uuid,version:n,status:s,organization_id:uuid.nullable(),assigned_agent_id:uuid.nullable(),title:s.nullable(),agent_name:s.nullable()})),InventoryController_assignOwnerAgent:z.object({version:n}),InventoryController_submissions:z.array(owner),InventoryController_submit:owner,InventoryController_createOwnerDraft:owner,InventoryController_ownerDraft:owner,InventoryController_saveOwnerDraft:owner,InventoryController_sendDraft:owner,
@@ -103,7 +105,7 @@ export const responses={
  RichMediaController_publicMedia:z.array(publicMedia),RichMediaController_owned:z.array(m.listings.pick({id:true,title:true,slug:true,version:true,status:true})),
  RichMediaController_workbench:z.object({listing:z.object({id:uuid,title:s,version:n,status:s}),media:z.array(studioMedia),floorPlans:z.array(m.floor_plans.pick({id:true,name:true}))}),
  RichMediaController_attach:m.listing_media,RichMediaController_revise:m.listing_media,RichMediaController_reviews:z.array(m.listing_media.extend({property_title:s,rights:s,scan_at:s.nullable()})),RichMediaController_review:versioned,RichMediaController_remove:z.object({removed:bool}),
- MediaController_intent:z.object({id:uuid,uploadUrl:s,method:z.literal('PUT'),expiresIn:n}),MediaController_status:m.media_assets.pick({id:true,status:true,purpose:true,width:true,height:true,duration:true,scan_at:true}),
+ MediaController_intent:z.object({id:uuid,uploadUrl:s,method:z.literal('PUT'),expiresIn:n}),MediaController_status:m.media_assets.pick({id:true,status:true,purpose:true,width:true,height:true,duration:true,scan_at:true,version:true}),
  MediaController_content:z.object({id:uuid,status:s,visibility:s,purpose:s}),
  MediaController_view:z.instanceof(Blob),MediaController_video:z.instanceof(Blob),MediaController_download:z.instanceof(Blob),MediaController_downloadLink:z.object({url:s,expiresIn:n}),MediaController_attach:z.object({attached:bool}),
  ManagementController_properties:z.array(m.management_grants.pick({id:true,unit_id:true,expires_at:true}).extend({area:decimal,beds:n,community:s})),ManagementController_tenants:z.array(m.tenants.pick({id:true,name:true,email:true,user_id:true})),

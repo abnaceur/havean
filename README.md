@@ -91,3 +91,5 @@ For approved English pixel regression on clean synthetic data, use `./test.sh pn
 Viewing calendars are available at `/account/viewings` and `/ops/viewings`. Confirmation schedules a necessary reminder 24 hours before the viewing (immediately when confirmed within that window). Cancelled or rescheduled bookings invalidate pending reminder jobs. Inquiry and viewing workspaces offer scoped, formula-safe CSV downloads; see [reminders and reports](docs/adr/viewing-reminders-and-exports.md).
 
 Conversation participants and inquiry context are shown at `/account/messages` and `/ops/messages`. Current assignment/membership controls every read and authenticated socket subscription; see [conversation authorization](docs/adr/conversation-authorization.md).
+
+Messages commit before acknowledgement, retain drafts for receipt retries and share scanned files only with current participants; see [durable private messages](docs/adr/durable-private-messages.md).

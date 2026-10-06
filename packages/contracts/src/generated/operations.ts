@@ -27,6 +27,7 @@ import {availabilityUpdate,availabilityBlockCreate,availabilityBlockCancel,viewi
 import {viewingBookingCreate,viewingBookingConfirm,viewingBookingCancel} from '../viewing-bookings';
 import {viewingCalendarQuery,viewingRescheduleQuery,viewingReschedule,viewingTerminalAction} from '../viewing-calendar';
 import {leadExportQuery,viewingExportQuery} from '../crm-exports';
+import {messageCreate,chatUploadIntent} from '../chat';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -65,6 +66,8 @@ export const operations={
 "BrowsingHistoryController_read":{method:"GET",path:"/api/v1/me/history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["BrowsingHistoryController_read"]},
 "BrowsingHistoryController_record":{method:"POST",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyView,response:responses["BrowsingHistoryController_record"]},
 "BrowsingHistoryController_remove":{method:"DELETE",path:"/api/v1/me/history/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:historyVersion,response:responses["BrowsingHistoryController_remove"]},
+"ChatMediaController_download":{method:"GET",path:"/api/v1/conversations/:conversationId/attachments/:id",params:z.object({"conversationId":z.string().min(1),"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ChatMediaController_download"]},
+"ChatMediaController_intent":{method:"POST",path:"/api/v1/conversations/:id/attachment-intents",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:chatUploadIntent,response:responses["ChatMediaController_intent"]},
 "ConversationsController_detail":{method:"GET",path:"/api/v1/conversations/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ConversationsController_detail"]},
 "CrmController_detail":{method:"GET",path:"/api/v1/ops/leads/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["CrmController_detail"]},
 "CrmController_note":{method:"POST",path:"/api/v1/ops/leads/:id/notes",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leadNoteCreate,response:responses["CrmController_note"]},
@@ -130,7 +133,7 @@ export const operations={
 "EngagementController_inquiry":{method:"POST",path:"/api/v1/inquiries",params:z.object({}),query:z.object({}),body:inquirySchema,response:responses["EngagementController_inquiry"]},
 "EngagementController_lead":{method:"PATCH",path:"/api/v1/ops/leads/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leadStageUpdate,response:responses["EngagementController_lead"]},
 "EngagementController_leads":{method:"GET",path:"/api/v1/ops/leads",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_leads"]},
-"EngagementController_message":{method:"POST",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({body:z.string().trim().min(1).max(4000),clientId:z.string().uuid()}),response:responses["EngagementController_message"]},
+"EngagementController_message":{method:"POST",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:messageCreate,response:responses["EngagementController_message"]},
 "EngagementController_messages":{method:"GET",path:"/api/v1/conversations/:id/messages",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["EngagementController_messages"]},
 "EngagementController_opsViewings":{method:"GET",path:"/api/v1/ops/viewings",params:z.object({}),query:viewingCalendarQuery,body:z.undefined(),response:responses["EngagementController_opsViewings"]},
 "EngagementController_unfavorite":{method:"DELETE",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:favoriteMutation,response:responses["EngagementController_unfavorite"]},
