@@ -106,8 +106,8 @@
 - [x] **S01 Create support cases and complaints** — done; dependencies: L06, M04, V03, I08
 - [x] **S02 Build support workbench** — done; dependencies: S01, L06, M04, V03, I08
 - [x] **S03 Manage home curation and taxonomy** — done; dependencies: S02, L06, M04, V03, I08
-- [ ] **S04 Manage platform users and verification** — in_progress; dependencies: S03, L06, M04, V03, I08
-- [ ] **S05 Manage market configuration** — todo; dependencies: S04, L06, M04, V03, I08
+- [x] **S04 Manage platform users and verification** — done; dependencies: S03, L06, M04, V03, I08
+- [ ] **S05 Manage market configuration** — in_progress; dependencies: S04, L06, M04, V03, I08
 - [ ] **S06 Publish scoped analytics and audit** — todo; dependencies: S05, L06, M04, V03, I08
 - [ ] **Q01 Complete SEO and routing behavior** — todo; dependencies: G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
 - [ ] **Q02 Audit full English visual parity** — todo; dependencies: Q01, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
