@@ -33,11 +33,10 @@ import {quoteCreate,quoteChange,quoteFilters} from '../quotes';
 import {managementGrantCreate,managementGrantUpdate,managementGrantPage} from '../management-grants';
 import {tenantInvite,tenantInviteDecision} from '../tenant-links';
 import {leaseDraftCreate,leaseDraftUpdate} from '../lease-drafts';
-import {leaseActivation} from '../lease-workflow';
+import {leaseActivation,leaseRenewal,leaseEnding} from '../lease-workflow';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
-const date=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(v=>!Number.isNaN(Date.parse(v))&&new Date(v).toISOString().slice(0,10)===v,'Use a valid date');
 const kind=z.enum(['photo','floor_plan','panorama','video']);
 const metadata=propertyMediaMetadata;
 export const operations={
@@ -202,10 +201,12 @@ export const operations={
 "LeaseDraftsController_options":{method:"GET",path:"/api/v1/ops/lease-draft-options/:unitId",params:z.object({"unitId":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["LeaseDraftsController_options"]},
 "LeaseDraftsController_read":{method:"GET",path:"/api/v1/ops/lease-drafts/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["LeaseDraftsController_read"]},
 "LeaseDraftsController_update":{method:"PATCH",path:"/api/v1/ops/lease-drafts/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leaseDraftUpdate,response:responses["LeaseDraftsController_update"]},
+"LeaseLifecycleController_end":{method:"POST",path:"/api/v1/ops/leases/:id/end",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leaseEnding,response:responses["LeaseLifecycleController_end"]},
+"LeaseLifecycleController_read":{method:"GET",path:"/api/v1/ops/leases/:id/workflow",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["LeaseLifecycleController_read"]},
+"LeaseLifecycleController_renew":{method:"POST",path:"/api/v1/ops/leases/:id/renew",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leaseRenewal,response:responses["LeaseLifecycleController_renew"]},
 "ManagementController_allocate":{method:"POST",path:"/api/v1/ops/allocations",params:z.object({}),query:z.object({}),body:z.object({paymentId:z.string().uuid(),chargeId:z.string().uuid(),amount:money}),response:responses["ManagementController_allocate"]},
 "ManagementController_charges":{method:"GET",path:"/api/v1/ops/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_charges"]},
 "ManagementController_deposit":{method:"POST",path:"/api/v1/ops/deposits",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),kind:z.enum(['received','released']),amount:money,reason:z.string().min(5).max(500)}),response:responses["ManagementController_deposit"]},
-"ManagementController_end":{method:"POST",path:"/api/v1/ops/leases/:id/end",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({reason:z.string().min(5).max(500)}),response:responses["ManagementController_end"]},
 "ManagementController_generate":{method:"POST",path:"/api/v1/ops/charges/generate",params:z.object({}),query:z.object({}),body:z.object({period:z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/)}),response:responses["ManagementController_generate"]},
 "ManagementController_leases":{method:"GET",path:"/api/v1/ops/leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_leases"]},
 "ManagementController_maintain":{method:"PATCH",path:"/api/v1/ops/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.string(),version:z.number().int(),assignee:z.string().max(100).optional(),publicNote:z.string().max(2000).optional(),internalNote:z.string().max(2000).optional()}),response:responses["ManagementController_maintain"]},
@@ -214,7 +215,6 @@ export const operations={
 "ManagementController_payment":{method:"POST",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),amount:money,currency:z.literal('CNY'),source:z.enum(['bank_statement','receipt','manual_evidence']),reference:z.string().trim().min(3).max(120)}),response:responses["ManagementController_payment"]},
 "ManagementController_payments":{method:"GET",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_payments"]},
 "ManagementController_properties":{method:"GET",path:"/api/v1/ops/managed-properties",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["ManagementController_properties"]},
-"ManagementController_renew":{method:"POST",path:"/api/v1/ops/leases/:id/renew",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({startDate:date,endDate:date,rent:money}),response:responses["ManagementController_renew"]},
 "ManagementController_request":{method:"POST",path:"/api/v1/me/maintenance",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),title:z.string().min(5).max(120),description:z.string().min(10).max(3000),category:z.enum(['Plumbing','Electrical','Heating','Appliance','Other']),urgency:z.enum(['Routine','Urgent','Emergency'])}),response:responses["ManagementController_request"]},
 "ManagementController_reverse":{method:"POST",path:"/api/v1/ops/payment-records/:id/reverse",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({reason:z.string().min(5).max(500)}),response:responses["ManagementController_reverse"]},
 "ManagementController_reverseCharge":{method:"POST",path:"/api/v1/ops/charges/:id/reverse",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({reason:z.string().min(5).max(500)}),response:responses["ManagementController_reverseCharge"]},

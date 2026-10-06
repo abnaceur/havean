@@ -24,3 +24,4 @@ export {ManagementGrants} from './management-grants';
 export {TenantLinks} from './tenant-links';
 export {LeaseDraftForm} from './lease-draft-form';
 export {LeaseActivationForm} from './lease-activation-form';
+export {LeaseLifecycleForm} from './lease-lifecycle-form';

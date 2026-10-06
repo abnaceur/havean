@@ -1,3 +1,4 @@
+import {leaseWorkflowRecord} from './lease-workflow';
 import {leaseDraftRecord,leaseDraftSource} from './lease-drafts';
 import {tenantInviteRecord,tenantProfileRecord} from './tenant-links';
 import {managementGrantRecord,managementUnit} from './management-grants';
@@ -118,7 +119,7 @@ export const responses={
  TenantLinksController_invitations:z.array(tenantInviteRecord),TenantLinksController_ownInvitations:z.array(tenantInviteRecord),TenantLinksController_invite:tenantInviteRecord,TenantLinksController_decide:tenantInviteRecord,TenantLinksController_profiles:z.array(tenantProfileRecord),TenantLinksController_profile:tenantProfileRecord,
  LeaseDraftsController_options:leaseDraftSource,LeaseDraftsController_read:leaseDraftRecord,LeaseDraftsController_create:leaseDraftRecord,LeaseDraftsController_activate:leaseDraftRecord,LeaseDraftsController_update:leaseDraftRecord,LeaseDraftsController_download:z.instanceof(Blob),
  ManagementController_properties:z.array(managementGrantRecord),ManagementController_tenants:z.array(m.tenants.pick({id:true,name:true,email:true,user_id:true})),
- ManagementController_leases:z.array(m.leases.extend({tenant:s,community:s})),ManagementController_end:z.object({status:s}),ManagementController_renew:m.leases,
+ ManagementController_leases:z.array(m.leases.extend({tenant:s,community:s})),LeaseLifecycleController_read:leaseWorkflowRecord,LeaseLifecycleController_end:leaseWorkflowRecord,LeaseLifecycleController_renew:leaseDraftRecord,
  ManagementController_reverseCharge:m.charges,ManagementController_ownerLeases:z.array(leaseSummary),ManagementController_generate:z.object({generated:n,period:s,proration:s}),ManagementController_charges:z.array(m.charges.extend({community:s})),
  ManagementController_payments:z.array(m.payments),ManagementController_payment:m.payments,ManagementController_allocate:m.allocations,ManagementController_reverse:m.payments,ManagementController_deposit:m.deposits,
  ManagementController_tenantLeases:z.array(leaseSummary),ManagementController_tenantCharges:z.array(chargeSummary.extend({lease_id:uuid})),
