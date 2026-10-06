@@ -1,4 +1,6 @@
-import {Controller,Get,Post,Patch,Param,Req,Body,Inject} from '@nestjs/common';
+import {managementGrantPage} from '@haven/contracts';
+import {managementPortfolio} from './grants.js';
+import {Controller,Get,Post,Patch,Param,Req,Body,Query,Inject} from '@nestjs/common';
 import type {FastifyRequest} from 'fastify';
 import {z} from 'zod';
 import Decimal from 'decimal.js';
@@ -9,12 +11,12 @@ import {Identity,data,fail,transaction,idempotent} from '../platform/core.js';
 const roles=['property_manager','admin'];
 const finance=['finance'];
 async function lease(c:pg.PoolClient,id:string){const r=await c.query('SELECT * FROM leases WHERE id=$1 FOR UPDATE',[id]);if(!r.rowCount)fail(404,'Lease not found');return r.rows[0];}
-async function grant(c:pg.PoolClient,a:Actor,unit:string){if(!(await c.query('SELECT 1 FROM management_grants WHERE unit_id=$1 AND organization_id=$2 AND expires_at>now()',[unit,a.orgId])).rowCount)fail(403,'A valid management grant is required');}
+async function grant(c:pg.PoolClient,a:Actor,unit:string){if((await c.query('SELECT management_unit_grant_lock($1,$2) AS version',[unit,a.orgId])).rows[0].version===null)fail(403,'A current management grant and assigned team membership are required');}
 const date=z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(v=>!Number.isNaN(Date.parse(v))&&new Date(v).toISOString().slice(0,10)===v,'Use a valid date');
 @Controller('api/v1')
 export class ManagementController{
  constructor(@Inject(Identity) private readonly identity:Identity){}
- @Get('ops/managed-properties') async properties(@Req() req:FastifyRequest){const a=await this.identity.actor(req,roles);return transaction(a,async c=>data((await c.query('SELECT g.id,g.unit_id,g.expires_at,u.area::text,u.beds,co.name AS community FROM management_grants g JOIN units u ON u.id=g.unit_id JOIN communities co ON co.id=u.community_id WHERE g.expires_at>now()')).rows));}
+ @Get('ops/managed-properties') async properties(@Req() req:FastifyRequest,@Query() input:unknown={}){const a=await this.identity.actor(req,roles),x=managementGrantPage.parse(input);return transaction(a,async c=>data(await managementPortfolio(c,x.page),{page:x.page,limit:20}));}
  @Get('ops/tenants') async tenants(@Req() req:FastifyRequest){const a=await this.identity.actor(req,roles);return transaction(a,async c=>data((await c.query('SELECT id,name,email,user_id FROM tenants')).rows));}
  @Get('ops/leases') async leases(@Req() req:FastifyRequest){const a=await this.identity.actor(req,roles);return transaction(a,async c=>data((await c.query('SELECT l.*,t.name AS tenant,co.name AS community FROM leases l JOIN tenants t ON t.id=l.tenant_id JOIN units u ON u.id=l.unit_id JOIN communities co ON co.id=u.community_id ORDER BY l.start_date DESC')).rows));}
  @Post('ops/leases') async createLease(@Req() req:FastifyRequest,@Body() body:unknown){const a=await this.identity.actor(req,roles);const x=z.object({unitId:z.string().uuid(),tenantId:z.string().uuid(),startDate:date,endDate:date,rent:money,currency:z.literal('CNY')}).parse(body);if(x.startDate>x.endDate||new Decimal(x.rent).lte(0))fail(400,'Valid dates and positive rent are required');return transaction(a,async c=>idempotent(c,a,req,x,async()=>{await grant(c,a,x.unitId);if(!(await c.query('SELECT 1 FROM tenants WHERE id=$1 AND organization_id=$2',[x.tenantId,a.orgId])).rowCount)fail(404,'Tenant not found');const r=await c.query('INSERT INTO leases(organization_id,unit_id,tenant_id,start_date,end_date,rent,currency) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *',[a.orgId,x.unitId,x.tenantId,x.startDate,x.endDate,x.rent,x.currency]);await event(c,a,r.rows[0].id,'lease.drafted');return data(r.rows[0]);}));}

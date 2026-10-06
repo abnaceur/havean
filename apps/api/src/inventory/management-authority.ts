@@ -1,0 +1,5 @@
+import type pg from 'pg';
+import type {Actor} from '@haven/database';
+import {fail} from '../platform/core.js';
+export async function managementOwnerUnit(c:pg.PoolClient,_actor:Actor,id:string,unitVersion:number,ownerGrantVersion:number){const unit=(await c.query('SELECT owner_management_unit($1) AS snapshot',[id])).rows[0].snapshot;if(!unit)fail(404,'A current owner authorization for this unit is required');if(unit.version!==unitVersion||unit.ownerGrantVersion!==ownerGrantVersion)fail(409,'The unit or owner authorization changed. Refresh before granting access');return unit;}
+export async function managementOwnerUnits(c:pg.PoolClient,a:Actor,page:number){return (await c.query(`SELECT u.id,u.version,g.version AS "ownerGrantVersion",co.name AS community,ci.slug AS city,ci.currency,u.area::text,u.beds FROM owner_unit_grants g JOIN units u ON u.id=g.unit_id JOIN communities co ON co.id=u.community_id JOIN districts d ON d.id=co.district_id JOIN cities ci ON ci.id=d.city_id WHERE g.owner_id=$1 AND g.status='active' AND (g.expires_at IS NULL OR g.expires_at>statement_timestamp()) ORDER BY co.name,u.id LIMIT 20 OFFSET $2`,[a.id,(page-1)*20])).rows;}

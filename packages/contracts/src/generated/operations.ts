@@ -30,6 +30,7 @@ import {leadExportQuery,viewingExportQuery} from '../crm-exports';
 import {messageCreate,chatUploadIntent,messageHistoryQuery,conversationListQuery,readCursorUpdate} from '../chat';
 import {providerCreate,providerUpdate,providerVersion,providerReview,providerFilters,providerReviewFilters,providerPage} from '../providers';
 import {quoteCreate,quoteChange,quoteFilters} from '../quotes';
+import {managementGrantCreate,managementGrantUpdate,managementGrantPage} from '../management-grants';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -205,7 +206,7 @@ export const operations={
 "ManagementController_ownerLeases":{method:"GET",path:"/api/v1/me/owner-leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_ownerLeases"]},
 "ManagementController_payment":{method:"POST",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),amount:money,currency:z.literal('CNY'),source:z.enum(['bank_statement','receipt','manual_evidence']),reference:z.string().trim().min(3).max(120)}),response:responses["ManagementController_payment"]},
 "ManagementController_payments":{method:"GET",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_payments"]},
-"ManagementController_properties":{method:"GET",path:"/api/v1/ops/managed-properties",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_properties"]},
+"ManagementController_properties":{method:"GET",path:"/api/v1/ops/managed-properties",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["ManagementController_properties"]},
 "ManagementController_renew":{method:"POST",path:"/api/v1/ops/leases/:id/renew",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({startDate:date,endDate:date,rent:money}),response:responses["ManagementController_renew"]},
 "ManagementController_request":{method:"POST",path:"/api/v1/me/maintenance",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),title:z.string().min(5).max(120),description:z.string().min(10).max(3000),category:z.enum(['Plumbing','Electrical','Heating','Appliance','Other']),urgency:z.enum(['Routine','Urgent','Emergency'])}),response:responses["ManagementController_request"]},
 "ManagementController_reverse":{method:"POST",path:"/api/v1/ops/payment-records/:id/reverse",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({reason:z.string().min(5).max(500)}),response:responses["ManagementController_reverse"]},
@@ -215,6 +216,14 @@ export const operations={
 "ManagementController_tenantLeases":{method:"GET",path:"/api/v1/me/leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenantLeases"]},
 "ManagementController_tenantMaintenance":{method:"GET",path:"/api/v1/me/maintenance",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenantMaintenance"]},
 "ManagementController_tenants":{method:"GET",path:"/api/v1/ops/tenants",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenants"]},
+"ManagementGrantsController_create":{method:"POST",path:"/api/v1/me/management-grants",params:z.object({}),query:z.object({}),body:managementGrantCreate,response:responses["ManagementGrantsController_create"]},
+"ManagementGrantsController_detail":{method:"GET",path:"/api/v1/me/management-grants/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ManagementGrantsController_detail"]},
+"ManagementGrantsController_list":{method:"GET",path:"/api/v1/me/management-grants",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["ManagementGrantsController_list"]},
+"ManagementGrantsController_organizations":{method:"GET",path:"/api/v1/me/management-organizations",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementGrantsController_organizations"]},
+"ManagementGrantsController_professional":{method:"GET",path:"/api/v1/ops/managed-properties/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ManagementGrantsController_professional"]},
+"ManagementGrantsController_unit":{method:"GET",path:"/api/v1/me/management-grant-units/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ManagementGrantsController_unit"]},
+"ManagementGrantsController_units":{method:"GET",path:"/api/v1/me/management-grant-units",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["ManagementGrantsController_units"]},
+"ManagementGrantsController_update":{method:"PATCH",path:"/api/v1/me/management-grants/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:managementGrantUpdate,response:responses["ManagementGrantsController_update"]},
 "MediaController_attach":{method:"POST",path:"/api/v1/owner-submissions/:id/documents",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({mediaId:z.string().uuid(),version:z.number().int().positive(),documentType:z.enum(['ownership','authorization']).optional()}).strict(),response:responses["MediaController_attach"]},
 "MediaController_content":{method:"PUT",path:"/api/v1/media/:id/content",params:z.object({"id":z.string().min(1)}),query:z.object({signature:z.string()}),body:z.instanceof(Blob),response:responses["MediaController_content"]},
 "MediaController_download":{method:"GET",path:"/api/v1/documents/:id/download",params:z.object({"id":z.string().min(1)}),query:z.object({signature:z.string().optional()}),body:z.undefined(),response:responses["MediaController_download"]},

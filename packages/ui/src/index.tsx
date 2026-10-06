@@ -20,3 +20,4 @@ export {ChatComposer,ChatMessage} from './chat-composer';
 
 export {ConversationInbox} from './conversation-inbox';
 export {QuoteWorkspace} from './quote-workspace';
+export {ManagementGrants} from './management-grants';
