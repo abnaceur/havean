@@ -28,6 +28,7 @@ const datasets:Record<string,string>={
  ownedUnits:'SELECT u.id,u.area::text,u.beds,u.living_rooms,u.baths,u.orientation,u.floor,u.elevator FROM units u WHERE EXISTS(SELECT 1 FROM listings l WHERE l.unit_id=u.id AND l.owner_id=$1) ORDER BY u.id',
  mediaMetadata:'SELECT id,listing_id,mime,size::text,rights,visibility,status,width,height,purpose,duration::text,created_at FROM media_assets WHERE owner_id=$1 ORDER BY id',
  listingViewActivity:'SELECT id,listing_id,listing_version,recorded_at,view_day FROM listing_view_events WHERE user_id=$1 ORDER BY id',
+ tenantInvitations: 'SELECT id,organization_id,unit_id,name,status,version,expires_at,created_at FROM tenant_invitations WHERE tenant_invitation_recipient(email) ORDER BY id',
  tenantProfiles:'SELECT id,name,email FROM tenants WHERE user_id=$1 ORDER BY id',
  tenantAllocations:'SELECT a.id,a.payment_id,a.charge_id,a.amount::text,a.reversed_at,a.created_at FROM allocations a JOIN payments p ON p.id=a.payment_id JOIN leases l ON l.id=p.lease_id JOIN tenants t ON t.id=l.tenant_id WHERE t.user_id=$1 ORDER BY a.id',
  favorites:'SELECT listing_id,saved,version,created_at FROM favorites WHERE user_id=$1 ORDER BY listing_id',

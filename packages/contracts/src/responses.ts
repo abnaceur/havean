@@ -1,3 +1,4 @@
+import {tenantInviteRecord,tenantProfileRecord} from './tenant-links';
 import {managementGrantRecord,managementUnit} from './management-grants';
 import {mortgageResult,defaultMortgageEstimateNotes} from './mortgage';
 import {quoteRecord} from './quotes';
@@ -113,6 +114,7 @@ export const responses={
  MediaController_intent:z.object({id:uuid,uploadUrl:s,method:z.literal('PUT'),expiresIn:n}),MediaController_status:m.media_assets.pick({id:true,status:true,purpose:true,width:true,height:true,duration:true,scan_at:true,version:true}),
  MediaController_content:z.object({id:uuid,status:s,visibility:s,purpose:s}),
  MediaController_view:z.instanceof(Blob),MediaController_video:z.instanceof(Blob),MediaController_download:z.instanceof(Blob),MediaController_downloadLink:z.object({url:s,expiresIn:n}),MediaController_attach:z.object({attached:bool}),
+ TenantLinksController_invitations:z.array(tenantInviteRecord),TenantLinksController_ownInvitations:z.array(tenantInviteRecord),TenantLinksController_invite:tenantInviteRecord,TenantLinksController_decide:tenantInviteRecord,TenantLinksController_profiles:z.array(tenantProfileRecord),TenantLinksController_profile:tenantProfileRecord,
  ManagementController_properties:z.array(managementGrantRecord),ManagementController_tenants:z.array(m.tenants.pick({id:true,name:true,email:true,user_id:true})),
  ManagementController_leases:z.array(m.leases.extend({tenant:s,community:s})),ManagementController_createLease:m.leases,ManagementController_activate:m.leases,ManagementController_end:z.object({status:s}),ManagementController_renew:m.leases,
  ManagementController_reverseCharge:m.charges,ManagementController_ownerLeases:z.array(leaseSummary),ManagementController_generate:z.object({generated:n,period:s,proration:s}),ManagementController_charges:z.array(m.charges.extend({community:s})),

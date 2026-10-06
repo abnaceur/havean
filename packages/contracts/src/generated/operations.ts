@@ -31,6 +31,7 @@ import {messageCreate,chatUploadIntent,messageHistoryQuery,conversationListQuery
 import {providerCreate,providerUpdate,providerVersion,providerReview,providerFilters,providerReviewFilters,providerPage} from '../providers';
 import {quoteCreate,quoteChange,quoteFilters} from '../quotes';
 import {managementGrantCreate,managementGrantUpdate,managementGrantPage} from '../management-grants';
+import {tenantInvite,tenantInviteDecision} from '../tenant-links';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -285,6 +286,12 @@ export const operations={
 "ServicesController_ownDetail":{method:"GET",path:"/api/v1/me/quotes/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ServicesController_ownDetail"]},
 "ServicesController_quote":{method:"POST",path:"/api/v1/quote-requests",params:z.object({}),query:z.object({}),body:quoteCreate,response:responses["ServicesController_quote"]},
 "ServicesController_quotes":{method:"GET",path:"/api/v1/ops/quotes",params:z.object({}),query:quoteFilters,body:z.undefined(),response:responses["ServicesController_quotes"]},
+"TenantLinksController_decide":{method:"PATCH",path:"/api/v1/tenant-invitations/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:tenantInviteDecision,response:responses["TenantLinksController_decide"]},
+"TenantLinksController_invitations":{method:"GET",path:"/api/v1/ops/tenant-invitations",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["TenantLinksController_invitations"]},
+"TenantLinksController_invite":{method:"POST",path:"/api/v1/ops/tenant-invitations",params:z.object({}),query:z.object({}),body:tenantInvite,response:responses["TenantLinksController_invite"]},
+"TenantLinksController_ownInvitations":{method:"GET",path:"/api/v1/me/tenant-invitations",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["TenantLinksController_ownInvitations"]},
+"TenantLinksController_profile":{method:"GET",path:"/api/v1/me/tenant-profiles/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["TenantLinksController_profile"]},
+"TenantLinksController_profiles":{method:"GET",path:"/api/v1/me/tenant-profiles",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["TenantLinksController_profiles"]},
 "ViewingAvailabilityController_block":{method:"POST",path:"/api/v1/ops/viewing-availability/:id/blocks",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:availabilityBlockCreate,response:responses["ViewingAvailabilityController_block"]},
 "ViewingAvailabilityController_cancelBlock":{method:"DELETE",path:"/api/v1/ops/viewing-availability/:id/blocks/:blockId",params:z.object({"id":z.string().min(1),"blockId":z.string().min(1)}),query:z.object({}),body:availabilityBlockCancel,response:responses["ViewingAvailabilityController_cancelBlock"]},
 "ViewingAvailabilityController_listings":{method:"GET",path:"/api/v1/ops/viewing-availability",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ViewingAvailabilityController_listings"]},
