@@ -7,7 +7,7 @@ import {DiscoveryEventsController} from '../../apps/api/src/engagement/discovery
 import {RankingBoostsController} from '../../apps/api/src/administration/ranking-boosts';
 import type {Identity} from '../../apps/api/src/platform/core';
 afterAll(()=>pool.end());
-const origin='http://localhost:8088';
+const origin=process.env.PUBLIC_WEB_URL||'http://localhost:8088';
 const consumer:Actor={id:'00000000-0000-4000-8000-000000000001',orgId:null,roles:['consumer']};
 function controller<T>(factory:(identity:Identity)=>T,actor:Actor){return factory({actor:async()=>actor} as unknown as Identity);}
 function request(path:string,key=crypto.randomUUID()){return {method:'POST',url:'/api/v1'+path,headers:{'idempotency-key':key}} as unknown as FastifyRequest;}

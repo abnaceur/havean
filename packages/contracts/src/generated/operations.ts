@@ -42,6 +42,7 @@ import {depositMovement,depositLedgerQuery} from '../deposits';
 import {tenantLeaseQuery} from '../tenant-leases';
 import {managementDashboardQuery} from '../management-dashboard';
 import {supportCreate,supportTriage,supportPageQuery,supportWorkflow,supportPublicAction} from '../support-cases';
+import {homeContentQuery,homeSectionCreate,homeSectionEdit,homeSectionAction,homeTaxonomySave} from '../home-content';
 import {statementQuery} from '../statements';
 import {maintenanceCreate,maintenanceWorkflow,maintenancePageQuery,maintenanceOptionsQuery,maintenanceTenantAction} from '../maintenance';
 import {responses} from '../responses';
@@ -53,6 +54,12 @@ export const operations={
 "AdministrationController_audit":{method:"GET",path:"/api/v1/ops/audit",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_audit"]},
 "AdministrationController_cases":{method:"GET",path:"/api/v1/support-cases",params:z.object({}),query:supportPageQuery,body:z.undefined(),response:responses["AdministrationController_cases"]},
 "AdministrationController_dashboard":{method:"GET",path:"/api/v1/ops/dashboard",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_dashboard"]},
+"AdministrationController_homeContent":{method:"GET",path:"/api/v1/ops/home-content",params:z.object({}),query:homeContentQuery,body:z.undefined(),response:responses["AdministrationController_homeContent"]},
+"AdministrationController_homeCreate":{method:"POST",path:"/api/v1/ops/home-content",params:z.object({}),query:z.object({}),body:homeSectionCreate,response:responses["AdministrationController_homeCreate"]},
+"AdministrationController_homeEdit":{method:"PATCH",path:"/api/v1/ops/home-content/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:homeSectionEdit,response:responses["AdministrationController_homeEdit"]},
+"AdministrationController_homePreview":{method:"GET",path:"/api/v1/ops/home-content/:id/preview",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_homePreview"]},
+"AdministrationController_homePublish":{method:"POST",path:"/api/v1/ops/home-content/:id/actions",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:homeSectionAction,response:responses["AdministrationController_homePublish"]},
+"AdministrationController_homeTaxonomy":{method:"POST",path:"/api/v1/ops/home-taxonomy",params:z.object({}),query:z.object({}),body:homeTaxonomySave,response:responses["AdministrationController_homeTaxonomy"]},
 "AdministrationController_memberships":{method:"GET",path:"/api/v1/ops/memberships",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["AdministrationController_memberships"]},
 "AdministrationController_support":{method:"POST",path:"/api/v1/support-cases",params:z.object({}),query:z.object({}),body:supportCreate,response:responses["AdministrationController_support"]},
 "AdministrationController_supportAction":{method:"POST",path:"/api/v1/ops/support-cases/:id/actions",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:supportWorkflow,response:responses["AdministrationController_supportAction"]},

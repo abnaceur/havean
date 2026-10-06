@@ -8,7 +8,7 @@ import {RankingBoostsController} from '../../apps/api/src/administration/ranking
 import type {Identity} from '../../apps/api/src/platform/core';
 import {responses} from '../../packages/contracts/src/responses';
 afterAll(()=>pool.end());
-const origin='http://localhost:8088',boosts=new RankingBoostsController({actor:async()=>workerActor} as unknown as Identity);
+const origin=process.env.PUBLIC_WEB_URL||'http://localhost:8088',boosts=new RankingBoostsController({actor:async()=>workerActor} as unknown as Identity);
 const request=()=>({method:'POST',url:'/api/v1/ops/ranking-boosts',headers:{'idempotency-key':crypto.randomUUID()}} as unknown as FastifyRequest);
 async function home(city='bj'){const response=await fetch(origin+'/api/v1/discovery/home?city='+city);expect(response.status).toBe(200);const result=await response.json();responses.HomeDiscoveryController_home.parse(result.data);return result;}
 it('D07 city-scoped bounded home feeds show only active eligible curation and disclosed sponsorship; withdrawal/sold-out remove cards immediately',async()=>{
@@ -32,5 +32,5 @@ it('D07 city-scoped bounded home feeds show only active eligible curation and di
  }finally{await transaction(workerActor,async c=>{await c.query('DELETE FROM curated_boosts WHERE resource_id=ANY($1::uuid[])',[[...listings,...developments]]);await c.query("UPDATE listings SET status='paused',version=version+1 WHERE id=ANY($1::uuid[])",[listings]);await c.query("UPDATE developments SET status='draft',version=version+1 WHERE id=ANY($1::uuid[])",[developments]);});}
 });
 it('D07 an empty selected city returns empty feeds rather than borrowing another city; malformed/unknown requests are explicit',async()=>{
- const result=await home('sh');for(const cards of Object.values(result.data))expect(cards).toEqual([]);expect((await fetch(origin+'/api/v1/discovery/home?city=unknown-city')).status).toBe(404);expect((await fetch(origin+'/api/v1/discovery/home?city=bj&invented=true')).status).toBe(400);
+ const result=await home('sh');for(const key of ['resale','rentals','developments','curatedResale','curatedDevelopments','sections'])expect(result.data[key]).toEqual([]);expect(result.data.taxonomy.every((t:any)=>['buy','rent','new-homes','commercial'].includes(t.category)&&typeof t.label==='string')).toBe(true);expect((await fetch(origin+'/api/v1/discovery/home?city=unknown-city')).status).toBe(404);expect((await fetch(origin+'/api/v1/discovery/home?city=bj&invented=true')).status).toBe(400);
 });

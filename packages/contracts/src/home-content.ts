@@ -1,0 +1,14 @@
+import {z} from 'zod';
+const city=z.string().regex(/^[a-z0-9-]{1,50}$/),version=z.number().int().positive();
+export const homeCategory=z.enum(['buy','rent','new-homes','commercial']);
+const item=z.object({id:z.uuid(),version}).strict();
+const fields={city,category:homeCategory,title:z.string().trim().min(5).max(100),copy:z.string().trim().min(5).max(300),position:z.number().int().min(1).max(100),startsAt:z.iso.datetime(),endsAt:z.iso.datetime(),items:z.array(item).min(1).max(6).refine(v=>new Set(v.map(x=>x.id)).size===v.length,'Duplicate selection')};
+const period=(v:{startsAt:string;endsAt:string})=>Date.parse(v.endsAt)>Date.parse(v.startsAt);
+export const homeSectionCreate=z.object({version:z.literal(0),...fields}).strict().refine(period,'End must follow start');
+export const homeSectionEdit=z.object({version,...fields}).strict().refine(period,'End must follow start');
+export const homeSectionAction=z.object({version,action:z.enum(['publish','archive'])}).strict();
+export const homeContentQuery=z.object({city}).strict();
+export const homeTaxonomySave=z.object({version:z.number().int().min(0),city,category:homeCategory,label:z.string().trim().min(2).max(60),active:z.boolean()}).strict();
+export const homeTaxonomyRecord=z.object({city,category:homeCategory,label:z.string(),active:z.boolean(),version,updatedAt:z.string().nullable(),historical:z.boolean()});
+export const homeSectionRecord=z.object({id:z.uuid(),version,city,category:homeCategory,title:z.string(),copy:z.string(),position:z.number(),startsAt:z.string(),endsAt:z.string(),items:z.array(item),state:z.enum(['draft','published','archived']),publishedVersion:version.nullable(),published:z.object({...fields,version}).nullable(),updatedAt:z.string(),activity:z.array(z.object({version,action:z.string(),at:z.string()}))});
+export const homeContentWorkspace=z.object({sections:z.array(homeSectionRecord),taxonomy:z.array(homeTaxonomyRecord)});

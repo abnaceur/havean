@@ -1,3 +1,4 @@
+import {editorialHome} from './editorial-home.js';
 import {Controller,Get,Query} from '@nestjs/common';
 import {z} from 'zod';
 import {data,fail,transaction} from '../platform/core.js';
@@ -12,6 +13,7 @@ export class HomeDiscoveryController{
    (CASE WHEN de.inventory_at IS NULL THEN 0 ELSE GREATEST(0,30-GREATEST(0,(now() AT TIME ZONE 'UTC')::date-(de.inventory_at AT TIME ZONE 'UTC')::date)) END+COALESCE((public_curated_boost('development',de.id)->>'points')::int,0)) AS "rankingScore",COALESCE((public_curated_boost('development',de.id)->>'sponsored')::boolean,false) AS sponsored,public_curated_boost('development',de.id)->>'label' AS "curationLabel"
    FROM developments de JOIN communities co ON co.id=de.community_id JOIN districts d ON d.id=co.district_id JOIN cities ci ON ci.id=d.city_id WHERE ci.slug=$1 AND de.currency=$2 AND de.status IN('on_sale','coming_soon') AND (NOT $3::boolean OR public_curated_boost('development',de.id) IS NOT NULL) ORDER BY "rankingScore" DESC,de.inventory_at DESC NULLS LAST,de.id LIMIT 3`,[q.city,city.currency,curated])).rows;}
   const resale=await listings('sale',false,6),rentals=await listings('rent',false,3),projects=await developments(false),curatedResale=await listings('sale',true,3),curatedDevelopments=await developments(true);
-  return data({resale,rentals,developments:projects,curatedResale,curatedDevelopments},{city:q.city,...rankingMetadata('30d',asOf),curation:'Active eligible placements only; empty curated sections omitted.'});
+  const editorial=await editorialHome(c,q.city);
+  return data({resale,rentals,developments:projects,curatedResale,curatedDevelopments,sections:editorial.sections,taxonomy:editorial.taxonomy},{city:q.city,...rankingMetadata('30d',asOf),curation:'Active eligible placements only; empty curated sections omitted.'});
  });}
 }
