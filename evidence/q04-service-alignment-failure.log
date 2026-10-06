@@ -1,0 +1,240 @@
+
+> haven-real-estate@0.1.0 test:integration /workspace
+> vitest run tests/integration
+
+
+ RUN  v5.0.3 /workspace
+
+ ✓ tests/integration/payment-allocations.test.ts (7 tests) 5978ms
+   ✓ P08 partial allocation leaves exact outstanding and credit, matching receipt creates one root, and settlement retains overpayment 774ms
+   ✓ P08 concurrent allocations respect payment 100.10 and charge 200.20 caps 549ms
+   ✓ P08 concurrent allocations respect payment 200.20 and charge 100.10 caps 664ms
+   ✓ P08 cross-lease, currency, stale versions, confirmation and over-allocation deny without changing balances 1072ms
+   ✓ P08 PostgreSQL independently serializes direct allocations and prevents immutable amount edits 827ms
+   ✓ P08 actual finance-only staff can allocate, manager-only and guessed foreign staff cannot, and revoked grants deny receipts 783ms
+   ✓ P08 allocation and existing linked reversal share lock order and retained undo versions 1256ms
+ ✓ tests/integration/financial-reversals.test.ts (5 tests) 6095ms
+   ✓ P09 payment reversal preserves original, restores balance and retains one attributed undo across receipt and fresh retries 1337ms
+   ✓ P09 charge reversal preserves original and restores payment credit without reversing a reversal 1224ms
+   ✓ P09 simultaneous payment reversals and an allocation settle once under the shared finance lock 1224ms
+   ✓ P09 stale versions, confirmation, foreign actual finance and revoked grants deny reversal or receipt without evidence 1057ms
+   ✓ P09 SQL requires exact linked evidence and commit-time allocation undo atomically 1197ms
+ ✓ tests/integration/management-dashboard.test.ts (4 tests) 4464ms
+   ✓ P15 source counts and aging reconcile, and native payment reversal restores overdue charge debt 1547ms
+   ✓ P15 immutable maintenance status, missing history and historical occupancy are declared with no private projection 1322ms
+   ✓ P15 current exact scope omits revoked foreign money and denies forged roles and selected foreign organization 889ms
+   ✓ P15 all due-date boundaries preserve separate exact USD totals above Number precision 639ms
+ ✓ tests/integration/maintenance-workbench.test.ts (2 tests) 15673ms
+   ✓ P13 manager resolution and tenant reopen preserve public progression while all tenant APIs exclude internal notes 12723ms
+   ✓ P13 versioned public comments and private-only notes remain immutable, filtered and currently scoped 2908ms
+ ✓ tests/integration/tenant-leases.test.ts (5 tests) 4975ms
+   ✓ P11 linked tenant sees exact reconciled own balance without private staff references, actor/org fields or draft payments 1351ms
+   ✓ P11 documents are private while draft, then exact approved bound PDF is readable only on its linked lease and revoked asset versions deny 567ms
+   ✓ P11 reversals reconcile own recorded balance and retained history without exposing correction reasons 2429ms
+   ✓ P11 bounded history pages keep full totals, tenant-link changes deny immediately and revoked professional grant does not erase tenant contract access 330ms
+ ✓ tests/integration/deposits.test.ts (5 tests) 3953ms
+   ✓ P10 received, partial release and explicit bidirectional adjustments reconcile liability without changing rent totals 1701ms
+   ✓ P10 excess, stale authority, invalid decimals, wrong currency and unconfirmed movements deny without liability changes; SQL rejects bypass 719ms
+   ✓ P10 concurrent releases use one liability version and receipt replay remains scoped after revocation 588ms
+   ✓ P10 historical adjustments preserve prior decrease convention and unknown provenance, while subsequent native release is exact 618ms
+ ✓ tests/integration/maintenance-requests.test.ts (5 tests) 10747ms
+   ✓ P12 linked tenant creates one versioned request with private owned photo, current manager triages and assigns with exact retained activity 4163ms
+   ✓ P12 a current manager can create an authorized request that its linked tenant sees, without impersonating tenant creation 1047ms
+   ✓ P12 foreign unit/persona/media, stale source versions, malformed labels and inactive workflow states deny without partial request roots 569ms
+   ✓ P12 cross-request photo guessing, invalid transitions, stale request versions and wrong-team assignment deny; revoked grant denies manager and new tenant creates 4620ms
+ ✓ tests/integration/statements.test.ts (4 tests) 9252ms
+   ✓ P14 golden posted ledger reconciles opening, inclusive period movements and closing with linked reversals and allocation undo 1278ms
+   ✓ P14 actual posted finance reconciles with the tenant portal and current grants deny other owners, forged staff and revoked exports 5851ms
+   ✓ P14 separate USD/CNY leases preserve amounts above JavaScript integer precision and refuse historical currency conflicts 829ms
+   ✓ P14 bounded pages retain full totals and complete exports escape labels, while oversized exports and malformed periods refuse 1229ms
+ ✓ tests/integration/payment-evidence.test.ts (5 tests) 5907ms
+   ✓ P07 native draft stays out of balances and tenant reads; posting exact evidence retains history and audit once 1305ms
+   ✓ P07 edits only current drafts, retains original amount snapshots and denies posted amount changes at API and database 1832ms
+   ✓ P07 negative/float/scientific money, foreign currency and stale authority deny creation with no payment roots 327ms
+   ✓ P07 posting requires current saved versions and confirmation, concurrent attempts create one post, and revoked grants deny receipts 1476ms
+   ✓ P07 drafts cannot be allocated or reversed before posting and actual manager-only authority cannot record payments 918ms
+ ✓ tests/integration/lease-lifecycle.test.ts (5 tests) 4671ms
+   ✓ P05 valid next term retains original terms, links history and replays one renewal draft 1152ms
+   ✓ P05 overlapping next terms and stale/currency versions deny renewal without partial linked drafts 1085ms
+   ✓ P05 ending records termination reason and original history, never republishes, and revoked authority denies receipt replay 702ms
+   ✓ P05 concurrent renewal requests yield one retained successor and concurrent endings yield one record 1039ms
+   ✓ P05 historical lease ending retains unknown provenance and new renewal uses current native authority 641ms
+ ✓ tests/integration/recurring-charges.test.ts (6 tests) 4049ms
+   ✓ P06 leap-month proration uses exact cents, term-aware due date and one charge across retry and repeated month 873ms
+   ✓ P06 concurrent generators cannot duplicate a charge; ended and out-of-term leases are excluded 1141ms
+   ✓ P06 stale versions, wrong scope and missing confirmation deny generation; grant revocation denies cached receipt 856ms
+   ✓ P06 market full-month policy and explicit historical due-day fallback are snapshotted without inventing original terms 353ms
+   ✓ P06 actual finance-only membership can generate within its granted property; a manager without finance cannot 758ms
+ ❯ tests/integration/search-rebuild.test.ts (2 tests | 1 failed) 6349ms
+   × D10 verified temporary rebuild preserves the old serving index and browsing, then swaps the complete eligible public count and catches queued projections 1398ms
+   ✓ D10 candidate content corruption and changed SQL source abort swap; network outage uses explicit nonempty SQL degradation 4945ms
+ ✓ tests/integration/lease-activation.test.ts (4 tests) 2709ms
+   ✓ P04 atomic activation withdraws the public rental offer with exact history, audit and matching receipts 517ms
+   ✓ P04 simultaneous overlapping draft activations yield exactly one success and one current-state conflict 607ms
+   ✓ P04 property occupation conflicts with child rooms while sibling rooms can hold separate exclusive terms 1146ms
+   ✓ P04 stale versions, missing confirmation and expired terms deny activation without withdrawing publication 387ms
+ ✓ tests/integration/lease-drafts.test.ts (4 tests) 1899ms
+   ✓ P03 updates only current draft versions, retains original history and denies ended lease term edits 795ms
+   ✓ P03 another real manager retains an existing team PDF while foreign and tenant document access are denied 541ms
+ ✓ tests/integration/commercial-discovery.test.ts (2 tests) 5037ms
+   ✓ C02 furnished office rentals compare explicit periods, price bases and area definitions in SQL and indexed search 5033ms
+ ❯ tests/integration/typed-search.test.ts (3 tests | 1 failed) 2547ms
+   × D02 exact city/decimal filters, UUID ties and opaque bounded cursors return the expected IDs without duplicates 2468ms
+   ✓ D02 rejects raw expressions, invalid ordering, ranges, mixed currencies and oversized pages 71ms
+   ✓ D02 canonical facets combine OR within each facet with AND between facets using parameters and quoted search values 4ms
+ ✓ tests/integration/viewing-calendar.test.ts (8 tests) 2485ms
+   ✓ L05 consumer atomically reschedules a confirmed viewing, requiring fresh confirmation; idempotent receipt preserves one event and row 392ms
+   ✓ L05 assigned professional reschedule retains confirmation; professional cancellation releases the new slot 334ms
+   ✓ L05 property capacity remains reserved when assignment changes; the former appointment can be cancelled through actual professional scope 509ms
+ ✓ tests/integration/rental-discovery.test.ts (2 tests) 2560ms
+   ✓ R02 indexed and SQL rental criteria isolate entire furnished monthly budgets, availability dates and yearly amounts 2556ms
+ ✓ tests/integration/rental-availability.test.ts (3 tests) 2145ms
+   ✓ R04 leased room invalidates whole-property search/detail/contact even with stale index; sibling room remains available and publication checks canonical occupancy 1752ms
+ ✓ tests/integration/provider-catalog.test.ts (5 tests) 2403ms
+   ✓ V01 only independently approved provider is public in its exact service area, with scanned portfolio and no owner/private review fields 624ms
+   ✓ V01 unscanned/foreign/stale-version/duplicate portfolio references and wrong-city districts are rejected without partial provider writes 722ms
+   ✓ V01 editing approval removes public access, submitted edits need withdrawal, stale writes conflict, and matching create retry returns one profile 487ms
+   ✓ V01 revoked vendor membership removes authoring/public eligibility while exact own personal export retains its provider metadata 475ms
+ ❯ tests/integration/resale-filters.test.ts (2 tests | 1 failed) 1613ms
+   × D04 combined resale facets use OR within groups and AND between them, including actual public tour eligibility and bounded transit proximity 1578ms
+   ✓ D04 invalid facet options and build-age ranges are rejected; public presets come from market configuration 32ms
+ ✓ tests/integration/viewing-reminders.test.ts (6 tests) 1917ms
+   ✓ L06 confirmation schedules one versioned reminder; actual BullMQ and SMTP receipt replay produce one email and one native notification 444ms
+   ✓ L06 cancellation invalidates queued and failed reminders and all stale retries send no email 363ms
+   ✓ L06 transactional reminders never email unverified accounts, and inactive accounts receive no reminder 310ms
+ ✓ tests/integration/outbox.test.ts (2 tests) 1956ms
+   ✓ F09 real queue replay and crash recovery (2)
+     ✓ crash after SMTP delivery retries without duplicating mail or notifications 1311ms
+     ✓ an old publish event cannot resurrect withdrawn inventory 642ms
+ ✓ tests/integration/notifications.test.ts (6 tests) 1511ms
+   ✓ A05 a real publication worker plans one daily digest; BullMQ delivers one provider-accepted email and one in-app notification; replay stays deduplicated 719ms
+ ✓ tests/integration/map-search.test.ts (2 tests) 2354ms
+   ✓ D05 map/list bounds use identical canonical criteria and only rounded public community positions; private coordinate sentinels never enter responses or projections 2276ms
+ ✓ tests/integration/tenant-links.test.ts (4 tests) 622ms
+   ✓ P02 verified recipient accepts exact grant invitation once and reads own linked profile without enumerating others 381ms
+ ✓ tests/integration/approved-tours.test.ts (1 test) 1533ms
+   ✓ D09 only scanned decoded approved panoramas expose public metadata and a tour badge; denied assets expose no storage URL 1531ms
+ ✓ tests/integration/agent-directory.test.ts (3 tests) 954ms
+   ✓ B02 assigned inventory and current counts exclude unpublished/withdrawn offers immediately 515ms
+ ✓ tests/integration/viewing-bookings.test.ts (6 tests) 1413ms
+   ✓ L04 database writes require current metadata and retained travel gaps apply across properties 429ms
+ ✓ tests/integration/listing-expiration.test.ts (5 tests) 1527ms
+   ✓ I08 real queue expiration and late duplicate jobs create one atomic transition and remove public destinations/search 918ms
+ ✓ tests/integration/home-content.test.ts (3 tests) 1358ms
+   ✓ S03 versioned scheduled publication uses the exact eligible snapshot, preserves independent draft edits and current public visibility 781ms
+ ✓ tests/integration/account-privacy.test.ts (4 tests) 1067ms
+   ✓ A06 one-snapshot personal export excludes another persona even for an administrator and keeps money as decimal strings 394ms
+ ✓ tests/integration/messages.test.ts (5 tests) 1342ms
+   ✓ M02 foreign/unscanned/stale and other-conversation files are denied without partial message/event/attachment writes 421ms
+ ✓ tests/integration/search-projection.test.ts (2 tests) 1293ms
+   ✓ D01 approved public projection is searchable with exact decimal price and no private fields; old publication cannot resurrect withdrawal 1289ms
+ ✓ tests/integration/agent-credentials.test.ts (3 tests) 675ms
+   ✓ B01 independent approval produces a badge; own/private projections omit internal notes and document identifiers 331ms
+ ✓ tests/integration/realtime.test.ts (3 tests) 1092ms
+   ✓ M04 replay after a saved sequence returns ordered missing pages and no duplicate previously received records 703ms
+ ✓ tests/integration/development-inventory.test.ts (2 tests) 1231ms
+   ✓ N02 publishes exact decimal range with an approved drawing, keeps types distinct from individual offered units and derives nonnegative availability with timestamps 694ms
+   ✓ N02 invalid ranges, foreign/unapproved drawing, wrong building/area, stale versions and incompatible type changes are denied; draft types are private 481ms
+ ✓ tests/integration/viewing-availability.test.ts (6 tests) 825ms
+   ✓ L03 private blocked intervals and existing agent appointments remove overlapping or buffered slots; cancellation restores capacity 310ms
+ ✓ tests/integration/read-cursors.test.ts (4 tests) 818ms
+ ✓ tests/integration/city-taxonomy-bootstrap.test.ts (2 tests) 861ms
+   ✓ Q04 cold seed includes editable categories and a trusted replay preserves existing native labels, state, versions and original activity 775ms
+ ✓ tests/integration/discovery-ranking.test.ts (2 tests) 653ms
+   ✓ D06 known freshness/view/curated scores produce deterministic order, duplicate events cannot inflate it, and withdrawn or private data is excluded 600ms
+ ✓ tests/integration/provider-discovery.test.ts (1 test) 522ms
+   ✓ V02 filters published providers by exact category/canonical area/text/city with bounded stable pages; other areas and unknown matches remain empty 461ms
+ ✓ tests/integration/quotes.test.ts (4 tests) 665ms
+ ✓ tests/integration/home-discovery.test.ts (2 tests) 665ms
+   ✓ D07 city-scoped bounded home feeds show only active eligible curation and disclosed sponsorship; withdrawal/sold-out remove cards immediately 606ms
+ ✓ tests/integration/management-grants.test.ts (5 tests) 422ms
+ ✓ tests/integration/browsing-history.test.ts (1 test) 542ms
+   ✓ A03 history is opt-in, versioned, removable/clearable and scoped; archived favorites/history stay unavailable without private fields 539ms
+ ✓ tests/integration/owner-grants.test.ts (2 tests) 461ms
+   ✓ O01 owner creates an exact private draft using a current explicit grant; contact audience isolates reviewers then the assigned team 353ms
+ ✓ tests/integration/owner-wizard.test.ts (2 tests) 400ms
+ ✓ tests/integration/inquiries.test.ts (6 tests) 469ms
+ ✓ tests/integration/support-workbench.test.ts (3 tests) 425ms
+ ✓ tests/integration/development-review.test.ts (4 tests) 454ms
+ ✓ tests/integration/owner-evidence.test.ts (2 tests) 445ms
+   ✓ O03 actual approved PDF attachment is versioned, scoped and labelled; authorized downloads are audited and expired/foreign tickets fail 360ms
+ ✓ tests/integration/contracts.test.ts (5 tests) 433ms
+ ✓ tests/integration/analytics.test.ts (3 tests) 408ms
+   ✓ S06 six declared consented source events project exact unique counts; retries, repeated-source events and concurrent workers cannot double count or expose private text 329ms
+ ✓ tests/integration/resale-detail.test.ts (1 test) 424ms
+   ✓ D08 detail exposes only published facts and current eligible assigned agents; expired/unassigned agents and withdrawn listings cannot receive bookings 422ms
+ ✓ tests/integration/crm.test.ts (4 tests) 345ms
+ ✓ tests/integration/agency-assignments.test.ts (3 tests) 390ms
+ ✓ tests/integration/seo.test.ts (2 tests) 311ms
+ ✓ tests/integration/development-discovery.test.ts (2 tests) 363ms
+   ✓ N03 development SQL search returns expected city/district/budget/basis/status/type-range IDs, stable pages, unknown prices and explicit public fields 303ms
+ ✓ tests/integration/owner-lifecycle.test.ts (3 tests) 318ms
+ ✓ tests/integration/support-cases.test.ts (3 tests) 352ms
+ ✓ tests/integration/conversations.test.ts (3 tests) 318ms
+ ✓ tests/integration/development-detail.test.ts (2 tests) 288ms
+ ✓ tests/integration/market-policy.test.ts (2 tests) 181ms
+ ✓ tests/integration/listing-workflow.test.ts (6 tests) 311ms
+ ✓ tests/integration/database.test.ts (15 tests) 230ms
+ ✓ tests/integration/rental-detail.test.ts (2 tests) 205ms
+ ✓ tests/integration/agency-memberships.test.ts (3 tests) 274ms
+ ✓ tests/integration/saved-searches.test.ts (2 tests) 223ms
+ ✓ tests/integration/commercial-detail.test.ts (2 tests) 213ms
+ ✓ tests/integration/commercial-facts.test.ts (3 tests) 217ms
+ ✓ tests/integration/favorites.test.ts (1 test) 243ms
+ ✓ tests/integration/agent-dashboard.test.ts (3 tests) 225ms
+ ✓ tests/integration/development-projects.test.ts (2 tests) 188ms
+ ✓ tests/integration/rental-terms.test.ts (2 tests) 202ms
+ ✓ tests/integration/platform-administration.test.ts (3 tests) 197ms
+ ✓ tests/integration/owner-assignment.test.ts (2 tests) 184ms
+ ✓ tests/integration/listing-revisions.test.ts (4 tests) 131ms
+ ✓ tests/integration/search-history.test.ts (2 tests) 124ms
+ ✓ tests/integration/account-profile.test.ts (1 test) 82ms
+ ✓ tests/integration/mortgage-market.test.ts (1 test) 89ms
+ ✓ tests/integration/inventory-schema.test.ts (6 tests) 71ms
+ ✓ tests/integration/moderation-evidence.test.ts (4 tests) 61ms
+ ✓ tests/integration/geography.test.ts (4 tests) 48ms
+ ✓ tests/integration/readiness.test.ts (2 tests) 32ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/resale-filters.test.ts > D04 combined resale facets use OR within groups and AND between them, including actual public tour eligibility and bounded transit proximity
+AssertionError: expected 'sql' to be 'meilisearch' // Object.is equality
+
+Expected: "meilisearch"
+Received: "sql"
+
+ ❯ tests/integration/resale-filters.test.ts:31:126
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/integration/search-rebuild.test.ts > D10 verified temporary rebuild preserves the old serving index and browsing, then swaps the complete eligible public count and catches queued projections
+Error: SEARCH_TASK_FAILED_index_primary_key_multiple_candidates_found
+ ❯ searchTask apps/worker/src/processor.ts:16:75
+
+ ❯ tests/integration/search-rebuild.test.ts:19:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/integration/typed-search.test.ts > D02 exact city/decimal filters, UUID ties and opaque bounded cursors return the expected IDs without duplicates
+AssertionError: expected 'sql' to be 'meilisearch' // Object.is equality
+
+Expected: "meilisearch"
+Received: "sql"
+
+ ❯ tests/integration/typed-search.test.ts:18:151
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  3 failed | 82 passed (85)
+      Tests  3 failed | 291 passed (294)
+   Start at  20:09:54
+   Duration  221.14s (tests 68%, import 31%, transform 1%)
+
+     Import  272 modules were evaluated 379 times · 66.50s total, 31% of tracked time
+             ~18.77s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
+ ELIFECYCLE  Command failed with exit code 1.

@@ -1,0 +1,97 @@
+
+ RUN  v5.0.3 /workspace
+
+ ✓ tests/integration/home-content.test.ts (3 tests) 1195ms
+   ✓ S03 versioned scheduled publication uses the exact eligible snapshot, preserves independent draft edits and current public visibility 682ms
+ ❯ tests/integration/account-privacy.test.ts (4 tests | 1 failed) 482ms
+   ✓ A06 one-snapshot personal export excludes another persona even for an administrator and keeps money as decimal strings 243ms
+   × A06 strict confirmed versioned deletion revokes every own session/optional channel and preserves posted finance plus reversal history 54ms
+   ✓ A06 online export refuses over-limit data rather than silently omitting records 123ms
+   ✓ Q04 own staff deletion keeps original permission history, advances revoked membership versions and never records an administrator reactivation 59ms
+ ✓ tests/integration/platform-administration.test.ts (3 tests) 184ms
+ ❯ tests/integration/city-taxonomy-bootstrap.test.ts (2 tests | 1 failed) 772ms
+   ✓ Q04 native city creation atomically initializes four versioned categories with exact original author/time/history and one replay receipt 97ms
+   × Q04 cold seed includes editable categories and a trusted replay preserves existing native labels, state, versions and original activity 671ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/integration/account-privacy.test.ts > A06 strict confirmed versioned deletion revokes every own session/optional channel and preserves posted finance plus reversal history
+AssertionError: expected undefined to deeply equal { enabled: false, version: 2 }
+
+- Expected:
+{
+  "enabled": false,
+  "version": 2,
+}
+
++ Received:
+undefined
+
+ ❯ tests/integration/account-privacy.test.ts:26:959
+
+ ❯ transaction packages/database/src/index.ts:7:1159
+ ❯ tests/integration/account-privacy.test.ts:26:2
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/integration/city-taxonomy-bootstrap.test.ts > Q04 cold seed includes editable categories and a trusted replay preserves existing native labels, state, versions and original activity
+AssertionError: expected [ Array(16) ] to deeply equal [ Array(13) ]
+
+- Expected
++ Received
+
+@@ -99,10 +99,43 @@
+      },
+    },
+    {
+      "row": {
+        "active": true,
++       "category": "commercial",
++       "city": "s03-8c2871bb-fda3-49ee-830f-6ad31695581d",
++       "label": "Commercial property",
++       "updated_at": null,
++       "updated_by": null,
++       "version": 1,
++     },
++   },
++   {
++     "row": {
++       "active": true,
++       "category": "new-homes",
++       "city": "s03-8c2871bb-fda3-49ee-830f-6ad31695581d",
++       "label": "New developments",
++       "updated_at": null,
++       "updated_by": null,
++       "version": 1,
++     },
++   },
++   {
++     "row": {
++       "active": true,
++       "category": "rent",
++       "city": "s03-8c2871bb-fda3-49ee-830f-6ad31695581d",
++       "label": "Rentals",
++       "updated_at": null,
++       "updated_by": null,
++       "version": 1,
++     },
++   },
++   {
++     "row": {
++       "active": true,
+        "category": "buy",
+        "city": "sh",
+        "label": "Homes for sale",
+        "updated_at": null,
+        "updated_by": null,
+
+ ❯ tests/integration/city-taxonomy-bootstrap.test.ts:23:405
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  2 failed | 10 passed (12)
+   Start at  19:24:00
+   Duration  6.98s (import 52%, tests 40%, transform 8%)
