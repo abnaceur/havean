@@ -73,3 +73,4 @@ export * from './tenant-links';
 export * from './lease-drafts';
 export * from './lease-workflow';
 export * from './recurring-charges';
+export * from './payment-evidence';

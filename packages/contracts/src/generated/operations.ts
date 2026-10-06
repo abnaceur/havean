@@ -35,6 +35,7 @@ import {tenantInvite,tenantInviteDecision} from '../tenant-links';
 import {leaseDraftCreate,leaseDraftUpdate} from '../lease-drafts';
 import {leaseActivation,leaseRenewal,leaseEnding} from '../lease-workflow';
 import {chargeGeneration,chargePreviewQuery} from '../recurring-charges';
+import {paymentEvidenceCreate,paymentEvidenceUpdate,paymentEvidencePost} from '../payment-evidence';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -212,7 +213,6 @@ export const operations={
 "ManagementController_maintain":{method:"PATCH",path:"/api/v1/ops/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.string(),version:z.number().int(),assignee:z.string().max(100).optional(),publicNote:z.string().max(2000).optional(),internalNote:z.string().max(2000).optional()}),response:responses["ManagementController_maintain"]},
 "ManagementController_maintenance":{method:"GET",path:"/api/v1/ops/maintenance",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_maintenance"]},
 "ManagementController_ownerLeases":{method:"GET",path:"/api/v1/me/owner-leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_ownerLeases"]},
-"ManagementController_payment":{method:"POST",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),amount:money,currency:z.literal('CNY'),source:z.enum(['bank_statement','receipt','manual_evidence']),reference:z.string().trim().min(3).max(120)}),response:responses["ManagementController_payment"]},
 "ManagementController_payments":{method:"GET",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_payments"]},
 "ManagementController_properties":{method:"GET",path:"/api/v1/ops/managed-properties",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["ManagementController_properties"]},
 "ManagementController_request":{method:"POST",path:"/api/v1/me/maintenance",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),title:z.string().min(5).max(120),description:z.string().min(10).max(3000),category:z.enum(['Plumbing','Electrical','Heating','Appliance','Other']),urgency:z.enum(['Routine','Urgent','Emergency'])}),response:responses["ManagementController_request"]},
@@ -250,6 +250,11 @@ export const operations={
 "NotificationWorkerController_plan":{method:"POST",path:"/api/v1/internal/alerts/plan/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationPlanInput,response:responses["NotificationWorkerController_plan"]},
 "NotificationWorkerController_read":{method:"GET",path:"/api/v1/internal/alerts/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["NotificationWorkerController_read"]},
 "NotificationWorkerController_transactional":{method:"POST",path:"/api/v1/internal/alerts/transactional/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationEventInput,response:responses["NotificationWorkerController_transactional"]},
+"PaymentEvidenceController_create":{method:"POST",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:paymentEvidenceCreate,response:responses["PaymentEvidenceController_create"]},
+"PaymentEvidenceController_options":{method:"GET",path:"/api/v1/ops/payment-evidence-options/:leaseId",params:z.object({"leaseId":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["PaymentEvidenceController_options"]},
+"PaymentEvidenceController_post":{method:"POST",path:"/api/v1/ops/payment-records/:id/post",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:paymentEvidencePost,response:responses["PaymentEvidenceController_post"]},
+"PaymentEvidenceController_read":{method:"GET",path:"/api/v1/ops/payment-records/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["PaymentEvidenceController_read"]},
+"PaymentEvidenceController_update":{method:"PATCH",path:"/api/v1/ops/payment-records/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:paymentEvidenceUpdate,response:responses["PaymentEvidenceController_update"]},
 "PrivacyController_export":{method:"GET",path:"/api/v1/me/export",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["PrivacyController_export"]},
 "PrivacyController_policy":{method:"GET",path:"/api/v1/me/privacy",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["PrivacyController_policy"]},
 "PrivacyController_requestDeletion":{method:"POST",path:"/api/v1/me/deletion-requests",params:z.object({}),query:z.object({}),body:deletionRequest,response:responses["PrivacyController_requestDeletion"]},

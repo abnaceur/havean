@@ -1,0 +1,10 @@
+import {z} from 'zod';
+import {leaseRent} from './lease-drafts';
+const version=z.number().int().positive(),authority={leaseVersion:version,unitVersion:version,grantVersion:version},terms={...authority,amount:leaseRent,currency:z.string().regex(/^[A-Z]{3}(?![\s\S])/),source:z.enum(['bank_statement','receipt','manual_evidence']),reference:z.string().trim().min(3).max(120)};
+export const paymentEvidenceCreate=z.object({version:z.literal(0),leaseId:z.uuid(),...terms}).strict();
+export const paymentEvidenceUpdate=z.object({version,...terms}).strict();
+export const paymentEvidencePost=z.object({version,...authority,confirm:z.literal(true)}).strict();
+export const paymentEvidenceSource=z.object({leaseId:z.uuid(),leaseVersion:version,unitVersion:version,grantVersion:version,currency:z.string()});
+export const paymentEvidenceRecord=z.object({id:z.uuid(),leaseId:z.uuid(),version,status:z.enum(['draft','posted']),amount:z.string(),currency:z.string(),source:z.string(),reference:z.string(),leaseVersion:version.nullable(),unitVersion:version.nullable(),grantVersion:version.nullable(),createdAt:z.string(),postedAt:z.string().nullable(),postedBy:z.uuid().nullable(),native:z.boolean(),activity:z.array(z.object({version:z.number().int(),action:z.string(),at:z.string()}))});
+export type PaymentEvidenceRecord=z.infer<typeof paymentEvidenceRecord>;
+export type PaymentEvidenceSource=z.infer<typeof paymentEvidenceSource>;

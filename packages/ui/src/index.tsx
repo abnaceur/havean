@@ -26,3 +26,4 @@ export {LeaseDraftForm} from './lease-draft-form';
 export {LeaseActivationForm} from './lease-activation-form';
 export {LeaseLifecycleForm} from './lease-lifecycle-form';
 export {RecurringChargeForm} from './recurring-charge-form';
+export {PaymentEvidenceForm} from './payment-evidence-form';

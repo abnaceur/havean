@@ -1,3 +1,4 @@
+import {paymentEvidenceRecord,paymentEvidenceSource} from './payment-evidence';
 import {chargePreviewRecord,chargeGenerationRecord} from './recurring-charges';
 import {leaseWorkflowRecord} from './lease-workflow';
 import {leaseDraftRecord,leaseDraftSource} from './lease-drafts';
@@ -122,7 +123,7 @@ export const responses={
  ManagementController_properties:z.array(managementGrantRecord),ManagementController_tenants:z.array(m.tenants.pick({id:true,name:true,email:true,user_id:true})),
  ManagementController_leases:z.array(m.leases.extend({tenant:s,community:s})),LeaseLifecycleController_read:leaseWorkflowRecord,LeaseLifecycleController_end:leaseWorkflowRecord,LeaseLifecycleController_renew:leaseDraftRecord,
  ManagementController_reverseCharge:m.charges,ManagementController_ownerLeases:z.array(leaseSummary),RecurringChargesController_preview:chargePreviewRecord,RecurringChargesController_generate:chargeGenerationRecord,ManagementController_charges:z.array(m.charges.extend({community:s})),
- ManagementController_payments:z.array(m.payments),ManagementController_payment:m.payments,ManagementController_allocate:m.allocations,ManagementController_reverse:m.payments,ManagementController_deposit:m.deposits,
+ ManagementController_payments:z.array(m.payments),PaymentEvidenceController_options:paymentEvidenceSource,PaymentEvidenceController_read:paymentEvidenceRecord,PaymentEvidenceController_create:paymentEvidenceRecord,PaymentEvidenceController_update:paymentEvidenceRecord,PaymentEvidenceController_post:paymentEvidenceRecord,ManagementController_allocate:m.allocations,ManagementController_reverse:m.payments,ManagementController_deposit:m.deposits,
  ManagementController_tenantLeases:z.array(leaseSummary),ManagementController_tenantCharges:z.array(chargeSummary.extend({lease_id:uuid})),
  ManagementController_statement:z.object({lease:z.object({id:uuid,currency:s,rent:decimal,startDate:s,endDate:s,status:s}),charges:z.array(chargeSummary),payments:z.array(paymentSummary),allocations:z.array(allocationSummary),deposits:z.array(depositSummary),totals:z.object({charges:decimal,recordedPayments:decimal,allocated:decimal,outstanding:decimal,credit:decimal,depositHeld:decimal}),note:s}),
  ManagementController_tenantMaintenance:z.array(m.maintenance.omit({organization_id:true,user_id:true,internal_note:true})),ManagementController_request:status,ManagementController_maintenance:z.array(m.maintenance),ManagementController_maintain:versioned,
