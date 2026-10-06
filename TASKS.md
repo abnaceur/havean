@@ -78,8 +78,8 @@
 - [x] **L04 Reserve viewings transactionally** — done; dependencies: L03, D10, A06, B05, N05, C03, O05
 - [x] **L05 Build booking calendar and actions** — done; dependencies: L04, D10, A06, B05, N05, C03, O05
 - [x] **L06 Send viewing reminders and reports** — done; dependencies: L05, D10, A06, B05, N05, C03, O05
-- [ ] **M01 Create authorized conversations** — in_progress; dependencies: L06, F12
-- [ ] **M02 Persist and deduplicate messages** — todo; dependencies: M01, L06, F12
+- [x] **M01 Create authorized conversations** — done; dependencies: L06, F12
+- [ ] **M02 Persist and deduplicate messages** — in_progress; dependencies: M01, L06, F12
 - [ ] **M03 Build inbox and chat interface** — todo; dependencies: M02, L06, F12
 - [ ] **M04 Recover realtime sessions** — todo; dependencies: M03, L06, F12
 - [ ] **V01 Create service provider catalog** — todo; dependencies: A06, L06, U07
