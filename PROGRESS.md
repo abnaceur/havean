@@ -1,6 +1,6 @@
 # Progress — 6 October 2026
 
-Current specification status: **87/120 verified; 33 remain. T03 is in progress.** T02 mortgage interface acceptance is verified. Full release validation requires the remaining tasks.
+Current specification status: **88/120 verified; 32 remain. P01 is in progress.** T03 repayment export acceptance is verified. Full release validation requires the remaining tasks.
 
 ## Earlier implementation and verification history
 
@@ -151,3 +151,5 @@ V03 complete: validated contact/consent, current provider/service/area/currency 
 T01 complete: mortgage math moved into the API with strict decimal-string amounts, local high-precision half-up rounding, nonnegative capped principal and exact final adjustment. Explicit method/rate/term and first/final payment assumptions returned. Fifteen unit checks, two native desktop/mobile calculator regressions and final lint/types/contracts/task/all production builds pass. Implementation 4aea8d6; evidence/tasks/T01.md. 86/120 complete; 34 remain. Continue T02 market-aware typed mortgage interface. Original calculator parity and production deployment remain unverified.
 
 T02 complete: city/market-aware typed mortgage form, exact cents, explicit first/final payment and method assumptions, expandable schedule, retained English validation and clearing of stale results. Guarded malformed/newline decimal inputs also fix the quote-budget contract. Seventeen unit checks, four final desktop/mobile calculator journeys and lint/types/contracts/task/all production builds pass; table contrast and keyboard scroll access corrected. Implementation 5e1bdbf; evidence/tasks/T02.md. 87/120 complete; 33 remain. Continue T03 CSV totals, configured notes and safe custom title. New screenshots remain provisional; original calculator parity and production deployment unverified.
+
+T03 complete: frozen typed result exports every repayment row, exact totals, first/final payment, city currency, method/rate/term and actual configured note/version. Optional Unicode/formula-like titles are bounded, quoted and neutralized; UTF-8 CSV omits identity/contact by default. Nineteen units, one persisted market-source integration, six desktop/mobile regressions plus two final export journeys and all lint/types/contracts/task/production builds pass. SQL 105 applied to both stacks; proposed notes added to future seeds and versioned market UI. Implementation e6e6722; evidence/tasks/T03.md. 88/120 complete; 32 remain. Continue P01 canonical management portfolios and time-bound grants. New screenshots provisional; original parity and production deployment unverified.
