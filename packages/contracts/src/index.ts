@@ -51,3 +51,5 @@ export * from './agent-directory';
 export * from './agency-memberships';
 
 export * from './assignments';
+
+export * from './agent-dashboard';

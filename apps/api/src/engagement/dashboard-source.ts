@@ -1,0 +1,3 @@
+// Professional activity excludes personally owned inquiries unless assigned to this agent.
+export const dashboardNewLeadsSource=`SELECT l.id,l.name,l.status,l.created_at,l.version FROM leads l LEFT JOIN agents a ON a.id=l.agent_id CROSS JOIN authority auth WHERE l.organization_id=$1 AND l.status='new' AND (auth.team OR a.user_id=$2)`;
+export const dashboardUpcomingSource=`SELECT v.id,l.title,v.start_at,v.end_at,v.status,v.version FROM viewings v JOIN listings l ON l.id=v.listing_id JOIN agents a ON a.id=v.agent_id CROSS JOIN authority auth WHERE l.organization_id=$1 AND a.organization_id=$1 AND v.status IN('requested','confirmed') AND v.start_at>=statement_timestamp() AND (auth.team OR a.user_id=$2)`;

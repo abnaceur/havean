@@ -1,3 +1,4 @@
+import {agentDashboard} from './agent-dashboard';
 import {assignmentAgent,assignmentResult} from './assignments';
 import {agencyInvitationRecord,agencyMemberRecord} from './agency-memberships';
 import {agentStatistics} from './agent-directory';
@@ -103,7 +104,7 @@ export const responses={
  ManagementController_tenantMaintenance:z.array(m.maintenance.omit({organization_id:true,user_id:true,internal_note:true})),ManagementController_request:status,ManagementController_maintenance:z.array(m.maintenance),ManagementController_maintain:versioned,
  ServicesController_quote:status,ServicesController_quotes:z.array(m.quotes),ServicesController_changeQuote:versioned,
  AssignmentDirectoryController_listings:z.array(m.listings.pick({id:true,title:true,status:true,agent_id:true,version:true})),LeadAssignmentsController_leads:z.array(m.leads.pick({id:true,name:true,status:true,agent_id:true,version:true})),AssignmentDirectoryController_agents:z.array(assignmentAgent),AssignmentDirectoryController_history:z.array(m.listing_assignment_history),LeadAssignmentsController_assign:assignmentResult,LeadAssignmentsController_history:z.array(m.lead_assignment_history),
- AdministrationController_cases:z.array(support),AdministrationController_support:status,AdministrationController_supportQueue:z.array(m.support_cases),AdministrationController_updateSupport:versioned,
+ AgentDashboardController_overview:agentDashboard,AdministrationController_cases:z.array(support),AdministrationController_support:status,AdministrationController_supportQueue:z.array(m.support_cases),AdministrationController_updateSupport:versioned,
  AdministrationController_audit:z.array(m.audit_events),AdministrationController_users:z.array(m.profiles.pick({id:true,display_name:true,email:true,state:true})),AdministrationController_suspend:m.profiles.pick({id:true,state:true}),
- AdministrationController_memberships:z.array(agencyMemberRecord),AdministrationController_dashboard:z.object({listings:n,leads:n,leases:n,maintenance:n,asOf:s,definition:s})
+ AdministrationController_memberships:z.array(agencyMemberRecord),AdministrationController_dashboard:z.union([agentDashboard,z.object({listings:n,leads:n,leases:n,maintenance:n,asOf:s,definition:s})])
 } as const;

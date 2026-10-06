@@ -24,6 +24,7 @@ export const sdk={
 "AgentCredentialsController_review":call(operations["AgentCredentialsController_review"]),
 "AgentCredentialsController_submit":call(operations["AgentCredentialsController_submit"]),
 "AgentCredentialsController_update":call(operations["AgentCredentialsController_update"]),
+"AgentDashboardController_overview":call(operations["AgentDashboardController_overview"]),
 "AssignmentDirectoryController_agents":call(operations["AssignmentDirectoryController_agents"]),
 "AssignmentDirectoryController_history":call(operations["AssignmentDirectoryController_history"]),
 "AssignmentDirectoryController_listings":call(operations["AssignmentDirectoryController_listings"]),
