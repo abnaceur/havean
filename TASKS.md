@@ -91,8 +91,8 @@
 - [x] **P01 Create management grants and portfolios** — done; dependencies: R04, O05, B05, F12
 - [x] **P02 Create tenant profiles and account links** — done; dependencies: P01, R04, O05, B05, F12
 - [x] **P03 Create lease drafts and term validation** — done; dependencies: P02, R04, O05, B05, F12
-- [ ] **P04 Activate lease and enforce availability** — in_progress; dependencies: P03, R04, O05, B05, F12
-- [ ] **P05 Renew and end leases** — todo; dependencies: P04, R04, O05, B05, F12
+- [x] **P04 Activate lease and enforce availability** — done; dependencies: P03, R04, O05, B05, F12
+- [ ] **P05 Renew and end leases** — in_progress; dependencies: P04, R04, O05, B05, F12
 - [ ] **P06 Generate recurring charges** — todo; dependencies: P05, R04, O05, B05, F12
 - [ ] **P07 Record payment evidence** — todo; dependencies: P06, R04, O05, B05, F12
 - [ ] **P08 Allocate payments and credit balances** — todo; dependencies: P07, R04, O05, B05, F12

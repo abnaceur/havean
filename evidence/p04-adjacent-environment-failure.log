@@ -1,0 +1,29 @@
+ Container haven-p02-api-run-bf6a9a9a8dd0 Creating 
+ Container haven-p02-api-run-bf6a9a9a8dd0 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/account-privacy.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 674[2mms[22m[39m
+ [31m❯[39m tests/integration/rental-availability.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 474[2mms[22m[39m
+[31m   [31m×[31m R04 leased room invalidates whole-property search/detail/contact even with stale index; sibling room remains available and publication checks canonical occupancy[39m[32m 220[2mms[22m[39m
+[31m   [31m×[31m R04 root lock serializes a whole-property leased transition against child publication and prevents publication after the committed occupancy[39m[32m 208[2mms[22m[39m
+[31m   [31m×[31m R04 active whole-unit lease denies every child contact and public detail; direct consumer lead insert cannot bypass eligibility[39m[32m 43[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/rental-availability.test.ts[2m > [22mR04 leased room invalidates whole-property search/detail/contact even with stale index; sibling room remains available and publication checks canonical occupancy
+[41m[1m FAIL [22m[49m tests/integration/rental-availability.test.ts[2m > [22mR04 root lock serializes a whole-property leased transition against child publication and prevents publication after the committed occupancy
+[41m[1m FAIL [22m[49m tests/integration/rental-availability.test.ts[2m > [22mR04 active whole-unit lease denies every child contact and public detail; direct consumer lead insert cannot bypass eligibility
+[31m[1mTypeError[22m: fetch failed[39m
+[31m[1mCaused by: Error[22m: getaddrinfo ENOTFOUND search[39m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22m[39m
+[31m[1mSerialized Error:[22m[39m [90m{ errno: -3008, code: 'ENOTFOUND', syscall: 'getaddrinfo', hostname: 'search' }[39m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 09:06:57
+[2m   Duration [22m 4.25s[2m (import 55%, tests 30%, transform 15%)[22m
+
+
