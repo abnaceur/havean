@@ -40,6 +40,7 @@ import {paymentAllocation,allocationLedgerQuery} from '../payment-allocations';
 import {financialReversal} from '../financial-reversals';
 import {depositMovement,depositLedgerQuery} from '../deposits';
 import {tenantLeaseQuery} from '../tenant-leases';
+import {managementDashboardQuery} from '../management-dashboard';
 import {statementQuery} from '../statements';
 import {maintenanceCreate,maintenanceWorkflow,maintenancePageQuery,maintenanceOptionsQuery,maintenanceTenantAction} from '../maintenance';
 import {responses} from '../responses';
@@ -229,6 +230,7 @@ export const operations={
 "MaintenanceController_tenantOptions":{method:"GET",path:"/api/v1/me/maintenance-options",params:z.object({}),query:maintenanceOptionsQuery,body:z.undefined(),response:responses["MaintenanceController_tenantOptions"]},
 "MaintenanceController_tenantRead":{method:"GET",path:"/api/v1/me/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["MaintenanceController_tenantRead"]},
 "ManagementController_charges":{method:"GET",path:"/api/v1/ops/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_charges"]},
+"ManagementController_dashboard":{method:"GET",path:"/api/v1/ops/management-dashboard",params:z.object({}),query:managementDashboardQuery,body:z.undefined(),response:responses["ManagementController_dashboard"]},
 "ManagementController_leases":{method:"GET",path:"/api/v1/ops/leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_leases"]},
 "ManagementController_ownerLeases":{method:"GET",path:"/api/v1/me/owner-leases",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["ManagementController_ownerLeases"]},
 "ManagementController_payments":{method:"GET",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_payments"]},

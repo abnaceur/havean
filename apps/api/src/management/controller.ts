@@ -1,4 +1,5 @@
-import {managementGrantPage,statementQuery} from '@haven/contracts';
+import {managementGrantPage,statementQuery,managementDashboardQuery} from '@haven/contracts';
+import {managementDashboard} from './dashboard.js';
 import {managementPortfolio} from './grants.js';
 import {Controller,Get,Param,Req,Query,Res,Inject} from '@nestjs/common';
 import type {FastifyRequest,FastifyReply} from 'fastify';
@@ -10,6 +11,7 @@ const finance=['finance'];
 @Controller('api/v1')
 export class ManagementController{
  constructor(@Inject(Identity) private readonly identity:Identity){}
+ @Get('ops/management-dashboard') async dashboard(@Req() req:FastifyRequest,@Query() input:unknown={}){const a=await this.identity.actor(req,['property_manager','finance']),x=managementDashboardQuery.parse(input);return transaction(a,async c=>data(await managementDashboard(c,x)));}
  @Get('ops/managed-properties') async properties(@Req() req:FastifyRequest,@Query() input:unknown={}){const a=await this.identity.actor(req,roles),x=managementGrantPage.parse(input);return transaction(a,async c=>data(await managementPortfolio(c,x.page),{page:x.page,limit:20}));}
  @Get('ops/tenants') async tenants(@Req() req:FastifyRequest){const a=await this.identity.actor(req,roles);return transaction(a,async c=>data((await c.query('SELECT id,name,email,user_id FROM tenants')).rows));}
  @Get('ops/leases') async leases(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['property_manager','finance','admin']);return transaction(a,async c=>data((await c.query('SELECT l.*,t.name AS tenant,co.name AS community FROM leases l JOIN tenants t ON t.id=l.tenant_id JOIN units u ON u.id=l.unit_id JOIN communities co ON co.id=u.community_id ORDER BY l.start_date DESC')).rows));}

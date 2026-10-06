@@ -81,3 +81,5 @@ export * from './tenant-leases';
 export * from './maintenance';
 
 export * from './statements';
+
+export * from './management-dashboard';

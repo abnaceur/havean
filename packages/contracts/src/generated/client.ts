@@ -183,6 +183,7 @@ export const sdk={
 "MaintenanceController_tenantOptions":call(operations["MaintenanceController_tenantOptions"]),
 "MaintenanceController_tenantRead":call(operations["MaintenanceController_tenantRead"]),
 "ManagementController_charges":call(operations["ManagementController_charges"]),
+"ManagementController_dashboard":call(operations["ManagementController_dashboard"]),
 "ManagementController_leases":call(operations["ManagementController_leases"]),
 "ManagementController_ownerLeases":call(operations["ManagementController_ownerLeases"]),
 "ManagementController_payments":call(operations["ManagementController_payments"]),
