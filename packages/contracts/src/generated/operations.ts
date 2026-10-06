@@ -32,6 +32,7 @@ import {providerCreate,providerUpdate,providerVersion,providerReview,providerFil
 import {quoteCreate,quoteChange,quoteFilters} from '../quotes';
 import {managementGrantCreate,managementGrantUpdate,managementGrantPage} from '../management-grants';
 import {tenantInvite,tenantInviteDecision} from '../tenant-links';
+import {leaseDraftCreate,leaseDraftUpdate} from '../lease-drafts';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -194,10 +195,14 @@ export const operations={
 "LeadAssignmentsController_assign":{method:"PATCH",path:"/api/v1/ops/leads/:id/assignment",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leadAssignment,response:responses["LeadAssignmentsController_assign"]},
 "LeadAssignmentsController_history":{method:"GET",path:"/api/v1/ops/lead-assignment-history",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["LeadAssignmentsController_history"]},
 "LeadAssignmentsController_leads":{method:"GET",path:"/api/v1/ops/assignment-leads",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["LeadAssignmentsController_leads"]},
+"LeaseDraftsController_create":{method:"POST",path:"/api/v1/ops/leases",params:z.object({}),query:z.object({}),body:leaseDraftCreate,response:responses["LeaseDraftsController_create"]},
+"LeaseDraftsController_download":{method:"GET",path:"/api/v1/ops/leases/:leaseId/documents/:id",params:z.object({"leaseId":z.string().min(1),"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["LeaseDraftsController_download"]},
+"LeaseDraftsController_options":{method:"GET",path:"/api/v1/ops/lease-draft-options/:unitId",params:z.object({"unitId":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["LeaseDraftsController_options"]},
+"LeaseDraftsController_read":{method:"GET",path:"/api/v1/ops/lease-drafts/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["LeaseDraftsController_read"]},
+"LeaseDraftsController_update":{method:"PATCH",path:"/api/v1/ops/lease-drafts/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leaseDraftUpdate,response:responses["LeaseDraftsController_update"]},
 "ManagementController_activate":{method:"POST",path:"/api/v1/ops/leases/:id/activate",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_activate"]},
 "ManagementController_allocate":{method:"POST",path:"/api/v1/ops/allocations",params:z.object({}),query:z.object({}),body:z.object({paymentId:z.string().uuid(),chargeId:z.string().uuid(),amount:money}),response:responses["ManagementController_allocate"]},
 "ManagementController_charges":{method:"GET",path:"/api/v1/ops/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_charges"]},
-"ManagementController_createLease":{method:"POST",path:"/api/v1/ops/leases",params:z.object({}),query:z.object({}),body:z.object({unitId:z.string().uuid(),tenantId:z.string().uuid(),startDate:date,endDate:date,rent:money,currency:z.literal('CNY')}),response:responses["ManagementController_createLease"]},
 "ManagementController_deposit":{method:"POST",path:"/api/v1/ops/deposits",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),kind:z.enum(['received','released']),amount:money,reason:z.string().min(5).max(500)}),response:responses["ManagementController_deposit"]},
 "ManagementController_end":{method:"POST",path:"/api/v1/ops/leases/:id/end",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({reason:z.string().min(5).max(500)}),response:responses["ManagementController_end"]},
 "ManagementController_generate":{method:"POST",path:"/api/v1/ops/charges/generate",params:z.object({}),query:z.object({}),body:z.object({period:z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/)}),response:responses["ManagementController_generate"]},

@@ -22,3 +22,4 @@ export {ConversationInbox} from './conversation-inbox';
 export {QuoteWorkspace} from './quote-workspace';
 export {ManagementGrants} from './management-grants';
 export {TenantLinks} from './tenant-links';
+export {LeaseDraftForm} from './lease-draft-form';
