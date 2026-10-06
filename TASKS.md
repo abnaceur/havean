@@ -73,8 +73,8 @@
 - [x] **B04 Assign inventory and leads** — done; dependencies: B03, I08, A06, U07
 - [x] **B05 Build agent dashboard** — done; dependencies: B04, I08, A06, U07
 - [x] **L01 Persist inquiries and route leads** — done; dependencies: D10, A06, B05, N05, C03, O05
-- [ ] **L02 Build CRM queue and lead timeline** — in_progress; dependencies: L01, D10, A06, B05, N05, C03, O05
-- [ ] **L03 Create agent availability slots** — todo; dependencies: L02, D10, A06, B05, N05, C03, O05
+- [x] **L02 Build CRM queue and lead timeline** — done; dependencies: L01, D10, A06, B05, N05, C03, O05
+- [ ] **L03 Create agent availability slots** — in_progress; dependencies: L02, D10, A06, B05, N05, C03, O05
 - [ ] **L04 Reserve viewings transactionally** — todo; dependencies: L03, D10, A06, B05, N05, C03, O05
 - [ ] **L05 Build booking calendar and actions** — todo; dependencies: L04, D10, A06, B05, N05, C03, O05
 - [ ] **L06 Send viewing reminders and reports** — todo; dependencies: L05, D10, A06, B05, N05, C03, O05
