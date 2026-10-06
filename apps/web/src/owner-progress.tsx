@@ -1,0 +1,6 @@
+'use client';
+import {useQuery} from '@tanstack/react-query';
+import {api} from '@haven/contracts';
+import {Spinner,ErrorBox} from '@haven/ui';
+const labels:Record<string,string>={submitted:'Submitted for review',assigned:'Agent assigned',approved:'Property request approved',rejected:'Review completed. Contact support for the next step.'};
+export function OwnerProgress({id,status,version}:{id:string;status:string;version:number}){const progress=useQuery({queryKey:['owner-progress',id,version],queryFn:()=>api<any[]>('/me/owner-submissions/'+id+'/progress'),enabled:status!=='draft'});if(status==='draft')return null;return <section aria-label="Property request progress"><h4>Request progress</h4>{progress.isPending?<Spinner/>:progress.isError?<ErrorBox message={progress.error.message} retry={()=>progress.refetch()}/>:!progress.data?.data.length?<p>{labels[status]||'Request saved'}. Earlier timeline details are unavailable.</p>:<ol>{progress.data.data.map(entry=><li key={entry.id}><strong>{labels[entry.kind]}</strong>{entry.agent_name&&<span> · {entry.agent_name}</span>}<br/><time dateTime={entry.created_at}>{new Date(entry.created_at).toLocaleString('en-GB',{timeZone:'UTC'})} UTC</time></li>)}</ol>}</section>;}
