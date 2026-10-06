@@ -1,0 +1,2 @@
+export function publicRequestKey(endpoint:string|undefined){if(!endpoint)return null;const url=new URL(endpoint,'http://haven.internal');url.searchParams.sort();return url.pathname+'?'+url.searchParams.toString();}
+export function publicPageQuery(input:Record<string,string|string[]|undefined>){const query=new URLSearchParams();for(const [key,value] of Object.entries(input)){if(['city','editSearch'].includes(key)||value===undefined)continue;for(const item of Array.isArray(value)?value:[value])query.append(key,item);}query.sort();return query.toString();}

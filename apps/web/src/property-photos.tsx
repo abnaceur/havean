@@ -1,8 +1,9 @@
 'use client';
 import {useState,useRef,useEffect,useCallback,type KeyboardEvent,type TouchEvent} from 'react';
+import Image from 'next/image';
 import {ChevronLeft,ChevronRight,House} from 'lucide-react';
 import {Dialog} from '@haven/ui';
-function PropertyPhoto({src,title}:{src?:string;title:string}){const [failed,setFailed]=useState(false),image=useRef<HTMLImageElement>(null);useEffect(()=>{if(src&&image.current?.complete&&!image.current.naturalWidth)setFailed(true);},[src]);return src&&!failed?<img ref={image} src={src} alt={title||'Property photograph'} loading="lazy" onError={()=>setFailed(true)}/>:<div className="photo-fallback"><House size={32}/><span>Photo unavailable</span></div>;}
+function PropertyPhoto({src,title}:{src?:string;title:string}){const [failed,setFailed]=useState(false),image=useRef<HTMLImageElement>(null);useEffect(()=>{if(src&&image.current?.complete&&!image.current.naturalWidth)setFailed(true);},[src]);return src&&!failed?<Image ref={image} src={src} alt={title||'Property photograph'} width={1200} height={800} sizes="(max-width: 768px) 100vw, 900px" unoptimized={!src.startsWith('/homes/')} loading="eager" fetchPriority="high" decoding="async" onError={()=>setFailed(true)}/>:<div className="photo-fallback"><House size={32}/><span>Photo unavailable</span></div>;}
 export function PropertyPhotoGallery({photos,title}:{photos:string[];title:string}){
  const [index,setIndex]=useState(0),[open,setOpen]=useState(false),start=useRef<number|null>(null),close=useCallback(()=>setOpen(false),[]),count=photos.length;
  function move(delta:number){if(count>1)setIndex(value=>(value+delta+count)%count);}

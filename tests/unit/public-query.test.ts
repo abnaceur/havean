@@ -1,0 +1,4 @@
+import {it,expect} from 'vitest';
+import {publicPageQuery,publicRequestKey} from '../../apps/web/src/public-query';
+it('Q07 server snapshots normalize the same public query without private saved-search context or another city override',()=>{expect(publicPageQuery({city:'sh',editSearch:'private-saved-search',beds:['1','2'],sort:'newest',text:undefined})).toBe('beds=1&beds=2&sort=newest');});
+it('Q07 query order is equivalent while city, page and resource identity remain distinct',()=>{expect(publicRequestKey('/listings?city=bj&sort=newest')).toBe(publicRequestKey('/listings?sort=newest&city=bj'));for(const other of ['/listings?city=sh&sort=newest','/listings?city=bj&sort=newest&page=2','/agents?city=bj&sort=newest'])expect(publicRequestKey(other)).not.toBe(publicRequestKey('/listings?city=bj&sort=newest'));expect(publicRequestKey(undefined)).toBeNull();});

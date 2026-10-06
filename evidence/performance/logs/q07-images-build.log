@@ -1,0 +1,58 @@
+time="2026-10-07T02:31:20+04:00" level=warning msg="Found orphan containers ([haven-p09-runtime-web-1 haven-p09-runtime-api-1 haven-p09-runtime-ops-1 haven-p09-runtime-q04-worker-1 haven-p09-runtime-q04final-search-1 haven-p09-runtime-q04final-cache-1 haven-p09-runtime-q04-search-1 haven-p09-runtime-q04v-search-1 haven-p09-runtime-q04v-cache-1 haven-p09-runtime-q04-mail-1 haven-p09-runtime-q04-cache-1 haven-p09-runtime-q03-proxy-1 haven-p09-runtime-q02-search-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-p09-runtime-tests-run-16aeee0be89f Creating
+ Container haven-p09-runtime-tests-run-16aeee0be89f Created
+
+> haven-real-estate@0.1.0 lint /workspace
+> eslint . && node scripts/boundaries.mjs
+
+Application import boundaries passed
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+packages/ui typecheck: Done
+apps/api typecheck: Done
+apps/ops typecheck$ tsc --noEmit
+apps/web typecheck$ tsc --noEmit
+apps/ops typecheck: Done
+apps/web typecheck: Done
+
+> @haven/web@0.1.0 build /workspace/apps/web
+> node scripts/copy-maplibre-worker.mjs && next build
+
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 23ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.6s
+  Running TypeScript ...
+  Finished TypeScript in 11.0s ...
+  Collecting page data using 8 workers ...
+  Generating static pages using 8 workers (0/3) ...
+✓ Generating static pages using 8 workers (3/3) in 470ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /_not-found
+├ ƒ /[[...path]]
+├ ƒ /api/[...path]
+├ ○ /robots.txt
+├ ƒ /sitemap.xml
+└ ƒ /sitemaps/[page]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand

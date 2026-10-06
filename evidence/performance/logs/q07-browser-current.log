@@ -1,0 +1,134 @@
+time="2026-10-07T02:30:03+04:00" level=warning msg="Found orphan containers ([haven-p09-runtime-web-1 haven-p09-runtime-api-1 haven-p09-runtime-ops-1 haven-p09-runtime-q04-worker-1 haven-p09-runtime-q04final-search-1 haven-p09-runtime-q04final-cache-1 haven-p09-runtime-q04-search-1 haven-p09-runtime-q04v-search-1 haven-p09-runtime-q04v-cache-1 haven-p09-runtime-q04-mail-1 haven-p09-runtime-q04-cache-1 haven-p09-runtime-q03-proxy-1 haven-p09-runtime-q02-search-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-p09-runtime-tests-run-646d40a39200 Creating
+ Container haven-p09-runtime-tests-run-646d40a39200 Created
+
+Running 8 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj (10.8s)
+  ✓  2 [desktop] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj/buy?sort=newest (9.1s)
+  ✘  3 [desktop] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj/buy/home-1 (14.7s)
+  ✓  4 [desktop] › tests/e2e/ssr-inventory.spec.ts:3:1 › Q07 filtered public inventory is meaningful before JavaScript and matches current native API criteria (826ms)
+  ✘  5 [mobile] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj (9.7s)
+  ✓  6 [mobile] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj/buy?sort=newest (8.4s)
+  ✘  7 [mobile] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj/buy/home-1 (9.6s)
+  ✓  8 [mobile] › tests/e2e/ssr-inventory.spec.ts:3:1 › Q07 filtered public inventory is meaningful before JavaScript and matches current native API criteria (1.2s)
+
+
+  1) [desktop] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj ───────────────────────
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2500
+    Received:    3488
+
+      15 |  const result=await page.evaluate(()=>{const v=(window as any).__havenLab;return {...v,labInpUpperBoundMs:Math.max(16,...v.events.map((e:any)=>e.duration)),resources:performance.getEntriesByType('resource').map((r:any)=>({name:r.name,startTime:r.startTime,duration:r.duration,bytes:r.transferSize})),navigation:JSON.parse(JSON.stringify(performance.getEntriesByType('navigation')[0])),userAgent:navigator.userAgent};});
+      16 |  const report={label:'P',fieldMeasurement:false,emulatedDevice:true,route,viewport:info.project.use.viewport,cpuSlowdown:4,network:{latencyMs:150,downloadBitsPerSecond:1600000,uploadBitsPerSecond:750000},interaction:'Three actual city-dialog open/close cycles',inpMethod:'Maximum Event Timing interaction duration in this short lab; 16 ms observation threshold upper bound when no slower event is emitted',...result,targets:{lcpMs:2500,inpMs:200,cls:.1}};
+    > 17 |  fs.mkdirSync('evidence/performance',{recursive:true});fs.writeFileSync('evidence/performance/lab-'+info.project.name+'-'+route.replace(/[^a-z0-9]/gi,'-')+'.json',JSON.stringify(report,null,2)+'\n');expect(result.eventTiming).toBe(true);expect(result.lcp).toBeGreaterThan(0);expect(result.lcp).toBeLessThanOrEqual(2500);expect(result.labInpUpperBoundMs).toBeLessThanOrEqual(200);expect(result.cls).toBeLessThanOrEqual(.1);
+         |                                                                                                                                                                                                                                                                                                       ^
+      18 | });
+      19 |
+        at /workspace/tests/e2e/performance-lab.spec.ts:17:295
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/performance-lab-Q07-mobile-lab-bj-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/performance-lab-Q07-mobile-lab-bj-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/performance-lab-Q07-mobile-lab-bj-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/performance-lab-Q07-mobile-lab-bj-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj/buy/home-1 ────────────
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2500
+    Received:    3148
+
+      15 |  const result=await page.evaluate(()=>{const v=(window as any).__havenLab;return {...v,labInpUpperBoundMs:Math.max(16,...v.events.map((e:any)=>e.duration)),resources:performance.getEntriesByType('resource').map((r:any)=>({name:r.name,startTime:r.startTime,duration:r.duration,bytes:r.transferSize})),navigation:JSON.parse(JSON.stringify(performance.getEntriesByType('navigation')[0])),userAgent:navigator.userAgent};});
+      16 |  const report={label:'P',fieldMeasurement:false,emulatedDevice:true,route,viewport:info.project.use.viewport,cpuSlowdown:4,network:{latencyMs:150,downloadBitsPerSecond:1600000,uploadBitsPerSecond:750000},interaction:'Three actual city-dialog open/close cycles',inpMethod:'Maximum Event Timing interaction duration in this short lab; 16 ms observation threshold upper bound when no slower event is emitted',...result,targets:{lcpMs:2500,inpMs:200,cls:.1}};
+    > 17 |  fs.mkdirSync('evidence/performance',{recursive:true});fs.writeFileSync('evidence/performance/lab-'+info.project.name+'-'+route.replace(/[^a-z0-9]/gi,'-')+'.json',JSON.stringify(report,null,2)+'\n');expect(result.eventTiming).toBe(true);expect(result.lcp).toBeGreaterThan(0);expect(result.lcp).toBeLessThanOrEqual(2500);expect(result.labInpUpperBoundMs).toBeLessThanOrEqual(200);expect(result.cls).toBeLessThanOrEqual(.1);
+         |                                                                                                                                                                                                                                                                                                       ^
+      18 | });
+      19 |
+        at /workspace/tests/e2e/performance-lab.spec.ts:17:295
+
+    Error Context: test-results/performance-lab-Q07-mobile-lab-bj-buy-home-1-desktop/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/performance-lab-Q07-mobile-lab-bj-buy-home-1-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/performance-lab-Q07-mobile-lab-bj-buy-home-1-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj ────────────────────────
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2500
+    Received:    3144
+
+      15 |  const result=await page.evaluate(()=>{const v=(window as any).__havenLab;return {...v,labInpUpperBoundMs:Math.max(16,...v.events.map((e:any)=>e.duration)),resources:performance.getEntriesByType('resource').map((r:any)=>({name:r.name,startTime:r.startTime,duration:r.duration,bytes:r.transferSize})),navigation:JSON.parse(JSON.stringify(performance.getEntriesByType('navigation')[0])),userAgent:navigator.userAgent};});
+      16 |  const report={label:'P',fieldMeasurement:false,emulatedDevice:true,route,viewport:info.project.use.viewport,cpuSlowdown:4,network:{latencyMs:150,downloadBitsPerSecond:1600000,uploadBitsPerSecond:750000},interaction:'Three actual city-dialog open/close cycles',inpMethod:'Maximum Event Timing interaction duration in this short lab; 16 ms observation threshold upper bound when no slower event is emitted',...result,targets:{lcpMs:2500,inpMs:200,cls:.1}};
+    > 17 |  fs.mkdirSync('evidence/performance',{recursive:true});fs.writeFileSync('evidence/performance/lab-'+info.project.name+'-'+route.replace(/[^a-z0-9]/gi,'-')+'.json',JSON.stringify(report,null,2)+'\n');expect(result.eventTiming).toBe(true);expect(result.lcp).toBeGreaterThan(0);expect(result.lcp).toBeLessThanOrEqual(2500);expect(result.labInpUpperBoundMs).toBeLessThanOrEqual(200);expect(result.cls).toBeLessThanOrEqual(.1);
+         |                                                                                                                                                                                                                                                                                                       ^
+      18 | });
+      19 |
+        at /workspace/tests/e2e/performance-lab.spec.ts:17:295
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/performance-lab-Q07-mobile-lab-bj-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/performance-lab-Q07-mobile-lab-bj-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/performance-lab-Q07-mobile-lab-bj-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/performance-lab-Q07-mobile-lab-bj-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj/buy/home-1 ─────────────
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2500
+    Received:    3160
+
+      15 |  const result=await page.evaluate(()=>{const v=(window as any).__havenLab;return {...v,labInpUpperBoundMs:Math.max(16,...v.events.map((e:any)=>e.duration)),resources:performance.getEntriesByType('resource').map((r:any)=>({name:r.name,startTime:r.startTime,duration:r.duration,bytes:r.transferSize})),navigation:JSON.parse(JSON.stringify(performance.getEntriesByType('navigation')[0])),userAgent:navigator.userAgent};});
+      16 |  const report={label:'P',fieldMeasurement:false,emulatedDevice:true,route,viewport:info.project.use.viewport,cpuSlowdown:4,network:{latencyMs:150,downloadBitsPerSecond:1600000,uploadBitsPerSecond:750000},interaction:'Three actual city-dialog open/close cycles',inpMethod:'Maximum Event Timing interaction duration in this short lab; 16 ms observation threshold upper bound when no slower event is emitted',...result,targets:{lcpMs:2500,inpMs:200,cls:.1}};
+    > 17 |  fs.mkdirSync('evidence/performance',{recursive:true});fs.writeFileSync('evidence/performance/lab-'+info.project.name+'-'+route.replace(/[^a-z0-9]/gi,'-')+'.json',JSON.stringify(report,null,2)+'\n');expect(result.eventTiming).toBe(true);expect(result.lcp).toBeGreaterThan(0);expect(result.lcp).toBeLessThanOrEqual(2500);expect(result.labInpUpperBoundMs).toBeLessThanOrEqual(200);expect(result.cls).toBeLessThanOrEqual(.1);
+         |                                                                                                                                                                                                                                                                                                       ^
+      18 | });
+      19 |
+        at /workspace/tests/e2e/performance-lab.spec.ts:17:295
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/performance-lab-Q07-mobile-lab-bj-buy-home-1-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/performance-lab-Q07-mobile-lab-bj-buy-home-1-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/performance-lab-Q07-mobile-lab-bj-buy-home-1-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/performance-lab-Q07-mobile-lab-bj-buy-home-1-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj ────────────────────────
+    [desktop] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj/buy/home-1 ─────────────
+    [mobile] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj ─────────────────────────
+    [mobile] › tests/e2e/performance-lab.spec.ts:5:67 › Q07 mobile lab /bj/buy/home-1 ──────────────
+  4 passed (1.1m)

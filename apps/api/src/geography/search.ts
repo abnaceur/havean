@@ -1,3 +1,4 @@
+import {anonymousPublicRead} from './public-read-cache.js';
 import {createHash} from 'node:crypto';
 import type pg from 'pg';
 import type {z} from 'zod';
@@ -44,30 +45,41 @@ function pageFor(q:Filters){
  return {page,fingerprint};
 }
 async function rentalPeriod(c:pg.PoolClient,q:Filters){if(q.segment==='commercial'||q.transaction!=='rent'||q.rentPeriod)return q;const row=(await c.query('SELECT data FROM market_config WHERE id=$1',[q.city])).rows[0],period=row?.data?.rentPeriod;if(!['day','month','year'].includes(period))fail(503,'Choose an explicit rental billing period; the market default is unavailable.','RENT_PERIOD_UNAVAILABLE');return {...q,rentPeriod:period} as Filters;}
+type IndexPage={hits:{id:string;sourceVersion:number;pricePrecisionSafe:boolean}[];estimatedTotalHits:number};
+const indexReads=new Map<string,Promise<IndexPage>>();
+async function queryIndex(url:string,body:unknown){
+ const serialized=JSON.stringify(body),key=createHash('sha256').update(url+serialized).digest('hex');
+ const read=async()=>{const response=await fetch(url+'/indexes/listings/search',{method:'POST',headers:{Authorization:'Bearer '+env.SEARCH_KEY,'Content-Type':'application/json'},body:serialized,signal:AbortSignal.timeout(1200)});if(!response.ok)throw Error('SEARCH_UNAVAILABLE');return await response.json() as IndexPage;};
+ const existing=indexReads.get(key);if(!existing&&indexReads.size>=128)return read();
+ const pending=existing||read();if(!existing)indexReads.set(key,pending);
+ try{return await pending;}finally{if(indexReads.get(key)===pending)indexReads.delete(key);}
+}
 export async function searchListings(q:Filters,searchUrl=env.SEARCH_URL){
- return transaction(null,async c=>{
-  const market=(await c.query('SELECT currency FROM cities WHERE slug=$1',[q.city])).rows[0];
-  const requestedPeriod=q.rentPeriod;q=await rentalPeriod(c,q);
-  q={...q,currency:q.currency||market?.currency||'CNY'};
-  const compiled=compileListingSearch(q),{page,fingerprint}=pageFor(q),offset=(page-1)*q.limit;
+ const original=q,requestedPeriod=q.rentPeriod;
+ const read=async(c:pg.PoolClient)=>{
+  const market=(await c.query('SELECT currency FROM cities WHERE slug=$1',[original.city])).rows[0];
+  const q={...await rentalPeriod(c,original),currency:original.currency||market?.currency||'CNY'},compiled=compileListingSearch(q),{page,fingerprint}=pageFor(q),offset=(page-1)*q.limit;
   const total=Number((await c.query(`SELECT count(*) FROM public_listings WHERE ${compiled.where}`,compiled.values)).rows[0].count);
   const ranking=q.sort==='recommended'?rankingExpressions():null;const rankingAsOf=ranking?(await c.query('SELECT now() AS instant')).rows[0].instant:undefined;
   const rows=(await c.query(`SELECT *${ranking?','+ranking.score+' AS "rankingScore",'+ranking.columns:','+rankingExpressions().disclosure} FROM public_listings WHERE ${compiled.where} ORDER BY ${compiled.order} LIMIT $${compiled.values.length+1} OFFSET $${compiled.values.length+2}`,[...compiled.values,q.limit,offset])).rows;
+  // Hydrate from current public SQL eligibility: queued withdrawal can never leak a document.
+  const next=offset+rows.length<total&&page<500&&page*q.limit<=10000?encrypt({page:page+1,fingerprint,expires:Date.now()+3600000}):null;
+  return {criteria:q,result:data(rows,{total,page,limit:q.limit,...(q.transaction==='rent'?{rentalPeriod:q.rentPeriod||null,billingPeriodSource:requestedPeriod?'requested':q.segment==='commercial'?'unrestricted':'market'}:{}),searchMode:'sql',degraded:false,pagination:'bounded-offset',maxOffset:10000,nextCursor:next,...(ranking?{ranking:rankingMetadata('30d',rankingAsOf),queryPlan:'ranking-v1'}:{})})};
+ };
+ const snapshot=q.recentDays!==undefined||q.minAge!==undefined||q.maxAge!==undefined
+  ?await transaction(null,read)
+  :await anonymousPublicRead(()=>({kind:'listings',criteria:original,searchUrl}),read,(value,instant)=>({...value,result:{...value.result,meta:{...value.result.meta,cache:'current-publication-revision',...(value.result.meta?.ranking?{ranking:rankingMetadata('30d',instant)}:{})}}}));
+ q=snapshot.criteria;const response=snapshot.result,compiled=compileListingSearch(q),rows=response.data,total=Number(response.meta?.total),offset=(Number(response.meta?.page)-1)*q.limit;
   let searchMode='sql',degradedReason:string|undefined;
   if(q.bounds||q.lineId||q.stationId)degradedReason='spatial-sql-contract';
   else if(q.text)degradedReason='literal-text-contract';
   else if(q.sort==='recommended'){/* Version-1 aggregate ranking is an intentional authoritative SQL plan. */}
   else try{
-   const r=await fetch(searchUrl+'/indexes/listings/search',{method:'POST',headers:{Authorization:'Bearer '+env.SEARCH_KEY,'Content-Type':'application/json'},body:JSON.stringify({q:'',filter:compiled.filter,sort:compiled.indexOrder,offset,limit:q.limit,attributesToRetrieve:['id','sourceVersion','pricePrecisionSafe']}),signal:AbortSignal.timeout(1200)});
-   if(!r.ok)throw Error('SEARCH_UNAVAILABLE');
-   const result=await r.json() as {hits:{id:string;sourceVersion:number;pricePrecisionSafe:boolean}[];estimatedTotalHits:number};
+   const result=await queryIndex(searchUrl,{q:'',filter:compiled!.filter,sort:compiled!.indexOrder,offset:offset!,limit:q.limit,attributesToRetrieve:['id','sourceVersion','pricePrecisionSafe']});
    if(!Array.isArray(result.hits)||result.estimatedTotalHits!==total||result.hits.length!==rows.length||result.hits.some((hit,i)=>hit.id!==rows[i].id||hit.sourceVersion!==rows[i].version||!hit.pricePrecisionSafe))degradedReason='index-not-current';
    else searchMode='meilisearch';
   }catch{degradedReason='search-unavailable';}
-  // Hydrate from current public SQL eligibility: queued withdrawal can never leak a document.
-  const next=offset+rows.length<total&&page<500&&page*q.limit<=10000?encrypt({page:page+1,fingerprint,expires:Date.now()+3600000}):null;
-  return data(rows,{total,page,limit:q.limit,...(q.transaction==='rent'?{rentalPeriod:q.rentPeriod||null,billingPeriodSource:requestedPeriod?'requested':q.segment==='commercial'?'unrestricted':'market'}:{}),searchMode,degraded:!!degradedReason,...(degradedReason?{degradedReason}:{}),pagination:'bounded-offset',maxOffset:10000,nextCursor:next,...(ranking?{ranking:rankingMetadata('30d',rankingAsOf),queryPlan:'ranking-v1'}:{})});
- });
+ return {...response,meta:{...response.meta,searchMode,degraded:!!degradedReason,...(degradedReason?{degradedReason}:{})}};
 }
 
 export async function mapListings(q:Filters){
