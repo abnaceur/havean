@@ -89,8 +89,8 @@
 - [x] **T02 Build mortgage interface** — done; dependencies: T01, F08, U07
 - [x] **T03 Export repayment schedule** — done; dependencies: T02, F08, U07
 - [x] **P01 Create management grants and portfolios** — done; dependencies: R04, O05, B05, F12
-- [ ] **P02 Create tenant profiles and account links** — in_progress; dependencies: P01, R04, O05, B05, F12
-- [ ] **P03 Create lease drafts and term validation** — todo; dependencies: P02, R04, O05, B05, F12
+- [x] **P02 Create tenant profiles and account links** — done; dependencies: P01, R04, O05, B05, F12
+- [ ] **P03 Create lease drafts and term validation** — in_progress; dependencies: P02, R04, O05, B05, F12
 - [ ] **P04 Activate lease and enforce availability** — todo; dependencies: P03, R04, O05, B05, F12
 - [ ] **P05 Renew and end leases** — todo; dependencies: P04, R04, O05, B05, F12
 - [ ] **P06 Generate recurring charges** — todo; dependencies: P05, R04, O05, B05, F12
