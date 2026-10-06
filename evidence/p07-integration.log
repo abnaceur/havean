@@ -1,0 +1,44 @@
+ Container haven-p02-api-run-b0303541005e Creating 
+ Container haven-p02-api-run-b0303541005e Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/payment-evidence.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 30082[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 native draft stays out of balances and tenant reads; posting exact evidence retains history and audit once[33m 6820[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 edits only current drafts, retains original amount snapshots and denies posted amount changes at API and database[33m 9892[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 negative/float/scientific money, foreign currency and stale authority deny creation with no payment roots[33m 2546[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 posting requires current saved versions and confirmation, concurrent attempts create one post, and revoked grants deny receipts[33m 7170[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 drafts cannot be allocated or reversed before posting and actual manager-only authority cannot record payments[33m 3593[2mms[22m[39m
+ [32m✓[39m tests/integration/lease-lifecycle.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 30414[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 valid next term retains original terms, links history and replays one renewal draft[33m 5915[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 overlapping next terms and stale/currency versions deny renewal without partial linked drafts[33m 7633[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 ending records termination reason and original history, never republishes, and revoked authority denies receipt replay[33m 4026[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 concurrent renewal requests yield one retained successor and concurrent endings yield one record[33m 8376[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 historical lease ending retains unknown provenance and new renewal uses current native authority[33m 4400[2mms[22m[39m
+ [32m✓[39m tests/integration/recurring-charges.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 23639[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 leap-month proration uses exact cents, term-aware due date and one charge across retry and repeated month[33m 5286[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 concurrent generators cannot duplicate a charge; ended and out-of-term leases are excluded[33m 6915[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 stale versions, wrong scope and missing confirmation deny generation; grant revocation denies cached receipt[33m 5314[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 market full-month policy and explicit historical due-day fallback are snapshotted without inventing original terms[33m 895[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 actual finance-only membership can generate within its granted property; a manager without finance cannot[33m 5161[2mms[22m[39m
+ [32m✓[39m tests/integration/lease-activation.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 19121[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 atomic activation withdraws the public rental offer with exact history, audit and matching receipts[33m 3628[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 simultaneous overlapping draft activations yield exactly one success and one current-state conflict[33m 5493[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 property occupation conflicts with child rooms while sibling rooms can hold separate exclusive terms[33m 7230[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 stale versions, missing confirmation and expired terms deny activation without withdrawing publication[33m 2728[2mms[22m[39m
+ [32m✓[39m tests/integration/lease-drafts.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 6235[2mms[22m[39m
+   [33m[2m✓[22m[39m P03 creates one permitted canonical lease draft with exact decimals, monthly due terms and private attachment on retry[33m 480[2mms[22m[39m
+   [33m[2m✓[22m[39m P03 rejects invalid calendar/range/currency, floating amounts, stale sources and unauthorized documents without partial lease rows[33m 357[2mms[22m[39m
+   [33m[2m✓[22m[39m P03 updates only current draft versions, retains original history and denies ended lease term edits[33m 2041[2mms[22m[39m
+   [33m[2m✓[22m[39m P03 another real manager retains an existing team PDF while foreign and tenant document access are denied[33m 1516[2mms[22m[39m
+ [32m✓[39m tests/integration/tenant-links.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 2494[2mms[22m[39m
+   [33m[2m✓[22m[39m P02 verified recipient accepts exact grant invitation once and reads own linked profile without enumerating others[33m 2158[2mms[22m[39m
+ [32m✓[39m tests/integration/account-privacy.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 597[2mms[22m[39m
+ [32m✓[39m tests/integration/management-grants.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 536[2mms[22m[39m
+ [32m✓[39m tests/integration/database.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 342[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[32m51 passed[39m[22m[90m (51)[39m
+[2m   Start at [22m 09:43:58
+[2m   Duration [22m 123.17s[2m (tests 93%, import 7%)[22m
+
