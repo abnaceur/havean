@@ -1,3 +1,4 @@
+import {quoteRecord} from './quotes';
 import {ownedProvider,providerReviewRow,publicProvider} from './providers';
 import {chatMessage,readCursor,conversationSummary} from './chat';
 import {csvExport,viewingReminderSummary} from './crm-exports';
@@ -117,7 +118,7 @@ export const responses={
  ManagementController_tenantLeases:z.array(leaseSummary),ManagementController_tenantCharges:z.array(chargeSummary.extend({lease_id:uuid})),
  ManagementController_statement:z.object({lease:z.object({id:uuid,currency:s,rent:decimal,startDate:s,endDate:s,status:s}),charges:z.array(chargeSummary),payments:z.array(paymentSummary),allocations:z.array(allocationSummary),deposits:z.array(depositSummary),totals:z.object({charges:decimal,recordedPayments:decimal,allocated:decimal,outstanding:decimal,credit:decimal,depositHeld:decimal}),note:s}),
  ManagementController_tenantMaintenance:z.array(m.maintenance.omit({organization_id:true,user_id:true,internal_note:true})),ManagementController_request:status,ManagementController_maintenance:z.array(m.maintenance),ManagementController_maintain:versioned,
- ServicesController_quote:status,ServicesController_quotes:z.array(m.quotes),ServicesController_changeQuote:versioned,
+ ServicesController_quote:quoteRecord,ServicesController_quotes:z.array(quoteRecord),ServicesController_own:z.array(quoteRecord),ServicesController_detail:quoteRecord,ServicesController_ownDetail:quoteRecord,ServicesController_changeQuote:quoteRecord,
  AssignmentDirectoryController_listings:z.array(m.listings.pick({id:true,title:true,status:true,agent_id:true,version:true})),LeadAssignmentsController_leads:z.array(m.leads.pick({id:true,name:true,status:true,agent_id:true,version:true})),AssignmentDirectoryController_agents:z.array(assignmentAgent),AssignmentDirectoryController_history:z.array(m.listing_assignment_history),LeadAssignmentsController_assign:assignmentResult,LeadAssignmentsController_history:z.array(m.lead_assignment_history),
  AgentDashboardController_overview:agentDashboard,AdministrationController_cases:z.array(support),AdministrationController_support:status,AdministrationController_supportQueue:z.array(m.support_cases),AdministrationController_updateSupport:versioned,
  AdministrationController_audit:z.array(m.audit_events),AdministrationController_users:z.array(m.profiles.pick({id:true,display_name:true,email:true,state:true})),AdministrationController_suspend:m.profiles.pick({id:true,state:true}),

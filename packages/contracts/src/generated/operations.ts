@@ -29,6 +29,7 @@ import {viewingCalendarQuery,viewingRescheduleQuery,viewingReschedule,viewingTer
 import {leadExportQuery,viewingExportQuery} from '../crm-exports';
 import {messageCreate,chatUploadIntent,messageHistoryQuery,conversationListQuery,readCursorUpdate} from '../chat';
 import {providerCreate,providerUpdate,providerVersion,providerReview,providerFilters,providerReviewFilters,providerPage} from '../providers';
+import {quoteCreate,quoteChange,quoteFilters} from '../quotes';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -269,9 +270,12 @@ export const operations={
 "SearchHistoryController_clear":{method:"DELETE",path:"/api/v1/me/recent-searches",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/)}),body:z.undefined(),response:responses["SearchHistoryController_clear"]},
 "SearchHistoryController_read":{method:"GET",path:"/api/v1/me/recent-searches",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/)}),body:z.undefined(),response:responses["SearchHistoryController_read"]},
 "SearchHistoryController_record":{method:"POST",path:"/api/v1/me/recent-searches",params:z.object({}),query:z.object({}),body:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/),query:z.string().trim().min(1).max(120)}),response:responses["SearchHistoryController_record"]},
-"ServicesController_changeQuote":{method:"PATCH",path:"/api/v1/ops/quotes/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.enum(['assigned','contacted','quoted','closed']),version:z.number().int()}),response:responses["ServicesController_changeQuote"]},
-"ServicesController_quote":{method:"POST",path:"/api/v1/quote-requests",params:z.object({}),query:z.object({}),body:z.object({providerId:z.string().uuid(),description:z.string().min(10).max(3000),budget:z.string().regex(/^\d+(\.\d{1,2})?$/)}),response:responses["ServicesController_quote"]},
-"ServicesController_quotes":{method:"GET",path:"/api/v1/ops/quotes",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ServicesController_quotes"]},
+"ServicesController_changeQuote":{method:"PATCH",path:"/api/v1/ops/quotes/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:quoteChange,response:responses["ServicesController_changeQuote"]},
+"ServicesController_detail":{method:"GET",path:"/api/v1/ops/quotes/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ServicesController_detail"]},
+"ServicesController_own":{method:"GET",path:"/api/v1/me/quotes",params:z.object({}),query:quoteFilters,body:z.undefined(),response:responses["ServicesController_own"]},
+"ServicesController_ownDetail":{method:"GET",path:"/api/v1/me/quotes/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ServicesController_ownDetail"]},
+"ServicesController_quote":{method:"POST",path:"/api/v1/quote-requests",params:z.object({}),query:z.object({}),body:quoteCreate,response:responses["ServicesController_quote"]},
+"ServicesController_quotes":{method:"GET",path:"/api/v1/ops/quotes",params:z.object({}),query:quoteFilters,body:z.undefined(),response:responses["ServicesController_quotes"]},
 "ViewingAvailabilityController_block":{method:"POST",path:"/api/v1/ops/viewing-availability/:id/blocks",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:availabilityBlockCreate,response:responses["ViewingAvailabilityController_block"]},
 "ViewingAvailabilityController_cancelBlock":{method:"DELETE",path:"/api/v1/ops/viewing-availability/:id/blocks/:blockId",params:z.object({"id":z.string().min(1),"blockId":z.string().min(1)}),query:z.object({}),body:availabilityBlockCancel,response:responses["ViewingAvailabilityController_cancelBlock"]},
 "ViewingAvailabilityController_listings":{method:"GET",path:"/api/v1/ops/viewing-availability",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ViewingAvailabilityController_listings"]},

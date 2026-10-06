@@ -46,7 +46,7 @@ const datasets:Record<string,string>={
  conversations:'SELECT id,resource_id,created_at FROM conversations WHERE user_id=$1 ORDER BY id',
  conversationReadCursors:'SELECT conversation_id,sequence::text,version,updated_at FROM conversation_read_cursors WHERE user_id=$1 ORDER BY conversation_id',
  sentMessages:'SELECT m.id,m.conversation_id,m.client_id,m.sequence::text,m.body,m.created_at FROM messages m JOIN conversations c ON c.id=m.conversation_id WHERE m.sender_id=$1 AND c.user_id=$1 ORDER BY m.id',
- quotes:'SELECT id,description,budget::text,status,version,created_at FROM quotes WHERE user_id=$1 ORDER BY id',
+ quotes:"SELECT id,provider_id,provider_version,provider_snapshot,description,budget::text,currency,city,district_id,service_category,contact_name,contact_email,contact_phone,consent_at,policy_version,status,version,created_at,(SELECT coalesce(jsonb_agg(jsonb_build_object('version',a.quote_version,'status',a.status,'note',a.note,'at',a.at) ORDER BY a.quote_version),'[]') FROM quote_activity a WHERE a.quote_id=quotes.id) AS activity FROM quotes WHERE user_id=$1 ORDER BY id",
  supportRequests:'SELECT id,subject,description,category,status,public_reply,version,created_at FROM support_cases WHERE user_id=$1 ORDER BY id',
  maintenanceRequests:'SELECT id,lease_id,title,description,category,urgency,status,public_note,version,created_at FROM maintenance WHERE user_id=$1 ORDER BY id',
  tenantLeases:'SELECT l.id,l.start_date,l.end_date,l.rent::text,l.currency,l.status,l.version FROM leases l JOIN tenants t ON t.id=l.tenant_id WHERE t.user_id=$1 ORDER BY l.id',

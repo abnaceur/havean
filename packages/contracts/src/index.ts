@@ -67,3 +67,4 @@ export * from './crm-exports';
 export * from './chat';
 
 export * from './providers';
+export * from './quotes';

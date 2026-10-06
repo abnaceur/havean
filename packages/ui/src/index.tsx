@@ -19,3 +19,4 @@ export {ConversationContext} from './conversation-context';
 export {ChatComposer,ChatMessage} from './chat-composer';
 
 export {ConversationInbox} from './conversation-inbox';
+export {QuoteWorkspace} from './quote-workspace';
