@@ -14,13 +14,13 @@ export const mfaFlows=[
  {alias:'haven-enrolled-factor',providerId:'basic-flow',topLevel:false,builtIn:false,authenticationExecutions:[
   {authenticator:'conditional-user-role',authenticatorConfig:'haven-nonstaff-role',requirement:'REQUIRED',priority:10,authenticatorFlow:false},
   {authenticator:'conditional-user-configured',requirement:'REQUIRED',priority:20,authenticatorFlow:false},
-  {authenticator:'conditional-level-of-authentication',authenticatorConfig:'haven-enrolled-level-two',requirement:'REQUIRED',priority:30,authenticatorFlow:false},
+  {authenticator:'conditional-level-of-authentication',authenticatorConfig:'haven-enrolled-level-one',requirement:'REQUIRED',priority:30,authenticatorFlow:false},
   {authenticator:'auth-otp-form',requirement:'REQUIRED',priority:40,authenticatorFlow:false}
  ]}
 ];
 export const mfaConfigs=[
  {alias:'haven-nonstaff-role',config:{condUserRole:staffRole,negate:'true'}},
  {alias:'haven-staff-role',config:{condUserRole:staffRole,negate:'false'}},
- {alias:'haven-enrolled-level-two',config:{'loa-condition-level':'2','loa-max-age':'0'}},
+ {alias:'haven-enrolled-level-one',config:{'loa-condition-level':'1','loa-max-age':'0'}},
  {alias:'haven-level-two',config:{'loa-condition-level':'2','loa-max-age':'0'}}
 ];

@@ -16,7 +16,7 @@ export async function completeOtp(page:Page,persona:string){
   await page.getByLabel('One-time code',{exact:true}).fill(personaOtp(persona)!);
   await page.getByRole('button',{name:'Sign In',exact:true}).click();
   const result=await Promise.race([
-   page.waitForURL(url=>url.port!=='8090').then(()=>true),
+   page.waitForURL(url=>[process.env.PUBLIC_WEB_URL||'http://localhost:8088',process.env.PUBLIC_OPS_URL||'http://localhost:8089'].includes(url.origin)).then(()=>true),
    page.getByText('Invalid authenticator code.',{exact:true}).waitFor().then(()=>false)
   ]);
   if(result)return;

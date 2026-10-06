@@ -37,6 +37,7 @@ import {leaseActivation,leaseRenewal,leaseEnding} from '../lease-workflow';
 import {chargeGeneration,chargePreviewQuery} from '../recurring-charges';
 import {paymentEvidenceCreate,paymentEvidenceUpdate,paymentEvidencePost} from '../payment-evidence';
 import {paymentAllocation,allocationLedgerQuery} from '../payment-allocations';
+import {financialReversal} from '../financial-reversals';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -148,6 +149,9 @@ export const operations={
 "EngagementController_opsViewings":{method:"GET",path:"/api/v1/ops/viewings",params:z.object({}),query:viewingCalendarQuery,body:z.undefined(),response:responses["EngagementController_opsViewings"]},
 "EngagementController_unfavorite":{method:"DELETE",path:"/api/v1/me/favorites/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:favoriteMutation,response:responses["EngagementController_unfavorite"]},
 "EngagementController_viewings":{method:"GET",path:"/api/v1/me/viewings",params:z.object({}),query:viewingCalendarQuery,body:z.undefined(),response:responses["EngagementController_viewings"]},
+"FinancialReversalsController_read":{method:"GET",path:"/api/v1/ops/financial-records/:recordType/:id/reversal",params:z.object({"recordType":z.string().min(1),"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["FinancialReversalsController_read"]},
+"FinancialReversalsController_reverseCharge":{method:"POST",path:"/api/v1/ops/charges/:id/reverse",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:financialReversal,response:responses["FinancialReversalsController_reverseCharge"]},
+"FinancialReversalsController_reversePayment":{method:"POST",path:"/api/v1/ops/payment-records/:id/reverse",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:financialReversal,response:responses["FinancialReversalsController_reversePayment"]},
 "GeographyController_archive":{method:"DELETE",path:"/api/v1/ops/geography/:kind/:id",params:z.object({"kind":geographyKind,"id":z.string().min(1)}),query:z.object({}),body:z.object({version:z.number().int().positive()}),response:responses["GeographyController_archive"]},
 "GeographyController_buildings":{method:"GET",path:"/api/v1/communities/:id/buildings",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["GeographyController_buildings"]},
 "GeographyController_create":{method:"POST",path:"/api/v1/ops/geography/:kind",params:z.object({"kind":geographyKind}),query:z.object({}),body:geographyCreate,response:responses["GeographyController_create"]},
@@ -216,8 +220,6 @@ export const operations={
 "ManagementController_payments":{method:"GET",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_payments"]},
 "ManagementController_properties":{method:"GET",path:"/api/v1/ops/managed-properties",params:z.object({}),query:managementGrantPage,body:z.undefined(),response:responses["ManagementController_properties"]},
 "ManagementController_request":{method:"POST",path:"/api/v1/me/maintenance",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),title:z.string().min(5).max(120),description:z.string().min(10).max(3000),category:z.enum(['Plumbing','Electrical','Heating','Appliance','Other']),urgency:z.enum(['Routine','Urgent','Emergency'])}),response:responses["ManagementController_request"]},
-"ManagementController_reverse":{method:"POST",path:"/api/v1/ops/payment-records/:id/reverse",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({reason:z.string().min(5).max(500)}),response:responses["ManagementController_reverse"]},
-"ManagementController_reverseCharge":{method:"POST",path:"/api/v1/ops/charges/:id/reverse",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({reason:z.string().min(5).max(500)}),response:responses["ManagementController_reverseCharge"]},
 "ManagementController_statement":{method:"GET",path:"/api/v1/leases/:id/statement",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_statement"]},
 "ManagementController_tenantCharges":{method:"GET",path:"/api/v1/me/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenantCharges"]},
 "ManagementController_tenantLeases":{method:"GET",path:"/api/v1/me/leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_tenantLeases"]},

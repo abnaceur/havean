@@ -75,3 +75,4 @@ export * from './lease-workflow';
 export * from './recurring-charges';
 export * from './payment-evidence';
 export * from './payment-allocations';
+export * from './financial-reversals';
