@@ -36,6 +36,7 @@ import {leaseDraftCreate,leaseDraftUpdate} from '../lease-drafts';
 import {leaseActivation,leaseRenewal,leaseEnding} from '../lease-workflow';
 import {chargeGeneration,chargePreviewQuery} from '../recurring-charges';
 import {paymentEvidenceCreate,paymentEvidenceUpdate,paymentEvidencePost} from '../payment-evidence';
+import {paymentAllocation,allocationLedgerQuery} from '../payment-allocations';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -206,7 +207,6 @@ export const operations={
 "LeaseLifecycleController_end":{method:"POST",path:"/api/v1/ops/leases/:id/end",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leaseEnding,response:responses["LeaseLifecycleController_end"]},
 "LeaseLifecycleController_read":{method:"GET",path:"/api/v1/ops/leases/:id/workflow",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["LeaseLifecycleController_read"]},
 "LeaseLifecycleController_renew":{method:"POST",path:"/api/v1/ops/leases/:id/renew",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leaseRenewal,response:responses["LeaseLifecycleController_renew"]},
-"ManagementController_allocate":{method:"POST",path:"/api/v1/ops/allocations",params:z.object({}),query:z.object({}),body:z.object({paymentId:z.string().uuid(),chargeId:z.string().uuid(),amount:money}),response:responses["ManagementController_allocate"]},
 "ManagementController_charges":{method:"GET",path:"/api/v1/ops/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_charges"]},
 "ManagementController_deposit":{method:"POST",path:"/api/v1/ops/deposits",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),kind:z.enum(['received','released']),amount:money,reason:z.string().min(5).max(500)}),response:responses["ManagementController_deposit"]},
 "ManagementController_leases":{method:"GET",path:"/api/v1/ops/leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_leases"]},
@@ -250,6 +250,8 @@ export const operations={
 "NotificationWorkerController_plan":{method:"POST",path:"/api/v1/internal/alerts/plan/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationPlanInput,response:responses["NotificationWorkerController_plan"]},
 "NotificationWorkerController_read":{method:"GET",path:"/api/v1/internal/alerts/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["NotificationWorkerController_read"]},
 "NotificationWorkerController_transactional":{method:"POST",path:"/api/v1/internal/alerts/transactional/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:notificationEventInput,response:responses["NotificationWorkerController_transactional"]},
+"PaymentAllocationsController_create":{method:"POST",path:"/api/v1/ops/allocations",params:z.object({}),query:z.object({}),body:paymentAllocation,response:responses["PaymentAllocationsController_create"]},
+"PaymentAllocationsController_ledger":{method:"GET",path:"/api/v1/ops/leases/:id/allocation-ledger",params:z.object({"id":z.string().min(1)}),query:allocationLedgerQuery,body:z.undefined(),response:responses["PaymentAllocationsController_ledger"]},
 "PaymentEvidenceController_create":{method:"POST",path:"/api/v1/ops/payment-records",params:z.object({}),query:z.object({}),body:paymentEvidenceCreate,response:responses["PaymentEvidenceController_create"]},
 "PaymentEvidenceController_options":{method:"GET",path:"/api/v1/ops/payment-evidence-options/:leaseId",params:z.object({"leaseId":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["PaymentEvidenceController_options"]},
 "PaymentEvidenceController_post":{method:"POST",path:"/api/v1/ops/payment-records/:id/post",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:paymentEvidencePost,response:responses["PaymentEvidenceController_post"]},
