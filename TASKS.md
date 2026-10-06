@@ -64,8 +64,8 @@
 - [x] **C03 Build commercial detail and inquiry** — done; dependencies: C02, D10, I08
 - [x] **O01 Create owner grants and submissions** — done; dependencies: I08, A06, R04
 - [x] **O02 Build step-by-step owner form** — done; dependencies: O01, I08, A06, R04
-- [ ] **O03 Upload private ownership evidence** — in_progress; dependencies: O02, I08, A06, R04
-- [ ] **O04 Assign agent and track submission** — todo; dependencies: O03, I08, A06, R04
+- [x] **O03 Upload private ownership evidence** — done; dependencies: O02, I08, A06, R04
+- [ ] **O04 Assign agent and track submission** — in_progress; dependencies: O03, I08, A06, R04
 - [ ] **O05 Build owner listing lifecycle controls** — todo; dependencies: O04, I08, A06, R04
 - [ ] **B01 Onboard agents and verify credentials** — todo; dependencies: I08, A06, U07
 - [ ] **B02 Build agent directory and profiles** — todo; dependencies: B01, I08, A06, U07
