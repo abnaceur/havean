@@ -6,7 +6,7 @@ export const geographyKind=z.enum(['cities','districts','neighborhoods','lines',
 const slug=z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(100);
 const base=z.object({name:z.string().trim().min(2).max(120),slug,aliases:z.array(z.string().trim().min(1).max(100)).max(12).default([])});
 const identifier=z.string().uuid();
-const city=base.extend({kind:z.literal('cities'),country:marketCountry,currency:marketCurrency,timezone:marketTimezone});
+const city=base.extend({kind:z.literal('cities'),slug:slug.refine(v=>!['account','tenant','ops','api','sitemap','sitemaps','robots'].includes(v),'Choose a city slug outside reserved application routes'),country:marketCountry,currency:marketCurrency,timezone:marketTimezone});
 const district=base.extend({kind:z.literal('districts'),cityId:identifier});
 const neighborhood=base.extend({kind:z.literal('neighborhoods'),districtId:identifier});
 const line=base.extend({kind:z.literal('lines'),cityId:identifier});

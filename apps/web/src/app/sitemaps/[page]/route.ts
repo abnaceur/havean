@@ -1,0 +1,3 @@
+import {sitemapData,sitemapXML,sitemapHeaders} from '../../../sitemap-source';
+export const dynamic='force-dynamic';
+export async function GET(_req:Request,{params}:{params:Promise<{page:string}>}){const {page}=await params;if(!/^\d{1,5}\.xml$/.test(page))return new Response('Sitemap not found',{status:404});try{const index=Number(page.split('.')[0]),r=await sitemapData(index);if(index>=r.pages)return new Response('Sitemap not found',{status:404});return new Response(sitemapXML(r.entries),{headers:sitemapHeaders});}catch{return new Response('Sitemap temporarily unavailable',{status:503,headers:{'Cache-Control':'no-store','Retry-After':'30'}});}}

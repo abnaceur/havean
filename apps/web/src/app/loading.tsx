@@ -1,1 +1,0 @@
-export default function Loading(){return <main className="shell"><div className="skeleton" style={{height:300}}/><div className="skeleton" style={{height:180,marginTop:24}}/><p role="status">Loading your next chapter…</p></main>;}

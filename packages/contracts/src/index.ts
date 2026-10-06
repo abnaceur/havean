@@ -94,3 +94,5 @@ export * from './market-policy';
 export * from './area-display';
 
 export * from './analytics';
+
+export * from './seo';

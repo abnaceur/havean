@@ -45,6 +45,7 @@ import {supportCreate,supportTriage,supportPageQuery,supportWorkflow,supportPubl
 import {homeContentQuery,homeSectionCreate,homeSectionEdit,homeSectionAction,homeTaxonomySave} from '../home-content';
 import {platformUserQuery,platformAccountAction,platformStaffSave} from '../platform-administration';
 import {analyticsConsent,analyticsFilters,auditFilters} from '../analytics';
+import {sitemapQuery} from '../seo';
 import {statementQuery} from '../statements';
 import {maintenanceCreate,maintenanceWorkflow,maintenancePageQuery,maintenanceOptionsQuery,maintenanceTenantAction} from '../maintenance';
 import {responses} from '../responses';
@@ -153,6 +154,7 @@ export const operations={
 "DiscoveryController_provider":{method:"GET",path:"/api/v1/renovation/providers/:id",params:z.object({"id":z.string().min(1)}),query:z.object({city:z.string().min(1).max(100).optional()}),body:z.undefined(),response:responses["DiscoveryController_provider"]},
 "DiscoveryController_providers":{method:"GET",path:"/api/v1/renovation/providers",params:z.object({}),query:providerFilters,body:z.undefined(),response:responses["DiscoveryController_providers"]},
 "DiscoveryController_similar":{method:"GET",path:"/api/v1/listings/:id/similar",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryController_similar"]},
+"DiscoveryController_sitemap":{method:"GET",path:"/api/v1/seo/sitemap",params:z.object({}),query:sitemapQuery,body:z.undefined(),response:responses["DiscoveryController_sitemap"]},
 "DiscoveryController_suggestions":{method:"GET",path:"/api/v1/search/suggest",params:z.object({}),query:z.strictObject({city:z.string().regex(/^[a-z0-9-]{1,50}$/).default('bj'),q:z.string().trim().max(120).default('')}),body:z.undefined(),response:responses["DiscoveryController_suggestions"]},
 "DiscoveryEventsController_changeConsent":{method:"PATCH",path:"/api/v1/me/analytics-consent",params:z.object({}),query:z.object({}),body:analyticsConsent,response:responses["DiscoveryEventsController_changeConsent"]},
 "DiscoveryEventsController_consent":{method:"GET",path:"/api/v1/me/analytics-consent",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["DiscoveryEventsController_consent"]},

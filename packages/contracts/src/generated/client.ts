@@ -102,6 +102,7 @@ export const sdk={
 "DiscoveryController_provider":call(operations["DiscoveryController_provider"]),
 "DiscoveryController_providers":call(operations["DiscoveryController_providers"]),
 "DiscoveryController_similar":call(operations["DiscoveryController_similar"]),
+"DiscoveryController_sitemap":call(operations["DiscoveryController_sitemap"]),
 "DiscoveryController_suggestions":call(operations["DiscoveryController_suggestions"]),
 "DiscoveryEventsController_changeConsent":call(operations["DiscoveryEventsController_changeConsent"]),
 "DiscoveryEventsController_consent":call(operations["DiscoveryEventsController_consent"]),

@@ -1,3 +1,3 @@
 import type {NextConfig} from 'next';
-const config:NextConfig={distDir:process.env.NEXT_DIST_DIR||'.next',transpilePackages:['@haven/ui','@haven/contracts','@haven/config'],allowedDevOrigins:['localhost'],async headers(){return [{source:'/:path*',headers:[{key:'X-Content-Type-Options',value:'nosniff'},{key:'Referrer-Policy',value:'strict-origin-when-cross-origin'},{key:'X-Frame-Options',value:'DENY'}]}];}};
+const config:NextConfig={distDir:process.env.NEXT_DIST_DIR||'.next',transpilePackages:['@haven/ui','@haven/contracts','@haven/config'],htmlLimitedBots:/.*/,allowedDevOrigins:['localhost'],async headers(){return [{source:'/:path*',headers:[{key:'X-Content-Type-Options',value:'nosniff'},{key:'Referrer-Policy',value:'strict-origin-when-cross-origin'},{key:'X-Frame-Options',value:'DENY'}]},...['/account/:path*','/tenant/:path*','/api/:path*'].map(source=>({source,headers:[{key:'X-Robots-Tag',value:'noindex, nofollow'}]}))];}};
 export default config;
