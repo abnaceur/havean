@@ -38,6 +38,7 @@ import {chargeGeneration,chargePreviewQuery} from '../recurring-charges';
 import {paymentEvidenceCreate,paymentEvidenceUpdate,paymentEvidencePost} from '../payment-evidence';
 import {paymentAllocation,allocationLedgerQuery} from '../payment-allocations';
 import {financialReversal} from '../financial-reversals';
+import {depositMovement,depositLedgerQuery} from '../deposits';
 import {responses} from '../responses';
 import {propertyMediaMetadata} from '../property-media';
 import {geographyCreate,geographyUpdate,geographyFilters,marketSettings,geographyKind} from '../geography';
@@ -86,6 +87,8 @@ export const operations={
 "CrmController_timeline":{method:"GET",path:"/api/v1/ops/leads/:id/timeline",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["CrmController_timeline"]},
 "CrmExportsController_leads":{method:"GET",path:"/api/v1/ops/lead-queue/export",params:z.object({}),query:leadExportQuery,body:z.undefined(),response:responses["CrmExportsController_leads"]},
 "CrmExportsController_viewings":{method:"GET",path:"/api/v1/ops/viewings/export",params:z.object({}),query:viewingExportQuery,body:z.undefined(),response:responses["CrmExportsController_viewings"]},
+"DepositsController_create":{method:"POST",path:"/api/v1/ops/deposits",params:z.object({}),query:z.object({}),body:depositMovement,response:responses["DepositsController_create"]},
+"DepositsController_ledger":{method:"GET",path:"/api/v1/ops/leases/:leaseId/deposit-ledger",params:z.object({"leaseId":z.string().min(1)}),query:depositLedgerQuery,body:z.undefined(),response:responses["DepositsController_ledger"]},
 "DevelopmentInventoryController_createType":{method:"POST",path:"/api/v1/ops/developments/:id/floor-types",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:floorTypeCreate,response:responses["DevelopmentInventoryController_createType"]},
 "DevelopmentInventoryController_createUnit":{method:"POST",path:"/api/v1/ops/developments/:id/offered-units",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:offeredUnitCreate,response:responses["DevelopmentInventoryController_createUnit"]},
 "DevelopmentInventoryController_units":{method:"GET",path:"/api/v1/ops/developments/:id/offered-units",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["DevelopmentInventoryController_units"]},
@@ -212,7 +215,6 @@ export const operations={
 "LeaseLifecycleController_read":{method:"GET",path:"/api/v1/ops/leases/:id/workflow",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.undefined(),response:responses["LeaseLifecycleController_read"]},
 "LeaseLifecycleController_renew":{method:"POST",path:"/api/v1/ops/leases/:id/renew",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:leaseRenewal,response:responses["LeaseLifecycleController_renew"]},
 "ManagementController_charges":{method:"GET",path:"/api/v1/ops/charges",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_charges"]},
-"ManagementController_deposit":{method:"POST",path:"/api/v1/ops/deposits",params:z.object({}),query:z.object({}),body:z.object({leaseId:z.string().uuid(),kind:z.enum(['received','released']),amount:money,reason:z.string().min(5).max(500)}),response:responses["ManagementController_deposit"]},
 "ManagementController_leases":{method:"GET",path:"/api/v1/ops/leases",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_leases"]},
 "ManagementController_maintain":{method:"PATCH",path:"/api/v1/ops/maintenance/:id",params:z.object({"id":z.string().min(1)}),query:z.object({}),body:z.object({status:z.string(),version:z.number().int(),assignee:z.string().max(100).optional(),publicNote:z.string().max(2000).optional(),internalNote:z.string().max(2000).optional()}),response:responses["ManagementController_maintain"]},
 "ManagementController_maintenance":{method:"GET",path:"/api/v1/ops/maintenance",params:z.object({}),query:z.object({}),body:z.undefined(),response:responses["ManagementController_maintenance"]},

@@ -29,3 +29,5 @@ export {RecurringChargeForm} from './recurring-charge-form';
 export {PaymentEvidenceForm} from './payment-evidence-form';
 export {PaymentAllocationForm} from './payment-allocation-form';
 export {FinancialReversalForm} from './financial-reversal-form';
+
+export {DepositLedgerForm} from './deposit-ledger-form';
