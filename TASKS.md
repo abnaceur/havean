@@ -70,8 +70,8 @@
 - [x] **B01 Onboard agents and verify credentials** — done; dependencies: I08, A06, U07
 - [x] **B02 Build agent directory and profiles** — done; dependencies: B01, I08, A06, U07
 - [x] **B03 Manage agency members and roles** — done; dependencies: B02, I08, A06, U07
-- [ ] **B04 Assign inventory and leads** — in_progress; dependencies: B03, I08, A06, U07
-- [ ] **B05 Build agent dashboard** — todo; dependencies: B04, I08, A06, U07
+- [x] **B04 Assign inventory and leads** — done; dependencies: B03, I08, A06, U07
+- [ ] **B05 Build agent dashboard** — in_progress; dependencies: B04, I08, A06, U07
 - [ ] **L01 Persist inquiries and route leads** — todo; dependencies: D10, A06, B05, N05, C03, O05
 - [ ] **L02 Build CRM queue and lead timeline** — todo; dependencies: L01, D10, A06, B05, N05, C03, O05
 - [ ] **L03 Create agent availability slots** — todo; dependencies: L02, D10, A06, B05, N05, C03, O05
