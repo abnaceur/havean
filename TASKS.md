@@ -93,8 +93,8 @@
 - [x] **P03 Create lease drafts and term validation** — done; dependencies: P02, R04, O05, B05, F12
 - [x] **P04 Activate lease and enforce availability** — done; dependencies: P03, R04, O05, B05, F12
 - [x] **P05 Renew and end leases** — done; dependencies: P04, R04, O05, B05, F12
-- [ ] **P06 Generate recurring charges** — in_progress; dependencies: P05, R04, O05, B05, F12
-- [ ] **P07 Record payment evidence** — todo; dependencies: P06, R04, O05, B05, F12
+- [x] **P06 Generate recurring charges** — done; dependencies: P05, R04, O05, B05, F12
+- [ ] **P07 Record payment evidence** — in_progress; dependencies: P06, R04, O05, B05, F12
 - [ ] **P08 Allocate payments and credit balances** — todo; dependencies: P07, R04, O05, B05, F12
 - [ ] **P09 Reverse charges and payments** — todo; dependencies: P08, R04, O05, B05, F12
 - [ ] **P10 Track deposits separately** — todo; dependencies: P09, R04, O05, B05, F12

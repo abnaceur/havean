@@ -1,0 +1,22 @@
+ Container haven-p02-api-run-ab07e300bc91 Creating 
+ Container haven-p02-api-run-ab07e300bc91 Created 
+
+> haven-real-estate@0.1.0 db:migrate /workspace
+> tsx packages/database/src/migrate.ts
+
+Applied 121-recurring-charge-policy-object-guard.sql
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/recurring-charges.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 14154[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 leap-month proration uses exact cents, term-aware due date and one charge across retry and repeated month[33m 2932[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 concurrent generators cannot duplicate a charge; ended and out-of-term leases are excluded[33m 4218[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 stale versions, wrong scope and missing confirmation deny generation; grant revocation denies cached receipt[33m 3036[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 market full-month policy and explicit historical due-day fallback are snapshotted without inventing original terms[33m 593[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 actual finance-only membership can generate within its granted property; a manager without finance cannot[33m 3295[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 09:32:24
+[2m   Duration [22m 15.66s[2m (tests 91%, import 6%, transform 3%)[22m
+
