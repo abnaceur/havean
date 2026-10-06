@@ -1,0 +1,119 @@
+ Container haven-api-run-bb6f5cc0dd19 Creating 
+ Container haven-api-run-bb6f5cc0dd19 Created 
+
+> haven-real-estate@0.1.0 db:migrate /workspace
+> tsx packages/database/src/migrate.ts
+
+Applied 098-message-send-admission.sql
+ Container haven-integration-api-run-930361f5deb2 Creating 
+ Container haven-integration-api-run-930361f5deb2 Created 
+
+> haven-real-estate@0.1.0 db:migrate /workspace
+> tsx packages/database/src/migrate.ts
+
+Applied 098-message-send-admission.sql
+ Container haven-api-run-82baaff69b4b Creating 
+ Container haven-api-run-82baaff69b4b Created 
+
+> haven-real-estate@0.1.0 contracts:models /workspace
+> node scripts/generate-models.mjs
+
+Generated 92 model schemas; no database values exported.
+ Container haven-api-run-c2e9740f8004 Creating 
+ Container haven-api-run-c2e9740f8004 Created 
+
+> haven-real-estate@0.1.0 contracts:generate /workspace
+> node scripts/generate-contracts.mjs && tsx scripts/generate-openapi.ts
+
+Generated 243 typed API operations.
+Generated OpenAPI from canonical schemas
+ Container haven-api-run-88199eb4aede Creating 
+ Container haven-api-run-88199eb4aede Created 
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+packages/ui typecheck: Done
+apps/api typecheck: src/engagement/conversation-socket.ts(28,104): error TS7022: 'rows' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+apps/api typecheck: src/engagement/conversation-socket.ts(28,140): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+apps/api typecheck:   Type 'null' is not assignable to type 'string'.
+apps/api typecheck: Failed
+/workspace/apps/api:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @haven/api@0.1.0 typecheck: `tsc --noEmit`
+Exit status 2
+ ELIFECYCLE  Command failed with exit code 2.
+
+ Container haven-api-run-012003901fbb Creating 
+ Container haven-api-run-012003901fbb Created 
+
+> haven-real-estate@0.1.0 lint /workspace
+> eslint . && node scripts/boundaries.mjs
+
+
+/workspace/packages/ui/src/conversation-realtime.tsx
+  17:2  error  Definition for rule 'react-hooks/exhaustive-deps' was not found  react-hooks/exhaustive-deps
+
+✖ 1 problem (1 error, 0 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.
+
+ Container haven-api-run-4835b7d60f2f Creating 
+ Container haven-api-run-4835b7d60f2f Created 
+
+> haven-real-estate@0.1.0 lint /workspace
+> eslint . && node scripts/boundaries.mjs
+
+Application import boundaries passed
+ Container haven-api-run-6a62eefa469a Creating 
+ Container haven-api-run-6a62eefa469a Created 
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: Done
+apps/api typecheck$ tsc --noEmit
+apps/worker typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+apps/worker typecheck: Done
+packages/ui typecheck: Done
+apps/api typecheck: Done
+apps/ops typecheck$ tsc --noEmit
+apps/web typecheck$ tsc --noEmit
+apps/ops typecheck: Done
+apps/web typecheck: Done
+ Container haven-api-run-7395cbc1ffed Creating 
+ Container haven-api-run-7395cbc1ffed Created 
+
+> haven-real-estate@0.1.0 contracts:check /workspace
+> node scripts/generate-contracts.mjs --check && tsx scripts/generate-openapi.ts --check
+
+Generated 243 typed API operations.
+OpenAPI matches canonical schemas
+ Container haven-api-run-796d9c67be70 Creating 
+ Container haven-api-run-796d9c67be70 Created 
+
+> haven-real-estate@0.1.0 task:validate /workspace
+> node scripts/tasks.mjs
+
+Validated 120 tasks; 81 done.

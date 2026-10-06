@@ -95,3 +95,5 @@ Conversation participants and inquiry context are shown at `/account/messages` a
 Messages commit before acknowledgement, retain drafts for receipt retries and share scanned files only with current participants; see [durable private messages](docs/adr/durable-private-messages.md).
 
 Inbox selection survives refresh, unread counts use own committed read cursors, and older messages remain accessible; see [conversation read state](docs/adr/conversation-read-state.md).
+
+Native inboxes recover persisted messages after socket reconnect and stop live access after session or assignment revocation; see [realtime recovery](docs/adr/realtime-conversation-recovery.md).

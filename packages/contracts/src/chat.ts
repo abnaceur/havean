@@ -13,3 +13,15 @@ export const conversationListQuery=z.object({page:z.coerce.number().int().min(1)
 export const readCursorUpdate=z.object({version:z.number().int().nonnegative(),sequence}).strict();
 export const readCursor=z.object({version:z.number().int().nonnegative(),sequence});
 export const conversationSummary=z.object({id:z.uuid(),resource_id:z.uuid(),created_at:z.string(),resource_type:z.string().nullable(),state:z.enum(['legacy','active','closed']),unread_count:sequence,participants:z.array(z.string())});
+
+export const chatSocketCommand=z.discriminatedUnion('type',[
+ z.object({type:z.literal('subscribe'),conversationId:z.uuid(),after:sequence.default('0')}).strict(),
+ z.object({type:z.literal('send'),conversationId:z.uuid(),message:messageCreate}).strict()
+]);
+export const chatSocketFrame=z.discriminatedUnion('type',[
+ z.object({type:z.literal('subscribed'),conversationId:z.uuid()}).strict(),
+ z.object({type:z.literal('messages'),conversationId:z.uuid(),messages:z.array(chatMessage).max(100),after:sequence}).strict(),
+ z.object({type:z.literal('caught_up'),conversationId:z.uuid(),after:sequence}).strict(),
+ z.object({type:z.literal('receipt'),conversationId:z.uuid(),message:chatMessage}).strict(),
+ z.object({type:z.literal('error'),code:z.string(),message:z.string()}).strict()
+]);

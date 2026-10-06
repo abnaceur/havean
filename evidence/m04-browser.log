@@ -1,0 +1,200 @@
+ Container haven-tests-run-a25f598eafbc Creating 
+ Container haven-tests-run-a25f598eafbc Created 
+
+Running 8 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/conversations.spec.ts:9:1 › M01 inquiry participants open the actual resource conversation; unrelated accounts cannot read or join its WebSocket room (13.8s)
+  ✓  2 [desktop] › tests/e2e/inbox.spec.ts:10:1 › M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes (28.7s)
+  ✓  3 [desktop] › tests/e2e/messages.spec.ts:10:1 › M02 native lost-ACK retry keeps text/files and creates one inert message; current participants download its private PDF (26.7s)
+  ✘  4 [desktop] › tests/e2e/realtime.spec.ts:11:1 › M04 native live reconnect recovers missing messages in order; revoked assignment and expired session close existing rooms (28.6s)
+  ✓  5 [mobile] › tests/e2e/conversations.spec.ts:9:1 › M01 inquiry participants open the actual resource conversation; unrelated accounts cannot read or join its WebSocket room (28.0s)
+  ✓  6 [mobile] › tests/e2e/inbox.spec.ts:10:1 › M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes (33.1s)
+  ✓  7 [mobile] › tests/e2e/messages.spec.ts:10:1 › M02 native lost-ACK retry keeps text/files and creates one inert message; current participants download its private PDF (26.5s)
+  ✘  8 [mobile] › tests/e2e/realtime.spec.ts:11:1 › M04 native live reconnect recovers missing messages in order; revoked assignment and expired session close existing rooms (31.0s)
+
+
+  1) [desktop] › tests/e2e/realtime.spec.ts:11:1 › M04 native live reconnect recovers missing messages in order; revoked assignment and expired session close existing rooms 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div class=\"messages\" aria-label=\"Saved messages\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".messages",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+      21 |  // Native socket send commits before receipt; replaying its client ID produces one row.
+      22 |  const clientId=crypto.randomUUID();const receipt=await page.evaluate(({id,version,clientId})=>new Promise<any>((resolve,reject)=>{const socket=(globalThis as any).m04Sockets.filter((s:WebSocket)=>s.readyState===1).at(-1),timer=setTimeout(()=>reject(Error('Socket receipt timed out')),15000);const on=(event:MessageEvent)=>{const frame=JSON.parse(event.data);if(frame.type==='receipt'&&frame.message.body==='M04 socket send'){clearTimeout(timer);socket.removeEventListener('message',on);resolve(frame.message);}};socket.addEventListener('message',on);socket.send(JSON.stringify({type:'send',conversationId:id,message:{version:0,conversationVersion:version,clientId,body:'M04 socket send'}}));}),{id:thread!,version,clientId});expect(receipt.sequence).toBe('7');const replay=await page.request.post('/api/v1/conversations/'+thread+'/messages',{headers:{Origin:'http://localhost:8088'},data:{version:0,conversationVersion:version,clientId,body:'M04 socket send'}});expect(replay.ok()).toBe(true);expect((await replay.json()).data.id).toBe(receipt.id);await expect(page.locator('.message')).toHaveCount(7);await page.unroute('**/api/v1/conversations/'+thread+'/messages*');
+    > 23 |  expect((await new AxeBuilder({page}).include('main#main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/m04-live-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                          ^
+      24 |  // Source reassignment immediately removes the existing professional grant.
+      25 |  await staff(c=>c.query('UPDATE leads SET agent_id=NULL,version=version+1 WHERE id=$1',[lead]));await expect(agentPage.getByLabel('Conversation connection')).toContainText('Conversation access ended');expect((await agentPage.request.get('http://localhost:8089/api/v1/conversations/'+thread+'/messages')).status()).toBe(404);
+      26 |  // Expire this browser’s actual server session, without exposing cookie values.
+        at /workspace/tests/e2e/realtime.spec.ts:23:138
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-desktop/error-context.md
+
+    Error Context: test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-desktop/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/realtime.spec.ts:11:1 › M04 native live reconnect recovers missing messages in order; revoked assignment and expired session close existing rooms 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<div class=\"messages\" aria-label=\"Saved messages\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".messages",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+      21 |  // Native socket send commits before receipt; replaying its client ID produces one row.
+      22 |  const clientId=crypto.randomUUID();const receipt=await page.evaluate(({id,version,clientId})=>new Promise<any>((resolve,reject)=>{const socket=(globalThis as any).m04Sockets.filter((s:WebSocket)=>s.readyState===1).at(-1),timer=setTimeout(()=>reject(Error('Socket receipt timed out')),15000);const on=(event:MessageEvent)=>{const frame=JSON.parse(event.data);if(frame.type==='receipt'&&frame.message.body==='M04 socket send'){clearTimeout(timer);socket.removeEventListener('message',on);resolve(frame.message);}};socket.addEventListener('message',on);socket.send(JSON.stringify({type:'send',conversationId:id,message:{version:0,conversationVersion:version,clientId,body:'M04 socket send'}}));}),{id:thread!,version,clientId});expect(receipt.sequence).toBe('7');const replay=await page.request.post('/api/v1/conversations/'+thread+'/messages',{headers:{Origin:'http://localhost:8088'},data:{version:0,conversationVersion:version,clientId,body:'M04 socket send'}});expect(replay.ok()).toBe(true);expect((await replay.json()).data.id).toBe(receipt.id);await expect(page.locator('.message')).toHaveCount(7);await page.unroute('**/api/v1/conversations/'+thread+'/messages*');
+    > 23 |  expect((await new AxeBuilder({page}).include('main#main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/m04-live-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                          ^
+      24 |  // Source reassignment immediately removes the existing professional grant.
+      25 |  await staff(c=>c.query('UPDATE leads SET agent_id=NULL,version=version+1 WHERE id=$1',[lead]));await expect(agentPage.getByLabel('Conversation connection')).toContainText('Conversation access ended');expect((await agentPage.request.get('http://localhost:8089/api/v1/conversations/'+thread+'/messages')).status()).toBe(404);
+      26 |  // Expire this browser’s actual server session, without exposing cookie values.
+        at /workspace/tests/e2e/realtime.spec.ts:23:138
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-mobile/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-mobile/error-context.md
+
+    Error Context: test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-mobile/error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/realtime-M04-native-live-r-12dfb-ession-close-existing-rooms-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/realtime.spec.ts:11:1 › M04 native live reconnect recovers missing messages in order; revoked assignment and expired session close existing rooms 
+    [mobile] › tests/e2e/realtime.spec.ts:11:1 › M04 native live reconnect recovers missing messages in order; revoked assignment and expired session close existing rooms 
+  6 passed (3.7m)
+
