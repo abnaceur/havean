@@ -1,0 +1,25 @@
+{"project":"desktop","privatePageCommitted":true}
+{"project":"mobile","privatePageCommitted":true}
+{"project":"desktop-floors","privatePageCommitted":true}
+{"project":"mobile-floors","privatePageCommitted":true}
+/workspace/apps/api/src/platform/core.ts:10
+export function fail(status:number,message:string,code='INVALID_REQUEST'):never{throw new HttpException({code,message},status);}
+                                                                                      ^
+
+HttpException: Run scope does not match this workspace.
+    at fail (/workspace/apps/api/src/platform/core.ts:10:87)
+    at createRunGraph (/workspace/apps/api/src/inventory/digitization/workflow.ts:16:230)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async transaction (/workspace/packages/database/src/index.ts:7:1053)
+    at async <anonymous> (/workspace/tests/support/digitization-plan-fixture.ts:36:2) {
+  response: {
+    code: 'DIGITIZATION_SCOPE_REQUIRED',
+    message: 'Run scope does not match this workspace.'
+  },
+  status: 403,
+  options: undefined,
+  cause: undefined,
+  errorCode: undefined
+}
+
+Node.js v24.21.0

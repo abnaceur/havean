@@ -2,7 +2,7 @@ import {planPublicationAlerts,deliverAlertDigest,confirmInquiry} from './alerts.
 import nodemailer from 'nodemailer';
 import {pool,transaction} from '@haven/database';
 import {config} from '@haven/config';
-import {listingSearchSettings,publicListingSearchDocument} from '@haven/contracts';
+import {listingSearchSettings,publicListingSearchDocument,outboxConsumer} from '@haven/contracts';
 export const workerActor={id:'00000000-0000-4000-8000-000000000010',orgId:null,roles:['admin']};
 export type FaultPoint='after-search'|'after-mail'|'before-commit';
 export type ProcessorOptions={afterEffect?:(point:FaultPoint)=>Promise<void>;searchUrl?:string;mailApiUrl?:string;mailHost?:string;mailPort?:number};
@@ -30,6 +30,7 @@ export function createProcessor(options:ProcessorOptions={}){
   const id=job.data.id;
   await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',[id]);
   const row=(await c.query('SELECT * FROM outbox WHERE id=$1 AND processed_at IS NULL FOR NO KEY UPDATE',[id])).rows[0];if(!row)return;
+  if(outboxConsumer(row.kind)!=='platform')throw Error('OUTBOX_CONSUMER_MISMATCH');
   // Serialize projections per aggregate across all worker processes, including replay.
   await c.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['aggregate:'+row.aggregate_id]);
   let version:number|undefined;

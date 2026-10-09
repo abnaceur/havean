@@ -1,0 +1,31 @@
+ Container haven-integration-proxy-1 Recreate 
+ Container haven-integration-proxy-1 Recreated 
+ Container haven-integration-proxy-1 Starting 
+ Container haven-integration-proxy-1 Started 
+ Container haven-integration-tests-run-c42dd444808f Creating 
+ Container haven-integration-tests-run-c42dd444808f Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-capture.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 873[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B02 capture API persists a resumable scoped session, reuses receipts and streams signed parts directly through the real gateway[33m 641[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-capture-finalization.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 890[2mms[22m[39m
+   [33m[2m✓[22m[39m actual signed multipart completion stores one private quarantine receipt, survives lost commit/checksum retry and never approves processing[33m 624[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-worker-http.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 4606[2mms[22m[39m
+   [33m[2m✓[22m[39m real Nest/Fastify engine command routes enforce separate service authentication, contracts, versions and cancellation[33m 4603[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-schema.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1978[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-A04 expired explicit evidence grant removes private derived reads[33m 1258[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-inputs.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 959[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B05 real stored source binds immutable revisions; removal does not mutate existing run snapshots[33m 956[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-validation.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 517[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B03 small-upload source validation detects forged MIME/object sizes and retains explicit PDF decoder state[33m 513[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m      Tests [22m [1m[32m13 passed[39m[22m[90m (13)[39m
+[2m   Start at [22m 01:19:37
+[2m   Duration [22m 20.51s[2m (tests 50%, import 43%, transform 6%)[22m
+
+[2m     Import [22m [33m115 modules were evaluated 188 times[39m[2m · 8.42s total, 43% of tracked time[22m
+[2m            [22m [2m~3.27s faster with [22m[33misolate: false[39m[2m — shared modules are evaluated once per worker instead of once per file[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-isolation[22m
+

@@ -1,0 +1,34 @@
+
+> haven-real-estate@0.1.0 db:migrate /workspace
+> tsx packages/database/src/migrate.ts
+
+Applied 164-deny-unused-flatgeobuf-decoders-to-runtime.sql
+/workspace/node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694
+          Error.captureStackTrace(err)
+                ^
+
+error: RUNTIME_GEOMETRY_DECODER_PERMISSION_UNSAFE: database extension owner must execute 164-deny-unused-flatgeobuf-decoders-to-runtime.sql before retrying this forward migration
+    at /workspace/node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async <anonymous> (/workspace/packages/database/src/migrate.ts:5:355) {
+  length: 286,
+  severity: 'ERROR',
+  code: 'P0001',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: 'PL/pgSQL function inline_code_block line 8 at RAISE',
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'pl_exec.c',
+  line: '3911',
+  routine: 'exec_stmt_raise'
+}
+
+Node.js v24.21.0
+ ELIFECYCLE  Command failed with exit code 1.

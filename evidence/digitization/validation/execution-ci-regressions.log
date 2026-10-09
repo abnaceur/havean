@@ -1,0 +1,32 @@
+ Container haven-integration-tests-run-c1799e9aeeca Creating 
+ Container haven-integration-tests-run-c1799e9aeeca Created 
+
+> haven-real-estate@0.1.0 db:seed /workspace
+> tsx packages/database/src/seed.ts
+
+Existing fixtures retained
+Geography and building fixtures present; existing edits preserved
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/viewing-calendar.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 3059[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 consumer atomically reschedules a confirmed viewing, requiring fresh confirmation; idempotent receipt preserves one event and row[33m 624[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 conflicting/stale/unauthorized reschedules and cancellations preserve the original confirmed interval[33m 410[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 assigned professional reschedule retains confirmation; professional cancellation releases the new slot[33m 400[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 property capacity remains reserved when assignment changes; the former appointment can be cancelled through actual professional scope[33m 564[2mms[22m[39m
+ [32m✓[39m tests/integration/account-privacy.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 739[2mms[22m[39m
+   [33m[2m✓[22m[39m A06 one-snapshot personal export excludes another persona even for an administrator and keeps money as decimal strings[33m 319[2mms[22m[39m
+ [32m✓[39m tests/integration/home-content.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1930[2mms[22m[39m
+   [33m[2m✓[22m[39m S03 versioned scheduled publication uses the exact eligible snapshot, preserves independent draft edits and current public visibility[33m 1007[2mms[22m[39m
+   [33m[2m✓[22m[39m S03 future and expired schedules stay absent; invalid city/category/version/link, guessed preview and forged editor permissions deny[33m 440[2mms[22m[39m
+   [33m[2m✓[22m[39m S03 actual editor taxonomy is versioned with immutable history; disabled eligibility hides publication and blocks draft admission[33m 480[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m14 passed[39m[22m[90m (14)[39m
+[2m   Start at [22m 17:04:22
+[2m   Duration [22m 9.93s[2m (tests 60%, import 31%, transform 9%)[22m
+
+[2m     Import [22m [33m124 modules were evaluated 199 times[39m[2m · 2.95s total, 31% of tracked time[22m
+[2m            [22m [2m~1.11s faster with [22m[33misolate: false[39m[2m — shared modules are evaluated once per worker instead of once per file[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-isolation[22m
+

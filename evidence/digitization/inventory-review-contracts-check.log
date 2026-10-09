@@ -1,0 +1,17 @@
+
+> haven-real-estate@0.1.0 contracts:check /workspace
+> node scripts/generate-contracts.mjs --check && tsx scripts/generate-openapi.ts --check && tsx scripts/generate-digitization-schemas.ts --check
+
+Generated 371 typed API operations.
+/workspace/scripts/generate-openapi.ts:4
+if(process.argv.includes('--check')){if(fs.readFileSync(path,'utf8')!==source)throw Error('OpenAPI contract is stale; run pnpm contracts:generate');console.log('OpenAPI matches canonical schemas');}
+                                                                                    ^
+
+Error: OpenAPI contract is stale; run pnpm contracts:generate
+    at <anonymous> (/workspace/scripts/generate-openapi.ts:4:85)
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.21.0
+ ELIFECYCLE  Command failed with exit code 1.

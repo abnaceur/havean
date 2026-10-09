@@ -15,3 +15,11 @@ Run `./test.sh` for a fresh integration project with its own volumes and no publ
 ## Continuous integration
 
 `./ci.sh` resets the same isolated Docker project and enforces frozen installation, fixture/contract generation checks, lint, type checking, unit/integration/browser tests and builds. Every failed command terminates the gate. Reports under `evidence/ci` are scrubbed of generated credentials. The GitHub workflow retains reports and screenshots even after failure; credential-bearing browser traces are excluded. Baselines are never updated by the gate. Checkout and artifact actions use verified release commit hashes. Require the `verify` job before merging; `pnpm check:release` remains the separate all-task completion gate.
+
+## Shared-host file watching and maintained infrastructure
+
+If Next startup reports an exhausted inotify quota, add `-f compose.polling.yaml` to development Compose commands; this uses webpack polling without changing host sysctls. Keep the same environment/project flags for every command.
+
+Compose builds the maintained database, identity and scanner images from pinned Dockerfile sources. Fresh database initialization applies extension-owner geometry hardening before runtime admission. Existing clusters require administrator preflight in `docs/runbooks/production-readiness.md`; migration 165 refuses unsafe decoder permissions. A PostgreSQL libc/image transition requires a new cluster and logical restore with financial/identity/media reconciliation. Never reset a live development volume to fix an upgrade.
+
+With the shared-host polling override, Traefik reads its static route file without a file watcher. Restart the proxy after editing routes. This avoids an exhausted inotify quota returning 404 while ping is healthy; verify an actual application route as well as container health.

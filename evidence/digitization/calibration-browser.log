@@ -1,0 +1,80 @@
+{"project":"desktop","privatePageCommitted":true}
+{"project":"mobile","privatePageCommitted":true}
+ Container haven-integration-tests-run-b6c30bc33ac7 Creating 
+ Container haven-integration-tests-run-b6c30bc33ac7 Created 
+
+Running 6 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (7.6s)
+  ✓  2 [desktop] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (6.5s)
+  ✘  3 [desktop] › tests/e2e/digitization-plan.spec.ts:44:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay (5.5s)
+  ✓  4 [mobile] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (6.2s)
+  ✓  5 [mobile] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (5.5s)
+  ✘  6 [mobile] › tests/e2e/digitization-plan.spec.ts:44:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay (5.0s)
+
+
+  1) [desktop] › tests/e2e/digitization-plan.spec.ts:44:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 201
+
+      53 |  const svg=await (await page.request.get(origin+route+'/preview.svg')).text();expect(svg).toContain('96.00');expect(svg).toContain('m²');expect(svg).toContain('estimated');expect(svg).not.toContain('<script>');
+      54 |  await expect(page.getByRole('img',{name:'Plan drawing canvas'})).toHaveAttribute('viewBox','0 0 32 24');await expect(page.getByRole('button',{name:'Save private trace',exact:true})).toBeDisabled();await page.reload();await expect(page.getByText(/saved revision 5/)).toBeVisible();expect((await read()).geometry).toEqual(scaled.geometry);
+    > 55 |  const headers={Origin:origin,'Idempotency-Key':sent.headers()['idempotency-key']},data=sent.postDataJSON();const replay=await page.request.post(origin+route+'/calibrate',{headers,data});expect(replay.status()).toBe(200);expect((await replay.json()).data).toEqual(scaled);
+         |                                                                                                                                                                                                                    ^
+      56 |  const invalid=await page.request.post(origin+route+'/calibrate',{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:{...data,version:scaled.workspaceVersion,geometryRevisionId:scaled.geometry.id,distanceMetres:'-1'}});expect(invalid.status()).toBe(422);expect((await read()).geometry).toEqual(scaled.geometry);
+      57 |  const removed=await page.request.delete(origin+'/api/v1/ops/digitization-intakes/'+fixture.engineId+'/asset-bindings/'+fixture.bindingId,{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:{version:scaled.workspaceVersion,inputRevision:scaled.inputRevision+1}});expect(removed.status()).toBe(200);
+      58 |  const stale=await page.request.post(origin+route+'/calibrate',{headers,data});expect(stale.status()).toBe(409);
+        at /workspace/tests/e2e/digitization-plan.spec.ts:55:212
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-plan.spec.ts:44:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 201
+
+      53 |  const svg=await (await page.request.get(origin+route+'/preview.svg')).text();expect(svg).toContain('96.00');expect(svg).toContain('m²');expect(svg).toContain('estimated');expect(svg).not.toContain('<script>');
+      54 |  await expect(page.getByRole('img',{name:'Plan drawing canvas'})).toHaveAttribute('viewBox','0 0 32 24');await expect(page.getByRole('button',{name:'Save private trace',exact:true})).toBeDisabled();await page.reload();await expect(page.getByText(/saved revision 5/)).toBeVisible();expect((await read()).geometry).toEqual(scaled.geometry);
+    > 55 |  const headers={Origin:origin,'Idempotency-Key':sent.headers()['idempotency-key']},data=sent.postDataJSON();const replay=await page.request.post(origin+route+'/calibrate',{headers,data});expect(replay.status()).toBe(200);expect((await replay.json()).data).toEqual(scaled);
+         |                                                                                                                                                                                                                    ^
+      56 |  const invalid=await page.request.post(origin+route+'/calibrate',{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:{...data,version:scaled.workspaceVersion,geometryRevisionId:scaled.geometry.id,distanceMetres:'-1'}});expect(invalid.status()).toBe(422);expect((await read()).geometry).toEqual(scaled.geometry);
+      57 |  const removed=await page.request.delete(origin+'/api/v1/ops/digitization-intakes/'+fixture.engineId+'/asset-bindings/'+fixture.bindingId,{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:{version:scaled.workspaceVersion,inputRevision:scaled.inputRevision+1}});expect(removed.status()).toBe(200);
+      58 |  const stale=await page.request.post(origin+route+'/calibrate',{headers,data});expect(stale.status()).toBe(409);
+        at /workspace/tests/e2e/digitization-plan.spec.ts:55:212
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-plan.spec.ts:44:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay 
+    [mobile] › tests/e2e/digitization-plan.spec.ts:44:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay 
+  4 passed (38.3s)
+

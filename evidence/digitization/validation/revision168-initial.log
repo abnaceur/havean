@@ -1,0 +1,79 @@
+ Container haven-integration-tests-run-b9e06b823696 Creating 
+ Container haven-integration-tests-run-b9e06b823696 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-schema.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 338[2mms[22m[39m
+   [32m✓[39m HE-A04 table ownership and real RLS exist; narrow worker identity gets no engine bypass[32m 113[2mms[22m[39m
+[31m   [31m×[31m HE-A04 two mandates on one unit do not share engine records or private evidence[39m[32m 58[2mms[22m[39m
+[31m   [31m×[31m HE-A04 expired explicit evidence grant removes private derived reads[39m[32m 49[2mms[22m[39m
+   [32m✓[39m HE-A04 reassignment, revoked membership, mandate and owner grant remove authority[32m 61[2mms[22m[39m
+[31m   [31m×[31m HE-A04 cross-org children, cross-run stages and stale/immutable edits are rejected[39m[32m 47[2mms[22m[39m
+   [32m✓[39m HE-A04 private intake needs no fake unit/geography and duplicate active target is denied[32m 9[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-inputs.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 795[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B05 real stored source binds immutable revisions; removal does not mutate existing run snapshots[33m 793[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-intakes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 266[2mms[22m[39m
+ [31m❯[39m tests/integration/digitization-revision-authority.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 352[2mms[22m[39m
+[31m   [31m×[31m HE-B05 owner grants bootstrap an exact reserved revision; no grant carryover or historical exposure; revoked source can be removed immutably[39m[33m 350[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 4 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-revision-authority.test.ts[2m > [22mHE-B05 owner grants bootstrap an exact reserved revision; no grant carryover or historical exposure; revoked source can be removed immutably
+[31m[1mHttpException[22m: Scoped scanned source not found[39m
+[36m [2m❯[22m fail apps/api/src/platform/core.ts:[2m10:87[22m[39m
+
+[90m [2m❯[22m apps/api/src/inventory/digitization/source-validation.ts:[2m10:419[22m[39m
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m verifySmallDigitizationSource apps/api/src/inventory/digitization/source-validation.ts:[2m10:17[22m[39m
+[90m [2m❯[22m DigitizationInputController.bind apps/api/src/inventory/digitization/input-controller.ts:[2m45:34[22m[39m
+[90m [2m❯[22m tests/integration/digitization-revision-authority.test.ts:[2m43:16[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-schema.test.ts[2m > [22mHE-A04 two mandates on one unit do not share engine records or private evidence
+[31m[1merror[22m: new row violates row-level security policy for table "property_input_revisions"[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m revision tests/integration/digitization-schema.test.ts:[2m23:75[22m[39m
+
+[90m [2m❯[22m tests/integration/digitization-schema.test.ts:[2m32:62[22m[39m
+[90m [2m❯[22m tests/integration/digitization-schema.test.ts:[2m10:133[22m[39m
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m rollback tests/integration/digitization-schema.test.ts:[2m10:93[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-schema.test.ts[2m > [22mHE-A04 expired explicit evidence grant removes private derived reads
+[31m[1merror[22m: new row violates row-level security policy for table "property_input_revisions"[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m revision tests/integration/digitization-schema.test.ts:[2m23:75[22m[39m
+
+[90m [2m❯[22m tests/integration/digitization-schema.test.ts:[2m42:62[22m[39m
+[90m [2m❯[22m tests/integration/digitization-schema.test.ts:[2m10:133[22m[39m
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m rollback tests/integration/digitization-schema.test.ts:[2m10:93[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-schema.test.ts[2m > [22mHE-A04 cross-org children, cross-run stages and stale/immutable edits are rejected
+[31m[1merror[22m: new row violates row-level security policy for table "property_input_revisions"[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m revision tests/integration/digitization-schema.test.ts:[2m23:75[22m[39m
+
+[90m [2m❯[22m tests/integration/digitization-schema.test.ts:[2m59:72[22m[39m
+[90m [2m❯[22m tests/integration/digitization-schema.test.ts:[2m10:133[22m[39m
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m rollback tests/integration/digitization-schema.test.ts:[2m10:93[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (12)[39m
+[2m   Start at [22m 10:58:57
+[2m   Duration [22m 6.20s[2m (import 59%, tests 31%, transform 10%)[22m
+
+[2m     Import [22m [33m114 modules were evaluated 184 times[39m[2m · 3.40s total, 59% of tracked time[22m
+[2m            [22m [2m~1.29s faster with [22m[33misolate: false[39m[2m — shared modules are evaluated once per worker instead of once per file[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-isolation[22m
+
+

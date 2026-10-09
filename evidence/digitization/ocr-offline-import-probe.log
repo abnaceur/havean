@@ -1,0 +1,16 @@
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+Error: Can not import paddle core while this file exists: /usr/local/lib/python3.12/site-packages/paddle/base/libpaddle.so
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.12/site-packages/paddle/__init__.py", line 44, in <module>
+    from .base import core  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddle/base/__init__.py", line 38, in <module>
+    from . import (  # noqa: F401
+  File "/usr/local/lib/python3.12/site-packages/paddle/base/backward.py", line 28, in <module>
+    from . import core, framework, log_helper, unique_name
+  File "/usr/local/lib/python3.12/site-packages/paddle/base/core.py", line 390, in <module>
+    raise e
+  File "/usr/local/lib/python3.12/site-packages/paddle/base/core.py", line 267, in <module>
+    from . import libpaddle
+ImportError: libgomp.so.1: cannot open shared object file: No such file or directory

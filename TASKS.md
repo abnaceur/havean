@@ -110,13 +110,13 @@
 - [x] **S05 Manage market configuration** — done; dependencies: S04, L06, M04, V03, I08
 - [x] **S06 Publish scoped analytics and audit** — done; dependencies: S05, L06, M04, V03, I08
 - [x] **Q01 Complete SEO and routing behavior** — done; dependencies: G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
-- [ ] **Q02 Audit full English visual parity** — in_progress; dependencies: Q01, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
-- [ ] **Q03 Audit responsive accessibility** — todo; dependencies: Q02, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
-- [ ] **Q04 Run marketplace critical journeys** — todo; dependencies: Q03, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
-- [ ] **Q05 Run management integrity journeys** — todo; dependencies: Q04, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
-- [ ] **Q06 Run security and provider readiness checks** — todo; dependencies: Q05, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
-- [ ] **Q07 Measure performance and fix bottlenecks** — todo; dependencies: Q06, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
-- [ ] **Q08 Package staging deployment** — todo; dependencies: Q07, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
-- [ ] **Q09 Verify backup and restore** — todo; dependencies: Q08, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
-- [ ] **Q10 Verify migrations and rollback** — todo; dependencies: Q09, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
-- [ ] **Q11 Complete documentation and launch handoff** — todo; dependencies: Q10, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [x] **Q02 Audit full English visual parity** — done; dependencies: Q01, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [x] **Q03 Audit responsive accessibility** — done; dependencies: Q02, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [x] **Q04 Run marketplace critical journeys** — done; dependencies: Q03, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [x] **Q05 Run management integrity journeys** — done; dependencies: Q04, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [x] **Q06 Run security and provider readiness checks** — done; dependencies: Q05, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [x] **Q07 Measure performance and fix bottlenecks** — done; dependencies: Q06, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [x] **Q08 Package staging deployment** — done; dependencies: Q07, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [x] **Q09 Verify backup and restore** — done; dependencies: Q08, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [x] **Q10 Verify migrations and rollback** — done; dependencies: Q09, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+- [x] **Q11 Complete documentation and launch handoff** — done; dependencies: Q10, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06

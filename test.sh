@@ -1,5 +1,10 @@
 #!/bin/sh
 set -eu
+# The isolated project is shared across sessions/checkouts on this Docker host.
+# Acquire the lock before clearing evidence or resetting any stack resource.
+command -v flock >/dev/null 2>&1 || { echo 'flock is required for isolated integration testing' >&2; exit 1; }
+exec 9>/tmp/haven-integration.lock
+flock -n 9 || { echo 'haven-integration is already in use; wait for the active test run' >&2; exit 1; }
 # Remove reports from previous runs before any operation can fail.
 docker run --rm -e HAVEN_HOST_UID="$(id -u)" -e HAVEN_HOST_GID="$(id -g)" -v "$PWD:/workspace" -w /workspace node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 node scripts/reset-ci-evidence.mjs
 # Only haven-integration resources are reset. The development project is separate.

@@ -1,0 +1,22 @@
+[33mConnectivity check to the model hoster has been skipped because `DISABLE_MODEL_SOURCE_CHECK` is enabled.[0m
+Pillow Arabic shaping: False
+[32mCreating model: ('PP-OCRv5_mobile_det', '/probe/models/PP-OCRv5_mobile_det')[0m
+/usr/local/lib/python3.12/site-packages/paddle/utils/cpp_extension/extension_utils.py:718: UserWarning: No ccache found. Please be aware that recompiling all source files may be required. You can download and install ccache from: https://github.com/ccache/ccache/blob/master/doc/INSTALL.md
+  warnings.warn(warning_message)
+[32mCreating model: ('en_PP-OCRv4_mobile_rec', '/probe/models/en_PP-OCRv4_mobile_rec')[0m
+{"locale": "en", "sourceSha256": "5a4e541a0b06a2ba33c88b19ad832c3dc2192f0d50916e58451f128d68ece481", "page": 1, "coordinateSpace": "upright-page-normalized-top-left", "tokens": [{"text": "Unit area 123.45 m2", "score": 0.997678279876709, "polygon": [[0.034375, 0.235], [0.428125, 0.235], [0.428125, 0.605], [0.034375, 0.605]]}]}
+[32mCreating model: ('PP-OCRv5_mobile_det', '/probe/models/PP-OCRv5_mobile_det')[0m
+[32mCreating model: ('latin_PP-OCRv3_mobile_rec', '/probe/models/latin_PP-OCRv3_mobile_rec')[0m
+{"locale": "fr", "sourceSha256": "0faa2a9fcc0a1f66bf0333042b3e838bf49371c23c521c353f1f872770ac456e", "page": 1, "coordinateSpace": "upright-page-normalized-top-left", "tokens": [{"text": "Surface batie 123,45 m2", "score": 0.9624261260032654, "polygon": [[0.034375, 0.22], [0.496875, 0.22], [0.496875, 0.605], [0.034375, 0.605]]}]}
+Traceback (most recent call last):
+  File "/probe/probe_ocr.py", line 11, in <module>
+    draw.text((60,50),text,font=font,fill='black',**({'direction':'rtl'} if locale=='ar' else {}))
+  File "/usr/local/lib/python3.12/site-packages/PIL/ImageDraw.py", line 670, in text
+    draw_text(ink)
+  File "/usr/local/lib/python3.12/site-packages/PIL/ImageDraw.py", line 609, in draw_text
+    mask, offset = font.getmask2(  # type: ignore[union-attr,misc]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/PIL/ImageFont.py", line 640, in getmask2
+    return self.font.render(
+           ^^^^^^^^^^^^^^^^^
+KeyError: 'setting text direction, language or font features is not supported without libraqm'

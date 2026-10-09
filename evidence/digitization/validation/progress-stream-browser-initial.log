@@ -1,0 +1,28 @@
+ Container haven-integration-tests-run-fbb5cf7a08a4 Creating 
+ Container haven-integration-tests-run-fbb5cf7a08a4 Created 
+Development password-only sign-in configured.
+SyntaxError: /workspace/apps/api/src/services/agent-credentials.ts: Decorators cannot be used to decorate parameters. (16:13)
+
+  14 | @Controller('api/v1')
+  15 | export class AgentCredentialsController{
+> 16 |  constructor(@Inject(Identity) private readonly identity:Identity){}
+     |              ^
+  17 |  @Get('me/agent-profiles') async read(@Req() req:FastifyRequest){const a=await this.identity.actor(req,['agent','agency_manager']);return transaction(a,async c=>data(await profiles(c,a)));}
+  18 |  @Post('me/agent-profiles') async create(@Req() req:FastifyRequest,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager']),x=agentProfileCreate.parse(body);return transaction(a,async c=>idempotent(c,a,req,x,async()=>{if(!a.orgId)fail(403,'An agency membership is required');if((await profiles(c,a)).length)fail(409,'Edit your existing profile');const districts=await market(c,x.city,x.districtIds),id=randomUUID();await c.query(`INSERT INTO agents(id,user_id,organization_id,name,slug,biography,languages,districts,city,public_email) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,[id,a.id,a.orgId,x.name,'agent-'+id,x.biography,x.languages,districts,x.city,x.contactConsent?x.publicEmail:null]);await event(c,a,id,'agent.profile_created');return data((await profiles(c,a)).find(p=>p.id===id));}));}
+  19 |  @Patch('me/agent-profiles/:id') async update(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager']),x=agentProfileUpdate.parse(body);return transaction(a,async c=>{const p=await own(c,a,id);if(p.version!==x.version)fail(409,'Profile changed; refresh before editing');const districts=await market(c,x.city,x.districtIds);await c.query(`UPDATE agents SET name=$2,biography=$3,languages=$4,districts=$5,city=$6,public_email=$7,version=version+1 WHERE id=$1`,[p.id,x.name,x.biography,x.languages,districts,x.city,x.contactConsent?x.publicEmail:null]);await event(c,a,p.id,'agent.profile_updated');return data((await profiles(c,a)).find(row=>row.id===p.id));});}
+
+   at digitization-stream.spec.ts:16
+
+  14 |  await expect.poll(()=>page.evaluate(()=>(window as any).engineStreamText)).toContain('heartbeat');expect(await page.evaluate(()=>(window as any).engineStreamText)).not.toContain('digitization.intake_created');
+  15 |  const ticket=(await page.context().cookies('http://localhost:8089')).find(c=>c.name==='haven_session')!.value,pool=new pg.Pool({connectionString:environment.MIGRATION_DATABASE_URL});try{await pool.query("UPDATE sessions SET expires_at=now()-interval '1 second' WHERE id=$1",[ticket]);}finally{await pool.end();}
+> 16 |  await expect.poll(()=>page.evaluate(()=>(window as any).engineStreamClosed),{timeout:12000}).toBe(true);expect((await page.request.get('http://localhost:8089'+path)).status()).toBe(401);
+     |             ^
+  17 | });
+  18 |
+  19 | test('HE-C09 real persisted run timeline resumes through BFF and revoking membership closes its active stream',async({page})=>{
+    at eval (<anonymous>:1:1)
+Error: No tests found.
+Make sure that arguments are regular expressions matching test files.
+You may need to escape symbols like "$" or "*" and quote the arguments.
+
+

@@ -1,0 +1,7 @@
+import {z} from 'zod';
+import {digitizationTarget} from './digitization';
+export const digitizationIntakeCreate=z.strictObject({authorityConfirmed:z.literal(true)});
+export const digitizationListingCreate=digitizationIntakeCreate.extend({listingVersion:z.number().int().positive()});
+export const digitizationEvidenceGrantCreate=z.strictObject({digitizationVersion:z.number().int().positive(),assetId:z.uuid(),assetVersion:z.number().int().positive(),inputRevision:z.number().int().positive(),granteeId:z.uuid(),purposes:z.array(z.enum(['preview','document_processing'])).min(1).max(2).refine(v=>new Set(v).size===v.length),expiresAt:z.iso.datetime(),consentConfirmed:z.literal(true)});
+export const digitizationWorkspaceRecord=z.strictObject({id:z.uuid(),organizationId:z.uuid().nullable(),createdBy:z.uuid(),target:digitizationTarget,unitId:z.uuid().nullable(),listingId:z.uuid().nullable(),state:z.enum(['active','archived']),version:z.number().int().positive(),inputRevision:z.number().int().nonnegative(),capabilities:z.strictObject({ocrAvailable:z.literal(false),reconstructionAvailable:z.literal(false),privateEvidenceRequiresGrant:z.literal(true)})});
+export const digitizationEvidenceGrantRecord=z.strictObject({id:z.uuid(),digitizationId:z.uuid(),assetId:z.uuid(),assetVersion:z.number().int().positive(),inputRevision:z.number().int().positive(),granteeId:z.uuid(),purposes:z.array(z.enum(['preview','document_processing'])),state:z.enum(['active','revoked']),version:z.number().int().positive(),expiresAt:z.iso.datetime()});

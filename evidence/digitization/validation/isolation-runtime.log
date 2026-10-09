@@ -1,0 +1,67 @@
+ Image haven-processing-cpu Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 612B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.cpu
+#2 transferring dockerfile: 1.49kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 192B done
+#4 DONE 0.0s
+
+#5 [cpu 1/8] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#5 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 3.48kB done
+#6 DONE 0.0s
+
+#7 [cpu 7/8] COPY services/property-processing/property_processing ./property_processing
+#7 CACHED
+
+#8 [cpu 2/8] WORKDIR /opt/processing
+#8 CACHED
+
+#9 [cpu 5/8] COPY docs/adr/processing-dependencies.json ./dependencies.json
+#9 CACHED
+
+#10 [cpu 4/8] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
+#10 CACHED
+
+#11 [cpu 3/8] COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
+#11 CACHED
+
+#12 [cpu 6/8] COPY docs/adr/licenses/pypdfium2-5.14.0 /usr/share/doc/haven-processing/pypdfium2-5.14.0
+#12 CACHED
+
+#13 [cpu 8/8] RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:70f76cba1d33615a395529503a3a7ec9929876f9788c6aa7c3d5c72712bc0df4 0.0s done
+#14 exporting config sha256:722ab9bde535743b4e119b9aa497a85bf6330f569c343c29ab9508556c74f0bb 0.0s done
+#14 exporting attestation manifest sha256:c5747af4222cc87a5c76e6d47d9ab4ffe6c1364b377f307294c555fa76c9757d
+#14 exporting attestation manifest sha256:c5747af4222cc87a5c76e6d47d9ab4ffe6c1364b377f307294c555fa76c9757d 0.1s done
+#14 exporting manifest list sha256:b66fe5d99da1305a6fd73b8f9230d157bcd3e569db4430478b75b93ce8ea3599 0.0s done
+#14 naming to docker.io/library/haven-processing-cpu:latest
+#14 naming to docker.io/library/haven-processing-cpu:latest done
+#14 unpacking to docker.io/library/haven-processing-cpu:latest 0.0s done
+#14 DONE 0.3s
+
+#15 resolving provenance for metadata file
+#15 DONE 0.0s
+ Image haven-processing-cpu Built 
+ Container haven-processing-cpu-1 Recreate 
+ Container haven-processing-cpu-1 Recreated 
+ Container haven-processing-cpu-1 Starting 
+ Container haven-processing-cpu-1 Started 
+ Container haven-processing-cpu-1 Waiting 
+ Container haven-processing-cpu-1 Healthy 
+{"data":{"status":"up","capabilities":{"adapterVersion":"unavailable-v1","decoderIsolationProfile":"linux-landlock-seccomp-decoder-v1","landlockAbi":8,"nativePdfAvailable":true,"pdfRasterAvailable":true,"imageOrientationAvailable":true,"ocrAvailable":false,"reconstructionAvailable":false,"executionProtocolAvailable":false,"executionProfileIds":[]}}}

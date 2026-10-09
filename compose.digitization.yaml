@@ -1,0 +1,63 @@
+# Processing has no host ports and no infrastructure credentials or Docker socket.
+services:
+  api:
+    environment:
+      CAPTURE_UPLOAD_ORIGIN: ${PUBLIC_OPS_URL}
+      DIGITIZATION_COORDINATOR_KEY: ${DIGITIZATION_COORDINATOR_KEY:?Run ./dev.sh to generate independent processing credentials}
+      DIGITIZATION_CPU_RUNNER_ORIGIN: http://processing-cpu:8020
+      DIGITIZATION_CPU_SIGNING_KEY_FILE: /run/digitization-runner.key
+    volumes:
+      - ./infra/generated/digitization-runner.key:/run/digitization-runner.key:ro
+    networks: [private, processing]
+  worker:
+    environment:
+      DIGITIZATION_COORDINATOR_KEY: ${DIGITIZATION_COORDINATOR_KEY:?Run ./dev.sh to generate independent processing credentials}
+  processing-volume-init:
+    image: node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+    restart: 'no'
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN, FOWNER, DAC_OVERRIDE]
+    security_opt: [no-new-privileges:true]
+    volumes: [processing-executions:/jobs]
+    command: [node, -e, "require('fs').chownSync('/jobs',10001,10001);require('fs').chmodSync('/jobs',0o700)"]
+  processing-cpu:
+    build:
+      context: .
+      dockerfile: services/property-processing/Dockerfile.cpu
+      target: cpu
+    init: true
+    restart: unless-stopped
+    read_only: true
+    user: '10001:10001'
+    group_add: ['1000']
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      PROCESSING_DEPLOYMENT: development
+      PROCESSING_ADAPTER: unavailable
+      PROCESSING_ENABLE_SIMULATOR: 'false'
+      PROCESSING_EXECUTION_ROOT: /jobs
+      PROCESSING_SIGNING_KEY_FILE: /run/digitization-runner.key
+    volumes:
+      - processing-executions:/jobs
+      - ./infra/generated/digitization-runner.key:/run/digitization-runner.key:ro
+    depends_on:
+      processing-volume-init: {condition: service_completed_successfully}
+    command: [python, -m, property_processing.server]
+    mem_limit: 512m
+    cpus: 1
+    pids_limit: 64
+    tmpfs: ['/tmp:size=67108864,mode=1777']
+    networks: [processing]
+    healthcheck:
+      test: [CMD, python, -c, 'import urllib.request; urllib.request.urlopen("http://127.0.0.1:8020/health/ready",timeout=2).close()']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+networks:
+  processing:
+    internal: true
+volumes:
+  processing-executions:

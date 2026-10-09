@@ -1,0 +1,454 @@
+name: haven
+networks:
+  private:
+    name: haven_private
+services:
+  api:
+    cap_drop:
+      - ALL
+    cpus: "4.0"
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+      identity:
+        condition: service_healthy
+        required: true
+      scanner:
+        condition: service_healthy
+        required: true
+      storage:
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: /home/abn/project/real-estate-solution/${APP_ENV_FILE:?Missing protected application environment}
+        required: true
+    healthcheck:
+      interval: 10s
+      retries: 20
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://localhost:4000/api/v1/health/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      timeout: 5s
+    image: ${HAVEN_API_IMAGE:?Set an immutable image digest}
+    init: true
+    mem_limit: 2g
+    networks:
+      private: null
+    read_only: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m
+  archive-init:
+    cap_add:
+      - CHOWN
+      - FOWNER
+    cap_drop:
+      - ALL
+    command:
+      - chown postgres:postgres /archive && chmod 700 /archive
+    cpus: "0.5"
+    entrypoint:
+      - /bin/sh
+      - -c
+    image: ${HAVEN_DATABASE_IMAGE:?Set an immutable infrastructure image digest}
+    mem_limit: 64m
+    network_mode: none
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
+    user: "0:0"
+    volumes:
+      - source: wal-archive
+        target: /archive
+        type: volume
+        volume: {}
+  cache:
+    command: valkey-server --appendonly yes
+    cpus: "2.0"
+    healthcheck:
+      interval: 5s
+      retries: 20
+      test:
+        - CMD
+        - valkey-cli
+        - ping
+      timeout: 3s
+    image: valkey/valkey:9.1.2-alpine@sha256:48332870af354a799964c0012ae1194a0bf2bf894eb508f945810596dc2d8d11
+    mem_limit: 2g
+    networks:
+      private: null
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - source: cache
+        target: /data
+        type: volume
+        volume: {}
+  db:
+    command:
+      - postgres
+      - -c
+      - wal_level=replica
+      - -c
+      - archive_mode=on
+      - -c
+      - archive_timeout=300s
+      - -c
+      - archive_command=test -f /var/lib/postgresql/wal-archive/%f || cp %p /var/lib/postgresql/wal-archive/%f
+    cpus: "4.0"
+    depends_on:
+      archive-init:
+        condition: service_completed_successfully
+        required: true
+    environment:
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?Missing APP_DB_PASSWORD}
+      IDENTITY_DB_PASSWORD: ${IDENTITY_DB_PASSWORD:?Missing IDENTITY_DB_PASSWORD}
+      POSTGRES_DB: haven
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run ./dev.sh to generate secrets}
+      POSTGRES_USER: postgres
+    healthcheck:
+      interval: 5s
+      retries: 20
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres -d haven
+      timeout: 3s
+    image: ${HAVEN_DATABASE_IMAGE:?Set an immutable infrastructure image digest}
+    mem_limit: 2g
+    networks:
+      private: null
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - source: database
+        target: /var/lib/postgresql/data
+        type: volume
+        volume: {}
+      - bind:
+          create_host_path: true
+        read_only: true
+        source: /home/abn/project/real-estate-solution/infra/init-db.sh
+        target: /docker-entrypoint-initdb.d/01-roles.sh
+        type: bind
+      - bind:
+          create_host_path: true
+        read_only: true
+        source: /home/abn/project/real-estate-solution/infra/geometry-hardening.sql
+        target: /docker-entrypoint-initdb.d/20-geometry-hardening.sql
+        type: bind
+      - source: wal-archive
+        target: /var/lib/postgresql/wal-archive
+        type: volume
+        volume: {}
+  identity:
+    command:
+      - start
+      - --import-realm
+    cpus: "2.0"
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+    environment:
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?Missing identity administrator secret}
+      KC_BOOTSTRAP_ADMIN_USERNAME: local-admin
+      KC_DB: postgres
+      KC_DB_PASSWORD: ${IDENTITY_DB_PASSWORD:?Missing IDENTITY_DB_PASSWORD}
+      KC_DB_URL: jdbc:postgresql://db:5432/haven_identity
+      KC_DB_USERNAME: haven_identity
+      KC_HEALTH_ENABLED: "true"
+      KC_HOSTNAME: ${PUBLIC_IDENTITY_URL:?Missing public HTTPS identity URL}
+      KC_HTTP_ENABLED: "true"
+      KC_PROXY_HEADERS: xforwarded
+    group_add:
+      - "1000"
+    healthcheck:
+      interval: 10s
+      retries: 30
+      start_period: 30s
+      test:
+        - CMD-SHELL
+        - bash -c 'exec 3<>/dev/tcp/localhost/9000; printf "GET /health/ready HTTP/1.0\r\n\r\n" >&3; grep -q UP <&3'
+      timeout: 5s
+    image: ${HAVEN_IDENTITY_IMAGE:?Set an immutable infrastructure image digest}
+    mem_limit: 2g
+    networks:
+      private: null
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - read_only: true
+        source: ${IDENTITY_IMPORT_FILE:?Missing protected realm import}
+        target: /opt/keycloak/data/import/haven-realm.json
+        type: volume
+        volume: {}
+  migrate:
+    cap_drop:
+      - ALL
+    cpus: "2.0"
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: /home/abn/project/real-estate-solution/${APP_ENV_FILE:?Missing protected application environment}
+        required: true
+    environment:
+      MIGRATION_DATABASE_URL: ${MIGRATION_DATABASE_URL:?Missing separate migration credentials}
+    image: ${HAVEN_MIGRATE_IMAGE:?Set an immutable image digest}
+    init: true
+    mem_limit: 2g
+    networks:
+      private: null
+    profiles:
+      - maintenance
+    read_only: true
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m
+  ops:
+    cap_drop:
+      - ALL
+    cpus: "2.0"
+    depends_on:
+      api:
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: /home/abn/project/real-estate-solution/${APP_ENV_FILE:?Missing protected application environment}
+        required: true
+    environment:
+      PUBLIC_APP_URL: ${PUBLIC_OPS_URL:?Missing operations HTTPS origin}
+    healthcheck:
+      interval: 10s
+      retries: 20
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://localhost:3001/ops').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      timeout: 10s
+    image: ${HAVEN_OPS_IMAGE:?Set an immutable image digest}
+    init: true
+    mem_limit: 2g
+    networks:
+      private: null
+    read_only: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m
+      - /workspace/apps/ops/.next/cache:rw,noexec,nosuid,uid=1000,gid=1000,size=256m
+  proxy:
+    cap_drop:
+      - ALL
+    command:
+      - --configFile=/etc/traefik/production.yaml
+    cpus: "1.0"
+    depends_on:
+      identity:
+        condition: service_started
+        required: true
+      ops:
+        condition: service_started
+        required: true
+      web:
+        condition: service_started
+        required: true
+    image: traefik:v3.7.14@sha256:e849695bc5c317da0cec22bfee4794fd9e15871fe554f864d31b625983e883ff
+    mem_limit: 256m
+    networks:
+      private: null
+    ports:
+      - ${HTTPS_BIND_ADDRESS:-127.0.0.1}:${HTTPS_PORT:-8443}:8443
+    read_only: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    user: 1000:1000
+    volumes:
+      - bind:
+          create_host_path: true
+        read_only: true
+        source: /home/abn/project/real-estate-solution/infra/production/traefik.yaml
+        target: /etc/traefik/production.yaml
+        type: bind
+      - read_only: true
+        source: ${TLS_ROUTES_FILE:?Missing generated TLS routes}
+        target: /etc/traefik/routes.yaml
+        type: volume
+        volume: {}
+      - read_only: true
+        source: ${TLS_CERT_FILE:?Missing TLS certificate}
+        target: /run/tls/cert.pem
+        type: volume
+        volume: {}
+      - read_only: true
+        source: ${TLS_KEY_FILE:?Missing TLS private key}
+        target: /run/tls/key.pem
+        type: volume
+        volume: {}
+  scanner:
+    cpus: "4.0"
+    healthcheck:
+      interval: 10s
+      retries: 40
+      start_period: 90s
+      test:
+        - CMD
+        - clamdscan
+        - --ping
+        - "1"
+      timeout: 5s
+    image: ${HAVEN_SCANNER_IMAGE:?Set an immutable infrastructure image digest}
+    mem_limit: 3g
+    networks:
+      private: null
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - source: virus-signatures
+        target: /var/lib/clamav
+        type: volume
+        volume: {}
+  search:
+    cpus: "2.0"
+    environment:
+      MEILI_ENV: production
+      MEILI_MASTER_KEY: ${SEARCH_KEY:?Missing SEARCH_KEY}
+      MEILI_NO_ANALYTICS: "true"
+    healthcheck:
+      interval: 5s
+      retries: 20
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:7700/health
+      timeout: 3s
+    image: getmeili/meilisearch:v1.54.3@sha256:e68913ab7d6f5b159529e472cfd362ce3c741fafd3c127961b2142abbe41b3c9
+    mem_limit: 2g
+    networks:
+      private: null
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - source: search
+        target: /meili_data
+        type: volume
+        volume: {}
+  storage:
+    command: server -s3 -s3.config=/etc/seaweedfs/s3.json -dir=/data -ip=storage -volume.max=20 -master.volumeSizeLimitMB=100
+    cpus: "2.0"
+    healthcheck:
+      interval: 10s
+      retries: 20
+      test:
+        - CMD-SHELL
+        - wget -q -O /dev/null http://storage:9333/cluster/status && (wget -S -O /dev/null http://storage:8333 2>&1 | grep -q "403 Forbidden")
+      timeout: 5s
+    image: chrislusf/seaweedfs:4.48@sha256:4e61d15fd35994cb1e43e1e553dff106794841fd9a99ade2fc8c8bfce4d7872d
+    mem_limit: 2g
+    networks:
+      private: null
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - source: objects
+        target: /data
+        type: volume
+        volume: {}
+      - read_only: true
+        source: ${S3_CONFIG_FILE:?Missing protected S3 configuration}
+        target: /etc/seaweedfs/s3.json
+        type: volume
+        volume: {}
+  web:
+    cap_drop:
+      - ALL
+    cpus: "2.0"
+    depends_on:
+      api:
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: /home/abn/project/real-estate-solution/${APP_ENV_FILE:?Missing protected application environment}
+        required: true
+    healthcheck:
+      interval: 10s
+      retries: 20
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://localhost:3000/bj').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      timeout: 10s
+    image: ${HAVEN_WEB_IMAGE:?Set an immutable image digest}
+    init: true
+    mem_limit: 2g
+    networks:
+      private: null
+    read_only: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m
+      - /workspace/apps/web/.next/cache:rw,noexec,nosuid,uid=1000,gid=1000,size=256m
+  worker:
+    cap_drop:
+      - ALL
+    cpus: "2.0"
+    depends_on:
+      cache:
+        condition: service_healthy
+        required: true
+      db:
+        condition: service_healthy
+        required: true
+      search:
+        condition: service_healthy
+        required: true
+    env_file:
+      - path: /home/abn/project/real-estate-solution/${APP_ENV_FILE:?Missing protected application environment}
+        required: true
+    image: ${HAVEN_WORKER_IMAGE:?Set an immutable image digest}
+    init: true
+    mem_limit: 2g
+    networks:
+      private: null
+    read_only: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=128m
+volumes:
+  cache:
+    name: haven_cache
+  database:
+    name: haven_database
+  objects:
+    name: haven_objects
+  search:
+    name: haven_search
+  virus-signatures:
+    name: haven_virus-signatures
+  wal-archive:
+    name: haven_wal-archive

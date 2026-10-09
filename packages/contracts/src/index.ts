@@ -69,12 +69,25 @@ export * from './chat';
 export * from './providers';
 export * from './quotes';
 export * from './management-grants';
+
+export * from './legacy-digitization-geometry';
 export * from './tenant-links';
+
+export * from './outbox-routing';
 export * from './lease-drafts';
+
+export * from './digitization';
+export * from './digitization-worker';
+export * from './digitization-geometry';
 export * from './lease-workflow';
+
+export * from './digitization-topology';
 export * from './recurring-charges';
 export * from './payment-evidence';
 export * from './payment-allocations';
+
+export * from './digitization-intake';
+export * from './digitization-capture';
 export * from './financial-reversals';
 export * from './deposits';
 export * from './tenant-leases';
@@ -91,8 +104,12 @@ export * from './home-content';
 export * from './platform-administration';
 
 export * from './market-policy';
+
 export * from './area-display';
 
 export * from './analytics';
 
 export * from './seo';
+
+export * from './digitization-inputs';
+export * from './digitization-inventory';

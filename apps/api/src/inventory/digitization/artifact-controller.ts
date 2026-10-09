@@ -1,0 +1,29 @@
+import {Body,Controller,Get,Inject,Param,Post,Query,Req,Res} from '@nestjs/common';
+import type {FastifyRequest,FastifyReply} from 'fastify';
+import {z} from 'zod';
+import {Identity,data,idempotent,transaction,fail} from '../../platform/core.js';
+import {digitizationPlanPageQuery,digitizationGeometrySave,digitizationGeometryCalibration,digitizationGeometryEdit,digitizationTraceCheckpoint} from '@haven/contracts';
+import {readArtifactPreview} from './artifact-preview.js';
+import {readPlanPageSelection,listPlanPages} from './plan-selection.js';
+import {readGeometryDraft,saveGeometryDraft,calibrateGeometryDraft,requireCalibrationReplayScope} from './geometry-drafts.js';
+import {splitPlanRoom,mergePlanRooms,addPlanFloor,connectPlanFloors} from './plan-edit.js';
+import {checkpointTrace,traceConflict} from './trace-checkpoints.js';
+import {renderPlanSvg} from './plan-render.js';
+@Controller('api/v1')
+export class DigitizationArtifactController{
+ @Get('ops/digitizations/:id/geometry/conflict') async conflict(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['agent','agency_manager']);z.uuid().parse(id);return transaction(a,c=>traceConflict(c,a,id).then(data));}
+ @Post('ops/digitizations/:id/geometry/checkpoints') async checkpoint(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager']),x=digitizationTraceCheckpoint.parse(body);z.uuid().parse(id);const selection=await readPlanPageSelection(a,id,x.artifactId,x.clockwiseDegrees);return transaction(a,c=>idempotent(c,a,req,x,async()=>data(await checkpointTrace(c,a,id,x,selection))));}
+ @Post('ops/digitizations/:id/geometry/edit') async edit(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager']),x=digitizationGeometryEdit.parse(body);z.uuid().parse(id);const selection=await readPlanPageSelection(a,id,x.artifactId,x.clockwiseDegrees);return transaction(a,c=>idempotent(c,a,req,x,async()=>{let geometry;const o=x.operation;try{geometry=o.kind==='split_room'?splitPlanRoom(x.geometry,o.roomId,o.firstVertex,o.lastVertex):o.kind==='merge_rooms'?mergePlanRooms(x.geometry,o.firstRoomId,o.lastRoomId,o.name):o.kind==='add_floor'?addPlanFloor(x.geometry,o.name):connectPlanFloors(x.geometry,o.fromFloorId,o.toFloorId);}catch{fail(422,'Choose valid source-linked room boundaries or distinct floors.','GEOMETRY_EDIT_INVALID');}return data(await saveGeometryDraft(c,a,id,{version:x.version,artifactId:x.artifactId,clockwiseDegrees:x.clockwiseDegrees,geometry},selection));}));}
+ @Post('ops/digitizations/:id/geometry/calibrate') async calibrate(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager']),x=digitizationGeometryCalibration.parse(body);z.uuid().parse(id);return transaction(a,async c=>{await requireCalibrationReplayScope(c,a,id,x.geometryRevisionId);return idempotent(c,a,req,x,async()=>data(await calibrateGeometryDraft(c,a,id,x)));});}
+ @Get('ops/digitizations/:id/geometry/preview.svg') async geometrySvg(@Req() req:FastifyRequest,@Param('id') id:string,@Res() reply:FastifyReply){const a=await this.identity.actor(req,['agent','agency_manager']);z.uuid().parse(id);const body=await transaction(a,async c=>{const draft=await readGeometryDraft(c,a,id);if(!draft)fail(404,'Private trace not found.');const svg=renderPlanSvg(draft.geometry,draft.geometry.floors[0].id);await readGeometryDraft(c,a,id);return svg;});return reply.header('Content-Type','image/svg+xml; charset=utf-8').header('Cache-Control','private,no-store').header('X-Content-Type-Options','nosniff').header('Content-Security-Policy',"default-src 'none'; sandbox").send(Buffer.from(body,'utf8'));}
+ @Get('ops/digitizations/:id/plan-pages') async planPages(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['agent','agency_manager']);z.uuid().parse(id);return transaction(a,async c=>data(await listPlanPages(c,a,id)));}
+ @Get('ops/digitizations/:id/geometry') async geometry(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['agent','agency_manager']);z.uuid().parse(id);return transaction(a,async c=>data(await readGeometryDraft(c,a,id)));}
+ @Post('ops/digitizations/:id/geometry') async saveGeometry(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager']),x=digitizationGeometrySave.parse(body);z.uuid().parse(id);const selection=await readPlanPageSelection(a,id,x.artifactId,x.clockwiseDegrees);return transaction(a,c=>idempotent(c,a,req,x,async()=>data(await saveGeometryDraft(c,a,id,x,selection))));}
+ @Get('ops/digitizations/:id/artifacts/:artifactId/plan-page') async planPage(@Req() req:FastifyRequest,@Param('id') id:string,@Param('artifactId') artifactId:string,@Query() input:unknown){const a=await this.identity.actor(req,['agent','agency_manager']),x=digitizationPlanPageQuery.parse(input);z.uuid().parse(id);z.uuid().parse(artifactId);return data(await readPlanPageSelection(a,id,artifactId,x.clockwiseDegrees));}
+ constructor(@Inject(Identity) private readonly identity:Identity){}
+ @Get('ops/digitizations/:id/artifacts/:artifactId/preview') async preview(@Req() req:FastifyRequest,@Param('id') id:string,@Param('artifactId') artifactId:string,@Res() reply:FastifyReply){
+  const a=await this.identity.actor(req,['agent','agency_manager']);z.uuid().parse(id);z.uuid().parse(artifactId);
+  const body=await readArtifactPreview(a,id,artifactId);
+  return reply.header('Content-Type','image/png').header('Cache-Control','private,no-store').header('X-Content-Type-Options','nosniff').header('Content-Security-Policy',"default-src 'none'; sandbox").send(body);
+ }
+}

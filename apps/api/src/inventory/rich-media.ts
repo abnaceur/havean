@@ -3,21 +3,15 @@ import type {FastifyRequest} from 'fastify';
 import type pg from 'pg';
 import {z} from 'zod';
 import {propertyMediaMetadata} from '@haven/contracts';
-import {event,type Actor} from '@haven/database';
+import {event} from '@haven/database';
+import {editableProperty as editable,type PropertyResource} from './property-access.js';
 import {Identity,data,fail,transaction,idempotent} from '../platform/core.js';
 const kind=z.enum(['photo','floor_plan','panorama','video']);
 const metadata=propertyMediaMetadata;
-type Resource='listings'|'developments';
+type Resource=PropertyResource;
 function resource(value:string):Resource{if(value!=='listings'&&value!=='developments')fail(404,'Property media not found');return value as Resource;}
 function parentColumn(type:Resource){return type==='listings'?'listing_id':'development_id';}
 function parent(row:any):{type:Resource;id:string}{return row.listing_id?{type:'listings',id:row.listing_id}:{type:'developments',id:row.development_id};}
-async function editable(c:pg.PoolClient,a:Actor,id:string,type:Resource){
- const record=(await c.query(type==='listings'?'SELECT id,title,owner_id,organization_id,agent_id,version,status FROM listings WHERE id=$1 FOR UPDATE':'SELECT id,name AS title,organization_id,version,status FROM developments WHERE id=$1 FOR UPDATE',[id])).rows[0];
- const allowed=type==='listings'?['agent','agency_manager']:['developer'];
- if(!record||!(a.roles.some(r=>['admin','moderator'].includes(r))||record.owner_id===a.id||record.organization_id===a.orgId&&a.roles.some(r=>allowed.includes(r))))fail(404,'Editable property not found');
- if(type==='listings'&&a.roles.includes('agent')&&!a.roles.some(r=>['admin','agency_manager'].includes(r))&&record.owner_id!==a.id&&!(await c.query('SELECT 1 FROM agents WHERE id=$1 AND user_id=$2',[record.agent_id,a.id])).rowCount)fail(404,'This property is not assigned to you');
- return record;
-}
 async function validateLinks(c:pg.PoolClient,id:string,type:Resource,value:z.infer<typeof metadata>,mediaKind:string){
  if(value.spatial&&mediaKind!=='floor_plan')fail(400,'Spatial floor data belongs to a floor-plan image');
  for(const room of value.spatial?.rooms||[])if(!(await c.query(`SELECT 1 FROM listing_media WHERE id=$1 AND ${parentColumn(type)}=$2 AND kind='panorama'`,[room.sceneId,id])).rowCount)fail(400,'Each mapped room must link to a panorama in this property');

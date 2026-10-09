@@ -1,0 +1,71 @@
+BEGIN
+SET
+ set_config | set_config | set_config | set_config | set_config | set_config | set_config | set_config 
+------------+------------+------------+------------+------------+------------+------------+------------
+            |            | false      | false      | false      | false      | false      | false
+(1 row)
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    QUERY PLAN                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=93576.17..93576.18 rows=1 width=8) (actual time=325.987..325.990 rows=1 loops=1)
+   Buffers: shared hit=401753
+   ->  Nested Loop  (cost=3.59..93555.06 rows=8444 width=0) (actual time=0.126..317.955 rows=69999 loops=1)
+         Buffers: shared hit=401753
+         ->  Nested Loop  (cost=0.29..1464.36 rows=14286 width=16) (actual time=0.106..30.687 rows=100000 loops=1)
+               Buffers: shared hit=1753
+               ->  Nested Loop  (cost=0.00..61.99 rows=1 width=16) (actual time=0.086..0.110 rows=6 loops=1)
+                     Join Filter: (d.id = co.district_id)
+                     Rows Removed by Join Filter: 30
+                     Buffers: shared hit=6
+                     ->  Seq Scan on communities co  (cost=0.00..52.28 rows=3 width=32) (actual time=0.043..0.048 rows=6 loops=1)
+                           Filter: ((current_setting('app.admin'::text, true) = 'true'::text) OR ((status = 'active'::text) AND (ANY (district_id = (hashed SubPlan 22).col1))) OR (current_setting('app.admin'::text, true) = 'true'::text))
+                           Buffers: shared hit=3
+                           SubPlan 22
+                             ->  Seq Scan on districts  (cost=0.00..8.51 rows=4 width=16) (actual time=0.020..0.023 rows=7 loops=1)
+                                   Filter: ((current_setting('app.admin'::text, true) = 'true'::text) OR ((status = 'active'::text) AND (ANY (city_id = (hashed SubPlan 21).col1))) OR (current_setting('app.admin'::text, true) = 'true'::text))
+                                   Buffers: shared hit=2
+                                   SubPlan 21
+                                     ->  Seq Scan on cities  (cost=0.00..1.04 rows=2 width=16) (actual time=0.005..0.006 rows=2 loops=1)
+                                           Filter: ((current_setting('app.admin'::text, true) = 'true'::text) OR (status = 'active'::text) OR (current_setting('app.admin'::text, true) = 'true'::text))
+                                           Buffers: shared hit=1
+                     ->  Materialize  (cost=0.00..9.62 rows=2 width=16) (actual time=0.007..0.009 rows=6 loops=6)
+                           Buffers: shared hit=3
+                           ->  Nested Loop  (cost=0.00..9.61 rows=2 width=16) (actual time=0.032..0.042 rows=6 loops=1)
+                                 Join Filter: (d.city_id = ci.id)
+                                 Rows Removed by Join Filter: 1
+                                 Buffers: shared hit=3
+                                 ->  Seq Scan on cities ci  (cost=0.00..1.05 rows=1 width=16) (actual time=0.003..0.004 rows=1 loops=1)
+                                       Filter: ((slug = 'bj'::text) AND ((current_setting('app.admin'::text, true) = 'true'::text) OR (status = 'active'::text) OR (current_setting('app.admin'::text, true) = 'true'::text)))
+                                       Rows Removed by Filter: 1
+                                       Buffers: shared hit=1
+                                 ->  Seq Scan on districts d  (cost=0.00..8.51 rows=4 width=32) (actual time=0.028..0.036 rows=7 loops=1)
+                                       Filter: ((current_setting('app.admin'::text, true) = 'true'::text) OR ((status = 'active'::text) AND (ANY (city_id = (hashed SubPlan 24).col1))) OR (current_setting('app.admin'::text, true) = 'true'::text))
+                                       Buffers: shared hit=2
+                                       SubPlan 24
+                                         ->  Seq Scan on cities cities_1  (cost=0.00..1.04 rows=2 width=16) (actual time=0.021..0.022 rows=2 loops=1)
+                                               Filter: ((current_setting('app.admin'::text, true) = 'true'::text) OR (status = 'active'::text) OR (current_setting('app.admin'::text, true) = 'true'::text))
+                                               Buffers: shared hit=1
+               ->  Index Scan using units_community on units u  (cost=0.29..1235.71 rows=16667 width=48) (actual time=0.004..3.239 rows=16667 loops=6)
+                     Index Cond: (community_id = co.id)
+                     Buffers: shared hit=1747
+         ->  Index Scan using listings_unit on listings l  (cost=3.30..6.44 rows=1 width=43) (actual time=0.002..0.003 rows=1 loops=100000)
+               Index Cond: (unit_id = u.id)
+               Filter: ((status = 'published'::text) AND (currency = 'CNY'::bpchar) AND (transaction = 'sale'::text) AND ((expires_at IS NULL) OR (expires_at > now())) AND ((COALESCE(current_setting('app.agent_only'::text, true), 'false'::text) <> 'true'::text) OR (status = 'published'::text) OR (owner_id = (NULLIF(current_setting('app.actor'::text, true), ''::text))::uuid) OR (ANY (agent_id = (hashed SubPlan 15).col1))) AND ((COALESCE(current_setting('app.review'::text, true), 'false'::text) = 'true'::text) OR (status = 'published'::text) OR (organization_id = (NULLIF(current_setting('app.org'::text, true), ''::text))::uuid) OR (owner_id = (NULLIF(current_setting('app.actor'::text, true), ''::text))::uuid) OR (COALESCE(current_setting('app.admin'::text, true), 'false'::text) = 'true'::text) OR (ANY (unit_id = (hashed SubPlan 16).col1)) OR (organization_id = (NULLIF(current_setting('app.org'::text, true), ''::text))::uuid) OR (owner_id = (NULLIF(current_setting('app.actor'::text, true), ''::text))::uuid) OR (COALESCE(current_setting('app.admin'::text, true), 'false'::text) = 'true'::text)) AND ((transaction <> 'rent'::text) OR (NOT EXISTS(SubPlan 1))))
+               Rows Removed by Filter: 0
+               Buffers: shared hit=400000
+               SubPlan 15
+                 ->  Seq Scan on agents  (cost=0.00..1.09 rows=1 width=16) (never executed)
+                       Filter: (user_id = (NULLIF(current_setting('app.actor'::text, true), ''::text))::uuid)
+               SubPlan 16
+                 ->  Seq Scan on management_grants  (cost=0.00..1.79 rows=1 width=16) (never executed)
+                       Filter: ((expires_at > now()) AND (organization_id = (NULLIF(current_setting('app.org'::text, true), ''::text))::uuid) AND ((owner_id = (NULLIF(current_setting('app.actor'::text, true), ''::text))::uuid) OR management_admin() OR (management_team(organization_id) AND management_grant_valid(id))))
+               SubPlan 1
+                 ->  Function Scan on public_unavailable_rental_units blocked  (cost=0.25..12.75 rows=5 width=0) (never executed)
+                       Filter: (unit_id = l.unit_id)
+ Planning:
+   Buffers: shared hit=1243
+ Planning Time: 16.107 ms
+ Execution Time: 327.022 ms
+(59 rows)
+
+ROLLBACK

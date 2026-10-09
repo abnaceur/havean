@@ -1,4 +1,6 @@
+import {validateReleaseReadiness} from './release-readiness.mjs';
 import fs from 'node:fs';
+import {validateDigitizationTasks} from './lib/digitization-tasks.mjs';
 const {tasks} = JSON.parse(fs.readFileSync('TASKS.json','utf8'));
 const ids = new Set(tasks.map(t=>t.id));
 const errors=[];
@@ -13,6 +15,10 @@ for(const t of tasks){
  }
 }
 fs.writeFileSync('TASKS.md','# Specification backlog\n\n'+tasks.map(t=>`- [${t.status==='done'?'x':' '}] **${t.id} ${t.title}** — ${t.status}; dependencies: ${t.dependencies.join(', ')||'none'}\n`).join(''));
+if(process.argv.includes('--release'))errors.push(...validateReleaseReadiness());
 if(process.argv.includes('--release')) for(const t of tasks) if(t.status!=='done') errors.push(`${t.id}: ${t.status}`);
+const engine=validateDigitizationTasks({release:process.argv.includes('--release')});
+errors.push(...engine.errors);
 if(errors.length){console.error(errors.join('\n'));process.exit(1);}
 console.log(`Validated ${tasks.length} tasks; ${tasks.filter(t=>t.status==='done').length} done.`);
+console.log(`Validated ${engine.count} digitization tasks; ${engine.done} done.`);

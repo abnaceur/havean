@@ -1,0 +1,21 @@
+
+> @haven/api@0.1.0 typecheck /workspace/apps/api
+> tsc --noEmit
+
+
+> @haven/worker@0.1.0 typecheck /workspace/apps/worker
+> tsc --noEmit
+
+
+> haven-real-estate@0.1.0 contracts:check /workspace
+> node scripts/generate-contracts.mjs --check && tsx scripts/generate-openapi.ts --check && tsx scripts/generate-digitization-schemas.ts --check
+
+Generated 348 typed API operations.
+OpenAPI matches canonical schemas
+Digitization runner schemas match canonical contracts
+
+/workspace/tests/integration/digitization-coordinator.test.ts
+  31:188  error  Empty block statement  no-empty
+
+✖ 1 problem (1 error, 0 warnings)
+

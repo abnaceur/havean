@@ -1,0 +1,25 @@
+ Container haven-integration-tests-run-25232c1f5ff3 Creating 
+ Container haven-integration-tests-run-25232c1f5ff3 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/viewing-reminders.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2770[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 confirmation schedules one versioned reminder; actual BullMQ and SMTP receipt replay produce one email and one native notification[33m 563[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 cancellation invalidates queued and failed reminders and all stale retries send no email[33m 562[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 lost post-SMTP acknowledgement reconciles the frozen provider receipt without duplicate sending[33m 369[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 rescheduling invalidates the former booking job and fresh confirmation schedules the new version; unsigned service calls and private table reads fail[33m 381[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 transactional reminders never email unverified accounts, and inactive accounts receive no reminder[33m 487[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-worker-http.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 2970[2mms[22m[39m
+   [33m[2m✓[22m[39m real Nest/Fastify engine command routes enforce separate service authentication, contracts, versions and cancellation[33m 2967[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-outbox-routing.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-scan.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 23[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m10 passed[39m[22m[90m (10)[39m
+[2m   Start at [22m 11:14:40
+[2m   Duration [22m 9.98s[2m (tests 61%, import 32%, transform 6%)[22m
+
+[2m     Import [22m [33m131 modules were evaluated 213 times[39m[2m · 3.06s total, 32% of tracked time[22m
+[2m            [22m [2m~1.18s faster with [22m[33misolate: false[39m[2m — shared modules are evaluated once per worker instead of once per file[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-isolation[22m
+

@@ -1,0 +1,87 @@
+ Container haven-integration-tests-run-ce50c0e3a2c7 Creating 
+ Container haven-integration-tests-run-ce50c0e3a2c7 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-schema.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1817[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-A04 expired explicit evidence grant removes private derived reads[33m 1216[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-inputs.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 963[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B05 real stored source binds immutable revisions; removal does not mutate existing run snapshots[33m 960[2mms[22m[39m
+ [31m❯[39m tests/integration/digitization-capture-finalization.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 115[2mms[22m[39m
+[31m   [31m×[31m actual signed multipart completion stores one private quarantine receipt, survives lost commit/checksum retry and never approves processing[39m[32m 93[2mms[22m[39m
+[31m   [31m×[31m a declared QuickTime MIME cannot approve or bind an actual MPEG-4 capture[39m[32m 19[2mms[22m[39m
+ [31m❯[39m tests/integration/digitization-capture.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 582[2mms[22m[39m
+[31m   [31m×[31m HE-B02 capture API persists a resumable scoped session, reuses receipts and streams signed parts directly through the real gateway[39m[33m 420[2mms[22m[39m
+   [32m✓[39m HE-B02 declared 2 GiB clip/20 GiB property quotas and current versions are enforced before storage work[32m 158[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-worker-http.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 3683[2mms[22m[39m
+   [33m[2m✓[22m[39m real Nest/Fastify engine command routes enforce separate service authentication, contracts, versions and cancellation[33m 3679[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-validation.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 670[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B03 small-upload source validation detects forged MIME/object sizes and retains explicit PDF decoder state[33m 665[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-capture-finalization.test.ts[2m > [22mactual signed multipart completion stores one private quarantine receipt, survives lost commit/checksum retry and never approves processing
+[31m[1mZodError[22m: [
+  {
+    "code": "invalid_value",
+    "values": [
+      true
+    ],
+    "path": [
+      "authorityConfirmed"
+    ],
+    "message": "Invalid input: expected true"
+  }
+][39m
+[36m [2m❯[22m DigitizationCaptureController.createIntake apps/api/src/inventory/digitization/capture-controller.ts:[2m23:180[22m[39m
+
+[90m [2m❯[22m uploaded tests/integration/digitization-capture-finalization.test.ts:[2m20:34[22m[39m
+[90m [2m❯[22m tests/integration/digitization-capture-finalization.test.ts:[2m26:168[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-capture-finalization.test.ts[2m > [22ma declared QuickTime MIME cannot approve or bind an actual MPEG-4 capture
+[31m[1mZodError[22m: [
+  {
+    "code": "invalid_value",
+    "values": [
+      true
+    ],
+    "path": [
+      "authorityConfirmed"
+    ],
+    "message": "Invalid input: expected true"
+  }
+][39m
+[36m [2m❯[22m DigitizationCaptureController.createIntake apps/api/src/inventory/digitization/capture-controller.ts:[2m23:180[22m[39m
+
+[90m [2m❯[22m uploaded tests/integration/digitization-capture-finalization.test.ts:[2m20:34[22m[39m
+[90m [2m❯[22m tests/integration/digitization-capture-finalization.test.ts:[2m43:168[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-capture.test.ts[2m > [22mHE-B02 capture API persists a resumable scoped session, reuses receipts and streams signed parts directly through the real gateway
+[31m[1mAssertionError[22m: expected 404 to be 200 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 200[39m
+[31m+ 404[39m
+
+[36m [2m❯[22m tests/integration/digitization-capture.test.ts:[2m23:297[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m4 passed[39m[22m[90m (6)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m10 passed[39m[22m[90m (13)[39m
+[2m   Start at [22m 01:18:42
+[2m   Duration [22m 17.49s[2m (tests 47%, import 45%, transform 8%)[22m
+
+[2m     Import [22m [33m115 modules were evaluated 184 times[39m[2m · 7.44s total, 45% of tracked time[22m
+[2m            [22m [2m~2.79s faster with [22m[33misolate: false[39m[2m — shared modules are evaluated once per worker instead of once per file[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-isolation[22m
+
+

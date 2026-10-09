@@ -1,5 +1,10 @@
 http:
   routers:
+    capture-parts:
+      entryPoints: [ops, web]
+      rule: PathPrefix(`/haven-private/capture/`) && Method(`PUT`)
+      priority: 110
+      service: capture-storage
     conversation-web:
       entryPoints: [web]
       rule: PathPrefix(`/api/v1/realtime/conversations/`)
@@ -27,6 +32,10 @@ http:
       rule: PathPrefix(`/`)
       service: mail
   services:
+    capture-storage:
+      loadBalancer:
+        passHostHeader: true
+        servers: [{url: 'http://storage:8333'}]
     conversation-api:
       loadBalancer:
         servers: [{url: 'http://api:4000'}]

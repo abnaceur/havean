@@ -1,0 +1,103 @@
+ Container haven-processing-tests-wheel-download-run-1037ec63adb3 Creating 
+ Container haven-processing-tests-wheel-download-run-1037ec63adb3 Created 
+Verified cached pypdf-6.1.1-py3-none-any.whl
+Verified cached pillow-11.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+Verified cached pytest-8.4.2-py3-none-any.whl
+Verified cached iniconfig-2.1.0-py3-none-any.whl
+Verified cached packaging-25.0-py3-none-any.whl
+Verified cached pluggy-1.6.0-py3-none-any.whl
+Verified cached pygments-2.19.2-py3-none-any.whl
+Verified cached pypdfium2-5.14.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+ Image haven-processing-tests-cpu Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 608B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.cpu
+#2 transferring dockerfile: 1.49kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 ...
+
+#4 [auth] library/python:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 2.7s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 192B done
+#5 DONE 0.0s
+
+#6 [cpu 1/8] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#6 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 34.73kB 0.1s done
+#7 DONE 0.1s
+
+#8 [cpu 5/8] COPY docs/adr/processing-dependencies.json ./dependencies.json
+#8 CACHED
+
+#9 [cpu 2/8] WORKDIR /opt/processing
+#9 CACHED
+
+#10 [cpu 3/8] COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
+#10 CACHED
+
+#11 [cpu 4/8] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
+#11 CACHED
+
+#12 [cpu 6/8] COPY docs/adr/licenses/pypdfium2-5.14.0 /usr/share/doc/haven-processing/pypdfium2-5.14.0
+#12 CACHED
+
+#13 [cpu 7/8] COPY services/property-processing/property_processing ./property_processing
+#13 DONE 0.1s
+
+#14 [cpu 8/8] RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+#14 DONE 0.4s
+
+#15 [cpu-tests 1/3] COPY services/property-processing/locks/test.lock /tmp/test.lock
+#15 DONE 0.1s
+
+#16 [cpu-tests 2/3] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/test.lock && python -m pip check
+#16 1.896 Looking in links: /wheels
+#16 1.897 Requirement already satisfied: pypdf==6.1.1 in /usr/local/lib/python3.12/site-packages (from -r /tmp/test.lock (line 2)) (6.1.1)
+#16 1.897 Requirement already satisfied: pillow==11.3.0 in /usr/local/lib/python3.12/site-packages (from -r /tmp/test.lock (line 4)) (11.3.0)
+#16 1.905 Processing /wheels/pytest-8.4.2-py3-none-any.whl (from -r /tmp/test.lock (line 6))
+#16 1.914 Processing /wheels/iniconfig-2.1.0-py3-none-any.whl (from -r /tmp/test.lock (line 8))
+#16 1.916 Processing /wheels/packaging-25.0-py3-none-any.whl (from -r /tmp/test.lock (line 10))
+#16 1.919 Processing /wheels/pluggy-1.6.0-py3-none-any.whl (from -r /tmp/test.lock (line 12))
+#16 1.922 Processing /wheels/pygments-2.19.2-py3-none-any.whl (from -r /tmp/test.lock (line 14))
+#16 1.957 Installing collected packages: pygments, pluggy, packaging, iniconfig, pytest
+#16 2.972 Successfully installed iniconfig-2.1.0 packaging-25.0 pluggy-1.6.0 pygments-2.19.2 pytest-8.4.2
+#16 2.972 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#16 4.029 No broken requirements found.
+#16 DONE 4.1s
+
+#17 [cpu-tests 3/3] COPY services/property-processing/tests ./tests
+#17 DONE 0.1s
+
+#18 exporting to image
+#18 exporting layers
+#18 exporting layers 0.7s done
+#18 exporting manifest sha256:67972009f2f6fc8e8f039f5925281b50b4c5bba119185231571f185c35a9ac5d 0.0s done
+#18 exporting config sha256:8a67b9ad8841a8aaf47a04255798738f862805b35fd24125da3da7a97b8dbc3b 0.0s done
+#18 exporting attestation manifest sha256:e39018e1014f7815f7fef6ab71b969b2a752aedd763df2bf3272d37f28836f5d
+#18 exporting attestation manifest sha256:e39018e1014f7815f7fef6ab71b969b2a752aedd763df2bf3272d37f28836f5d 0.1s done
+#18 exporting manifest list sha256:62ca3222f461c2e1f1b1a66d63382c42ff01add58c256b4309338c590a3c6e56 0.0s done
+#18 naming to docker.io/library/haven-processing-tests-cpu:latest
+#18 naming to docker.io/library/haven-processing-tests-cpu:latest done
+#18 unpacking to docker.io/library/haven-processing-tests-cpu:latest
+#18 unpacking to docker.io/library/haven-processing-tests-cpu:latest 0.3s done
+#18 DONE 1.2s
+
+#19 resolving provenance for metadata file
+#19 DONE 0.0s
+ Image haven-processing-tests-cpu Built 
+ Container haven-processing-tests-cpu-run-14929225bd72 Creating 
+ Container haven-processing-tests-cpu-run-14929225bd72 Created 
+..........................................................               [100%]
+58 passed in 8.03s

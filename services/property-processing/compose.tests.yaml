@@ -1,0 +1,35 @@
+name: haven-processing-tests
+services:
+  wheel-download:
+    image: python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+    profiles: [bootstrap]
+    init: true
+    read_only: true
+    user: '${PROCESSING_BUILD_UID:-1000}:${PROCESSING_BUILD_GID:-1000}'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    pids_limit: 32
+    volumes:
+      - ./download_wheels.py:/download_wheels.py:ro
+      - ../../docs/adr/processing-dependencies.json:/manifest.json:ro
+      - ./.wheels:/wheels
+    command: [python, /download_wheels.py, --manifest, /manifest.json, --directory, /wheels]
+  cpu:
+    build:
+      context: ../..
+      dockerfile: services/property-processing/Dockerfile.cpu
+      target: ${PROCESSING_BUILD_TARGET:-cpu-tests}
+    init: true
+    read_only: true
+    user: '10001:10001'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+    cpus: 1
+    pids_limit: 64
+    tmpfs: ['/tmp:size=67108864,mode=1777']
+    networks: [isolated]
+networks:
+  isolated:
+    internal: true

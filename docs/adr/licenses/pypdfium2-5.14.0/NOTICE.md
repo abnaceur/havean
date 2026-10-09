@@ -1,0 +1,5 @@
+Haven CPU processing uses unmodified pypdfium2 5.14.0 and bundled PDFium 156.0.8076.0 from the exact checksum-pinned x86-64 wheel. All eighteen upstream notice files are retained here and in the installed wheel. The package's Apache-2.0 or BSD-3-Clause choice is independent of native dependency notices. CC-BY-4.0 applies to upstream documentation, not a new license on property inputs or rendered outputs.
+
+Portions of this software are copyright © The FreeType Project (www.freetype.org). All rights reserved. The FreeType License option is used. This software is based in part on the work of the Independent JPEG Group. Native dependency acknowledgments and redistribution notices are preserved without endorsing Haven. ICU includes Autoconf macro distribution exceptions; those notices are retained verbatim. No V8/JavaScript or XFA-enabled PDFium build is adopted.
+
+The manifest records each notice checksum and the native library checksum. Runtime/network source builds and unpinned PDFium substitutions are unsupported. Original documents and page previews remain private under Haven's evidence grants.

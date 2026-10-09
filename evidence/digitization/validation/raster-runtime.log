@@ -1,0 +1,96 @@
+ Image haven-processing-cpu Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 612B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.cpu
+#2 transferring dockerfile: 1.49kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 192B done
+#4 DONE 0.0s
+
+#5 [cpu 1/8] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#5 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 3.31kB done
+#6 DONE 0.0s
+
+#7 [cpu 4/8] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
+#7 CACHED
+
+#8 [cpu 3/8] COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
+#8 CACHED
+
+#9 [cpu 7/8] COPY services/property-processing/property_processing ./property_processing
+#9 CACHED
+
+#10 [cpu 5/8] COPY docs/adr/processing-dependencies.json ./dependencies.json
+#10 CACHED
+
+#11 [cpu 2/8] WORKDIR /opt/processing
+#11 CACHED
+
+#12 [cpu 6/8] COPY docs/adr/licenses/pypdfium2-5.14.0 /usr/share/doc/haven-processing/pypdfium2-5.14.0
+#12 CACHED
+
+#13 [cpu 8/8] RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:59f03ad42bce4f1751bf6e0bb646601066e5aa5d3118aa691e7f22dbe356fc02 0.0s done
+#14 exporting config sha256:dc4971ce4d09d66e79e471548f2f004a8ca1cb878305608008b790ac2153b9b5 0.0s done
+#14 exporting attestation manifest sha256:679c40b92d9cfb134df8871f9f5dcc1ff027171b367c01763495ab5bbd01e7d5
+#14 exporting attestation manifest sha256:679c40b92d9cfb134df8871f9f5dcc1ff027171b367c01763495ab5bbd01e7d5 0.1s done
+#14 exporting manifest list sha256:25a18439adde6bd24be07808af018e61959cc5b6a97e9b2673756a58a86136f6 0.0s done
+#14 naming to docker.io/library/haven-processing-cpu:latest
+#14 naming to docker.io/library/haven-processing-cpu:latest done
+#14 unpacking to docker.io/library/haven-processing-cpu:latest 0.0s done
+#14 DONE 0.3s
+
+#15 resolving provenance for metadata file
+#15 DONE 0.0s
+ Image haven-processing-cpu Built 
+ Container haven-processing-cpu-1 Recreate 
+ Container haven-processing-cpu-1 Recreated 
+ Container haven-processing-cpu-1 Starting 
+ Container haven-processing-cpu-1 Started 
+ Container haven-processing-cpu-1 Waiting 
+ Container haven-processing-cpu-1 Healthy 
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+TypeError: fetch failed
+    at Object.processResponse (node:internal/deps/undici/undici:13068:20)
+    at node:internal/deps/undici/undici:13456:23
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at node:internal/deps/undici/undici:17859:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  [cause]: Error: getaddrinfo ENOTFOUND processing-cpu
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:123:26) {
+    errno: -3008,
+    code: 'ENOTFOUND',
+    syscall: 'getaddrinfo',
+    hostname: 'processing-cpu'
+  }
+}
+
+Node.js v24.21.0
+ Container haven-processing-cpu-1 Running 
+ Container haven-api-1 Recreate 
+ Container haven-api-1 Recreated 
+ Container haven-api-1 Starting 
+ Container haven-api-1 Started 
+ Container haven-processing-cpu-1 Waiting 
+ Container haven-api-1 Waiting 
+ Container haven-processing-cpu-1 Healthy 
+ Container haven-api-1 Healthy 
+200 {"data":{"status":"up","capabilities":{"adapterVersion":"unavailable-v1","nativePdfAvailable":true,"pdfRasterAvailable":true,"imageOrientationAvailable":true,"ocrAvailable":false,"reconstructionAvailable":false}}}

@@ -14,7 +14,7 @@ docker build -f infra/Dockerfile.production --target web -t haven-web:staging .
 docker build -f infra/Dockerfile.production --target ops -t haven-ops:staging .
 ```
 
-Set the five HAVEN_*_IMAGE fields to immutable digests, not these convenience build tags. Keep application secrets in a protected APP_ENV_FILE. Keep migration/identity administrator credentials outside that file. `scripts/production-preflight.mjs` checks deployment inputs and file permissions without logging values; native application configuration additionally checks HTTPS, mail, maps and required secrets. Generate proxy routes with `scripts/production-routes.mjs` using distinct web, operations and identity HTTPS origins. Public identity routes expose realm login/resources; administrative routes remain private.
+Build the three maintained infrastructure images with `node scripts/build-infrastructure.mjs /protected/compose.env`. This updates only immutable database/identity/scanner image identifiers and prints no environment values. Set the eight HAVEN_*_IMAGE fields to immutable digests, not these convenience build tags. Keep application secrets in a protected APP_ENV_FILE. Keep migration/identity administrator credentials outside that file. `scripts/production-preflight.mjs` checks deployment inputs and file permissions without logging values; native application configuration additionally checks HTTPS, mail, maps and required secrets. Generate proxy routes with `scripts/production-routes.mjs` using distinct web, operations and identity HTTPS origins. Public identity routes expose realm login/resources; administrative routes remain private.
 
 Compose publishes only the HTTPS gateway. Database/cache/search/object administration and scanner ports remain private. Application containers run as node with read-only filesystems, bounded writable temporary/cache paths, capability restrictions and resource limits. PostgreSQL has a protected WAL archive volume; this is a local archive, not off-host backup evidence.
 
@@ -30,7 +30,7 @@ The migration image can run `node scripts/schema-preflight.mjs` against the depl
 
 ## Explicit synthetic local staging
 
-On a clean checkout, `HAVEN_SYNTHETIC_STAGING=true node scripts/staging-setup.mjs /absolute/private/unused-directory` generates protected local fixture credentials, a private seven-day CA, TLS routes and strict staff MFA realm import. Populate generated compose.env with the actual five built image IDs. Keep all generated files outside Git. The application environment excludes development persona and administrator credentials.
+On a clean checkout, `HAVEN_SYNTHETIC_STAGING=true node scripts/staging-setup.mjs /absolute/private/unused-directory` generates protected local fixture credentials, a private seven-day CA, TLS routes and strict staff MFA realm import. Populate generated compose.env with the actual eight built application/infrastructure image IDs. Keep all generated files outside Git. The application environment excludes development persona and administrator credentials.
 
 For local staging only, add `-f compose.staging-local.yaml` to each Compose command. It adds trust for the generated CA, private Mailpit and an authenticated HTTPS mail adapter whose acceptance depends on actual SMTP delivery. Its sender and identities are synthetic; this does not verify production email providers. After migration, seed only this new synthetic staging database with the migrate image command `node packages/database/dist/seed.js`. Existing databases retain their records. Rebuild search with the operator worker entry point and verify eligible document counts.
 
@@ -39,3 +39,7 @@ Resolve web.haven.test, ops.haven.test and identity.haven.test to the local gate
 Public launch still needs authorized domains/certificates, actual provider/sender configuration, inventory rights, off-host recovery, completed mandatory tasks and recorded release gates. The user's current authorization is to push main; no external deployment is inferred.
 
 The concrete native search operator is `docker compose --env-file /protected/compose.env -f compose.production.yaml run --rm worker node apps/worker/dist/apps/worker/src/operator.js search-rebuild`. Its report must show `status: swapped` and equal source/verified counts. A changing source correctly refuses a rebuild; retry after the source is stable.
+
+## Public browsing capacity sizing (P, 9 October 2026)
+
+Production Compose declares a four-CPU/two-GiB API cap; Meilisearch stays at two CPUs/two GiB. The two-CPU API's current sustained capacity failure is retained. The isolated capacity loader uses four workers/four CPUs/two GiB and does not share the API process. Recorded fixture, request mix, exact source/image provenance and final measured latency reports are under evidence/performance/finalization and Q07 evidence. Do not infer capacity or release approval from the container limits alone.

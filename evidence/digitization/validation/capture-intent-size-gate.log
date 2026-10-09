@@ -1,0 +1,36 @@
+ Container haven-integration-tests-run-f9675826cbf7 Creating 
+ Container haven-integration-tests-run-f9675826cbf7 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-capture-finalization.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 762[2mms[22m[39m
+   [33m[2m✓[22m[39m actual signed multipart completion stores one private quarantine receipt, survives lost commit/checksum retry and never approves processing[33m 476[2mms[22m[39m
+   [32m✓[39m a declared QuickTime MIME cannot approve or bind an actual MPEG-4 capture[32m 171[2mms[22m[39m
+[31m   [31m×[31m authoritative stored multipart bytes above their capture intent cannot receive a quarantine receipt or processing grant[39m[32m 111[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-validation.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 474[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B03 small-upload source validation detects forged MIME/object sizes and retains explicit PDF decoder state[33m 471[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-capture-finalization.test.ts[2m > [22mauthoritative stored multipart bytes above their capture intent cannot receive a quarantine receipt or processing grant
+[31m[1mAssertionError[22m: expected 403 to be 200 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 200[39m
+[31m+ 403[39m
+
+[36m [2m❯[22m uploaded tests/integration/digitization-capture-finalization.test.ts:[2m23:306[22m[39m
+
+[90m [2m❯[22m tests/integration/digitization-capture-finalization.test.ts:[2m53:168[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (4)[39m
+[2m   Start at [22m 01:20:53
+[2m   Duration [22m 5.07s[2m (import 48%, tests 26%, transform 26%)[22m
+
+

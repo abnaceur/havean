@@ -9,4 +9,10 @@ for (const name of ["haven-realm.json", "s3.json"]) {
  const stat=fs.statSync(file);
  fs.chownSync(file,stat.uid,1000);
  fs.chmodSync(file,0o640);
+}
+const runnerKey=process.argv[1]+"/digitization-runner.key";
+if(fs.existsSync(runnerKey)){
+ const stat=fs.statSync(runnerKey);
+ fs.chownSync(runnerKey,stat.uid,1000);
+ fs.chmodSync(runnerKey,0o640);
 }' "${1:-infra/generated}"

@@ -23,3 +23,11 @@ export function call<const O extends Operation>(operation:O){return async(reques
  const result=await api<z.output<O['response']>>(route.replace(/^\/api\/v1/,'')+(search.size?'?'+search.toString():''),{method:operation.method,headers,signal:request.signal,...(body!==undefined?{body:body instanceof Blob?body:JSON.stringify(body)}:{})});
  return {...result,data:operation.response.parse(result.data) as z.output<O['response']>};
 };}
+// SSE is returned incrementally; it must never pass through JSON/blob buffering.
+export function openEventStream<const O extends Operation>(operation:O){return async(request:Request<O>):Promise<Response>=>{
+ const params=operation.params.parse(request.params||{}) as Record<string,string>,query=operation.query.parse(request.query||{}) as Record<string,unknown>;let route=operation.path;
+ for(const [key,value] of Object.entries(params))route=route.replace(':'+key,encodeURIComponent(value));const search=new URLSearchParams();for(const [key,value] of Object.entries(query))if(value!==undefined&&value!==null)search.set(key,String(value));
+ const headers=new Headers(request.headers);headers.set('Accept','text/event-stream');const response=await fetch(route+(search.size?'?'+search.toString():''),{method:'GET',headers,signal:request.signal,cache:'no-store'});
+ if(!response.ok){const result=await response.json().catch(()=>({}));throw new ApiError(result.error?.code||'REQUEST_ERROR',result.error?.message||'Progress stream unavailable',response.status,result.error?.requestId||'');}
+ if(!response.headers.get('Content-Type')?.startsWith('text/event-stream')){await response.body?.cancel();throw new ApiError('STREAM_UNAVAILABLE','Progress stream unavailable',502,response.headers.get('X-Request-Id')||'');}return response;
+};}

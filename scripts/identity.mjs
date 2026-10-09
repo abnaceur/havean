@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import {URLSearchParams} from 'node:url';
-import {mfaFlows,mfaConfigs,staffRole} from './identity-policy.mjs';
+import {mfaFlows,mfaConfigs,staffRole,developmentFlow,browserFlowFor} from './identity-policy.mjs';
 const generated=process.env.HAVEN_GENERATED_DIR||'infra/generated';
 const realm=JSON.parse(fs.readFileSync(generated+'/haven-realm.json','utf8'));
 const base=process.env.OIDC_INTERNAL_URL.replace(/\/realms\/[^/]+$/,'');
@@ -14,7 +14,8 @@ async function admin(path,method='GET',body){
 }
 const roles=await admin('/roles');
 if(!roles.some(r=>r.name===staffRole))await admin('/roles','POST',{name:staffRole});
-for(const flow of mfaFlows){
+const flowsToConfigure=[...mfaFlows,...(process.env.NODE_ENV==='development'?[developmentFlow]:[])];
+for(const flow of flowsToConfigure){
  const flows=await admin('/authentication/flows');
  const nested=flow.topLevel?[]:await admin('/authentication/flows/haven-browser/executions');
  if(!flows.some(f=>f.alias===flow.alias)&&!nested.some(e=>e.displayName===flow.alias)){
@@ -22,7 +23,7 @@ for(const flow of mfaFlows){
   else await admin('/authentication/flows/haven-browser/executions/flow','POST',{alias:flow.alias,type:'basic-flow',provider:'basic-flow',description:'Role-scoped mandatory staff OTP'});
  }
 }
-for(const flow of mfaFlows){
+for(const flow of flowsToConfigure){
  for(const item of flow.authenticationExecutions){
   let executions=await admin('/authentication/flows/'+flow.alias+'/executions');
   let execution=executions.find(e=>item.authenticator?e.providerId===item.authenticator:e.displayName===item.flowAlias);
@@ -31,7 +32,7 @@ for(const flow of mfaFlows){
   if(item.authenticatorConfig){const config=mfaConfigs.find(c=>c.alias===item.authenticatorConfig);if(execution.authenticationConfig)await admin('/authentication/config/'+execution.authenticationConfig,'PUT',config);else await admin('/authentication/executions/'+execution.id+'/config','POST',config);}
  }
 }
-await admin('','PUT',{browserFlow:'haven-browser',...(process.env.NODE_ENV==='development'?{resetPasswordAllowed:true,smtpServer:{host:'mail',port:'1025',from:'accounts@example.test',fromDisplayName:'Haven accounts',auth:'false',ssl:'false',starttls:'false'}}:{})});
+await admin('','PUT',{browserFlow:browserFlowFor(process.env.NODE_ENV),loginTheme:process.env.NODE_ENV==='development'&&process.env.DEV_PASSWORD?'haven-development':'',...(process.env.NODE_ENV==='development'?{resetPasswordAllowed:true,smtpServer:{host:'mail',port:'1025',from:'accounts@example.test',fromDisplayName:'Haven accounts',auth:'false',ssl:'false',starttls:'false'}}:{})});
 if(process.env.NODE_ENV==='development'&&process.env.DEV_PASSWORD){
  // Imported local personas need their own account-console permissions.
  // Explicit realm roles on import do not inherit the provider's default roles.
@@ -47,4 +48,4 @@ if(process.env.DEV_PASSWORD){
  const users=staff.filter(u=>!prior.includes(u.id));
  if(users.length){await admin('/partialImport','POST',{ifResourceExists:'OVERWRITE',users});fs.writeFileSync(marker,JSON.stringify([...prior,...users.map(u=>u.id)]),{mode:0o600});}
 }
-console.log('Identity staff OTP and verified level-2 policy configured.');
+console.log(process.env.NODE_ENV==='development'?'Development password-only sign-in configured.':'Identity staff OTP and verified level-2 policy configured.');

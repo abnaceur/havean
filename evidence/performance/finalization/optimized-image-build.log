@@ -1,0 +1,24 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 234B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/sha256:82b70a81a0331ebbc421a5764f11ca6caa3896f59f3a5d018f3201739d5e42b3
+#2 ...
+
+#3 [auth] library/sha256:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/sha256:82b70a81a0331ebbc421a5764f11ca6caa3896f59f3a5d018f3201739d5e42b3
+#2 ERROR: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+------
+ > [internal] load metadata for docker.io/library/sha256:82b70a81a0331ebbc421a5764f11ca6caa3896f59f3a5d018f3201739d5e42b3:
+------
+Dockerfile:1
+--------------------
+   1 | >>> FROM sha256:82b70a81a0331ebbc421a5764f11ca6caa3896f59f3a5d018f3201739d5e42b3
+   2 |     COPY --chown=node:node packages/ /workspace/packages/
+   3 |     COPY --chown=node:node apps/api/dist/ /workspace/apps/api/dist/
+--------------------
+ERROR: failed to build: failed to solve: sha256:82b70a81a0331ebbc421a5764f11ca6caa3896f59f3a5d018f3201739d5e42b3: failed to resolve source metadata for docker.io/library/sha256:82b70a81a0331ebbc421a5764f11ca6caa3896f59f3a5d018f3201739d5e42b3: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed

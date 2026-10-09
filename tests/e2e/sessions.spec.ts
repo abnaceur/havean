@@ -15,17 +15,19 @@ async function signIn(page:Page){
 }
 
 test.afterAll(async()=>{await pool.end();});
-test('F06 staff password alone is insufficient; verified OTP grants access',async({page})=>{
+test('F06 staff sign-in follows the environment MFA policy',async({page})=>{
   await page.goto('http://localhost:8089/api/v1/auth/login?prompt=login&returnTo=/ops');
   await page.getByRole('textbox',{name:'Username or email'}).fill('developer');
   await page.getByLabel('Password',{exact:true}).fill(process.env.DEV_PASSWORD!);
   await page.getByRole('button',{name:'Sign In',exact:true}).click();
+  if(process.env.NODE_ENV!=='development'){
   await expect(page.getByLabel('One-time code',{exact:true})).toBeVisible();
   expect((await page.context().cookies()).find(c=>c.name==='haven_session')).toBeUndefined();
   await page.getByLabel('One-time code',{exact:true}).fill('invalid');
   await page.getByRole('button',{name:'Sign In',exact:true}).click();
   await expect(page.getByText('Invalid authenticator code.',{exact:true})).toBeVisible();
   await completeOtp(page,'developer');
+  }
   await expect(page).toHaveURL('http://localhost:8089/ops');
   const me=await page.request.get('http://localhost:8089/api/v1/me');
   expect(me.ok()).toBe(true);

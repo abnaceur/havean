@@ -1,0 +1,13 @@
+import {z} from 'zod';
+const captureRoom=z.strictObject({id:z.string().regex(/^[a-zA-Z0-9_-]{1,80}$/),name:z.string().trim().min(1).max(80),completed:z.boolean()});
+const captureRoomClip=z.strictObject({roomId:z.string().regex(/^[a-zA-Z0-9_-]{1,80}$/),uploadId:z.uuid()});
+export const digitizationCaptureSessionCreate=z.strictObject({workspaceVersion:z.number().int().positive()});
+export const digitizationCaptureSessionSave=z.strictObject({version:z.number().int().positive(),inputRevision:z.number().int().nonnegative(),rooms:z.array(captureRoom).max(200),clips:z.array(captureRoomClip).max(256),activeRoomId:z.string().max(80).nullable(),state:z.enum(['draft','recording','complete','cancelled'])});
+export const digitizationCaptureSessionRecord=z.strictObject({id:z.uuid(),digitizationId:z.uuid(),version:z.number().int().positive(),inputRevision:z.number().int().nonnegative(),rooms:z.array(captureRoom).max(200),clips:z.array(captureRoomClip).max(256),activeRoomId:z.string().max(80).nullable(),state:z.enum(['draft','recording','complete','cancelled']),stale:z.boolean()});
+export const digitizationCaptureCreate=z.object({digitizationVersion:z.number().int().positive(),mime:z.enum(['video/mp4','video/quicktime']),bytes:z.number().int().min(1).max(2147483648),rights:z.string().min(5).max(300),authorityConfirmed:z.literal(true)}).strict();
+export const digitizationCapturePart=z.object({version:z.number().int().positive(),partNumber:z.number().int().min(1).max(256)}).strict();
+export const digitizationCaptureVersion=z.object({version:z.number().int().positive()}).strict();
+export const digitizationCaptureComplete=digitizationCaptureVersion.extend({checksum:z.string().regex(/^[a-f0-9]{64}$/)});
+export const digitizationCaptureReceipt=z.strictObject({id:z.uuid(),digitizationId:z.uuid(),version:z.number().int().positive(),status:z.literal('quarantined'),checksum:z.string().regex(/^[a-f0-9]{64}$/),bytes:z.number().int().min(16).max(2147483648),processingEligible:z.literal(false)});
+export const digitizationCaptureRecord=z.object({id:z.uuid(),digitizationId:z.uuid(),version:z.number().int().positive(),state:z.enum(['provisioning','uploading','cancel_requested','cancelled','expired','complete']),mime:z.enum(['video/mp4','video/quicktime']),bytes:z.number().int().positive(),partBytes:z.literal(8388608),expiresAt:z.iso.datetime(),completionRequired:z.literal(true).optional(),parts:z.array(z.object({partNumber:z.number().int().positive(),bytes:z.number().int().positive(),etag:z.string()}))}).strict();
+export const digitizationCapturePartGrant=z.object({url:z.url(),method:z.literal('PUT'),bytes:z.number().int().positive(),expiresIn:z.literal(600),partNumber:z.number().int().positive()}).strict();

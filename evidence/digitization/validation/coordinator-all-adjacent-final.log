@@ -1,0 +1,41 @@
+ Container haven-integration-tests-run-0ed3fcd8981a Creating 
+ Container haven-integration-tests-run-0ed3fcd8981a Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-worker-http.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 3073[2mms[22m[39m
+   [33m[2m✓[22m[39m real Nest/Fastify engine command routes enforce separate service authentication, contracts, versions and cancellation[33m 3070[2mms[22m[39m
+ [32m✓[39m tests/integration/viewing-reminders.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2692[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 confirmation schedules one versioned reminder; actual BullMQ and SMTP receipt replay produce one email and one native notification[33m 540[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 cancellation invalidates queued and failed reminders and all stale retries send no email[33m 530[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 lost post-SMTP acknowledgement reconciles the frozen provider receipt without duplicate sending[33m 318[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 rescheduling invalidates the former booking job and fresh confirmation schedules the new version; unsigned service calls and private table reads fail[33m 449[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 transactional reminders never email unverified accounts, and inactive accounts receive no reminder[33m 496[2mms[22m[39m
+ [32m✓[39m tests/integration/outbox.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1994[2mms[22m[39m
+   [32m✓[39m F09 real queue replay and crash recovery [2m(2)[22m
+     [33m[2m✓[22m[39m crash after SMTP delivery retries without duplicating mail or notifications[33m 1432[2mms[22m[39m
+     [33m[2m✓[22m[39m an old publish event cannot resurrect withdrawn inventory[33m 559[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-schema.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1572[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-A04 expired explicit evidence grant removes private derived reads[33m 1184[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-workflow.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 1304[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C01 dispatch atomically queues only roots and emits one redacted durable event; duplicate and stale dispatch are denied[33m 556[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-inputs.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 866[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B05 real stored source binds immutable revisions; removal does not mutate existing run snapshots[33m 863[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-revision-authority.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 704[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B05 owner grants bootstrap an exact reserved revision; no grant carryover or historical exposure; revoked source can be removed immutably[33m 702[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-leases.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 381[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C04 API-owned lease admits one current execution; wrong fencing, duplicate delivery and cancelled run cannot renew[33m 379[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-validation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 370[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-intakes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 273[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-outbox-routing.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-scan.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 19[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m12 passed[39m[22m[90m (12)[39m
+[2m      Tests [22m [1m[32m34 passed[39m[22m[90m (34)[39m
+[2m   Start at [22m 11:54:38
+[2m   Duration [22m 25.29s[2m (tests 56%, import 41%, transform 3%)[22m
+
+[2m     Import [22m [33m154 modules were evaluated 233 times[39m[2m · 9.87s total, 41% of tracked time[22m
+[2m            [22m [2m~3.35s faster with [22m[33misolate: false[39m[2m — shared modules are evaluated once per worker instead of once per file[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-isolation[22m
+

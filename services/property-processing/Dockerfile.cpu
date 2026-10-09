@@ -1,0 +1,19 @@
+FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS cpu
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_DISABLE_PIP_VERSION_CHECK=1 PIP_DEFAULT_TIMEOUT=60 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+WORKDIR /opt/processing
+COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
+RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
+COPY docs/adr/processing-dependencies.json ./dependencies.json
+COPY docs/adr/licenses/pypdfium2-5.14.0 /usr/share/doc/haven-processing/pypdfium2-5.14.0
+COPY services/property-processing/property_processing ./property_processing
+RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+USER 10001:10001
+CMD ["python", "-m", "property_processing.preflight"]
+
+FROM cpu AS cpu-tests
+USER root
+COPY services/property-processing/locks/test.lock /tmp/test.lock
+RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/test.lock && python -m pip check
+COPY services/property-processing/tests ./tests
+USER 10001:10001
+CMD ["python", "-m", "pytest", "-p", "no:cacheprovider", "-q", "tests"]

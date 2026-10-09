@@ -1,0 +1,1923 @@
+{
+  "schemaVersion": 1,
+  "specification": "docs/digitization/specification.md",
+  "tasks": [
+    {
+      "id": "HE-A01",
+      "title": "Recheck inspected commit and mandatory root docs; record actual integration paths and head differences",
+      "status": "done",
+      "dependencies": [
+        "HE-R01"
+      ],
+      "acceptance": [
+        "Recheck inspected commit and mandatory root docs; record actual integration paths and head differences"
+      ],
+      "minimumTests": [
+        "Confirm legacy rich-media and outbox regression commands from the checkout"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-A01.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "docker compose exec -T api pnpm task:validate",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-A02",
+      "title": "Add inventory-owned engine ADR and extend exact dependency/image/model licensing manifests",
+      "status": "done",
+      "dependencies": [
+        "HE-A01"
+      ],
+      "acceptance": [
+        "Add inventory-owned engine ADR and extend exact dependency/image/model licensing manifests"
+      ],
+      "minimumTests": [
+        "Frozen dependency resolution, extended license gate and CPU image build"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-A02.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "docker compose -f services/property-processing/compose.tests.yaml build --builder default cpu",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-A03",
+      "title": "Add versioned fact, geometry, job and manifest schemas",
+      "status": "done",
+      "dependencies": [
+        "HE-A02"
+      ],
+      "acceptance": [
+        "Add versioned fact, geometry, job and manifest schemas"
+      ],
+      "minimumTests": [
+        "Reject invalid coordinates, unsupported units and missing evidence"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-A03.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "docker compose exec -T api pnpm exec vitest run tests/unit/digitization-contracts.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-A04",
+      "title": "Add SQL migrations after current maximum, RLS and inventoried engine table ownership",
+      "status": "done",
+      "dependencies": [
+        "HE-A03",
+        "HE-R02"
+      ],
+      "acceptance": [
+        "Add SQL migrations after current maximum, RLS and inventoried engine table ownership"
+      ],
+      "minimumTests": [
+        "Fresh and existing-schema upgrade succeed; current-grant and cross-org relations denied"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-A04.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test.sh pnpm exec vitest run tests/integration/digitization-schema.test.ts tests/integration/digitization-access.test.ts tests/integration/digitization-outbox-routing.test.ts tests/integration/owner-evidence.test.ts tests/integration/approved-tours.test.ts tests/integration/outbox.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-A05",
+      "title": "Add CPU/GPU profiles to current Compose/setup and runner network policies",
+      "status": "in_progress",
+      "dependencies": [
+        "HE-A02",
+        "HE-A04",
+        "HE-A05-CPU",
+        "HE-A05-GPU"
+      ],
+      "acceptance": [
+        "Add CPU/GPU profiles to current Compose/setup and runner network policies"
+      ],
+      "minimumTests": [
+        "./dev.sh starts existing services plus CPU runner with no new infrastructure host ports"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-A05.md",
+      "verification": []
+    },
+    {
+      "id": "HE-A06",
+      "title": "Add adapter interfaces and explicit development-only simulator",
+      "status": "done",
+      "dependencies": [
+        "HE-A03"
+      ],
+      "acceptance": [
+        "Add adapter interfaces and explicit development-only simulator"
+      ],
+      "minimumTests": [
+        "Production config rejects simulator adapter"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-A06.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "docker compose -f services/property-processing/compose.tests.yaml run --rm cpu",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-B01",
+      "title": "Reuse Identity.actor, current assignment, mandate/owner/evidence grants and private intake authorization",
+      "status": "done",
+      "dependencies": [
+        "HE-A04",
+        "HE-R02"
+      ],
+      "acceptance": [
+        "Reuse Identity.actor, current assignment, mandate/owner/evidence grants and private intake authorization"
+      ],
+      "minimumTests": [
+        "Same unit across two agency mandates does not share deed/run access"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-B01.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests sh -c 'pnpm db:migrate && pnpm exec vitest run tests/integration/digitization-intakes.test.ts tests/integration/digitization-schema.test.ts tests/integration/digitization-access.test.ts'",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-B02",
+      "title": "Add capture-specific multipart path; reuse small signed upload intents",
+      "status": "done",
+      "dependencies": [
+        "HE-B01",
+        "HE-A05-CPU",
+        "HE-R03"
+      ],
+      "acceptance": [
+        "Add capture-specific multipart path; reuse small signed upload intents"
+      ],
+      "minimumTests": [
+        "Resume capture upload through actual SeaweedFS path without legacy BFF buffering"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-B02.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests sh -c 'pnpm db:migrate && pnpm exec vitest run tests/integration/digitization-capture.test.ts tests/integration/digitization-multipart.test.ts'",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-B03",
+      "title": "Finalize with byte/MIME/object checks and quarantine",
+      "status": "done",
+      "dependencies": [
+        "HE-B02"
+      ],
+      "acceptance": [
+        "Finalize with byte/MIME/object checks and quarantine"
+      ],
+      "minimumTests": [
+        "Forged MIME/oversized object cannot become processing eligible"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-B03.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec vitest run tests/integration/digitization-capture-finalization.test.ts tests/integration/digitization-source-validation.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-B04",
+      "title": "Scan and raster-budget isolation",
+      "status": "done",
+      "dependencies": [
+        "HE-B03"
+      ],
+      "acceptance": [
+        "Scan and raster-budget isolation"
+      ],
+      "minimumTests": [
+        "Test fixture rejected by scan policy; raster over-budget terminates safely"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-B04.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec vitest run tests/integration/digitization-revision-authority.test.ts tests/integration/digitization-source-validation.test.ts tests/integration/digitization-workflow.test.ts tests/integration/digitization-schema.test.ts tests/integration/digitization-inputs.test.ts tests/integration/digitization-intakes.test.ts tests/integration/digitization-leases.test.ts tests/integration/outbox.test.ts",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-processing.sh",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-B05",
+      "title": "Store immutable asset lineage and input revision",
+      "status": "done",
+      "dependencies": [
+        "HE-B04"
+      ],
+      "acceptance": [
+        "Store immutable asset lineage and input revision"
+      ],
+      "minimumTests": [
+        "Removing an asset creates new revision without altering old run inputs"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-B05.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec vitest run tests/integration/digitization-revision-authority.test.ts tests/integration/digitization-source-validation.test.ts tests/integration/digitization-workflow.test.ts tests/integration/digitization-schema.test.ts tests/integration/digitization-inputs.test.ts tests/integration/digitization-intakes.test.ts tests/integration/digitization-leases.test.ts tests/integration/outbox.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-B06",
+      "title": "Add source preview access and public derivative stripping",
+      "status": "done",
+      "dependencies": [
+        "HE-B05"
+      ],
+      "acceptance": [
+        "Add source preview access and public derivative stripping"
+      ],
+      "minimumTests": [
+        "Unauthorized preview fails and public photo omits GPS EXIF"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-B06.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml exec -T api sh -c 'pnpm lint && pnpm typecheck && pnpm contracts:check && pnpm license:check && pnpm test:unit && pnpm task:validate'",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-C01",
+      "title": "Implement run/stage dependency graph and legal transitions",
+      "status": "done",
+      "dependencies": [
+        "HE-A04",
+        "HE-B05"
+      ],
+      "acceptance": [
+        "Implement run/stage dependency graph and legal transitions"
+      ],
+      "minimumTests": [
+        "Invalid transition and unsatisfied dependency cannot start"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-C01.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec vitest run tests/integration/digitization-revision-authority.test.ts tests/integration/digitization-source-validation.test.ts tests/integration/digitization-workflow.test.ts tests/integration/digitization-schema.test.ts tests/integration/digitization-inputs.test.ts tests/integration/digitization-intakes.test.ts tests/integration/digitization-leases.test.ts tests/integration/outbox.test.ts",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-C02",
+      "title": "Extend existing event/outbox ownership and engine consumer dispatch; retain platform effects",
+      "status": "done",
+      "dependencies": [
+        "HE-C01",
+        "HE-R06"
+      ],
+      "acceptance": [
+        "Extend existing event/outbox ownership and engine consumer dispatch; retain platform effects"
+      ],
+      "minimumTests": [
+        "Crash before engine enqueue recovers; search/reminder handling still passes"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-C02.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec vitest run tests/integration/digitization-revision-authority.test.ts tests/integration/digitization-source-validation.test.ts tests/integration/digitization-workflow.test.ts tests/integration/digitization-schema.test.ts tests/integration/digitization-inputs.test.ts tests/integration/digitization-intakes.test.ts tests/integration/digitization-leases.test.ts tests/integration/outbox.test.ts",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec vitest run tests/integration/viewing-reminders.test.ts tests/integration/digitization-outbox-routing.test.ts tests/integration/digitization-worker-http.test.ts tests/integration/digitization-source-scan.test.ts",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-C03",
+      "title": "Build authenticated runner protocol and typed stage registry",
+      "status": "done",
+      "dependencies": [
+        "HE-A06",
+        "HE-C01"
+      ],
+      "acceptance": [
+        "Build authenticated runner protocol and typed stage registry"
+      ],
+      "minimumTests": [
+        "Unknown stage/profile rejected; duplicate execution ID reuses execution"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-C03.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec vitest run tests/integration/viewing-reminders.test.ts tests/integration/digitization-outbox-routing.test.ts tests/integration/digitization-worker-http.test.ts tests/integration/digitization-source-scan.test.ts",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-processing.sh",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-C04",
+      "title": "Implement leases, fencing and callback idempotency",
+      "status": "done",
+      "dependencies": [
+        "HE-C02",
+        "HE-C03"
+      ],
+      "acceptance": [
+        "Implement leases, fencing and callback idempotency"
+      ],
+      "minimumTests": [
+        "Late completion with expired token cannot overwrite new attempt"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-C04.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec vitest run tests/integration/digitization-revision-authority.test.ts tests/integration/digitization-source-validation.test.ts tests/integration/digitization-workflow.test.ts tests/integration/digitization-schema.test.ts tests/integration/digitization-inputs.test.ts tests/integration/digitization-intakes.test.ts tests/integration/digitization-leases.test.ts tests/integration/outbox.test.ts",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-C05",
+      "title": "Add reconciliation and runner reattachment",
+      "status": "done",
+      "dependencies": [
+        "HE-C04"
+      ],
+      "acceptance": [
+        "Add reconciliation and runner reattachment"
+      ],
+      "minimumTests": [
+        "Kill coordinator during a real CPU task; restore without duplicate result"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-C05.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-C06",
+      "title": "Add bounded retry/error classification",
+      "status": "done",
+      "dependencies": [
+        "HE-C05"
+      ],
+      "acceptance": [
+        "Add bounded retry/error classification"
+      ],
+      "minimumTests": [
+        "Invalid input does not loop; transient outage obeys retry cap"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-C06.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-C07",
+      "title": "Add process cancellation",
+      "status": "done",
+      "dependencies": [
+        "HE-C04"
+      ],
+      "acceptance": [
+        "Add process cancellation"
+      ],
+      "minimumTests": [
+        "Cancel active child process and reject late success callback"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-C07.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-processing.sh",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-C08",
+      "title": "Add budget/quota and GPU resource leases",
+      "status": "done",
+      "dependencies": [
+        "HE-C04"
+      ],
+      "acceptance": [
+        "Add budget/quota and GPU resource leases"
+      ],
+      "minimumTests": [
+        "Two heavy jobs cannot acquire same exclusive GPU lease"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-C08.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml exec -T -e HAVEN_CONTAINER_TESTS=true -e HAVEN_ENV_FILE=.env.integration api pnpm exec vitest run tests/integration/digitization-resource-budgets.test.ts",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-C09",
+      "title": "Persist progress and implement dedicated BFF stream/revocation checks",
+      "status": "done",
+      "dependencies": [
+        "HE-C01",
+        "HE-B01",
+        "HE-R04"
+      ],
+      "acceptance": [
+        "Persist progress and implement dedicated BFF stream/revocation checks"
+      ],
+      "minimumTests": [
+        "Cursor reconnect recovers events; revoked membership ends live stream"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-C09.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec playwright test tests/e2e/digitization-stream.spec.ts --project=desktop --project=mobile",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-C10",
+      "title": "Add revision-aware reuse/invalidation",
+      "status": "done",
+      "dependencies": [
+        "HE-C05",
+        "HE-B05"
+      ],
+      "acceptance": [
+        "Add revision-aware reuse/invalidation"
+      ],
+      "minimumTests": [
+        "Media change leaves OCR artifact reusable but invalidates scene approval"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-C10.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh plan-editor",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-D01",
+      "title": "Implement native PDF text/raster fallback and orientation",
+      "status": "done",
+      "dependencies": [
+        "HE-B04",
+        "HE-C03"
+      ],
+      "acceptance": [
+        "Implement native PDF text/raster fallback and orientation"
+      ],
+      "minimumTests": [
+        "Rotated scanned page's evidence box aligns with displayed crop"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-D01.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-processing.sh",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-D02",
+      "title": "Add real PaddleOCR worker with locale profiles",
+      "status": "in_progress",
+      "dependencies": [
+        "HE-D01"
+      ],
+      "acceptance": [
+        "Add real PaddleOCR worker with locale profiles"
+      ],
+      "minimumTests": [
+        "Authorized Arabic/French/English fixtures produce nonempty source-linked tokens"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-D02.md",
+      "verification": []
+    },
+    {
+      "id": "HE-D03",
+      "title": "Implement normalization for decimals, units, IDs and calendars",
+      "status": "in_progress",
+      "dependencies": [
+        "HE-A03",
+        "HE-D02"
+      ],
+      "acceptance": [
+        "Implement normalization for decimals, units, IDs and calendars"
+      ],
+      "minimumTests": [
+        "184,20 m\u00b2 normalizes correctly; leading-zero ID stays string"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-D03.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-processing.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-D04",
+      "title": "Implement generic anchored extraction with abstention",
+      "status": "in_progress",
+      "dependencies": [
+        "HE-D03"
+      ],
+      "acceptance": [
+        "Implement generic anchored extraction with abstention"
+      ],
+      "minimumTests": [
+        "Missing bedroom count remains unknown, never zero or guessed"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-D04.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-processing.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-D05",
+      "title": "Add UAE family profile and benchmark report",
+      "status": "todo",
+      "dependencies": [
+        "HE-D04"
+      ],
+      "acceptance": [
+        "Add UAE family profile and benchmark report"
+      ],
+      "minimumTests": [
+        "Holdout fixture extraction/evidence meets profile gate or profile remains disabled"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-D05.md",
+      "verification": []
+    },
+    {
+      "id": "HE-D06",
+      "title": "Add Algerian family profile and benchmark report",
+      "status": "todo",
+      "dependencies": [
+        "HE-D04"
+      ],
+      "acceptance": [
+        "Add Algerian family profile and benchmark report"
+      ],
+      "minimumTests": [
+        "Mixed Arabic/French fixture preserves area scope and source pages"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-D06.md",
+      "verification": []
+    },
+    {
+      "id": "HE-D07",
+      "title": "Add optional structured model provider behind disabled-by-default config",
+      "status": "todo",
+      "dependencies": [
+        "HE-D04"
+      ],
+      "acceptance": [
+        "Add optional structured model provider behind disabled-by-default config"
+      ],
+      "minimumTests": [
+        "No provider credentials still permits OCR/manual review; unsupported claim rejected"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-D07.md",
+      "verification": []
+    },
+    {
+      "id": "HE-D08",
+      "title": "Preserve conflicts and decision history",
+      "status": "todo",
+      "dependencies": [
+        "HE-D05",
+        "HE-D06"
+      ],
+      "acceptance": [
+        "Preserve conflicts and decision history"
+      ],
+      "minimumTests": [
+        "Contradictory documents create two candidates and review blocker"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-D08.md",
+      "verification": []
+    },
+    {
+      "id": "HE-D09",
+      "title": "Build source-linked fact review UI",
+      "status": "todo",
+      "dependencies": [
+        "HE-D08",
+        "HE-B06"
+      ],
+      "acceptance": [
+        "Build source-linked fact review UI"
+      ],
+      "minimumTests": [
+        "Accept/correct field and confirm correct crop appears in Playwright"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-D09.md",
+      "verification": []
+    },
+    {
+      "id": "HE-D10",
+      "title": "Add explicit fact-to-draft mapping, private intake, canonical geography resolution and pending-revision apply",
+      "status": "todo",
+      "dependencies": [
+        "HE-D09",
+        "HE-C10",
+        "HE-R07"
+      ],
+      "acceptance": [
+        "Add explicit fact-to-draft mapping, private intake, canonical geography resolution and pending-revision apply"
+      ],
+      "minimumTests": [
+        "Missing unit facts block creation; confirmed facts cannot overwrite newer published version"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-D10.md",
+      "verification": []
+    },
+    {
+      "id": "HE-E01",
+      "title": "Select/deskew plan page and preserve overlay transform",
+      "status": "done",
+      "dependencies": [
+        "HE-D01"
+      ],
+      "acceptance": [
+        "Select/deskew plan page and preserve overlay transform"
+      ],
+      "minimumTests": [
+        "Source pixel and editor geometry mapping survive rotation"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-E01.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "docker compose exec -T api pnpm exec vitest run tests/unit/digitization-plan-page.test.ts",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-E02",
+      "title": "Add v2 geometry with optional panorama links; preserve legacy schema and triangulate concave rooms",
+      "status": "done",
+      "dependencies": [
+        "HE-A03",
+        "HE-R05"
+      ],
+      "acceptance": [
+        "Add v2 geometry with optional panorama links; preserve legacy schema and triangulate concave rooms"
+      ],
+      "minimumTests": [
+        "Legacy fixture remains unchanged; v2 no-panorama and concave/hole geometry validates"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-E02.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "docker compose exec -T api pnpm exec vitest run tests/unit/digitization-topology.test.ts tests/unit/digitization-contracts.test.ts tests/unit/legacy-digitization-geometry.test.ts tests/unit/spatial-media.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-E03",
+      "title": "Build plan canvas with source overlay and walls",
+      "status": "done",
+      "dependencies": [
+        "HE-E01",
+        "HE-E02"
+      ],
+      "acceptance": [
+        "Build plan canvas with source overlay and walls"
+      ],
+      "minimumTests": [
+        "Draw/move wall then reload retains geometry"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-E03.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh plan-editor",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-E04",
+      "title": "Add openings and room labels",
+      "status": "done",
+      "dependencies": [
+        "HE-E03"
+      ],
+      "acceptance": [
+        "Add openings and room labels"
+      ],
+      "minimumTests": [
+        "Door bounds validated and label escaped in SVG output"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-E04.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh plan-editor",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "docker compose exec -T api pnpm exec vitest run tests/unit/digitization-plan-render.test.ts tests/unit/digitization-plan-page.test.ts tests/unit/digitization-contracts.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-E05",
+      "title": "Add scale anchors and metric-state gate",
+      "status": "done",
+      "dependencies": [
+        "HE-E03"
+      ],
+      "acceptance": [
+        "Add scale anchors and metric-state gate"
+      ],
+      "minimumTests": [
+        "Unscaled plan hides metre area; known dimension yields expected scale"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-E05.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh plan-editor",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "docker compose exec -T api pnpm exec vitest run tests/unit/digitization-plan-scale.test.ts tests/unit/digitization-plan-page.test.ts tests/unit/digitization-plan-render.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-E06",
+      "title": "Add split/merge and multi-floor editing",
+      "status": "done",
+      "dependencies": [
+        "HE-E04"
+      ],
+      "acceptance": [
+        "Add split/merge and multi-floor editing"
+      ],
+      "minimumTests": [
+        "Split preserves valid polygons; stair connects selected floor IDs"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-E06.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh plan-editor",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "docker compose exec -T api pnpm exec vitest run tests/unit/digitization-plan-edit.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-E07",
+      "title": "Add undo/redo, autosave and revision conflicts",
+      "status": "done",
+      "dependencies": [
+        "HE-E06",
+        "HE-A04"
+      ],
+      "acceptance": [
+        "Add undo/redo, autosave and revision conflicts"
+      ],
+      "minimumTests": [
+        "Concurrent save returns conflict and preserves both reviewers' work references"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-E07.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh plan-editor",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-E08",
+      "title": "Add assisted line/label proposals",
+      "status": "todo",
+      "dependencies": [
+        "HE-E01",
+        "HE-D02",
+        "HE-E03"
+      ],
+      "acceptance": [
+        "Add assisted line/label proposals"
+      ],
+      "minimumTests": [
+        "Source plan yields editable proposals with no automatic approval"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-E08.md",
+      "verification": []
+    },
+    {
+      "id": "HE-E09",
+      "title": "Render deterministic SVG/PNG",
+      "status": "in_progress",
+      "dependencies": [
+        "HE-E05",
+        "HE-E07"
+      ],
+      "acceptance": [
+        "Render deterministic SVG/PNG"
+      ],
+      "minimumTests": [
+        "Approved reference geometry matches expected topology/dimensions"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-E09.md",
+      "verification": []
+    },
+    {
+      "id": "HE-E10",
+      "title": "Build structural mesh/GLB with openings and floor conversion",
+      "status": "in_progress",
+      "dependencies": [
+        "HE-E09"
+      ],
+      "acceptance": [
+        "Build structural mesh/GLB with openings and floor conversion"
+      ],
+      "minimumTests": [
+        "Load GLB and inspect correct wall/door/floor geometry and axis orientation"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-E10.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "docker compose exec -T api pnpm exec vitest run tests/unit/digitization-structural-glb.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-E11",
+      "title": "Add 3D plan/dollhouse viewer",
+      "status": "todo",
+      "dependencies": [
+        "HE-E10"
+      ],
+      "acceptance": [
+        "Add 3D plan/dollhouse viewer"
+      ],
+      "minimumTests": [
+        "Select floor/room and verify matching 2D/3D room ID"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-E11.md",
+      "verification": []
+    },
+    {
+      "id": "HE-F01",
+      "title": "Probe media codec/orientation and normalize thumbnails",
+      "status": "todo",
+      "dependencies": [
+        "HE-B04",
+        "HE-C03"
+      ],
+      "acceptance": [
+        "Probe media codec/orientation and normalize thumbnails"
+      ],
+      "minimumTests": [
+        "Rotated supported clip renders upright; unsupported codec returns clear error"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-F01.md",
+      "verification": []
+    },
+    {
+      "id": "HE-F02",
+      "title": "Extract frames and retain camera/lens metadata",
+      "status": "todo",
+      "dependencies": [
+        "HE-F01"
+      ],
+      "acceptance": [
+        "Extract frames and retain camera/lens metadata"
+      ],
+      "minimumTests": [
+        "Frame timestamps and orientation match known fixture"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-F02.md",
+      "verification": []
+    },
+    {
+      "id": "HE-F03",
+      "title": "Add blur/duplicate filters and dataset report",
+      "status": "todo",
+      "dependencies": [
+        "HE-F02"
+      ],
+      "acceptance": [
+        "Add blur/duplicate filters and dataset report"
+      ],
+      "minimumTests": [
+        "Reject blurred duplicates while retaining doorway sequence"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-F03.md",
+      "verification": []
+    },
+    {
+      "id": "HE-F04",
+      "title": "Build room checklist and resumable capture session",
+      "status": "done",
+      "dependencies": [
+        "HE-B05"
+      ],
+      "acceptance": [
+        "Build room checklist and resumable capture session"
+      ],
+      "minimumTests": [
+        "Close/reopen app resumes room and uploaded clips"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-F04.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec playwright test tests/e2e/digitization-plan.spec.ts --project=desktop --project=mobile --grep HE-F04",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-F05",
+      "title": "Add supported browser recording/clip upload and fallback",
+      "status": "todo",
+      "dependencies": [
+        "HE-F04",
+        "HE-F01"
+      ],
+      "acceptance": [
+        "Add supported browser recording/clip upload and fallback"
+      ],
+      "minimumTests": [
+        "Supported browser records/uploads; unsupported MIME offers native upload"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-F05.md",
+      "verification": []
+    },
+    {
+      "id": "HE-F06",
+      "title": "Add capture guidance and local quality feedback",
+      "status": "todo",
+      "dependencies": [
+        "HE-F05",
+        "HE-F03"
+      ],
+      "acceptance": [
+        "Add capture guidance and local quality feedback"
+      ],
+      "minimumTests": [
+        "Blur guidance shown from real frame input without fabricated coverage percentage"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-F06.md",
+      "verification": []
+    },
+    {
+      "id": "HE-F07",
+      "title": "Add privacy exclusions/masks before reconstruction",
+      "status": "todo",
+      "dependencies": [
+        "HE-F03",
+        "HE-B06"
+      ],
+      "acceptance": [
+        "Add privacy exclusions/masks before reconstruction"
+      ],
+      "minimumTests": [
+        "Sensitive fixture region excluded/masked in actual training images"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-F07.md",
+      "verification": []
+    },
+    {
+      "id": "HE-F08",
+      "title": "Build independent gallery from approved photos",
+      "status": "todo",
+      "dependencies": [
+        "HE-F01"
+      ],
+      "acceptance": [
+        "Build independent gallery from approved photos"
+      ],
+      "minimumTests": [
+        "Failed reconstruction does not hide approved gallery"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-F08.md",
+      "verification": []
+    },
+    {
+      "id": "HE-G01",
+      "title": "Validate genuine panorama inputs and create tiers",
+      "status": "todo",
+      "dependencies": [
+        "HE-F01"
+      ],
+      "acceptance": [
+        "Validate genuine panorama inputs and create tiers"
+      ],
+      "minimumTests": [
+        "Arbitrary 2:1 normal photo is flagged for review rather than auto-certified panorama"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-G01.md",
+      "verification": []
+    },
+    {
+      "id": "HE-G02",
+      "title": "Store tour graph and room/node links",
+      "status": "todo",
+      "dependencies": [
+        "HE-G01",
+        "HE-A03"
+      ],
+      "acceptance": [
+        "Store tour graph and room/node links"
+      ],
+      "minimumTests": [
+        "Dangling hotspot node rejected by API"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-G02.md",
+      "verification": []
+    },
+    {
+      "id": "HE-G03",
+      "title": "Extend existing panorama viewer/hotspots and capture review; preserve approved-tour predicates",
+      "status": "todo",
+      "dependencies": [
+        "HE-G02"
+      ],
+      "acceptance": [
+        "Extend existing panorama viewer/hotspots and capture review; preserve approved-tour predicates"
+      ],
+      "minimumTests": [
+        "Existing two-node tour plus new reviewed capture passes keyboard/touch/fallback tests"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-G03.md",
+      "verification": []
+    },
+    {
+      "id": "HE-G04",
+      "title": "Add plan-map node positioning where geometry exists",
+      "status": "todo",
+      "dependencies": [
+        "HE-G03",
+        "HE-E09"
+      ],
+      "acceptance": [
+        "Add plan-map node positioning where geometry exists"
+      ],
+      "minimumTests": [
+        "Clicking confirmed plan node opens corresponding panorama"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-G04.md",
+      "verification": []
+    },
+    {
+      "id": "HE-G05",
+      "title": "Add tour review and node-level exclusion",
+      "status": "todo",
+      "dependencies": [
+        "HE-G03"
+      ],
+      "acceptance": [
+        "Add tour review and node-level exclusion"
+      ],
+      "minimumTests": [
+        "Excluded panorama does not appear in approved tour manifest"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-G05.md",
+      "verification": []
+    },
+    {
+      "id": "HE-H01",
+      "title": "Build pinned COLMAP CPU/GPU image and smoke CLI wrapper",
+      "status": "todo",
+      "dependencies": [
+        "HE-A02",
+        "HE-C03",
+        "HE-F03"
+      ],
+      "acceptance": [
+        "Build pinned COLMAP CPU/GPU image and smoke CLI wrapper"
+      ],
+      "minimumTests": [
+        "Real small overlapping dataset yields registered cameras/points"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-H01.md",
+      "verification": []
+    },
+    {
+      "id": "HE-H02",
+      "title": "Add camera grouping and primary matching profile",
+      "status": "todo",
+      "dependencies": [
+        "HE-H01"
+      ],
+      "acceptance": [
+        "Add camera grouping and primary matching profile"
+      ],
+      "minimumTests": [
+        "Known lens-switch fixture remains separate calibration group"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-H02.md",
+      "verification": []
+    },
+    {
+      "id": "HE-H03",
+      "title": "Export quality/connectivity report",
+      "status": "todo",
+      "dependencies": [
+        "HE-H02"
+      ],
+      "acceptance": [
+        "Export quality/connectivity report"
+      ],
+      "minimumTests": [
+        "Disconnected room dataset is reported as disconnected"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-H03.md",
+      "verification": []
+    },
+    {
+      "id": "HE-H04",
+      "title": "Add one bounded matching fallback and recapture output",
+      "status": "todo",
+      "dependencies": [
+        "HE-H03",
+        "HE-C06"
+      ],
+      "acceptance": [
+        "Add one bounded matching fallback and recapture output"
+      ],
+      "minimumTests": [
+        "Unsuitable photos exhaust allowed profile and produce actionable missing-connection message"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-H04.md",
+      "verification": []
+    },
+    {
+      "id": "HE-H05",
+      "title": "Add metric scale and scene/plan registration records",
+      "status": "todo",
+      "dependencies": [
+        "HE-H03",
+        "HE-E05"
+      ],
+      "acceptance": [
+        "Add metric scale and scene/plan registration records"
+      ],
+      "minimumTests": [
+        "Unanchored scene cannot publish metric measurements"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-H05.md",
+      "verification": []
+    },
+    {
+      "id": "HE-H06",
+      "title": "Build pinned gsplat training wrapper and checkpointing",
+      "status": "todo",
+      "dependencies": [
+        "HE-H03",
+        "HE-C08"
+      ],
+      "acceptance": [
+        "Build pinned gsplat training wrapper and checkpointing"
+      ],
+      "minimumTests": [
+        "Real GPU dataset produces loadable checkpoint and nonempty scene"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-H06.md",
+      "verification": []
+    },
+    {
+      "id": "HE-H07",
+      "title": "Add resume, time cap and reduced-memory fallback",
+      "status": "todo",
+      "dependencies": [
+        "HE-H06",
+        "HE-C07"
+      ],
+      "acceptance": [
+        "Add resume, time cap and reduced-memory fallback"
+      ],
+      "minimumTests": [
+        "Interrupt/resume real training; fallback stops at configured budget"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-H07.md",
+      "verification": []
+    },
+    {
+      "id": "HE-H08",
+      "title": "Add held-out render report and scene sanity validation",
+      "status": "todo",
+      "dependencies": [
+        "HE-H06"
+      ],
+      "acceptance": [
+        "Add held-out render report and scene sanity validation"
+      ],
+      "minimumTests": [
+        "NaN/empty export rejected; real scene renders held-out views"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-H08.md",
+      "verification": []
+    },
+    {
+      "id": "HE-H09",
+      "title": "Export compatible splat tiers/manifests",
+      "status": "todo",
+      "dependencies": [
+        "HE-H08"
+      ],
+      "acceptance": [
+        "Export compatible splat tiers/manifests"
+      ],
+      "minimumTests": [
+        "Export loads in selected viewer with correct orientation and opacity"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-H09.md",
+      "verification": []
+    },
+    {
+      "id": "HE-H10",
+      "title": "Enforce scene privacy review and incomplete-room labels",
+      "status": "todo",
+      "dependencies": [
+        "HE-H09",
+        "HE-F07"
+      ],
+      "acceptance": [
+        "Enforce scene privacy review and incomplete-room labels"
+      ],
+      "minimumTests": [
+        "Unreviewed scene never appears publicly; partial scene identifies covered rooms"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-H10.md",
+      "verification": []
+    },
+    {
+      "id": "HE-I01",
+      "title": "Extend existing PropertyMedia lazy tabs; add independent scene3dAvailable capability",
+      "status": "todo",
+      "dependencies": [
+        "HE-E11",
+        "HE-F08",
+        "HE-G05",
+        "HE-H09"
+      ],
+      "acceptance": [
+        "Extend existing PropertyMedia lazy tabs; add independent scene3dAvailable capability"
+      ],
+      "minimumTests": [
+        "Legacy tour badge unchanged; absent/broken new scene retains gallery"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-I01.md",
+      "verification": []
+    },
+    {
+      "id": "HE-I02",
+      "title": "Integrate splat adapter, bounds/reset and resource cleanup",
+      "status": "todo",
+      "dependencies": [
+        "HE-H09"
+      ],
+      "acceptance": [
+        "Integrate splat adapter, bounds/reset and resource cleanup"
+      ],
+      "minimumTests": [
+        "Actual exported fixture opens, resets, then releases resources on exit"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-I02.md",
+      "verification": []
+    },
+    {
+      "id": "HE-I03",
+      "title": "Add approved camera anchors and optional floor-map links",
+      "status": "todo",
+      "dependencies": [
+        "HE-I02",
+        "HE-H05",
+        "HE-E09"
+      ],
+      "acceptance": [
+        "Add approved camera anchors and optional floor-map links"
+      ],
+      "minimumTests": [
+        "Wrong/unverified transform cannot enable plan navigation"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-I03.md",
+      "verification": []
+    },
+    {
+      "id": "HE-I04",
+      "title": "Add tier selection and measured performance report",
+      "status": "todo",
+      "dependencies": [
+        "HE-I02"
+      ],
+      "acceptance": [
+        "Add tier selection and measured performance report"
+      ],
+      "minimumTests": [
+        "Document fps, memory and load bytes on named mobile/desktop devices"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-I04.md",
+      "verification": []
+    },
+    {
+      "id": "HE-I05",
+      "title": "Implement WebXR capability/gesture/session lifecycle",
+      "status": "todo",
+      "dependencies": [
+        "HE-G03",
+        "HE-E11"
+      ],
+      "acceptance": [
+        "Implement WebXR capability/gesture/session lifecycle"
+      ],
+      "minimumTests": [
+        "Real supported headset enters/exits genuine panorama or structural VR"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-I05.md",
+      "verification": []
+    },
+    {
+      "id": "HE-I06",
+      "title": "Verify splat WebXR stereo and teleport if supported",
+      "status": "todo",
+      "dependencies": [
+        "HE-I02",
+        "HE-I05"
+      ],
+      "acceptance": [
+        "Verify splat WebXR stereo and teleport if supported"
+      ],
+      "minimumTests": [
+        "Real headset verifies per-eye rendering and measured refresh target; otherwise mark unsupported"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-I06.md",
+      "verification": []
+    },
+    {
+      "id": "HE-I07",
+      "title": "Accessibility and supported-browser check",
+      "status": "todo",
+      "dependencies": [
+        "HE-I01",
+        "HE-I05"
+      ],
+      "acceptance": [
+        "Accessibility and supported-browser check"
+      ],
+      "minimumTests": [
+        "Keyboard plan/tour navigation, focus return and readable error states"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-I07.md",
+      "verification": []
+    },
+    {
+      "id": "HE-J01",
+      "title": "Build quality summary with compatible-area comparisons",
+      "status": "todo",
+      "dependencies": [
+        "HE-D10",
+        "HE-E09",
+        "HE-H03"
+      ],
+      "acceptance": [
+        "Build quality summary with compatible-area comparisons"
+      ],
+      "minimumTests": [
+        "Deed built-up area and room net area are not auto-declared equivalent"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-J01.md",
+      "verification": []
+    },
+    {
+      "id": "HE-J02",
+      "title": "Extend independent moderator/admin review and immutable output dependencies",
+      "status": "todo",
+      "dependencies": [
+        "HE-J01",
+        "HE-C10"
+      ],
+      "acceptance": [
+        "Extend independent moderator/admin review and immutable output dependencies"
+      ],
+      "minimumTests": [
+        "Author/admin cannot self-approve; changed geometry invalidates affected review"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-J02.md",
+      "verification": []
+    },
+    {
+      "id": "HE-J03",
+      "title": "Assemble public allowlisted manifest and atomic package",
+      "status": "todo",
+      "dependencies": [
+        "HE-J02",
+        "HE-I01"
+      ],
+      "acceptance": [
+        "Assemble public allowlisted manifest and atomic package"
+      ],
+      "minimumTests": [
+        "Owner/registry/source documents absent from serialized public response"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-J03.md",
+      "verification": []
+    },
+    {
+      "id": "HE-J04",
+      "title": "Integrate changeListingState, pending listing/media revisions and reviewed projections",
+      "status": "todo",
+      "dependencies": [
+        "HE-J03",
+        "HE-B01",
+        "HE-R07"
+      ],
+      "acceptance": [
+        "Integrate changeListingState, pending listing/media revisions and reviewed projections"
+      ],
+      "minimumTests": [
+        "Author cannot publish; stale package denied and prior approved public version retained"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-J04.md",
+      "verification": []
+    },
+    {
+      "id": "HE-J05",
+      "title": "Revoke and version public packages",
+      "status": "todo",
+      "dependencies": [
+        "HE-J04"
+      ],
+      "acceptance": [
+        "Revoke and version public packages"
+      ],
+      "minimumTests": [
+        "Revocation stops new access; new edit leaves current approved package unchanged"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-J05.md",
+      "verification": []
+    },
+    {
+      "id": "HE-K01",
+      "title": "Add metrics/redacted logs and operations dashboard",
+      "status": "todo",
+      "dependencies": [
+        "HE-C09",
+        "HE-H03"
+      ],
+      "acceptance": [
+        "Add metrics/redacted logs and operations dashboard"
+      ],
+      "minimumTests": [
+        "Worker failure visible without private OCR text"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-K01.md",
+      "verification": []
+    },
+    {
+      "id": "HE-K02",
+      "title": "Add quota/resource controls and cleanup policies",
+      "status": "done",
+      "dependencies": [
+        "HE-C08",
+        "HE-B02"
+      ],
+      "acceptance": [
+        "Add quota/resource controls and cleanup policies"
+      ],
+      "minimumTests": [
+        "Over-budget job blocked; expired multipart and scratch objects reclaimed"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-K02.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml exec -T -e HAVEN_CONTAINER_TESTS=true -e HAVEN_ENV_FILE=.env.integration api pnpm exec vitest run tests/integration/digitization-resource-budgets.test.ts tests/integration/digitization-cleanup.test.ts tests/integration/digitization-capture.test.ts tests/integration/digitization-access.test.ts tests/integration/digitization-intakes.test.ts tests/integration/digitization-schema.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-K03",
+      "title": "Add tenant/account deletion and cancellation propagation",
+      "status": "todo",
+      "dependencies": [
+        "HE-K02",
+        "HE-J05"
+      ],
+      "acceptance": [
+        "Add tenant/account deletion and cancellation propagation"
+      ],
+      "minimumTests": [
+        "Delete fixture tenant removes originals/derivatives and stops active job"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-K03.md",
+      "verification": []
+    },
+    {
+      "id": "HE-K04",
+      "title": "Add required CI lanes and fixture licensing manifest",
+      "status": "todo",
+      "dependencies": [
+        "HE-A02",
+        "HE-H09",
+        "HE-J04"
+      ],
+      "acceptance": [
+        "Add required CI lanes and fixture licensing manifest"
+      ],
+      "minimumTests": [
+        "Clean CPU suite passes; GPU lane runs a real reconstruction fixture"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-K04.md",
+      "verification": []
+    },
+    {
+      "id": "HE-K05",
+      "title": "Run upload, two-tenant, worker-crash and stale-approval acceptance",
+      "status": "todo",
+      "dependencies": [
+        "HE-K04"
+      ],
+      "acceptance": [
+        "Run upload, two-tenant, worker-crash and stale-approval acceptance"
+      ],
+      "minimumTests": [
+        "Fault injection produces no unauthorized exposure or duplicate public package"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-K05.md",
+      "verification": []
+    },
+    {
+      "id": "HE-K06",
+      "title": "Write production configs, backup and rollback runbooks",
+      "status": "todo",
+      "dependencies": [
+        "HE-K05"
+      ],
+      "acceptance": [
+        "Write production configs, backup and rollback runbooks"
+      ],
+      "minimumTests": [
+        "Restore staging DB/assets and recover interrupted processing run"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-K06.md",
+      "verification": []
+    },
+    {
+      "id": "HE-K07",
+      "title": "Run reference workload and publish supported-input/device matrix",
+      "status": "todo",
+      "dependencies": [
+        "HE-I04",
+        "HE-I06",
+        "HE-K05"
+      ],
+      "acceptance": [
+        "Run reference workload and publish supported-input/device matrix"
+      ],
+      "minimumTests": [
+        "Measured stage times/VRAM/bytes/fps recorded with dataset/hardware IDs"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-K07.md",
+      "verification": []
+    },
+    {
+      "id": "HE-K08",
+      "title": "Demonstrate full R1\u2013R4 engine and known limitations",
+      "status": "todo",
+      "dependencies": [
+        "HE-K06",
+        "HE-K07"
+      ],
+      "acceptance": [
+        "Demonstrate full R1\u2013R4 engine and known limitations"
+      ],
+      "minimumTests": [
+        "Clean setup processes a deed, edited plan, real panorama and suitable reconstruction through approval"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-K08.md",
+      "verification": []
+    },
+    {
+      "id": "HE-R01",
+      "title": "Add separate engine ledger/schema/validator and wire root task/release scripts while preserving 120 original IDs",
+      "status": "done",
+      "dependencies": [],
+      "acceptance": [
+        "Add separate engine ledger/schema/validator and wire root task/release scripts while preserving 120 original IDs"
+      ],
+      "minimumTests": [
+        "Root validator still accepts unchanged marketplace ledger; engine missing evidence/unfinished release fails"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-R01.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "docker compose exec -T api pnpm exec vitest run tests/unit/digitization-ledger.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-R02",
+      "title": "Extract/reuse inventory access service and document private evidence processing grant and narrow worker identity",
+      "status": "done",
+      "dependencies": [
+        "HE-R01"
+      ],
+      "acceptance": [
+        "Extract/reuse inventory access service and document private evidence processing grant and narrow worker identity"
+      ],
+      "minimumTests": [
+        "Expired owner/reviewer grant or reassigned agent denied; legacy media authorization tests pass"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-R02.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "pnpm test:integration",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-R03",
+      "title": "Spike SeaweedFS multipart, externally reachable upload origin/streaming BFF, abort/checksum and limits",
+      "status": "done",
+      "dependencies": [
+        "HE-R02"
+      ],
+      "acceptance": [
+        "Spike SeaweedFS multipart, externally reachable upload origin/streaming BFF, abort/checksum and limits"
+      ],
+      "minimumTests": [
+        "Real interrupted multipart round trip, object mismatch and abandoned-upload cleanup"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-R03.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec vitest run tests/integration/digitization-multipart.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-R04",
+      "title": "Design dedicated authenticated BFF SSE route and reconnect/revocation policy",
+      "status": "done",
+      "dependencies": [
+        "HE-R02"
+      ],
+      "acceptance": [
+        "Design dedicated authenticated BFF SSE route and reconnect/revocation policy"
+      ],
+      "minimumTests": [
+        "Last-Event-ID forwarded and expired session terminates stream; ordinary CSRF/timeout unchanged"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-R04.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests sh -c 'node scripts/identity.mjs && pnpm exec playwright test tests/e2e/digitization-stream.spec.ts --project=desktop --project=mobile'",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-R05",
+      "title": "Add legacy FloorLayout adapter and unverified-scale/height labels without changing approved fixtures",
+      "status": "done",
+      "dependencies": [
+        "HE-R01"
+      ],
+      "acceptance": [
+        "Add legacy FloorLayout adapter and unverified-scale/height labels without changing approved fixtures"
+      ],
+      "minimumTests": [
+        "Existing plan/panorama model plays unchanged; synthetic/default dimensions never become confirmed measurements"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-R05.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "docker compose exec -T api pnpm exec vitest run tests/unit/legacy-digitization-geometry.test.ts tests/unit/spatial-media.test.ts",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-R06",
+      "title": "Define outbox event dispatch routing and engine consumer effect ownership",
+      "status": "done",
+      "dependencies": [
+        "HE-R01"
+      ],
+      "acceptance": [
+        "Define outbox event dispatch routing and engine consumer effect ownership"
+      ],
+      "minimumTests": [
+        "New engine event is not swallowed by generic processor; duplicate delivery yields one execution"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-R06.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "flock -n /tmp/haven-integration.lock docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests run --rm --no-deps tests pnpm exec vitest run tests/integration/viewing-reminders.test.ts tests/integration/digitization-outbox-routing.test.ts tests/integration/digitization-worker-http.test.ts tests/integration/digitization-source-scan.test.ts",
+          "result": "passed"
+        },
+        {
+          "minimumTest": 0,
+          "command": "./test-runner-protocol.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-R07",
+      "title": "Extend reviewed inventory application port for extracted unit/location/facts and artifact publishing",
+      "status": "in_progress",
+      "dependencies": [
+        "HE-R02"
+      ],
+      "acceptance": [
+        "Extend reviewed inventory application port for extracted unit/location/facts and artifact publishing"
+      ],
+      "minimumTests": [
+        "Published unit fact change requires review and current authority; two mandates do not inherit private evidence"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-R07.md",
+      "verification": []
+    },
+    {
+      "id": "HE-A05-CPU",
+      "title": "Start bounded CPU processing service through current dev.sh on a private internal network",
+      "status": "done",
+      "dependencies": [
+        "HE-A02",
+        "HE-A04"
+      ],
+      "acceptance": [
+        "Existing development startup includes the unprivileged pinned CPU service with readiness and no new infrastructure host ports or DB/queue credentials"
+      ],
+      "minimumTests": [
+        "./dev.sh starts the existing services plus CPU readiness; real CPU server tests pass"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-A05-CPU.md",
+      "verification": [
+        {
+          "minimumTest": 0,
+          "command": "./dev.sh",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "id": "HE-A05-GPU",
+      "title": "Add and verify the pinned optional isolated GPU processing profile on supported hardware",
+      "status": "todo",
+      "dependencies": [
+        "HE-A02",
+        "HE-A04"
+      ],
+      "acceptance": [
+        "GPU service has exact approved dependency/image pins, explicit bounded resources and private network; no CUDA capacity is claimed without a functioning driver"
+      ],
+      "minimumTests": [
+        "Supported NVIDIA host starts the unprivileged GPU profile; absent driver gives a clear unavailable result"
+      ],
+      "evidence": "evidence/digitization/tasks/HE-A05-GPU.md",
+      "verification": []
+    }
+  ]
+}

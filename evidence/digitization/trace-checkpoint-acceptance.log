@@ -1,0 +1,34 @@
+{"project":"desktop","privatePageCommitted":true}
+{"project":"mobile","privatePageCommitted":true}
+{"project":"desktop-floors","privatePageCommitted":true}
+{"project":"mobile-floors","privatePageCommitted":true}
+/workspace/node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694
+          Error.captureStackTrace(err)
+                ^
+
+error: Current owner evidence authority required
+    at /workspace/node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async grantOwnerEvidence (/workspace/apps/api/src/inventory/digitization/intakes.ts:38:13)
+    at async transaction (/workspace/packages/database/src/index.ts:7:1053)
+    at async <anonymous> (/workspace/tests/support/digitization-plan-fixture.ts:33:10) {
+  length: 175,
+  severity: 'ERROR',
+  code: '42501',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: 'PL/pgSQL function digitization_grant_authority_guard() line 8 at RAISE',
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'pl_exec.c',
+  line: '3897',
+  routine: 'exec_stmt_raise'
+}
+
+Node.js v24.21.0

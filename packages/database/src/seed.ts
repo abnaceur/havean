@@ -13,6 +13,12 @@ try{
    await c.query('INSERT INTO profiles(id,subject,display_name,email,created_at) VALUES($1,$2,$3,$4,$5)',[p.id,p.subject,p.displayName,p.email,fixtures.clock]);
    for(const [j,role] of p.roles.entries())await c.query('INSERT INTO memberships(id,user_id,organization_id,role) VALUES($1,$2,$3,$4)',[id(6000+i*10+j),p.id,['admin','moderator','support','editor'].includes(role)?null:p.organizationId,role]);
   }
+  // Fresh-schema bootstrap runs as the migration role, but current workflow
+  // guards still require an actual recorded actor. Use the synthetic admin only
+  // inside this transaction; never relax guards or approve customer evidence.
+  const bootstrapAdmin=fixtures.personas.find(person=>person.roles.includes('admin'));
+  if(!bootstrapAdmin)throw Error('Synthetic bootstrap admin is missing');
+  await c.query("SELECT set_config('app.actor',$1,true),set_config('app.admin','true',true)",[bootstrapAdmin.id]);
   // Trusted synthetic bootstrap runs only with the migration role; existing app guards stay active.
   await c.query("SELECT set_config('app.actor',$1,true),set_config('app.admin','true',true)",[person(10)]);
   const city=fixtures.city;await c.query('INSERT INTO cities(id,slug,name,country,currency,timezone) VALUES($1,$2,$3,$4,$5,$6)',[city.id,city.slug,city.name,city.country,city.currency,city.timezone]);
@@ -54,6 +60,8 @@ try{
  await c.query("UPDATE units SET building_id=b.id FROM buildings b WHERE units.community_id=b.community_id AND b.slug='building-a' AND units.id=ANY($1::uuid[]) AND units.building_id IS NULL",[fixtures.listings.map(l=>l.unitId)]);
  await c.query("UPDATE market_config SET data=data||$1::jsonb WHERE id='bj' AND NOT data ? 'pricePresets'",[JSON.stringify({pricePresets:[{label:'Up to 4 million',transaction:'sale',min:'0',max:'4000000'},{label:'4–6 million',transaction:'sale',min:'4000000',max:'6000000'},{label:'Above 6 million',transaction:'sale',min:'6000000'},{label:'Up to 5,000/month',transaction:'rent',min:'0',max:'5000'}]})]);
  await c.query("INSERT INTO owner_unit_grants(id,unit_id,owner_id,source,source_listing_id,created_at) SELECT (substr(key,1,8)||'-'||substr(key,9,4)||'-4'||substr(key,14,3)||'-8'||substr(key,18,3)||'-'||substr(key,21,12))::uuid,unit_id,owner_id,'recorded_listing',id,$1 FROM (SELECT DISTINCT ON(unit_id,owner_id) unit_id,owner_id,id,md5('owner-grant:'||unit_id::text||':'||owner_id::text) AS key FROM listings WHERE owner_id IS NOT NULL ORDER BY unit_id,owner_id,created_at,id) source ON CONFLICT(unit_id,owner_id) DO NOTHING",[fixtures.clock]);
+ // Migrations precede city seeding on fresh stacks. Retain existing edited taxonomy.
+ await c.query("INSERT INTO home_taxonomy(city,category,label) SELECT c.slug,k.category,k.label FROM cities c CROSS JOIN (VALUES('buy','Homes for sale'),('rent','Rentals'),('new-homes','New developments'),('commercial','Commercial property')) k(category,label) ON CONFLICT(city,category) DO NOTHING");
  await c.query("INSERT INTO market_configuration_history(city,version,data,historical) SELECT id,version,data,true FROM market_config ON CONFLICT(city,version) DO NOTHING");
  // Trusted missing defaults only; existing editorial labels, state and versions survive seed replay.
  await c.query("INSERT INTO home_taxonomy(city,category,label) SELECT ci.slug,v.category,v.label FROM cities ci CROSS JOIN (VALUES ('buy','Homes for sale'),('rent','Rentals'),('new-homes','New developments'),('commercial','Commercial property')) v(category,label) WHERE ci.id=ANY($1::uuid[]) ON CONFLICT(city,category) DO NOTHING",[[fixtures.city.id,...fixtures.additionalCities.map(city=>city.id)]]);

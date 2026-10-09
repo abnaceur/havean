@@ -1,0 +1,158 @@
+ Container haven-tests-run-650a085f0fa3 Creating 
+ Container haven-tests-run-650a085f0fa3 Created 
+
+Running 26 tests using 1 worker
+
+  ✓   1 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: buyer (7.8s)
+  ✓   2 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: owner (5.4s)
+  ✓   3 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: tenant (5.0s)
+  ✓   4 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: agent (6.3s)
+  ✓   5 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: manager (4.0s)
+  ✓   6 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: developer (4.5s)
+  ✓   7 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: vendor (5.3s)
+  ✓   8 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: moderator (4.9s)
+  ✘   9 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: support (3.9s)
+  ✓  10 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: admin (5.2s)
+  ✓  11 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: outsider (4.1s)
+  ✓  12 [desktop] › tests/e2e/role-navigation.spec.ts:46:1 › explicit personal deep links are preserved and hidden owner sections remain unavailable (6.0s)
+  ✘  13 [desktop] › tests/e2e/role-navigation.spec.ts:54:1 › public home sign-in selects the professional workspace and explicit staff pages remain available (8.1s)
+  ✓  14 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: buyer (5.6s)
+  ✓  15 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: owner (4.1s)
+  ✓  16 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: tenant (4.0s)
+  ✓  17 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: agent (3.7s)
+  ✓  18 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: manager (3.4s)
+  ✓  19 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: developer (4.1s)
+  ✓  20 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: vendor (3.6s)
+  ✓  21 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: moderator (4.4s)
+  ✘  22 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: support (3.4s)
+  ✓  23 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: admin (4.1s)
+  ✓  24 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: outsider (3.8s)
+  ✓  25 [mobile] › tests/e2e/role-navigation.spec.ts:46:1 › explicit personal deep links are preserved and hidden owner sections remain unavailable (3.7s)
+  ✘  26 [mobile] › tests/e2e/role-navigation.spec.ts:54:1 › public home sign-in selects the professional workspace and explicit staff pages remain available (6.8s)
+
+
+  1) [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: support ────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Support cases', exact: true })
+    Expected: visible
+    Error: strict mode violation: getByRole('heading', { name: 'Support cases', exact: true }) resolved to 2 elements:
+        1) <h1>Support cases</h1> aka locator('h1')
+        2) <h2>Support cases</h2> aka getByRole('region', { name: 'Support case queue' }).getByRole('heading', { name: 'Support cases' })
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Support cases', exact: true }) with timeout 15000ms
+      - waiting for getByRole('heading', { name: 'Support cases', exact: true })
+
+
+      30 |  await completeOtp(page,c.user);
+      31 |  await expect(page).toHaveURL(c.origin+c.path);
+    > 32 |  await expect(page.getByRole('heading',{name:c.heading,exact:true})).toBeVisible();
+         |                                                                      ^
+      33 |  const me=await page.request.get(c.origin+'/api/v1/me');expect(me.ok()).toBe(true);expect((await me.json()).data.roles).toContain(c.role);
+      34 |  const admin=await page.request.get(c.origin+'/api/v1/ops/users');expect(admin.status()).toBe(c.user==='admin'?200:403);
+      35 |  if(c.user==='buyer'){
+        at /workspace/tests/e2e/role-navigation.spec.ts:32:70
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/role-navigation-final/role-navigation-role-landing-and-navigation-support-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/role-navigation-final/role-navigation-role-landing-and-navigation-support-desktop/error-context.md
+
+  2) [desktop] › tests/e2e/role-navigation.spec.ts:54:1 › public home sign-in selects the professional workspace and explicit staff pages remain available 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Leads & inquiries', exact: true })
+    Expected: visible
+    Error: strict mode violation: getByRole('heading', { name: 'Leads & inquiries', exact: true }) resolved to 2 elements:
+        1) <h1>Leads & inquiries</h1> aka locator('h1')
+        2) <h2>Leads & inquiries</h2> aka getByRole('region', { name: 'Inquiry queue' }).getByRole('heading', { name: 'Leads & inquiries' })
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Leads & inquiries', exact: true }) with timeout 15000ms
+      - waiting for getByRole('heading', { name: 'Leads & inquiries', exact: true })
+
+
+      56 |  await page.getByRole('textbox',{name:'Username or email'}).fill('developer');await page.getByLabel('Password',{exact:true}).fill(password!);await page.getByRole('button',{name:'Sign In',exact:true}).click();await completeOtp(page,'developer');
+      57 |  await expect(page).toHaveURL(ops+'/ops/developments');await expect(page.getByRole('heading',{name:'Developments',exact:true})).toBeVisible();
+    > 58 |  await page.goto(ops+'/ops/leads');await expect(page.getByRole('heading',{name:'Leads & inquiries',exact:true})).toBeVisible();
+         |                                                                                                                  ^
+      59 | });
+      60 |
+        at /workspace/tests/e2e/role-navigation.spec.ts:58:114
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/role-navigation-final/role-navigation-public-hom-dc015-taff-pages-remain-available-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/role-navigation-final/role-navigation-public-hom-dc015-taff-pages-remain-available-desktop/error-context.md
+
+  3) [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: support ─────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Support cases', exact: true })
+    Expected: visible
+    Error: strict mode violation: getByRole('heading', { name: 'Support cases', exact: true }) resolved to 2 elements:
+        1) <h1>Support cases</h1> aka locator('h1')
+        2) <h2>Support cases</h2> aka getByRole('region', { name: 'Support case queue' }).getByRole('heading', { name: 'Support cases' })
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Support cases', exact: true }) with timeout 15000ms
+      - waiting for getByRole('heading', { name: 'Support cases', exact: true })
+
+
+      30 |  await completeOtp(page,c.user);
+      31 |  await expect(page).toHaveURL(c.origin+c.path);
+    > 32 |  await expect(page.getByRole('heading',{name:c.heading,exact:true})).toBeVisible();
+         |                                                                      ^
+      33 |  const me=await page.request.get(c.origin+'/api/v1/me');expect(me.ok()).toBe(true);expect((await me.json()).data.roles).toContain(c.role);
+      34 |  const admin=await page.request.get(c.origin+'/api/v1/ops/users');expect(admin.status()).toBe(c.user==='admin'?200:403);
+      35 |  if(c.user==='buyer'){
+        at /workspace/tests/e2e/role-navigation.spec.ts:32:70
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/role-navigation-final/role-navigation-role-landing-and-navigation-support-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/role-navigation-final/role-navigation-role-landing-and-navigation-support-mobile/error-context.md
+
+  4) [mobile] › tests/e2e/role-navigation.spec.ts:54:1 › public home sign-in selects the professional workspace and explicit staff pages remain available 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Leads & inquiries', exact: true })
+    Expected: visible
+    Error: strict mode violation: getByRole('heading', { name: 'Leads & inquiries', exact: true }) resolved to 2 elements:
+        1) <h1>Leads & inquiries</h1> aka locator('h1')
+        2) <h2>Leads & inquiries</h2> aka getByRole('region', { name: 'Inquiry queue' }).getByRole('heading', { name: 'Leads & inquiries' })
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Leads & inquiries', exact: true }) with timeout 15000ms
+      - waiting for getByRole('heading', { name: 'Leads & inquiries', exact: true })
+
+
+      56 |  await page.getByRole('textbox',{name:'Username or email'}).fill('developer');await page.getByLabel('Password',{exact:true}).fill(password!);await page.getByRole('button',{name:'Sign In',exact:true}).click();await completeOtp(page,'developer');
+      57 |  await expect(page).toHaveURL(ops+'/ops/developments');await expect(page.getByRole('heading',{name:'Developments',exact:true})).toBeVisible();
+    > 58 |  await page.goto(ops+'/ops/leads');await expect(page.getByRole('heading',{name:'Leads & inquiries',exact:true})).toBeVisible();
+         |                                                                                                                  ^
+      59 | });
+      60 |
+        at /workspace/tests/e2e/role-navigation.spec.ts:58:114
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/role-navigation-final/role-navigation-public-hom-dc015-taff-pages-remain-available-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/role-navigation-final/role-navigation-public-hom-dc015-taff-pages-remain-available-mobile/error-context.md
+
+  4 failed
+    [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: support ─────
+    [desktop] › tests/e2e/role-navigation.spec.ts:54:1 › public home sign-in selects the professional workspace and explicit staff pages remain available 
+    [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: support ──────
+    [mobile] › tests/e2e/role-navigation.spec.ts:54:1 › public home sign-in selects the professional workspace and explicit staff pages remain available 
+  22 passed (2.1m)
+

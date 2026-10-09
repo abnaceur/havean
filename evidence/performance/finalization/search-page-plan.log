@@ -1,0 +1,73 @@
+                                                                                          QUERY PLAN                                                                                           
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=1.40..191.21 rows=20 width=901) (actual time=3.525..4.896 rows=20 loops=1)
+   Buffers: shared hit=694
+   ->  Nested Loop Left Join  (cost=1.40..280482.43 rows=29554 width=901) (actual time=3.524..4.891 rows=20 loops=1)
+         Join Filter: ((l.segment = 'commercial'::text) AND (c.listing_id = l.id))
+         Rows Removed by Join Filter: 240
+         Buffers: shared hit=694
+         ->  Nested Loop Left Join  (cost=1.40..264596.00 rows=29554 width=648) (actual time=0.122..0.362 rows=20 loops=1)
+               Buffers: shared hit=171
+               ->  Nested Loop Left Join  (cost=1.27..260009.13 rows=29554 width=641) (actual time=0.097..0.316 rows=20 loops=1)
+                     Buffers: shared hit=151
+                     ->  Nested Loop Left Join  (cost=1.12..255272.49 rows=29554 width=556) (actual time=0.088..0.274 rows=20 loops=1)
+                           Buffers: shared hit=111
+                           ->  Nested Loop  (cost=0.98..254532.62 rows=29554 width=532) (actual time=0.074..0.236 rows=20 loops=1)
+                                 Join Filter: (d.id = co.district_id)
+                                 Rows Removed by Join Filter: 96
+                                 Buffers: shared hit=99
+                                 ->  Nested Loop  (cost=0.98..250983.88 rows=59109 width=521) (actual time=0.057..0.159 rows=20 loops=1)
+                                       Buffers: shared hit=97
+                                       ->  Nested Loop  (cost=0.83..249610.68 rows=59109 width=438) (actual time=0.043..0.115 rows=20 loops=1)
+                                             Buffers: shared hit=85
+                                             ->  Index Scan using listings_newest_public on listings l  (cost=0.42..215754.42 rows=59109 width=393) (actual time=0.028..0.046 rows=20 loops=1)
+                                                   Index Cond: (transaction = 'sale'::text)
+                                                   Filter: ((currency = 'CNY'::bpchar) AND ((expires_at IS NULL) OR (expires_at > now())))
+                                                   Buffers: shared hit=5
+                                             ->  Index Scan using units_pkey on units u  (cost=0.42..0.57 rows=1 width=77) (actual time=0.002..0.002 rows=1 loops=20)
+                                                   Index Cond: (id = l.unit_id)
+                                                   Buffers: shared hit=80
+                                       ->  Memoize  (cost=0.14..0.16 rows=1 width=99) (actual time=0.001..0.002 rows=1 loops=20)
+                                             Cache Key: u.community_id
+                                             Cache Mode: logical
+                                             Hits: 14  Misses: 6  Evictions: 0  Overflows: 0  Memory Usage: 2kB
+                                             Buffers: shared hit=12
+                                             ->  Index Scan using communities_pkey on communities co  (cost=0.13..0.15 rows=1 width=99) (actual time=0.002..0.002 rows=1 loops=6)
+                                                   Index Cond: (id = u.community_id)
+                                                   Buffers: shared hit=12
+                                 ->  Materialize  (cost=0.00..2.20 rows=4 width=27) (actual time=0.001..0.001 rows=6 loops=20)
+                                       Buffers: shared hit=2
+                                       ->  Nested Loop  (cost=0.00..2.18 rows=4 width=27) (actual time=0.009..0.013 rows=6 loops=1)
+                                             Join Filter: (d.city_id = ci.id)
+                                             Rows Removed by Join Filter: 1
+                                             Buffers: shared hit=2
+                                             ->  Seq Scan on cities ci  (cost=0.00..1.02 rows=1 width=19) (actual time=0.006..0.007 rows=1 loops=1)
+                                                   Filter: (slug = 'bj'::text)
+                                                   Rows Removed by Filter: 1
+                                                   Buffers: shared hit=1
+                                             ->  Seq Scan on districts d  (cost=0.00..1.07 rows=7 width=40) (actual time=0.001..0.002 rows=7 loops=1)
+                                                   Buffers: shared hit=1
+                           ->  Memoize  (cost=0.15..0.16 rows=1 width=56) (actual time=0.001..0.001 rows=1 loops=20)
+                                 Cache Key: u.building_id
+                                 Cache Mode: logical
+                                 Hits: 14  Misses: 6  Evictions: 0  Overflows: 0  Memory Usage: 1kB
+                                 Buffers: shared hit=12
+                                 ->  Index Scan using buildings_pkey on buildings b  (cost=0.14..0.15 rows=1 width=56) (actual time=0.002..0.002 rows=1 loops=6)
+                                       Index Cond: (id = u.building_id)
+                                       Buffers: shared hit=12
+                     ->  Index Scan using residential_details_pkey on residential_details r  (cost=0.14..0.16 rows=1 width=101) (actual time=0.001..0.001 rows=1 loops=20)
+                           Index Cond: (listing_id = l.id)
+                           Buffers: shared hit=40
+               ->  Index Scan using rental_terms_pkey on rental_terms t  (cost=0.14..0.16 rows=1 width=23) (actual time=0.002..0.002 rows=0 loops=20)
+                     Index Cond: (listing_id = l.id)
+                     Buffers: shared hit=20
+         ->  Materialize  (cost=0.00..1.18 rows=12 width=158) (actual time=0.000..0.001 rows=12 loops=20)
+               Buffers: shared hit=1
+               ->  Seq Scan on commercial_details c  (cost=0.00..1.12 rows=12 width=158) (actual time=0.002..0.004 rows=12 loops=1)
+                     Buffers: shared hit=1
+ Planning:
+   Buffers: shared hit=1091
+ Planning Time: 10.848 ms
+ Execution Time: 15.574 ms
+(69 rows)
+

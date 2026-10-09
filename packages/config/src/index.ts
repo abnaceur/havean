@@ -1,5 +1,6 @@
 export * from './bff-client';
 export {notificationWorkerHeaders,validNotificationWorker} from './notification-worker';
+export {digitizationWorkerHeaders,validDigitizationWorker} from './digitization-worker';
 import { z } from 'zod';
 export const environmentSchema = z.object({
  DATABASE_URL:z.string().min(1), SESSION_KEY:z.string().regex(/^[a-f0-9]{64}$/,'Use 32 random bytes encoded as hex'),

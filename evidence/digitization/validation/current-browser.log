@@ -1,0 +1,1251 @@
+
+> haven-real-estate@0.1.0 test:e2e /workspace
+> playwright test --project=visual && playwright test --project=desktop --project=mobile
+
+
+Running 34 tests using 1 worker
+
+  ✘   1 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline home-390 (5.6s)
+  ✘   2 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline resale-390 (4.4s)
+  ✘   3 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline rent-390 (5.0s)
+  ✘   4 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline commercial-390 (4.1s)
+  ✘   5 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline new-homes-390 (4.8s)
+  ✓   6 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline communities-390 (3.4s)
+  ✘   7 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline community-390 (3.6s)
+  ✘   8 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline detail-390 (3.3s)
+  ✘   9 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline mortgage-390 (2.5s)
+  ✘  10 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline filters-390 (5.8s)
+  ✘  11 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline city-390 (7.7s)
+  ✘  12 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline home-375 (5.5s)
+  ✘  13 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline resale-375 (4.3s)
+  ✘  14 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline rent-375 (5.2s)
+  ✘  15 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline commercial-375 (4.6s)
+  ✘  16 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline new-homes-375 (5.1s)
+  ✓  17 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline communities-375 (3.6s)
+  ✘  18 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline community-375 (3.6s)
+  ✘  19 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline detail-375 (4.4s)
+  ✘  20 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline mortgage-375 (2.5s)
+  ✘  21 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline filters-375 (5.7s)
+  ✘  22 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline city-375 (7.2s)
+  ✘  23 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline home-1440 (7.3s)
+  ✘  24 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline resale-1440 (8.4s)
+  ✘  25 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline rent-1440 (8.3s)
+  ✘  26 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline commercial-1440 (6.9s)
+  ✘  27 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline new-homes-1440 (4.6s)
+  ✓  28 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline communities-1440 (3.2s)
+  ✘  29 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline community-1440 (5.7s)
+  ✘  30 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline detail-1440 (5.3s)
+  ✘  31 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline mortgage-1440 (3.3s)
+  ✘  32 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline filters-1440 (12.9s)
+  ✘  33 [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline city-1440 (19.8s)
+  ✘  34 [visual] › tests/e2e/visual-baselines.spec.ts:10:1 › U06 deliberate screenshot layout shift exceeds the approved pixel gate (6.1s)
+
+
+  1) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline home-390 ───
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 390px by 5395px, received 390px by 5547px. 420708 pixels (ratio 0.20 of all image pixels) are different.
+
+      Snapshot: home-390.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: home-390 (image/png) ────────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/home-390.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-home-390-visual/home-390-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-home-390-visual/home-390-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-home-390-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-home-390-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-home-390-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-home-390-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline resale-390 ─
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 390px by 4553px, received 390px by 4396px. 247254 pixels (ratio 0.14 of all image pixels) are different.
+
+      Snapshot: resale-390.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: resale-390 (image/png) ──────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/resale-390.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-resale-390-visual/resale-390-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-resale-390-visual/resale-390-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-resale-390-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-resale-390-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-resale-390-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-resale-390-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline rent-390 ───
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 390px by 4511px, received 390px by 5102px. 347081 pixels (ratio 0.18 of all image pixels) are different.
+
+      Snapshot: rent-390.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: rent-390 (image/png) ────────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/rent-390.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-rent-390-visual/rent-390-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-rent-390-visual/rent-390-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-rent-390-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-rent-390-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-rent-390-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-rent-390-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline commercial-390 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 390px by 2634px, received 390px by 2917px. 161191 pixels (ratio 0.15 of all image pixels) are different.
+
+      Snapshot: commercial-390.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: commercial-390 (image/png) ──────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/commercial-390.png
+    Received: test-results/visual-baselines-U06-appro-02eb1-ish-baseline-commercial-390-visual/commercial-390-actual.png
+    Diff:     test-results/visual-baselines-U06-appro-02eb1-ish-baseline-commercial-390-visual/commercial-390-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-appro-02eb1-ish-baseline-commercial-390-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-appro-02eb1-ish-baseline-commercial-390-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-appro-02eb1-ish-baseline-commercial-390-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-appro-02eb1-ish-baseline-commercial-390-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline new-homes-390 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 390px by 4180px, received 390px by 5105px. 663756 pixels (ratio 0.34 of all image pixels) are different.
+
+      Snapshot: new-homes-390.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: new-homes-390 (image/png) ───────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/new-homes-390.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-new-homes-390-visual/new-homes-390-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-new-homes-390-visual/new-homes-390-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-new-homes-390-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-new-homes-390-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-new-homes-390-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-new-homes-390-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline community-390 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 390px by 3861px, received 390px by 5155px. 227254 pixels (ratio 0.12 of all image pixels) are different.
+
+      Snapshot: community-390.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: community-390 (image/png) ───────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/community-390.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-community-390-visual/community-390-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-community-390-visual/community-390-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-community-390-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-community-390-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-community-390-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-community-390-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline detail-390 ─
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 390px by 3518px, received 390px by 2365px. 78898 pixels (ratio 0.06 of all image pixels) are different.
+
+      Snapshot: detail-390.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: detail-390 (image/png) ──────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/detail-390.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-detail-390-visual/detail-390-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-detail-390-visual/detail-390-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-detail-390-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-detail-390-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-detail-390-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-detail-390-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline mortgage-390 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 390px by 1531px, received 390px by 1497px. 32744 pixels (ratio 0.06 of all image pixels) are different.
+
+      Snapshot: mortgage-390.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: mortgage-390 (image/png) ────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/mortgage-390.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-mortgage-390-visual/mortgage-390-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-mortgage-390-visual/mortgage-390-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-mortgage-390-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-mortgage-390-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-mortgage-390-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-mortgage-390-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline filters-390 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 390px by 4553px, received 390px by 4396px. 222748 pixels (ratio 0.13 of all image pixels) are different.
+
+      Snapshot: filters-390.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: filters-390 (image/png) ─────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/filters-390.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-filters-390-visual/filters-390-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-filters-390-visual/filters-390-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-filters-390-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-filters-390-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-filters-390-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-filters-390-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline city-390 ──
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 390px by 5395px, received 390px by 5547px. 416994 pixels (ratio 0.20 of all image pixels) are different.
+
+      Snapshot: city-390.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: city-390 (image/png) ────────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/city-390.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-city-390-visual/city-390-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-city-390-visual/city-390-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-city-390-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-city-390-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-city-390-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-city-390-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline home-375 ──
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 375px by 5417px, received 375px by 5546px. 436431 pixels (ratio 0.21 of all image pixels) are different.
+
+      Snapshot: home-375.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: home-375 (image/png) ────────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/home-375.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-home-375-visual/home-375-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-home-375-visual/home-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-home-375-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-home-375-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-home-375-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-home-375-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline resale-375 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 375px by 4690px, received 375px by 4488px. 247304 pixels (ratio 0.15 of all image pixels) are different.
+
+      Snapshot: resale-375.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: resale-375 (image/png) ──────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/resale-375.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-resale-375-visual/resale-375-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-resale-375-visual/resale-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-resale-375-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-resale-375-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-resale-375-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-resale-375-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline rent-375 ──
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 375px by 4671px, received 375px by 5262px. 347112 pixels (ratio 0.18 of all image pixels) are different.
+
+      Snapshot: rent-375.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: rent-375 (image/png) ────────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/rent-375.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-rent-375-visual/rent-375-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-rent-375-visual/rent-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-rent-375-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-rent-375-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-rent-375-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-rent-375-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline commercial-375 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 375px by 2668px, received 375px by 3178px. 152991 pixels (ratio 0.13 of all image pixels) are different.
+
+      Snapshot: commercial-375.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: commercial-375 (image/png) ──────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/commercial-375.png
+    Received: test-results/visual-baselines-U06-appro-fc225-ish-baseline-commercial-375-visual/commercial-375-actual.png
+    Diff:     test-results/visual-baselines-U06-appro-fc225-ish-baseline-commercial-375-visual/commercial-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-appro-fc225-ish-baseline-commercial-375-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-appro-fc225-ish-baseline-commercial-375-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-appro-fc225-ish-baseline-commercial-375-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-appro-fc225-ish-baseline-commercial-375-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  15) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline new-homes-375 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 375px by 4115px, received 375px by 5040px. 626839 pixels (ratio 0.34 of all image pixels) are different.
+
+      Snapshot: new-homes-375.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: new-homes-375 (image/png) ───────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/new-homes-375.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-new-homes-375-visual/new-homes-375-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-new-homes-375-visual/new-homes-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-new-homes-375-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-new-homes-375-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-new-homes-375-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-new-homes-375-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  16) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline community-375 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 375px by 4068px, received 375px by 5362px. 259182 pixels (ratio 0.13 of all image pixels) are different.
+
+      Snapshot: community-375.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: community-375 (image/png) ───────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/community-375.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-community-375-visual/community-375-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-community-375-visual/community-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-community-375-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-community-375-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-community-375-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-community-375-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  17) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline detail-375 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 375px by 3658px, received 375px by 2482px. 65603 pixels (ratio 0.05 of all image pixels) are different.
+
+      Snapshot: detail-375.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: detail-375 (image/png) ──────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/detail-375.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-detail-375-visual/detail-375-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-detail-375-visual/detail-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-detail-375-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-detail-375-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-detail-375-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-detail-375-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  18) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline mortgage-375 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 375px by 1531px, received 375px by 935px. 20023 pixels (ratio 0.04 of all image pixels) are different.
+
+      Snapshot: mortgage-375.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: mortgage-375 (image/png) ────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/mortgage-375.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-mortgage-375-visual/mortgage-375-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-mortgage-375-visual/mortgage-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-mortgage-375-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-mortgage-375-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-mortgage-375-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-mortgage-375-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  19) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline filters-375 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 375px by 4690px, received 375px by 4488px. 226825 pixels (ratio 0.13 of all image pixels) are different.
+
+      Snapshot: filters-375.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: filters-375 (image/png) ─────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/filters-375.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-filters-375-visual/filters-375-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-filters-375-visual/filters-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-filters-375-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-filters-375-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-filters-375-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-filters-375-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  20) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline city-375 ──
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 375px by 5417px, received 375px by 5546px. 432917 pixels (ratio 0.21 of all image pixels) are different.
+
+      Snapshot: city-375.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: city-375 (image/png) ────────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/city-375.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-city-375-visual/city-375-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-city-375-visual/city-375-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-city-375-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-city-375-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-city-375-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-city-375-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  21) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline home-1440 ─
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 1440px by 4088px, received 1440px by 4108px. 811106 pixels (ratio 0.14 of all image pixels) are different.
+
+      Snapshot: home-1440.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: home-1440 (image/png) ───────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/home-1440.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-home-1440-visual/home-1440-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-home-1440-visual/home-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-home-1440-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-home-1440-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-home-1440-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-home-1440-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  22) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline resale-1440 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 1440px by 4201px, received 1440px by 4152px. 1394517 pixels (ratio 0.24 of all image pixels) are different.
+
+      Snapshot: resale-1440.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: resale-1440 (image/png) ─────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/resale-1440.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-resale-1440-visual/resale-1440-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-resale-1440-visual/resale-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-resale-1440-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-resale-1440-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-resale-1440-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-resale-1440-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  23) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline rent-1440 ─
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 1440px by 4201px, received 1440px by 4238px. 1165386 pixels (ratio 0.20 of all image pixels) are different.
+
+      Snapshot: rent-1440.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: rent-1440 (image/png) ───────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/rent-1440.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-rent-1440-visual/rent-1440-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-rent-1440-visual/rent-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-rent-1440-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-rent-1440-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-rent-1440-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-rent-1440-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  24) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline commercial-1440 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 1440px by 2672px, received 1440px by 2696px. 459637 pixels (ratio 0.12 of all image pixels) are different.
+
+      Snapshot: commercial-1440.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: commercial-1440 (image/png) ─────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/commercial-1440.png
+    Received: test-results/visual-baselines-U06-appro-7c4f2-sh-baseline-commercial-1440-visual/commercial-1440-actual.png
+    Diff:     test-results/visual-baselines-U06-appro-7c4f2-sh-baseline-commercial-1440-visual/commercial-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-appro-7c4f2-sh-baseline-commercial-1440-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-appro-7c4f2-sh-baseline-commercial-1440-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-appro-7c4f2-sh-baseline-commercial-1440-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-appro-7c4f2-sh-baseline-commercial-1440-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  25) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline new-homes-1440 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 1440px by 2180px, received 1440px by 2599px. 960604 pixels (ratio 0.26 of all image pixels) are different.
+
+      Snapshot: new-homes-1440.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: new-homes-1440 (image/png) ──────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/new-homes-1440.png
+    Received: test-results/visual-baselines-U06-appro-907d5-ish-baseline-new-homes-1440-visual/new-homes-1440-actual.png
+    Diff:     test-results/visual-baselines-U06-appro-907d5-ish-baseline-new-homes-1440-visual/new-homes-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-appro-907d5-ish-baseline-new-homes-1440-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-appro-907d5-ish-baseline-new-homes-1440-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-appro-907d5-ish-baseline-new-homes-1440-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-appro-907d5-ish-baseline-new-homes-1440-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  26) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline community-1440 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 1440px by 3777px, received 1440px by 4628px. 578494 pixels (ratio 0.09 of all image pixels) are different.
+
+      Snapshot: community-1440.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: community-1440 (image/png) ──────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/community-1440.png
+    Received: test-results/visual-baselines-U06-appro-04ba8-ish-baseline-community-1440-visual/community-1440-actual.png
+    Diff:     test-results/visual-baselines-U06-appro-04ba8-ish-baseline-community-1440-visual/community-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-appro-04ba8-ish-baseline-community-1440-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-appro-04ba8-ish-baseline-community-1440-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-appro-04ba8-ish-baseline-community-1440-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-appro-04ba8-ish-baseline-community-1440-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  27) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline detail-1440 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 1440px by 3383px, received 1440px by 2004px. 298433 pixels (ratio 0.07 of all image pixels) are different.
+
+      Snapshot: detail-1440.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: detail-1440 (image/png) ─────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/detail-1440.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-detail-1440-visual/detail-1440-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-detail-1440-visual/detail-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-detail-1440-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-detail-1440-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-detail-1440-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-detail-1440-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  28) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline mortgage-1440 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 1440px by 1102px, received 1440px by 900px. 39070 pixels (ratio 0.03 of all image pixels) are different.
+
+      Snapshot: mortgage-1440.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: mortgage-1440 (image/png) ───────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/mortgage-1440.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-mortgage-1440-visual/mortgage-1440-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-mortgage-1440-visual/mortgage-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-mortgage-1440-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-mortgage-1440-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-mortgage-1440-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-mortgage-1440-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  29) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline filters-1440 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 1440px by 4201px, received 1440px by 4152px. 1224837 pixels (ratio 0.21 of all image pixels) are different.
+
+      Snapshot: filters-1440.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: filters-1440 (image/png) ────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/filters-1440.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-filters-1440-visual/filters-1440-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-filters-1440-visual/filters-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-filters-1440-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-filters-1440-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-filters-1440-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-filters-1440-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  30) [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline city-1440 ─
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 1440px by 4088px, received 1440px by 4108px. 810072 pixels (ratio 0.14 of all image pixels) are different.
+
+      Snapshot: city-1440.png
+
+
+       7 | async function open(page:Page,screen:any){await page.setViewportSize(screen.viewport);await page.goto(screen.route);await page.waitForLoadState('networkidle');await screenshotReady(page,screen.route==='/bj');if(screen.id.startsWith('filters-'))await page.getByRole('button',{name:'All filters',exact:true}).click();if(screen.id.startsWith('city-')){await page.getByRole('button',{name:'Beijing',exact:true}).click();await page.getByLabel('Search cities',{exact:true}).fill('Beijing');}}
+       8 | async function shot(page:Page){return page.screenshot({fullPage:true,animations:'disabled',mask:[page.locator('.stats-updated')]});}
+    >  9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+         |                                                                                                                                                       ^
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+      11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+        at /workspace/tests/e2e/visual-baselines.spec.ts:9:151
+
+    attachment #1: city-1440 (image/png) ───────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/city-1440.png
+    Received: test-results/visual-baselines-U06-approved-English-baseline-city-1440-visual/city-1440-actual.png
+    Diff:     test-results/visual-baselines-U06-approved-English-baseline-city-1440-visual/city-1440-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-approved-English-baseline-city-1440-visual/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-approved-English-baseline-city-1440-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-approved-English-baseline-city-1440-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  31) [visual] › tests/e2e/visual-baselines.spec.ts:10:1 › U06 deliberate screenshot layout shift exceeds the approved pixel gate 
+
+    Error: expect(Buffer).toMatchSnapshot(expected) failed
+
+      Expected an image 390px by 5395px, received 390px by 5547px. 420708 pixels (ratio 0.20 of all image pixels) are different.
+
+      Snapshot: home-390.png
+
+
+       9 | for(const screen of manifest.screens)test('U06 approved English baseline '+screen.id,async({page})=>{await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});});
+      10 | test('U06 deliberate screenshot layout shift exceeds the approved pixel gate',async({page})=>{
+    > 11 |  const screen=manifest.screens.find((row:any)=>row.id==='home-390');await open(page,screen);expect(await shot(page)).toMatchSnapshot(screen.file,{maxDiffPixelRatio:manifest.maxDiffPixelRatio});
+         |                                                                                                                      ^
+      12 |  await page.addStyleTag({content:'.hero{transform:translateY(40px)!important;transition:none!important}'});const shifted=await shot(page),baseline=fs.readFileSync(folder+'/'+screen.file);
+      13 |  const ratio=await page.evaluate(async({first,second})=>{
+      14 |   async function pixels(base64:string){const image=new Image();image.src='data:image/png;base64,'+base64;await image.decode();const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const context=canvas.getContext('2d')!;context.drawImage(image,0,0);return {width:image.width,height:image.height,data:context.getImageData(0,0,image.width,image.height).data};}
+        at /workspace/tests/e2e/visual-baselines.spec.ts:11:118
+
+    attachment #1: home-390 (image/png) ────────────────────────────────────────────────────────────
+    Expected: evidence/visual/candidates/home-390.png
+    Received: test-results/visual-baselines-U06-delib-3ced4-eds-the-approved-pixel-gate-visual/home-390-actual.png
+    Diff:     test-results/visual-baselines-U06-delib-3ced4-eds-the-approved-pixel-gate-visual/home-390-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-delib-3ced4-eds-the-approved-pixel-gate-visual/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/visual-baselines-U06-delib-3ced4-eds-the-approved-pixel-gate-visual/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/visual-baselines-U06-delib-3ced4-eds-the-approved-pixel-gate-visual/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/visual-baselines-U06-delib-3ced4-eds-the-approved-pixel-gate-visual/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  31 failed
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline home-390 ────
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline resale-390 ──
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline rent-390 ────
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline commercial-390 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline new-homes-390 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline community-390 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline detail-390 ──
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline mortgage-390 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline filters-390 ─
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline city-390 ────
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline home-375 ────
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline resale-375 ──
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline rent-375 ────
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline commercial-375 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline new-homes-375 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline community-375 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline detail-375 ──
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline mortgage-375 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline filters-375 ─
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline city-375 ────
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline home-1440 ───
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline resale-1440 ─
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline rent-1440 ───
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline commercial-1440 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline new-homes-1440 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline community-1440 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline detail-1440 ─
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline mortgage-1440 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline filters-1440 
+    [visual] › tests/e2e/visual-baselines.spec.ts:9:38 › U06 approved English baseline city-1440 ───
+    [visual] › tests/e2e/visual-baselines.spec.ts:10:1 › U06 deliberate screenshot layout shift exceeds the approved pixel gate 
+  3 passed (4.0m)
+ ELIFECYCLE  Command failed with exit code 1.

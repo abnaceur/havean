@@ -1,0 +1,199 @@
+
+> haven-real-estate@0.1.0 test:integration /workspace
+> vitest run tests/integration
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/financial-reversals.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 4859[2mms[22m[39m
+   [33m[2m✓[22m[39m P09 payment reversal preserves original, restores balance and retains one attributed undo across receipt and fresh retries[33m 1039[2mms[22m[39m
+   [33m[2m✓[22m[39m P09 charge reversal preserves original and restores payment credit without reversing a reversal[33m 809[2mms[22m[39m
+   [33m[2m✓[22m[39m P09 simultaneous payment reversals and an allocation settle once under the shared finance lock[33m 981[2mms[22m[39m
+   [33m[2m✓[22m[39m P09 stale versions, confirmation, foreign actual finance and revoked grants deny reversal or receipt without evidence[33m 986[2mms[22m[39m
+   [33m[2m✓[22m[39m P09 SQL requires exact linked evidence and commit-time allocation undo atomically[33m 973[2mms[22m[39m
+ [32m✓[39m tests/integration/viewing-calendar.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 3665[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 consumer atomically reschedules a confirmed viewing, requiring fresh confirmation; idempotent receipt preserves one event and row[33m 553[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 conflicting/stale/unauthorized reschedules and cancellations preserve the original confirmed interval[33m 421[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 assigned professional reschedule retains confirmation; professional cancellation releases the new slot[33m 511[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 outcomes require a scoped confirmed viewing whose actual interval has ended, then become terminal[33m 330[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 concurrent reschedules from the same version yield one change and one conflict[33m 392[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 calendar date filters use the recorded property date, including times on the previous UTC day[33m 356[2mms[22m[39m
+   [33m[2m✓[22m[39m L05 property capacity remains reserved when assignment changes; the former appointment can be cancelled through actual professional scope[33m 726[2mms[22m[39m
+ [32m✓[39m tests/integration/inquiries.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 954[2mms[22m[39m
+ [32m✓[39m tests/integration/notifications.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2263[2mms[22m[39m
+   [33m[2m✓[22m[39m A05 a real publication worker plans one daily digest; BullMQ delivers one provider-accepted email and one in-app notification; replay stays deduplicated[33m 933[2mms[22m[39m
+   [33m[2m✓[22m[39m A05 opt-out and paused searches cancel queued optional email; unverified email cannot opt in[33m 345[2mms[22m[39m
+   [33m[2m✓[22m[39m A05 failed provider acceptance is truthful; own retry is versioned and scoped, other users and unsigned service calls are denied[33m 364[2mms[22m[39m
+ [32m✓[39m tests/integration/payment-allocations.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 10092[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 partial allocation leaves exact outstanding and credit, matching receipt creates one root, and settlement retains overpayment[33m 1488[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 concurrent allocations respect payment 100.10 and charge 200.20 caps[33m 1112[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 concurrent allocations respect payment 200.20 and charge 100.10 caps[33m 1231[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 cross-lease, currency, stale versions, confirmation and over-allocation deny without changing balances[33m 1846[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 PostgreSQL independently serializes direct allocations and prevents immutable amount edits[33m 1326[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 actual finance-only staff can allocate, manager-only and guessed foreign staff cannot, and revoked grants deny receipts[33m 1111[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 allocation and existing linked reversal share lock order and retained undo versions[33m 1892[2mms[22m[39m
+ [32m✓[39m tests/integration/recurring-charges.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2533[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 leap-month proration uses exact cents, term-aware due date and one charge across retry and repeated month[33m 520[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 concurrent generators cannot duplicate a charge; ended and out-of-term leases are excluded[33m 652[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 stale versions, wrong scope and missing confirmation deny generation; grant revocation denies cached receipt[33m 557[2mms[22m[39m
+   [33m[2m✓[22m[39m P06 actual finance-only membership can generate within its granted property; a manager without finance cannot[33m 524[2mms[22m[39m
+ [32m✓[39m tests/integration/payment-evidence.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 5007[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 native draft stays out of balances and tenant reads; posting exact evidence retains history and audit once[33m 1209[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 edits only current drafts, retains original amount snapshots and denies posted amount changes at API and database[33m 1352[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 negative/float/scientific money, foreign currency and stale authority deny creation with no payment roots[33m 331[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 posting requires current saved versions and confirmation, concurrent attempts create one post, and revoked grants deny receipts[33m 1197[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 drafts cannot be allocated or reversed before posting and actual manager-only authority cannot record payments[33m 859[2mms[22m[39m
+ [32m✓[39m tests/integration/lease-lifecycle.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 4621[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 valid next term retains original terms, links history and replays one renewal draft[33m 1165[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 overlapping next terms and stale/currency versions deny renewal without partial linked drafts[33m 1107[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 ending records termination reason and original history, never republishes, and revoked authority denies receipt replay[33m 653[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 concurrent renewal requests yield one retained successor and concurrent endings yield one record[33m 1028[2mms[22m[39m
+   [33m[2m✓[22m[39m P05 historical lease ending retains unknown provenance and new renewal uses current native authority[33m 605[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-schema.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1545[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-A04 expired explicit evidence grant removes private derived reads[33m 1167[2mms[22m[39m
+ [32m✓[39m tests/integration/viewing-reminders.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2941[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 confirmation schedules one versioned reminder; actual BullMQ and SMTP receipt replay produce one email and one native notification[33m 608[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 cancellation invalidates queued and failed reminders and all stale retries send no email[33m 573[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 lost post-SMTP acknowledgement reconciles the frozen provider receipt without duplicate sending[33m 391[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 rescheduling invalidates the former booking job and fresh confirmation schedules the new version; unsigned service calls and private table reads fail[33m 420[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 scoped reports share actual CRM filters, exclude foreign assignments and private note/message content, and neutralize all formula cells[33m 396[2mms[22m[39m
+   [33m[2m✓[22m[39m L06 transactional reminders never email unverified accounts, and inactive accounts receive no reminder[33m 441[2mms[22m[39m
+ [32m✓[39m tests/integration/viewing-availability.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1436[2mms[22m[39m
+   [33m[2m✓[22m[39m L03 current assigned agent publishes versioned working hours; public future slots convert property local time to actual UTC[33m 332[2mms[22m[39m
+   [33m[2m✓[22m[39m L03 private blocked intervals and existing agent appointments remove overlapping or buffered slots; cancellation restores capacity[33m 475[2mms[22m[39m
+ [32m✓[39m tests/integration/development-review.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1842[2mms[22m[39m
+   [33m[2m✓[22m[39m N05 initial publication requires independent verified moderation with exact versions, private pending detail, review queue, rejection reasons and idempotent audit[33m 1297[2mms[22m[39m
+ [32m✓[39m tests/integration/agency-assignments.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 662[2mms[22m[39m
+ [32m✓[39m tests/integration/provider-catalog.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 4017[2mms[22m[39m
+   [33m[2m✓[22m[39m V01 only independently approved provider is public in its exact service area, with scanned portfolio and no owner/private review fields[33m 1153[2mms[22m[39m
+   [33m[2m✓[22m[39m V01 unscanned/foreign/stale-version/duplicate portfolio references and wrong-city districts are rejected without partial provider writes[33m 1216[2mms[22m[39m
+   [33m[2m✓[22m[39m V01 editing approval removes public access, submitted edits need withdrawal, stale writes conflict, and matching create retry returns one profile[33m 740[2mms[22m[39m
+   [33m[2m✓[22m[39m V01 revoked vendor membership removes authoring/public eligibility while exact own personal export retains its provider metadata[33m 802[2mms[22m[39m
+ [32m✓[39m tests/integration/viewing-bookings.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 2964[2mms[22m[39m
+   [33m[2m✓[22m[39m L04 concurrent actual consumers yield one accepted reservation and one conflict[33m 412[2mms[22m[39m
+   [33m[2m✓[22m[39m L04 only the current assigned professional confirms once; owning cancellation is versioned and releases capacity[33m 413[2mms[22m[39m
+   [33m[2m✓[22m[39m L04 database writes require current metadata and retained travel gaps apply across properties[33m 1142[2mms[22m[39m
+ [32m✓[39m tests/integration/tenant-links.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 604[2mms[22m[39m
+ [32m✓[39m tests/integration/messages.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 2294[2mms[22m[39m
+   [33m[2m✓[22m[39m M02 same client ID replay, including concurrent retries, returns one committed message and one event; changed content cannot reuse it[33m 418[2mms[22m[39m
+   [33m[2m✓[22m[39m M02 concurrent different participants receive unique ordered BIGINT sequences; stale grants and cross-room client ID reuse persist no new message[33m 369[2mms[22m[39m
+   [33m[2m✓[22m[39m M02 scanned owned private files commit with the message and are readable only by its current participants; replay grants remain exact[33m 466[2mms[22m[39m
+   [33m[2m✓[22m[39m M02 foreign/unscanned/stale and other-conversation files are denied without partial message/event/attachment writes[33m 774[2mms[22m[39m
+ [32m✓[39m tests/integration/agency-memberships.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 445[2mms[22m[39m
+ [32m✓[39m tests/integration/account-privacy.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 733[2mms[22m[39m
+   [33m[2m✓[22m[39m A06 one-snapshot personal export excludes another persona even for an administrator and keeps money as decimal strings[33m 328[2mms[22m[39m
+ [32m✓[39m tests/integration/development-inventory.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1886[2mms[22m[39m
+   [33m[2m✓[22m[39m N02 publishes exact decimal range with an approved drawing, keeps types distinct from individual offered units and derives nonnegative availability with timestamps[33m 1115[2mms[22m[39m
+   [33m[2m✓[22m[39m N02 invalid ranges, foreign/unapproved drawing, wrong building/area, stale versions and incompatible type changes are denied; draft types are private[33m 701[2mms[22m[39m
+ [32m✓[39m tests/integration/database.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 323[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-intakes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 348[2mms[22m[39m
+ [32m✓[39m tests/integration/agent-dashboard.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 416[2mms[22m[39m
+ [32m✓[39m tests/integration/owner-lifecycle.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 471[2mms[22m[39m
+ [32m✓[39m tests/integration/quotes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 927[2mms[22m[39m
+ [32m✓[39m tests/integration/discovery-ranking.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1147[2mms[22m[39m
+   [33m[2m✓[22m[39m D06 known freshness/view/curated scores produce deterministic order, duplicate events cannot inflate it, and withdrawn or private data is excluded[33m 1009[2mms[22m[39m
+ [32m✓[39m tests/integration/rental-availability.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 2595[2mms[22m[39m
+   [33m[2m✓[22m[39m R04 leased room invalidates whole-property search/detail/contact even with stale index; sibling room remains available and publication checks canonical occupancy[33m 2138[2mms[22m[39m
+ [32m✓[39m tests/integration/lease-activation.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 2747[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 atomic activation withdraws the public rental offer with exact history, audit and matching receipts[33m 539[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 simultaneous overlapping draft activations yield exactly one success and one current-state conflict[33m 609[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 property occupation conflicts with child rooms while sibling rooms can hold separate exclusive terms[33m 1097[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 stale versions, missing confirmation and expired terms deny activation without withdrawing publication[33m 422[2mms[22m[39m
+ [32m✓[39m tests/integration/management-grants.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 527[2mms[22m[39m
+ [32m✓[39m tests/integration/crm.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 482[2mms[22m[39m
+ [32m✓[39m tests/integration/saved-searches.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 486[2mms[22m[39m
+   [33m[2m✓[22m[39m A04 normalized complex rental criteria restore, require city currency, update/pause/delete with versions and deny another actor[33m 354[2mms[22m[39m
+ [32m✓[39m tests/integration/read-cursors.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1218[2mms[22m[39m
+   [33m[2m✓[22m[39m M03 unread counts exclude own messages and only a participant’s monotonic committed cursor marks incoming messages read[33m 416[2mms[22m[39m
+   [33m[2m✓[22m[39m M03 latest history and before/after pages remain ordered and recover all messages beyond the initial window[33m 398[2mms[22m[39m
+ [32m✓[39m tests/integration/agent-credentials.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 886[2mms[22m[39m
+   [33m[2m✓[22m[39m B01 independent approval produces a badge; own/private projections omit internal notes and document identifiers[33m 455[2mms[22m[39m
+ [32m✓[39m tests/integration/resale-filters.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2402[2mms[22m[39m
+   [33m[2m✓[22m[39m D04 combined resale facets use OR within groups and AND between them, including actual public tour eligibility and bounded transit proximity[33m 2314[2mms[22m[39m
+ [32m✓[39m tests/integration/lease-drafts.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 2132[2mms[22m[39m
+   [33m[2m✓[22m[39m P03 updates only current draft versions, retains original history and denies ended lease term edits[33m 811[2mms[22m[39m
+   [33m[2m✓[22m[39m P03 another real manager retains an existing team PDF while foreign and tenant document access are denied[33m 590[2mms[22m[39m
+ [32m✓[39m tests/integration/development-projects.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 281[2mms[22m[39m
+ [32m✓[39m tests/integration/realtime.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1742[2mms[22m[39m
+   [33m[2m✓[22m[39m M04 replay after a saved sequence returns ordered missing pages and no duplicate previously received records[33m 1065[2mms[22m[39m
+   [33m[2m✓[22m[39m M04 current reassignment and revoked membership deny subsequent replay and send actions[32m 300[2mms[22m[39m
+   [33m[2m✓[22m[39m M04 durable actor send admission denies new messages at the limit while committed client-ID retries return the original receipt[33m 307[2mms[22m[39m
+ [32m✓[39m tests/integration/owner-grants.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 610[2mms[22m[39m
+   [33m[2m✓[22m[39m O01 owner creates an exact private draft using a current explicit grant; contact audience isolates reviewers then the assigned team[33m 509[2mms[22m[39m
+ [32m✓[39m tests/integration/commercial-facts.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 383[2mms[22m[39m
+ [32m✓[39m tests/integration/listing-revisions.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 204[2mms[22m[39m
+ [32m✓[39m tests/integration/conversations.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 463[2mms[22m[39m
+ [32m✓[39m tests/integration/development-discovery.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 539[2mms[22m[39m
+   [33m[2m✓[22m[39m N03 development SQL search returns expected city/district/budget/basis/status/type-range IDs, stable pages, unknown prices and explicit public fields[33m 438[2mms[22m[39m
+ [32m✓[39m tests/integration/listing-expiration.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1658[2mms[22m[39m
+   [33m[2m✓[22m[39m I08 real queue expiration and late duplicate jobs create one atomic transition and remove public destinations/search[33m 864[2mms[22m[39m
+ [32m✓[39m tests/integration/development-detail.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 442[2mms[22m[39m
+ [32m✓[39m tests/integration/owner-wizard.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 490[2mms[22m[39m
+ [32m✓[39m tests/integration/listing-workflow.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 389[2mms[22m[39m
+ [32m✓[39m tests/integration/search-rebuild.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 7502[2mms[22m[39m
+   [33m[2m✓[22m[39m D10 verified temporary rebuild preserves the old serving index and browsing, then swaps the complete eligible public count and catches queued projections[33m 3091[2mms[22m[39m
+   [33m[2m✓[22m[39m D10 candidate content corruption and changed SQL source abort swap; network outage uses explicit nonempty SQL degradation[33m 4406[2mms[22m[39m
+ [32m✓[39m tests/integration/owner-assignment.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 359[2mms[22m[39m
+ [32m✓[39m tests/integration/resale-detail.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 752[2mms[22m[39m
+   [33m[2m✓[22m[39m D08 detail exposes only published facts and current eligible assigned agents; expired/unassigned agents and withdrawn listings cannot receive bookings[33m 748[2mms[22m[39m
+ [32m✓[39m tests/integration/browsing-history.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 850[2mms[22m[39m
+   [33m[2m✓[22m[39m A03 history is opt-in, versioned, removable/clearable and scoped; archived favorites/history stay unavailable without private fields[33m 846[2mms[22m[39m
+ [32m✓[39m tests/integration/rental-terms.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 446[2mms[22m[39m
+   [33m[2m✓[22m[39m R01 monthly shared-room authoring creates a distinct canonical child, decimal deposit and explicit period; replay, stale edits, wrong actors and review-state edits are protected[33m 305[2mms[22m[39m
+ [32m✓[39m tests/integration/commercial-detail.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 298[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-access.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 312[2mms[22m[39m
+ [32m✓[39m tests/integration/home-discovery.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1000[2mms[22m[39m
+   [33m[2m✓[22m[39m D07 city-scoped bounded home feeds show only active eligible curation and disclosed sponsorship; withdrawal/sold-out remove cards immediately[33m 882[2mms[22m[39m
+ [32m✓[39m tests/integration/agent-directory.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 1389[2mms[22m[39m
+   [33m[2m✓[22m[39m B02 city/name/service-area/language filters open seeded assigned inventory without private credential data or invented statistics[33m 367[2mms[22m[39m
+   [33m[2m✓[22m[39m B02 assigned inventory and current counts exclude unpublished/withdrawn offers immediately[33m 756[2mms[22m[39m
+ [32m✓[39m tests/integration/owner-evidence.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 619[2mms[22m[39m
+   [33m[2m✓[22m[39m O03 actual approved PDF attachment is versioned, scoped and labelled; authorized downloads are audited and expired/foreign tickets fail[33m 574[2mms[22m[39m
+ [32m✓[39m tests/integration/outbox.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2799[2mms[22m[39m
+   [32m✓[39m F09 real queue replay and crash recovery [2m(2)[22m
+     [33m[2m✓[22m[39m crash after SMTP delivery retries without duplicating mail or notifications[33m 2112[2mms[22m[39m
+     [33m[2m✓[22m[39m an old publish event cannot resurrect withdrawn inventory[33m 682[2mms[22m[39m
+ [32m✓[39m tests/integration/map-search.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2043[2mms[22m[39m
+   [33m[2m✓[22m[39m D05 map/list bounds use identical canonical criteria and only rounded public community positions; private coordinate sentinels never enter responses or projections[33m 1772[2mms[22m[39m
+ [32m✓[39m tests/integration/provider-discovery.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 766[2mms[22m[39m
+   [33m[2m✓[22m[39m V02 filters published providers by exact category/canonical area/text/city with bounded stable pages; other areas and unknown matches remain empty[33m 698[2mms[22m[39m
+ [32m✓[39m tests/integration/rental-detail.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 349[2mms[22m[39m
+ [32m✓[39m tests/integration/typed-search.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 4029[2mms[22m[39m
+   [33m[2m✓[22m[39m D02 exact city/decimal filters, UUID ties and opaque bounded cursors return the expected IDs without duplicates[33m 3858[2mms[22m[39m
+ [32m✓[39m tests/integration/rental-discovery.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2610[2mms[22m[39m
+   [33m[2m✓[22m[39m R02 indexed and SQL rental criteria isolate entire furnished monthly budgets, availability dates and yearly amounts[33m 2605[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-capture.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1003[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B02 capture API persists a resumable scoped session, reuses receipts and streams signed parts directly through the real gateway[33m 793[2mms[22m[39m
+ [32m✓[39m tests/integration/commercial-discovery.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 2554[2mms[22m[39m
+   [33m[2m✓[22m[39m C02 furnished office rentals compare explicit periods, price bases and area definitions in SQL and indexed search[33m 2547[2mms[22m[39m
+ [32m✓[39m tests/integration/approved-tours.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 2804[2mms[22m[39m
+   [33m[2m✓[22m[39m D09 only scanned decoded approved panoramas expose public metadata and a tour badge; denied assets expose no storage URL[33m 2801[2mms[22m[39m
+ [32m✓[39m tests/integration/inventory-schema.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 100[2mms[22m[39m
+ [32m✓[39m tests/integration/favorites.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 364[2mms[22m[39m
+   [33m[2m✓[22m[39m A02 own favorites persist, repeated desired-state writes/replays are idempotent, stale toggles and private listings are denied, and another actor cannot read or remove them[33m 360[2mms[22m[39m
+ [32m✓[39m tests/integration/moderation-evidence.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 89[2mms[22m[39m
+ [32m✓[39m tests/integration/search-projection.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1559[2mms[22m[39m
+   [33m[2m✓[22m[39m D01 approved public projection is searchable with exact decimal price and no private fields; old publication cannot resurrect withdrawal[33m 1554[2mms[22m[39m
+ [32m✓[39m tests/integration/account-profile.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 96[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-multipart.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 340[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-R03 real gateway presigned multipart resumes, validates authoritative parts/checksum and aborts abandoned work[33m 338[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-validation.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 443[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B03 small-upload source validation detects forged MIME/object sizes and retains explicit PDF decoder state[33m 440[2mms[22m[39m
+ [32m✓[39m tests/integration/contracts.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 737[2mms[22m[39m
+   [32m✓[39m F08 generated API contract [2m(5)[22m
+     [33m[2m✓[22m[39m published OpenAPI matches generated operations exactly[33m 473[2mms[22m[39m
+ [32m✓[39m tests/integration/geography.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+ [32m✓[39m tests/integration/search-history.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 367[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-outbox-routing.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 114[2mms[22m[39m
+ [32m✓[39m tests/integration/mortgage-market.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 79[2mms[22m[39m
+ [32m✓[39m tests/integration/readiness.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-scan.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 41[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m79 passed[39m[22m[90m (79)[39m
+[2m      Tests [22m [1m[32m267 passed[39m[22m[90m (267)[39m
+[2m   Start at [22m 11:01:29
+[2m   Duration [22m 223.62s[2m (tests 55%, import 43%, transform 1%)[22m
+
+[2m    Isolate [22m [33m79 workers spawned[39m[2m · ~151ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~11.77s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+

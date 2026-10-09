@@ -1,0 +1,24 @@
+
+> @haven/api@0.1.0 build /workspace/apps/api
+> node ../../scripts/build-runtime.mjs api
+
+file:///workspace/scripts/build-runtime.mjs:19
+function rewrite(file){const text=fs.readFileSync(file,'utf8'),source=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS),edits=[];const visit=node=>{let literal;if((ts.isImportDeclaration(node)||ts.isExportDeclaration(node))&&node.moduleSpecifier&&ts.isStringLiteral(node.moduleSpecifier))literal=node.moduleSpecifier;if(ts.isCallExpression(node)&&node.expression.kind===ts.SyntaxKind.ImportKeyword&&node.arguments.length===1&&ts.isStringLiteral(node.arguments[0]))literal=node.arguments[0];if(literal){let spec=literal.text,target=exports.get(spec);if(spec.startsWith('@haven/')&&!target)throw new Error('Unknown workspace export '+spec);if(target){spec=path.relative(path.dirname(file),target).split(path.sep).join('/');if(!spec.startsWith('.'))spec='./'+spec;}else if(spec.startsWith('.')){target=path.resolve(path.dirname(file),spec);if(!path.extname(spec)){if(fs.existsSync(target+'.js'))spec+='.js';else if(fs.existsSync(path.join(target,'index.js')))spec+='/index.js';else throw new Error('Unresolved emitted import '+spec);target=path.resolve(path.dirname(file),spec);}}if(target&&!fs.existsSync(target))throw new Error('Missing compiled module '+target);if(spec!==literal.text)edits.push({start:literal.getStart(source),end:literal.end,text:JSON.stringify(spec)});}ts.forEachChild(node,visit);};visit(source);let result=text;for(const edit of edits.sort((a,b)=>b.start-a.start))result=result.slice(0,edit.start)+edit.text+result.slice(edit.end);fs.writeFileSync(file,result);count++;}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+Error: Missing compiled module /workspace/packages/contracts/dist/index.js
+    at visit (file:///workspace/scripts/build-runtime.mjs:19:1144)
+    at visitNodes (/workspace/node_modules/.pnpm/typescript@6.0.2/node_modules/typescript/lib/typescript.js:32559:22)
+    at forEachChildInSourceFile (/workspace/node_modules/.pnpm/typescript@6.0.2/node_modules/typescript/lib/typescript.js:32772:12)
+    at Object.forEachChild (/workspace/node_modules/.pnpm/typescript@6.0.2/node_modules/typescript/lib/typescript.js:33072:35)
+    at visit (file:///workspace/scripts/build-runtime.mjs:19:1303)
+    at rewrite (file:///workspace/scripts/build-runtime.mjs:19:1330)
+    at walk (file:///workspace/scripts/build-runtime.mjs:20:183)
+    at walk (file:///workspace/scripts/build-runtime.mjs:20:138)
+    at walk (file:///workspace/scripts/build-runtime.mjs:20:138)
+    at walk (file:///workspace/scripts/build-runtime.mjs:20:138)
+
+Node.js v24.21.0
+/workspace/apps/api:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @haven/api@0.1.0 build: `node ../../scripts/build-runtime.mjs api`
+Exit status 1

@@ -1,0 +1,244 @@
+ Container haven-processing-tests-wheel-download-run-137a85fdd724 Creating 
+ Container haven-processing-tests-wheel-download-run-137a85fdd724 Created 
+Verified cached pypdf-6.1.1-py3-none-any.whl
+Verified cached pillow-11.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+Verified cached pytest-8.4.2-py3-none-any.whl
+Verified cached iniconfig-2.1.0-py3-none-any.whl
+Verified cached packaging-25.0-py3-none-any.whl
+Verified cached pluggy-1.6.0-py3-none-any.whl
+Verified cached pygments-2.19.2-py3-none-any.whl
+Verified cached pypdfium2-5.14.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+ Image haven-processing-tests-cpu Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 608B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.cpu
+#2 transferring dockerfile: 1.49kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 192B done
+#4 DONE 0.0s
+
+#5 [cpu 1/8] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#5 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#5 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.1s done
+#5 DONE 0.1s
+
+#6 [internal] load build context
+#6 transferring context: 46.55kB done
+#6 DONE 0.1s
+
+#7 [cpu 2/8] WORKDIR /opt/processing
+#7 CACHED
+
+#8 [cpu 3/8] COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
+#8 CACHED
+
+#9 [cpu 4/8] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
+#9 CACHED
+
+#10 [cpu 5/8] COPY docs/adr/processing-dependencies.json ./dependencies.json
+#10 CACHED
+
+#11 [cpu 6/8] COPY docs/adr/licenses/pypdfium2-5.14.0 /usr/share/doc/haven-processing/pypdfium2-5.14.0
+#11 CACHED
+
+#12 [cpu 7/8] COPY services/property-processing/property_processing ./property_processing
+#12 DONE 0.1s
+
+#13 [cpu 8/8] RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+#13 DONE 0.5s
+
+#14 [cpu-tests 1/3] COPY services/property-processing/locks/test.lock /tmp/test.lock
+#14 DONE 0.1s
+
+#15 [cpu-tests 2/3] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/test.lock && python -m pip check
+#15 1.952 Looking in links: /wheels
+#15 1.954 Requirement already satisfied: pypdf==6.1.1 in /usr/local/lib/python3.12/site-packages (from -r /tmp/test.lock (line 2)) (6.1.1)
+#15 1.954 Requirement already satisfied: pillow==11.3.0 in /usr/local/lib/python3.12/site-packages (from -r /tmp/test.lock (line 4)) (11.3.0)
+#15 1.964 Processing /wheels/pytest-8.4.2-py3-none-any.whl (from -r /tmp/test.lock (line 6))
+#15 1.975 Processing /wheels/iniconfig-2.1.0-py3-none-any.whl (from -r /tmp/test.lock (line 8))
+#15 1.978 Processing /wheels/packaging-25.0-py3-none-any.whl (from -r /tmp/test.lock (line 10))
+#15 1.982 Processing /wheels/pluggy-1.6.0-py3-none-any.whl (from -r /tmp/test.lock (line 12))
+#15 1.986 Processing /wheels/pygments-2.19.2-py3-none-any.whl (from -r /tmp/test.lock (line 14))
+#15 2.033 Installing collected packages: pygments, pluggy, packaging, iniconfig, pytest
+#15 3.472 Successfully installed iniconfig-2.1.0 packaging-25.0 pluggy-1.6.0 pygments-2.19.2 pytest-8.4.2
+#15 3.472 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#15 4.643 No broken requirements found.
+#15 DONE 4.8s
+
+#16 [cpu-tests 3/3] COPY services/property-processing/tests ./tests
+#16 DONE 0.1s
+
+#17 exporting to image
+#17 exporting layers
+#17 exporting layers 0.9s done
+#17 exporting manifest sha256:c710b9987f300b2840385905687ff11ee0912a832ee1e7e8752f41b85d311054 0.1s done
+#17 exporting config sha256:33d84a6a71a74c49043b1e313caa9c9defa822f3aaa79487db0abdcb2a5995ee 0.1s done
+#17 exporting attestation manifest sha256:d19c08610bedcc2896d16085d3cfe8966d550cb9324ae9ab4a6679b55959cc03 0.1s done
+#17 exporting manifest list sha256:dbcdca31d9f99c6c80986b39f7d4f218c24f049e7c206f6a37fbd46765484372
+#17 exporting manifest list sha256:dbcdca31d9f99c6c80986b39f7d4f218c24f049e7c206f6a37fbd46765484372 0.1s done
+#17 naming to docker.io/library/haven-processing-tests-cpu:latest done
+#17 unpacking to docker.io/library/haven-processing-tests-cpu:latest
+#17 unpacking to docker.io/library/haven-processing-tests-cpu:latest 0.3s done
+#17 DONE 1.6s
+
+#18 resolving provenance for metadata file
+#18 DONE 0.0s
+ Image haven-processing-tests-cpu Built 
+ Container haven-processing-tests-cpu-run-6ac1cbc8a9a9 Creating 
+ Container haven-processing-tests-cpu-run-6ac1cbc8a9a9 Created 
+.....................................FFFF......................          [100%]
+=================================== FAILURES ===================================
+_ test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates[0] _
+
+rotation = 0
+
+    @pytest.mark.parametrize('rotation', [0, 90, 180, 270])
+    def test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates(rotation):
+        from property_processing.facts import generic_candidates
+        content = pdf('Unit: 00123')
+        reader = __import__('pypdf').PdfReader(BytesIO(content))
+        page = reader.pages[0]
+        page.rotate(rotation)
+        writer = PdfWriter()
+        writer.add_page(page)
+        encoded = BytesIO()
+        writer.write(encoded)
+        raster = list(rasterize_pdf(encoded.getvalue()))[0]
+        assert raster['requiresOcr'] is False
+        line = raster['nativeLines'][0]
+        assert line['text'] == 'Unit: 00123'
+        image = Image.open(BytesIO(raster['body']))
+        # Every ink pixel must be covered by the real glyph bounds, allowing raster antialiasing.
+        box = line['bbox']
+        pixels = [(x, y) for y in range(image.height) for x in range(image.width)
+                  if sum(image.getpixel((x, y))) < 600]
+        assert pixels
+        assert min(x for x, _ in pixels) >= box[0]*image.width-2
+        assert max(x for x, _ in pixels) <= box[2]*image.width+2
+        assert min(y for _, y in pixels) >= box[1]*image.height-2
+        assert max(y for _, y in pixels) <= box[3]*image.height+2
+        candidates = generic_candidates([line], locale='en')
+>       assert candidates[0]['normalizedValue'] == '00123'
+               ^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_pdf_raster.py:97: IndexError
+_ test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates[90] _
+
+rotation = 90
+
+    @pytest.mark.parametrize('rotation', [0, 90, 180, 270])
+    def test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates(rotation):
+        from property_processing.facts import generic_candidates
+        content = pdf('Unit: 00123')
+        reader = __import__('pypdf').PdfReader(BytesIO(content))
+        page = reader.pages[0]
+        page.rotate(rotation)
+        writer = PdfWriter()
+        writer.add_page(page)
+        encoded = BytesIO()
+        writer.write(encoded)
+        raster = list(rasterize_pdf(encoded.getvalue()))[0]
+        assert raster['requiresOcr'] is False
+        line = raster['nativeLines'][0]
+        assert line['text'] == 'Unit: 00123'
+        image = Image.open(BytesIO(raster['body']))
+        # Every ink pixel must be covered by the real glyph bounds, allowing raster antialiasing.
+        box = line['bbox']
+        pixels = [(x, y) for y in range(image.height) for x in range(image.width)
+                  if sum(image.getpixel((x, y))) < 600]
+        assert pixels
+        assert min(x for x, _ in pixels) >= box[0]*image.width-2
+        assert max(x for x, _ in pixels) <= box[2]*image.width+2
+        assert min(y for _, y in pixels) >= box[1]*image.height-2
+        assert max(y for _, y in pixels) <= box[3]*image.height+2
+        candidates = generic_candidates([line], locale='en')
+>       assert candidates[0]['normalizedValue'] == '00123'
+               ^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_pdf_raster.py:97: IndexError
+_ test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates[180] _
+
+rotation = 180
+
+    @pytest.mark.parametrize('rotation', [0, 90, 180, 270])
+    def test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates(rotation):
+        from property_processing.facts import generic_candidates
+        content = pdf('Unit: 00123')
+        reader = __import__('pypdf').PdfReader(BytesIO(content))
+        page = reader.pages[0]
+        page.rotate(rotation)
+        writer = PdfWriter()
+        writer.add_page(page)
+        encoded = BytesIO()
+        writer.write(encoded)
+        raster = list(rasterize_pdf(encoded.getvalue()))[0]
+        assert raster['requiresOcr'] is False
+        line = raster['nativeLines'][0]
+        assert line['text'] == 'Unit: 00123'
+        image = Image.open(BytesIO(raster['body']))
+        # Every ink pixel must be covered by the real glyph bounds, allowing raster antialiasing.
+        box = line['bbox']
+        pixels = [(x, y) for y in range(image.height) for x in range(image.width)
+                  if sum(image.getpixel((x, y))) < 600]
+        assert pixels
+        assert min(x for x, _ in pixels) >= box[0]*image.width-2
+        assert max(x for x, _ in pixels) <= box[2]*image.width+2
+        assert min(y for _, y in pixels) >= box[1]*image.height-2
+        assert max(y for _, y in pixels) <= box[3]*image.height+2
+        candidates = generic_candidates([line], locale='en')
+>       assert candidates[0]['normalizedValue'] == '00123'
+               ^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_pdf_raster.py:97: IndexError
+_ test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates[270] _
+
+rotation = 270
+
+    @pytest.mark.parametrize('rotation', [0, 90, 180, 270])
+    def test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates(rotation):
+        from property_processing.facts import generic_candidates
+        content = pdf('Unit: 00123')
+        reader = __import__('pypdf').PdfReader(BytesIO(content))
+        page = reader.pages[0]
+        page.rotate(rotation)
+        writer = PdfWriter()
+        writer.add_page(page)
+        encoded = BytesIO()
+        writer.write(encoded)
+        raster = list(rasterize_pdf(encoded.getvalue()))[0]
+        assert raster['requiresOcr'] is False
+        line = raster['nativeLines'][0]
+        assert line['text'] == 'Unit: 00123'
+        image = Image.open(BytesIO(raster['body']))
+        # Every ink pixel must be covered by the real glyph bounds, allowing raster antialiasing.
+        box = line['bbox']
+        pixels = [(x, y) for y in range(image.height) for x in range(image.width)
+                  if sum(image.getpixel((x, y))) < 600]
+        assert pixels
+        assert min(x for x, _ in pixels) >= box[0]*image.width-2
+        assert max(x for x, _ in pixels) <= box[2]*image.width+2
+        assert min(y for _, y in pixels) >= box[1]*image.height-2
+        assert max(y for _, y in pixels) <= box[3]*image.height+2
+        candidates = generic_candidates([line], locale='en')
+>       assert candidates[0]['normalizedValue'] == '00123'
+               ^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_pdf_raster.py:97: IndexError
+=========================== short test summary info ============================
+FAILED tests/test_pdf_raster.py::test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates[0]
+FAILED tests/test_pdf_raster.py::test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates[90]
+FAILED tests/test_pdf_raster.py::test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates[180]
+FAILED tests/test_pdf_raster.py::test_actual_native_glyph_bounds_align_with_upright_pixels_and_generic_candidates[270]
+4 failed, 59 passed in 8.60s
+

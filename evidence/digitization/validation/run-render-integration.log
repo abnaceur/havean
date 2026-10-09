@@ -1,0 +1,36 @@
+ Container haven-integration-tests-run-544a2b31b1ae Creating 
+ Container haven-integration-tests-run-544a2b31b1ae Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-worker-http.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 3410[2mms[22m[39m
+   [33m[2m✓[22m[39m real Nest/Fastify engine command routes enforce separate service authentication, contracts, versions and cancellation[33m 3408[2mms[22m[39m
+ [31m❯[39m tests/integration/outbox.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 21953[2mms[22m[39m
+   [31m❯[39m F09 real queue replay and crash recovery [2m(2)[22m
+[31m     [31m×[31m crash after SMTP delivery retries without duplicating mail or notifications[39m[33m 21298[2mms[22m[39m
+     [33m[2m✓[22m[39m an old publish event cannot resurrect withdrawn inventory[33m 650[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-inputs.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 977[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B05 real stored source binds immutable revisions; removal does not mutate existing run snapshots[33m 974[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-workflow.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 718[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-validation.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 450[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B03 small-upload source validation detects forged MIME/object sizes and retains explicit PDF decoder state[33m 447[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-leases.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 307[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C04 API-owned lease admits one current execution; wrong fencing, duplicate delivery and cancelled run cannot renew[33m 305[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-scan.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 32[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/outbox.test.ts[2m > [22mF09 real queue replay and crash recovery[2m > [22mcrash after SMTP delivery retries without duplicating mail or notifications
+[31m[1mError[22m: Worker did not reach effect-applied[39m
+[36m [2m❯[22m Timeout._onTimeout tests/integration/outbox.test.ts:[2m12:135[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (7)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m13 passed[39m[22m[90m (14)[39m
+[2m   Start at [22m 10:19:14
+[2m   Duration [22m 35.93s[2m (tests 79%, import 18%, transform 2%)[22m
+
+

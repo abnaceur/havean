@@ -1,0 +1,508 @@
+CPU processing tests passed
+Local environment and identity fixtures ready. Account credentials: infra/generated/integration/personas.md
+ Container haven-integration-proxy-1 Stopping 
+ Container haven-integration-worker-1 Stopping 
+ Container haven-integration-proxy-1 Stopped 
+ Container haven-integration-proxy-1 Removing 
+ Container haven-integration-proxy-1 Removed 
+ Container haven-integration-ops-1 Stopping 
+ Container haven-integration-web-1 Stopping 
+ Container haven-integration-worker-1 Stopped 
+ Container haven-integration-worker-1 Removing 
+ Container haven-integration-worker-1 Removed 
+ Container haven-integration-cache-1 Stopping 
+ Container haven-integration-search-1 Stopping 
+ Container haven-integration-mail-1 Stopping 
+ Container haven-integration-web-1 Stopped 
+ Container haven-integration-web-1 Removing 
+ Container haven-integration-ops-1 Stopped 
+ Container haven-integration-ops-1 Removing 
+ Container haven-integration-web-1 Removed 
+ Container haven-integration-cache-1 Stopped 
+ Container haven-integration-cache-1 Removing 
+ Container haven-integration-search-1 Stopped 
+ Container haven-integration-search-1 Removing 
+ Container haven-integration-ops-1 Removed 
+ Container haven-integration-api-1 Stopping 
+ Container haven-integration-mail-1 Stopped 
+ Container haven-integration-mail-1 Removing 
+ Container haven-integration-search-1 Removed 
+ Container haven-integration-api-1 Stopped 
+ Container haven-integration-api-1 Removing 
+ Container haven-integration-mail-1 Removed 
+ Container haven-integration-cache-1 Removed 
+ Container haven-integration-api-1 Removed 
+ Container haven-integration-identity-1 Stopping 
+ Container haven-integration-scanner-1 Stopping 
+ Container haven-integration-storage-1 Stopping 
+ Container haven-integration-migrate-1 Stopping 
+ Container haven-integration-migrate-1 Stopped 
+ Container haven-integration-migrate-1 Removing 
+ Container haven-integration-migrate-1 Removed 
+ Container haven-integration-install-1 Stopping 
+ Container haven-integration-install-1 Stopped 
+ Container haven-integration-install-1 Removing 
+ Container haven-integration-scanner-1 Stopped 
+ Container haven-integration-scanner-1 Removing 
+ Container haven-integration-install-1 Removed 
+ Container haven-integration-identity-1 Stopped 
+ Container haven-integration-identity-1 Removing 
+ Container haven-integration-scanner-1 Removed 
+ Container haven-integration-identity-1 Removed 
+ Container haven-integration-db-1 Stopping 
+ Container haven-integration-db-1 Stopped 
+ Container haven-integration-db-1 Removing 
+ Container haven-integration-db-1 Removed 
+ Container haven-integration-storage-1 Stopped 
+ Container haven-integration-storage-1 Removing 
+ Container haven-integration-storage-1 Removed 
+ Volume haven-integration_packages-test-support-dependencies Removing 
+ Volume haven-integration_apps-worker-dependencies Removing 
+ Volume haven-integration_apps-api-dependencies Removing 
+ Volume haven-integration_packages-database-dependencies Removing 
+ Volume haven-integration_dependencies Removing 
+ Volume haven-integration_objects Removing 
+ Volume haven-integration_search Removing 
+ Volume haven-integration_packages-contracts-dependencies Removing 
+ Volume haven-integration_apps-ops-dependencies Removing 
+ Volume haven-integration_packages-ui-dependencies Removing 
+ Volume haven-integration_packages-config-dependencies Removing 
+ Network haven-integration_private Removing 
+ Volume haven-integration_apps-worker-dependencies Removed 
+ Volume haven-integration_cache Removing 
+ Volume haven-integration_apps-web-dependencies Removing 
+ Volume haven-integration_packages-test-support-dependencies Removed 
+ Volume haven-integration_mail-data Removing 
+ Volume haven-integration_virus-signatures Removing 
+ Volume haven-integration_database Removing 
+ Volume haven-integration_cache Removed 
+ Volume haven-integration_packages-contracts-dependencies Removed 
+ Volume haven-integration_apps-ops-dependencies Removed 
+ Volume haven-integration_search Removed 
+ Volume haven-integration_objects Removed 
+ Volume haven-integration_apps-api-dependencies Removed 
+ Volume haven-integration_packages-database-dependencies Removed 
+ Network haven-integration_private Removed 
+ Volume haven-integration_dependencies Removed 
+ Volume haven-integration_apps-web-dependencies Removed 
+ Volume haven-integration_packages-ui-dependencies Removed 
+ Volume haven-integration_packages-config-dependencies Removed 
+ Volume haven-integration_mail-data Removed 
+ Volume haven-integration_database Removed 
+ Volume haven-integration_virus-signatures Removed 
+ Image haven-integration-api Building 
+ Image haven-integration-web Building 
+ Image haven-integration-migrate Building 
+ Image haven-integration-ops Building 
+ Image haven-integration-tests Building 
+ Image haven-integration-install Building 
+ Image haven-integration-worker Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 3.56kB done
+#1 DONE 0.0s
+
+#2 [install internal] load build definition from Dockerfile.dev
+#2 transferring dockerfile: 1.33kB done
+#2 DONE 0.0s
+
+#3 [migrate internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#3 DONE 0.0s
+
+#4 [api internal] load .dockerignore
+#4 transferring context: 192B done
+#4 DONE 0.0s
+
+#5 [api internal] load build context
+#5 DONE 0.0s
+
+#6 [api dependencies  1/15] FROM docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#6 resolve docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 0.0s done
+#6 DONE 0.0s
+
+#5 [worker internal] load build context
+#5 transferring context: 220.50MB 1.5s done
+#5 DONE 1.6s
+
+#7 [migrate dependencies  8/15] COPY apps/ops/package.json ./apps/ops/package.json
+#7 CACHED
+
+#8 [migrate dependencies  5/15] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#8 CACHED
+
+#9 [migrate dependencies 14/15] COPY packages/test-support/package.json ./packages/test-support/package.json
+#9 CACHED
+
+#10 [migrate dependencies 13/15] COPY packages/ui/package.json ./packages/ui/package.json
+#10 CACHED
+
+#11 [migrate dependencies  2/15] RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg=7:5.1.9-0+deb12u1 && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [migrate dependencies  4/15] WORKDIR /workspace
+#12 CACHED
+
+#13 [migrate dependencies 12/15] COPY packages/database/package.json ./packages/database/package.json
+#13 CACHED
+
+#14 [migrate dependencies  7/15] COPY apps/web/package.json ./apps/web/package.json
+#14 CACHED
+
+#15 [migrate dependencies 11/15] COPY packages/contracts/package.json ./packages/contracts/package.json
+#15 CACHED
+
+#16 [migrate dependencies 10/15] COPY packages/config/package.json ./packages/config/package.json
+#16 CACHED
+
+#17 [migrate dependencies  3/15] RUN npm install --global pnpm@10.32.1
+#17 CACHED
+
+#18 [migrate dependencies  6/15] COPY apps/api/package.json ./apps/api/package.json
+#18 CACHED
+
+#19 [migrate dependencies  9/15] COPY apps/worker/package.json ./apps/worker/package.json
+#19 CACHED
+
+#20 [migrate dependencies 15/15] RUN --mount=type=cache,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
+#20 CACHED
+
+#13 [web dependencies 12/15] COPY packages/database/package.json ./packages/database/package.json
+#13 CACHED
+
+#9 [web dependencies 14/15] COPY packages/test-support/package.json ./packages/test-support/package.json
+#9 CACHED
+
+#18 [web dependencies  6/15] COPY apps/api/package.json ./apps/api/package.json
+#18 CACHED
+
+#19 [web dependencies  9/15] COPY apps/worker/package.json ./apps/worker/package.json
+#19 CACHED
+
+#7 [web dependencies  8/15] COPY apps/ops/package.json ./apps/ops/package.json
+#7 CACHED
+
+#16 [web dependencies 10/15] COPY packages/config/package.json ./packages/config/package.json
+#16 CACHED
+
+#14 [web dependencies  7/15] COPY apps/web/package.json ./apps/web/package.json
+#14 CACHED
+
+#11 [web dependencies  2/15] RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg=7:5.1.9-0+deb12u1 && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [web dependencies  4/15] WORKDIR /workspace
+#12 CACHED
+
+#15 [web dependencies 11/15] COPY packages/contracts/package.json ./packages/contracts/package.json
+#15 CACHED
+
+#10 [web dependencies 13/15] COPY packages/ui/package.json ./packages/ui/package.json
+#10 CACHED
+
+#17 [web dependencies  3/15] RUN npm install --global pnpm@10.32.1
+#17 CACHED
+
+#8 [web dependencies  5/15] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#8 CACHED
+
+#21 [tests browser 1/1] RUN pnpm exec playwright install --with-deps --only-shell chromium
+#21 CACHED
+
+#22 [web development 1/1] COPY . .
+#22 ...
+
+#23 [tests tests 1/1] COPY . .
+#23 DONE 0.6s
+
+#22 [worker development 1/1] COPY . .
+#22 DONE 0.7s
+
+#24 [web] exporting to image
+#24 exporting layers
+#24 ...
+
+#25 [migrate] exporting to image
+#25 ...
+
+#26 [worker] exporting to image
+#26 ...
+
+#27 [tests] exporting to image
+#27 ...
+
+#28 [ops] exporting to image
+#28 ...
+
+#29 [install] exporting to image
+#29 ...
+
+#30 [api] exporting to image
+#30 ...
+
+#27 [tests] exporting to image
+#27 exporting layers 11.6s done
+#27 exporting manifest sha256:2d8ccb0f9c9dc8b539ce57642cd353b66cad9753afa24430ba55bbcc93dd1cb4 0.1s done
+#27 exporting config sha256:e86765795c162251205cf1398f5782f2735534874de4f16565cd33a1b7007d89
+#27 exporting config sha256:e86765795c162251205cf1398f5782f2735534874de4f16565cd33a1b7007d89 0.2s done
+#27 exporting attestation manifest sha256:dcee0f86b27e8b7b42ade55a9d263a728d375a6747617e94cd8cba7844ab33f8
+#27 exporting attestation manifest sha256:dcee0f86b27e8b7b42ade55a9d263a728d375a6747617e94cd8cba7844ab33f8 0.6s done
+#27 exporting manifest list sha256:1d7701d6ad5032e8b5f339ff0f5949e27e1f34f397090163b5a0fd3192d1d6bd
+#27 exporting manifest list sha256:1d7701d6ad5032e8b5f339ff0f5949e27e1f34f397090163b5a0fd3192d1d6bd 0.3s done
+#27 naming to docker.io/library/haven-integration-tests:latest
+#27 naming to docker.io/library/haven-integration-tests:latest 0.1s done
+#27 unpacking to docker.io/library/haven-integration-tests:latest
+#27 ...
+
+#28 [ops] exporting to image
+#28 exporting layers 11.7s done
+#28 exporting manifest sha256:88f173014f418906a1185fc53ce601e86c9436e41bcf665ab9331e681d9683da 0.2s done
+#28 exporting config sha256:ecf782868652c68e5babdb241e907f1e30c39a6fd04f2dd2a8584a476f14debf 0.2s done
+#28 exporting attestation manifest sha256:18f478d9b07f4e4b103e3caa1265cdc557294bbd33a4acc18b7fa4d79fd90456 0.6s done
+#28 exporting manifest list sha256:6c2f1d338351065a66c897fc5a509feb341b229e4c056706fb833c8e92e5b4c1 0.3s done
+#28 naming to docker.io/library/haven-integration-ops:latest 0.1s done
+#28 unpacking to docker.io/library/haven-integration-ops:latest 3.7s done
+#28 DONE 17.0s
+
+#24 [web] exporting to image
+#24 exporting layers 11.7s done
+#24 exporting manifest sha256:58a03f3638c86981912f60d30f23b0d0f4d047854ff26a5f10ece7d301bf99ae 0.2s done
+#24 exporting config sha256:9360b6a11a50131896e504dc965e3db062c597ae795a516cc12b7279fa827be2 0.2s done
+#24 exporting attestation manifest sha256:aab401834cb9357a5cf22063c45ed11cbeab75f427e471ac0eef6f49c389ea04 0.5s done
+#24 exporting manifest list sha256:e0a21844b14525759179ec8d799a177a797211f4f67cf7d8e5c11ced5e465e0f 0.2s done
+#24 naming to docker.io/library/haven-integration-web:latest 0.1s done
+#24 unpacking to docker.io/library/haven-integration-web:latest 3.7s done
+#24 DONE 17.0s
+
+#29 [install] exporting to image
+#29 exporting layers 11.7s done
+#29 exporting manifest sha256:4dcb3f96c573cd493a821171fd7337bf6862ef5c3903f632b18f9c005b2cacf9 0.2s done
+#29 exporting config sha256:11518787280d5b69625c5368bf9766619ea84252a35ccb7025985ccd2cf566f0 0.2s done
+#29 exporting attestation manifest sha256:c299da12012ec6ac7b82c642216605fede409844271868064b569071b61267c5 0.6s done
+#29 exporting manifest list sha256:d5ec1a8d470fb037d513b2c05cd916d06b371fef53db4e82792c7252d3be8a11 0.2s done
+#29 naming to docker.io/library/haven-integration-install:latest 0.0s done
+#29 unpacking to docker.io/library/haven-integration-install:latest 3.7s done
+#29 DONE 17.0s
+
+#25 [migrate] exporting to image
+#25 exporting layers 11.7s done
+#25 exporting manifest sha256:93a78d2eee17747798692f43ee1bd59542b32b10e5c41edb03ad155e5248b766 0.2s done
+#25 exporting config sha256:0508c3cb1b5fbd5a36a2fbad55b13cdb6958fa7e4d0381f8bf60ffadbeceb566 0.2s done
+#25 exporting attestation manifest sha256:04dda32ac37be09e789dc70c0c95da1ce67fcebc7e02ad5301aebd7ccb3a9090 0.6s done
+#25 exporting manifest list sha256:3fa26d804dfd66d76703f1b149a97c5a6af7106cda640aec9e7ffa41de5bd523 0.2s done
+#25 naming to docker.io/library/haven-integration-migrate:latest 0.1s done
+#25 unpacking to docker.io/library/haven-integration-migrate:latest 3.7s done
+#25 DONE 17.0s
+
+#30 [api] exporting to image
+#30 exporting layers 11.7s done
+#30 exporting manifest sha256:cee2eaf26f0532a5542fd1b0943a0cd8a0afa1b5701495d75d1bf6cbb3483999 0.2s done
+#30 exporting config sha256:56e0f0a2b08a80a97fbbe0ff8ae85acc18b34b24645aafcb5141eafb79c6061f 0.2s done
+#30 exporting attestation manifest sha256:d2cbd0f83853bc0ddf92628370c6475309b787fd79eff3c70e24b7c119260a84 0.6s done
+#30 exporting manifest list sha256:2b7bb590fde1e89e90a10a213b7f5bf171c44a3214bdb06f287afb1d91a3598f 0.2s done
+#30 naming to docker.io/library/haven-integration-api:latest 0.0s done
+#30 unpacking to docker.io/library/haven-integration-api:latest 3.7s done
+#30 DONE 17.0s
+
+#27 [tests] exporting to image
+#27 unpacking to docker.io/library/haven-integration-tests:latest 3.8s done
+#27 ...
+
+#26 [worker] exporting to image
+#26 exporting layers 11.7s done
+#26 exporting manifest sha256:53c8aef967b9a17d7720eafe86437225a8aecdbff84820539f85c46cee8f56f3 0.2s done
+#26 exporting config sha256:e1180a13db2fd3c02394836889d8f242d35908a10fc8100541ec65e88869bc1b 0.2s done
+#26 exporting attestation manifest sha256:9a8e3401d2d4fb794bf448fc7d9a6aeb3dfd72c71c93ecf17dc9cf3054365f6f 0.6s done
+#26 exporting manifest list sha256:21a02a754cab5cc9f1440cf00c6a4f368eeaaa36417e1ecb2f672e59b896865e 0.2s done
+#26 naming to docker.io/library/haven-integration-worker:latest 0.0s done
+#26 unpacking to docker.io/library/haven-integration-worker:latest 3.7s done
+#26 DONE 17.0s
+
+#27 [tests] exporting to image
+#27 DONE 17.1s
+
+#31 [ops] resolving provenance for metadata file
+#31 DONE 0.6s
+
+#32 [api] resolving provenance for metadata file
+#32 DONE 0.1s
+
+#33 [web] resolving provenance for metadata file
+#33 DONE 0.5s
+
+#34 [install] resolving provenance for metadata file
+#34 DONE 0.3s
+
+#35 [worker] resolving provenance for metadata file
+#35 DONE 0.2s
+
+#36 [migrate] resolving provenance for metadata file
+#36 DONE 0.5s
+
+#37 [tests] resolving provenance for metadata file
+#37 DONE 0.0s
+ Image haven-integration-worker Built 
+ Image haven-integration-ops Built 
+ Image haven-integration-migrate Built 
+ Image haven-integration-api Built 
+ Image haven-integration-web Built 
+ Image haven-integration-install Built 
+ Image haven-integration-tests Built 
+ Network haven-integration_private Creating 
+ Network haven-integration_private Created 
+ Volume haven-integration_apps-ops-dependencies Creating 
+ Volume haven-integration_apps-ops-dependencies Created 
+ Volume haven-integration_search Creating 
+ Volume haven-integration_search Created 
+ Volume haven-integration_dependencies Creating 
+ Volume haven-integration_dependencies Created 
+ Volume haven-integration_mail-data Creating 
+ Volume haven-integration_mail-data Created 
+ Volume haven-integration_packages-contracts-dependencies Creating 
+ Volume haven-integration_packages-contracts-dependencies Created 
+ Volume haven-integration_packages-database-dependencies Creating 
+ Volume haven-integration_packages-database-dependencies Created 
+ Volume haven-integration_packages-config-dependencies Creating 
+ Volume haven-integration_packages-config-dependencies Created 
+ Volume haven-integration_packages-ui-dependencies Creating 
+ Volume haven-integration_packages-ui-dependencies Created 
+ Volume haven-integration_apps-api-dependencies Creating 
+ Volume haven-integration_apps-api-dependencies Created 
+ Volume haven-integration_apps-web-dependencies Creating 
+ Volume haven-integration_apps-web-dependencies Created 
+ Volume haven-integration_database Creating 
+ Volume haven-integration_database Created 
+ Volume haven-integration_objects Creating 
+ Volume haven-integration_objects Created 
+ Volume haven-integration_virus-signatures Creating 
+ Volume haven-integration_virus-signatures Created 
+ Volume haven-integration_apps-worker-dependencies Creating 
+ Volume haven-integration_apps-worker-dependencies Created 
+ Volume haven-integration_cache Creating 
+ Volume haven-integration_cache Created 
+ Volume haven-integration_packages-test-support-dependencies Creating 
+ Volume haven-integration_packages-test-support-dependencies Created 
+ Container haven-integration-install-1 Creating 
+ Container haven-integration-search-1 Creating 
+ Container haven-integration-cache-1 Creating 
+ Container haven-integration-scanner-1 Creating 
+ Container haven-integration-db-1 Creating 
+ Container haven-integration-mail-1 Creating 
+ Container haven-integration-storage-1 Creating 
+ Container haven-integration-mail-1 Created 
+ Container haven-integration-db-1 Created 
+ Container haven-integration-storage-1 Created 
+ Container haven-integration-identity-1 Creating 
+ Container haven-integration-cache-1 Created 
+ Container haven-integration-search-1 Created 
+ Container haven-integration-scanner-1 Created 
+ Container haven-integration-identity-1 Created 
+ Container haven-integration-install-1 Created 
+ Container haven-integration-migrate-1 Creating 
+ Container haven-integration-migrate-1 Created 
+ Container haven-integration-worker-1 Creating 
+ Container haven-integration-api-1 Creating 
+ Container haven-integration-api-1 Created 
+ Container haven-integration-web-1 Creating 
+ Container haven-integration-ops-1 Creating 
+ Container haven-integration-worker-1 Created 
+ Container haven-integration-web-1 Created 
+ Container haven-integration-ops-1 Created 
+ Container haven-integration-proxy-1 Creating 
+ Container haven-integration-proxy-1 Created 
+ Container haven-integration-mail-1 Starting 
+ Container haven-integration-cache-1 Starting 
+ Container haven-integration-storage-1 Starting 
+ Container haven-integration-db-1 Starting 
+ Container haven-integration-scanner-1 Starting 
+ Container haven-integration-search-1 Starting 
+ Container haven-integration-install-1 Starting 
+ Container haven-integration-mail-1 Started 
+ Container haven-integration-db-1 Started 
+ Container haven-integration-db-1 Waiting 
+ Container haven-integration-install-1 Started 
+ Container haven-integration-db-1 Waiting 
+ Container haven-integration-install-1 Waiting 
+ Container haven-integration-search-1 Started 
+ Container haven-integration-storage-1 Started 
+ Container haven-integration-scanner-1 Started 
+ Container haven-integration-cache-1 Started 
+ Container haven-integration-install-1 Exited 
+ Container haven-integration-db-1 Healthy 
+ Container haven-integration-identity-1 Starting 
+ Container haven-integration-db-1 Healthy 
+ Container haven-integration-migrate-1 Starting 
+ Container haven-integration-identity-1 Started 
+ Container haven-integration-migrate-1 Started 
+ Container haven-integration-cache-1 Waiting 
+ Container haven-integration-search-1 Waiting 
+ Container haven-integration-mail-1 Waiting 
+ Container haven-integration-scanner-1 Waiting 
+ Container haven-integration-migrate-1 Waiting 
+ Container haven-integration-storage-1 Waiting 
+ Container haven-integration-migrate-1 Waiting 
+ Container haven-integration-identity-1 Waiting 
+ Container haven-integration-mail-1 Healthy 
+ Container haven-integration-storage-1 Healthy 
+ Container haven-integration-cache-1 Healthy 
+ Container haven-integration-search-1 Healthy 
+ Container haven-integration-migrate-1 Exited 
+ Container haven-integration-migrate-1 Exited 
+ Container haven-integration-worker-1 Starting 
+ Container haven-integration-worker-1 Started 
+ Container haven-integration-scanner-1 Healthy 
+ Container haven-integration-identity-1 Healthy 
+ Container haven-integration-api-1 Starting 
+ Container haven-integration-api-1 Started 
+ Container haven-integration-api-1 Waiting 
+ Container haven-integration-api-1 Waiting 
+ Container haven-integration-api-1 Healthy 
+ Container haven-integration-ops-1 Starting 
+ Container haven-integration-api-1 Healthy 
+ Container haven-integration-web-1 Starting 
+ Container haven-integration-web-1 Started 
+ Container haven-integration-ops-1 Started 
+ Container haven-integration-proxy-1 Starting 
+ Container haven-integration-proxy-1 Started 
+ Container haven-integration-migrate-1 Waiting 
+ Container haven-integration-mail-1 Waiting 
+ Container haven-integration-install-1 Waiting 
+ Container haven-integration-search-1 Waiting 
+ Container haven-integration-ops-1 Waiting 
+ Container haven-integration-identity-1 Waiting 
+ Container haven-integration-api-1 Waiting 
+ Container haven-integration-storage-1 Waiting 
+ Container haven-integration-web-1 Waiting 
+ Container haven-integration-db-1 Waiting 
+ Container haven-integration-proxy-1 Waiting 
+ Container haven-integration-cache-1 Waiting 
+ Container haven-integration-worker-1 Waiting 
+ Container haven-integration-scanner-1 Waiting 
+ Container haven-integration-scanner-1 Healthy 
+ Container haven-integration-mail-1 Healthy 
+ Container haven-integration-migrate-1 Exited 
+ Container haven-integration-install-1 Exited 
+ Container haven-integration-cache-1 Healthy 
+ Container haven-integration-api-1 Healthy 
+ Container haven-integration-worker-1 Healthy 
+ Container haven-integration-search-1 Healthy 
+ Container haven-integration-db-1 Healthy 
+ Container haven-integration-storage-1 Healthy 
+ Container haven-integration-identity-1 Healthy 
+ Container haven-integration-proxy-1 Healthy 
+ Container haven-integration-web-1 Healthy 
+ Container haven-integration-ops-1 Healthy 
+Synthetic fixture fingerprint: a2e43ecbc6a3908b4099bf6c263e2363130e458767ca064c5808756282444698
+Development password-only sign-in configured.
+ Container haven-integration-tests-run-0dc1fac9e3a8 Creating 
+ Container haven-integration-tests-run-0dc1fac9e3a8 Created 
+install passed
+tasks passed
+fixtures passed
+contracts passed
+reference passed
+licenses passed
+lint passed
+types passed
+unit passed
+integration failed; see retained sanitized evidence/ci/integration.log
+Sanitized CI report uploaded and read back successfully
+

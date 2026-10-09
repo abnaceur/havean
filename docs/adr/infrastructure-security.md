@@ -1,0 +1,15 @@
+# Maintained infrastructure and native geometry
+
+Evidence labels: P means actual local image/package scans and native rehearsal; upstream release URLs are R. Scans cannot establish application compatibility or original-site visual parity.
+
+The database image builds PostGIS 3.6.4 from the official OSGeo source, checking the recorded SHA256. It uses pinned PostgreSQL 17.11 Alpine and canonical geometry/topology support. Raster/GDAL/SFCGAL and protobuf inputs are excluded. The checksum is a locally recorded source checksum, not a claim of a separately published vendor checksum. An installed su-exec 0.3-r0 wrapper supplies the PostgreSQL entrypoint's privilege drop instead of its outdated Go-based gosu binary. Native initialization and logical restored-cluster boot verify this replacement.
+
+PostGIS source binaries are outside the Alpine package database; a zero package scan must not clear untracked source vulnerabilities. CVE-2026-73515 affects unused FlatGeobuf decoders. The extension owner revokes these decoder permissions in fresh initialization and before upgrades; SQL 165 verifies runtime denial and fails if administrator preflight was omitted. Runtime denial and normal GeoJSON/exact NUMERIC behavior are tested natively. The extension owner explicitly preserves EXECUTE with grant option for the separate trusted migrator, allowing PostgreSQL to process the immutable REVOKE migration even after runtime denial. Runtime credentials cannot execute the decoder or grant permissions. Extension-owner and migration credentials remain trusted maintenance boundaries.
+
+Keycloak preserves its official pinned 26.8.0 distribution on pinned Eclipse Temurin Java 21 Alpine, removing the old OS PCRE2 dependency. Real restored-realm migration and staff OTP are required compatibility checks. ClamAV 1.5.4 installs fixed PCRE2 10.49-r0. Other services use exact upstream version/digest pairs recorded in images.json. Development builds these three custom images from pinned sources; production requires their actual immutable built image IDs.
+
+Root filesystem scans use freshly created, never-started containers with no credentials, network or shared application volumes. They include OS packages and supported language/binary analyzers, using the actual cached vulnerability databases. These are root filesystem scans, not a claim of separately inspected image layers. Retain image IDs, scanner provenance, counts and native compatibility results in evidence/security/infrastructure.
+
+Upgrading a PostgreSQL cluster from Debian to Alpine changes libc. Restore a logical dump into a new cluster, reconcile all financial rows and identity/media, and preserve the old physical database. Never reuse or chown the original volume for this transition. Search and cache projections are rebuilt from authoritative data.
+
+With the shared-host polling override, Traefik reads its static route file without a file watcher. Restart the proxy after editing routes. This avoids an exhausted inotify quota returning 404 while ping is healthy; verify an actual application route as well as container health.

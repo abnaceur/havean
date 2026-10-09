@@ -1,0 +1,36 @@
+ Container haven-integration-tests-run-9635eb86affa Creating 
+ Container haven-integration-tests-run-9635eb86affa Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-inventory-application.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 1762[2mms[22m[39m
+   [33m[2m✓[22m[39m confirmed unit proposals stay private and pending; independent approval changes the shared unit without copying evidence[33m 407[2mms[22m[39m
+   [33m[2m✓[22m[39m evidence version is checked again at independent approval[33m 323[2mms[22m[39m
+ [31m❯[39m tests/integration/digitization-inventory-source-preflight.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 918[2mms[22m[39m
+[31m   [31m×[31m real PNG/S3/Clam source bytes are rechecked before proposal and independent review; receipts replay without changing facts twice[39m[33m 915[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-access.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 446[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-R02 agency authority never opens an owner document; expired/completed reviewer grant denies previews[33m 318[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-intakes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 371[2mms[22m[39m
+ [32m✓[39m tests/integration/listing-revisions.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 231[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-inventory-source-preflight.test.ts[2m > [22mreal PNG/S3/Clam source bytes are rechecked before proposal and independent review; receipts replay without changing facts twice
+[31m[1merror[22m: new row violates row-level security policy for table "property_digitizations"[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+
+[90m [2m❯[22m tests/integration/digitization-inventory-source-preflight.test.ts:[2m45:13[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m4 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m18 passed[39m[22m[90m (19)[39m
+[2m   Start at [22m 15:33:30
+[2m   Duration [22m 11.31s[2m (import 57%, tests 35%, transform 7%)[22m
+
+[2m    Isolate [22m [33m5 workers spawned[39m[2m · ~142ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~569ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+

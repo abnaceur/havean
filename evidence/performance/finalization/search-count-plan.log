@@ -1,0 +1,50 @@
+                                                                                                               QUERY PLAN                                                                                                               
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=177036.29..177036.30 rows=1 width=8) (actual time=349.397..349.401 rows=1 loops=1)
+   Buffers: shared hit=401651
+   ->  Nested Loop  (cost=3.82..176962.40 rows=29554 width=0) (actual time=30.869..342.041 rows=69999 loops=1)
+         Buffers: shared hit=401651
+         ->  Hash Join  (cost=3.40..3526.40 rows=50000 width=16) (actual time=30.826..66.069 rows=100000 loops=1)
+               Hash Cond: (u.community_id = co.id)
+               Buffers: shared hit=1651
+               ->  Seq Scan on units u  (cost=0.00..2648.00 rows=100000 width=48) (actual time=0.025..8.133 rows=100000 loops=1)
+                     Buffers: shared hit=1648
+               ->  Hash  (cost=3.36..3.36 rows=3 width=16) (actual time=30.765..30.767 rows=6 loops=1)
+                     Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                     Buffers: shared hit=3
+                     ->  Hash Join  (cost=1.14..3.36 rows=3 width=16) (actual time=30.746..30.755 rows=6 loops=1)
+                           Hash Cond: (d.id = co.district_id)
+                           Buffers: shared hit=3
+                           ->  Nested Loop  (cost=0.00..2.18 rows=4 width=16) (actual time=30.696..30.701 rows=6 loops=1)
+                                 Join Filter: (d.city_id = ci.id)
+                                 Rows Removed by Join Filter: 1
+                                 Buffers: shared hit=2
+                                 ->  Seq Scan on cities ci  (cost=0.00..1.02 rows=1 width=16) (actual time=30.665..30.666 rows=1 loops=1)
+                                       Filter: (slug = 'bj'::text)
+                                       Rows Removed by Filter: 1
+                                       Buffers: shared hit=1
+                                 ->  Seq Scan on districts d  (cost=0.00..1.07 rows=7 width=32) (actual time=0.014..0.015 rows=7 loops=1)
+                                       Buffers: shared hit=1
+                           ->  Hash  (cost=1.06..1.06 rows=6 width=32) (actual time=0.031..0.032 rows=6 loops=1)
+                                 Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                                 Buffers: shared hit=1
+                                 ->  Seq Scan on communities co  (cost=0.00..1.06 rows=6 width=32) (actual time=0.012..0.014 rows=6 loops=1)
+                                       Buffers: shared hit=1
+         ->  Index Scan using listings_unit on listings l  (cost=0.42..3.46 rows=1 width=43) (actual time=0.002..0.002 rows=1 loops=100000)
+               Index Cond: (unit_id = u.id)
+               Filter: ((status = 'published'::text) AND (currency = 'CNY'::bpchar) AND (transaction = 'sale'::text) AND ((expires_at IS NULL) OR (expires_at > now())) AND ((transaction <> 'rent'::text) OR (NOT EXISTS(SubPlan 1))))
+               Rows Removed by Filter: 0
+               Buffers: shared hit=400000
+               SubPlan 1
+                 ->  Function Scan on public_unavailable_rental_units blocked  (cost=0.25..12.75 rows=5 width=0) (never executed)
+                       Filter: (unit_id = l.unit_id)
+ Planning:
+   Buffers: shared hit=1041
+ Planning Time: 10.138 ms
+ JIT:
+   Functions: 36
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+   Timing: Generation 2.874 ms (Deform 1.265 ms), Inlining 0.000 ms, Optimization 1.537 ms, Emission 29.175 ms, Total 33.587 ms
+ Execution Time: 385.354 ms
+(46 rows)
+

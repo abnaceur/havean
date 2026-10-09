@@ -1,0 +1,17 @@
+
+> haven-real-estate@0.1.0 contracts:generate /workspace
+> node scripts/generate-contracts.mjs && tsx scripts/generate-openapi.ts && tsx scripts/generate-digitization-schemas.ts
+
+Generated 368 typed API operations.
+/workspace/packages/contracts/src/generated/operations.ts:161
+"DigitizationCaptureController_saveSession":{method:"POST",path:"/api/v1/ops/digitizations/:id/capture-session/:sessionId",params:z.object({"id":z.string().min(1),"sessionId":z.string().min(1)}),query:z.object({}),body:digitizationCaptureSessionSave,response:responses["DigitizationCaptureController_saveSession"]},
+                                                                                                                                                                                                                           ^
+
+ReferenceError: digitizationCaptureSessionSave is not defined
+    at <anonymous> (/workspace/packages/contracts/src/generated/operations.ts:161:220)
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.21.0
+ ELIFECYCLE  Command failed with exit code 1.

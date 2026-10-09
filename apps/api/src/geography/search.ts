@@ -1,3 +1,4 @@
+import {replyDates} from '../platform/reply-dates.js';
 import {anonymousPublicRead} from './public-read-cache.js';
 import {createHash} from 'node:crypto';
 import type pg from 'pg';
@@ -64,7 +65,8 @@ export async function searchListings(q:Filters,searchUrl=env.SEARCH_URL){
   const rows=(await c.query(`SELECT *${ranking?','+ranking.score+' AS "rankingScore",'+ranking.columns:','+rankingExpressions().disclosure} FROM public_listings WHERE ${compiled.where} ORDER BY ${compiled.order} LIMIT $${compiled.values.length+1} OFFSET $${compiled.values.length+2}`,[...compiled.values,q.limit,offset])).rows;
   // Hydrate from current public SQL eligibility: queued withdrawal can never leak a document.
   const next=offset+rows.length<total&&page<500&&page*q.limit<=10000?encrypt({page:page+1,fingerprint,expires:Date.now()+3600000}):null;
-  return {criteria:q,result:data(rows,{total,page,limit:q.limit,...(q.transaction==='rent'?{rentalPeriod:q.rentPeriod||null,billingPeriodSource:requestedPeriod?'requested':q.segment==='commercial'?'unrestricted':'market'}:{}),searchMode:'sql',degraded:false,pagination:'bounded-offset',maxOffset:10000,nextCursor:next,...(ranking?{ranking:rankingMetadata('30d',rankingAsOf),queryPlan:'ranking-v1'}:{})})};
+  const snapshot={criteria:q,result:data(rows,{total,page,limit:q.limit,...(q.transaction==='rent'?{rentalPeriod:q.rentPeriod||null,billingPeriodSource:requestedPeriod?'requested':q.segment==='commercial'?'unrestricted':'market'}:{}),searchMode:'sql',degraded:false,pagination:'bounded-offset',maxOffset:10000,nextCursor:next,...(ranking?{ranking:rankingMetadata('30d',rankingAsOf),queryPlan:'ranking-v1'}:{})})};
+  return replyDates(snapshot) as typeof snapshot;
  };
  const snapshot=q.recentDays!==undefined||q.minAge!==undefined||q.maxAge!==undefined
   ?await transaction(null,read)

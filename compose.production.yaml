@@ -1,7 +1,7 @@
 name: ${COMPOSE_PROJECT_NAME:-haven-staging}
 services:
   db:
-    image: postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6
+    image: ${HAVEN_DATABASE_IMAGE:?Set an immutable infrastructure image digest}
     environment:
       POSTGRES_DB: haven
       POSTGRES_USER: postgres
@@ -11,6 +11,7 @@ services:
     volumes:
     - database:/var/lib/postgresql/data
     - ./infra/init-db.sh:/docker-entrypoint-initdb.d/01-roles.sh:ro
+    - ./infra/geometry-hardening.sql:/docker-entrypoint-initdb.d/20-geometry-hardening.sql:ro
     - wal-archive:/var/lib/postgresql/wal-archive
     networks:
     - private
@@ -40,7 +41,7 @@ services:
       archive-init:
         condition: service_completed_successfully
   identity:
-    image: quay.io/keycloak/keycloak:26.4.7@sha256:9409c59bdfb65dbffa20b11e6f18b8abb9281d480c7ca402f51ed3d5977e6007
+    image: ${HAVEN_IDENTITY_IMAGE:?Set an immutable infrastructure image digest}
     group_add:
     - '1000'
     command:
@@ -80,7 +81,7 @@ services:
     security_opt:
     - no-new-privileges:true
   search:
-    image: getmeili/meilisearch:v1.37.0@sha256:9cde2774864e6c19cdd09fcd2950bc01ac9a0454b6f343fffafa14faae6eb7ea
+    image: getmeili/meilisearch:v1.54.3@sha256:e68913ab7d6f5b159529e472cfd362ce3c741fafd3c127961b2142abbe41b3c9
     environment:
       MEILI_MASTER_KEY: ${SEARCH_KEY:?Missing SEARCH_KEY}
       MEILI_NO_ANALYTICS: 'true'
@@ -104,7 +105,7 @@ services:
     security_opt:
     - no-new-privileges:true
   cache:
-    image: valkey/valkey:8.1.6-alpine@sha256:1cb6b20b70d927560cc4cc5397b5f045e74aa603ff7696274778880bb6fadc75
+    image: valkey/valkey:9.1.2-alpine@sha256:48332870af354a799964c0012ae1194a0bf2bf894eb508f945810596dc2d8d11
     command: valkey-server --appendonly yes
     volumes:
     - cache:/data
@@ -124,7 +125,7 @@ services:
     security_opt:
     - no-new-privileges:true
   storage:
-    image: chrislusf/seaweedfs:4.46@sha256:08d516132314207d10c8e37cbffc1f32b147d870169688734cc61c6231625b62
+    image: chrislusf/seaweedfs:4.48@sha256:4e61d15fd35994cb1e43e1e553dff106794841fd9a99ade2fc8c8bfce4d7872d
     command: server -s3 -s3.config=/etc/seaweedfs/s3.json -dir=/data -ip=storage -volume.max=20
       -master.volumeSizeLimitMB=100
     volumes:
@@ -146,7 +147,7 @@ services:
     security_opt:
     - no-new-privileges:true
   scanner:
-    image: clamav/clamav:1.4.3@sha256:75fb5fd95fcbe1d7e6d240c369c1572b686ee2c95949d1042b5148de8eddebb4
+    image: ${HAVEN_SCANNER_IMAGE:?Set an immutable infrastructure image digest}
     networks:
     - private
     volumes:
@@ -181,7 +182,7 @@ services:
     - ALL
     security_opt:
     - no-new-privileges:true
-    cpus: '2.0'
+    cpus: '4.0'
     mem_limit: 2g
     healthcheck:
       test:
@@ -313,7 +314,7 @@ services:
     profiles:
     - maintenance
   proxy:
-    image: traefik:v3.6.1@sha256:fd5932c796f7e2db9fd6bff485ef693d53797f0ee8ad03dc68aa424ea6f21958
+    image: traefik:v3.7.14@sha256:e849695bc5c317da0cec22bfee4794fd9e15871fe554f864d31b625983e883ff
     command:
     - --configFile=/etc/traefik/production.yaml
     ports:
@@ -341,7 +342,7 @@ services:
     mem_limit: 256m
     user: 1000:1000
   archive-init:
-    image: postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6
+    image: ${HAVEN_DATABASE_IMAGE:?Set an immutable infrastructure image digest}
     entrypoint:
     - /bin/sh
     - -c

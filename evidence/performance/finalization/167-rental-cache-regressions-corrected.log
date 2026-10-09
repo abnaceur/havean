@@ -1,0 +1,23 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/rental-availability.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 4298[2mms[22m[39m
+   [33m[2m✓[22m[39m R04 leased room invalidates whole-property search/detail/contact even with stale index; sibling room remains available and publication checks canonical occupancy[33m 3558[2mms[22m[39m
+   [33m[2m✓[22m[39m R04 root lock serializes a whole-property leased transition against child publication and prevents publication after the committed occupancy[33m 318[2mms[22m[39m
+   [33m[2m✓[22m[39m R04 active whole-unit lease denies every child contact and public detail; direct consumer lead insert cannot bypass eligibility[33m 418[2mms[22m[39m
+ [32m✓[39m tests/integration/public-read-cache.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 3286[2mms[22m[39m
+   [33m[2m✓[22m[39m Q07 reusable current public snapshots coalesce reads without bypassing expiry when no mutation occurs[33m 1165[2mms[22m[39m
+   [33m[2m✓[22m[39m Q07 pending reads cannot cross a publication deadline, and upcoming curation starts refresh without a write[33m 1070[2mms[22m[39m
+ [32m✓[39m tests/integration/lease-activation.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 2354[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 atomic activation withdraws the public rental offer with exact history, audit and matching receipts[33m 439[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 simultaneous overlapping draft activations yield exactly one success and one current-state conflict[33m 464[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 property occupation conflicts with child rooms while sibling rooms can hold separate exclusive terms[33m 944[2mms[22m[39m
+   [33m[2m✓[22m[39m P04 stale versions, missing confirmation and expired terms deny activation without withdrawing publication[33m 420[2mms[22m[39m
+ [32m✓[39m tests/integration/public-search-coalescing.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 592[2mms[22m[39m
+   [33m[2m✓[22m[39m Q07 concurrent identical searches share only a pending real index request; subsequent reads recheck the native provider[33m 588[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+[2m   Start at [22m 09:19:04
+[2m   Duration [22m 19.56s[2m (tests 57%, import 35%, transform 8%)[22m
+

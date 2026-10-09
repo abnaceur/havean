@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Haven digitization backlog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "specification", "tasks"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "specification": {"const": "docs/digitization/specification.md"},
+    "tasks": {
+      "type": "array", "minItems": 93,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "title", "status", "dependencies", "acceptance", "minimumTests", "evidence", "verification"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^HE-[A-KR][0-9]{2}(?:-[A-Z0-9]+)?$"},
+          "title": {"type": "string", "minLength": 1},
+          "status": {"enum": ["todo", "in_progress", "blocked", "done"]},
+          "dependencies": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^HE-[A-KR][0-9]{2}(?:-[A-Z0-9]+)?$"}},
+          "acceptance": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "minimumTests": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "evidence": {"type": "string", "pattern": "^evidence/digitization/tasks/HE-[A-KR][0-9]{2}(?:-[A-Z0-9]+)?\\.md$"},
+          "verification": {
+            "type": "array",
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["minimumTest", "command", "result"],
+              "properties": {
+                "minimumTest": {"type": "integer", "minimum": 0},
+                "command": {"type": "string", "minLength": 1},
+                "result": {"enum": ["passed", "failed", "blocked"]}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

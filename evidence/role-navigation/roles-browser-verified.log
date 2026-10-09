@@ -1,0 +1,138 @@
+ Container haven-tests-run-475062568f2f Creating 
+ Container haven-tests-run-475062568f2f Created 
+
+Running 34 tests using 1 worker
+
+  ✓   1 [desktop] › tests/e2e/development-login.spec.ts:4:1 › development buttons sign in as buyer and preserve the return route (4.9s)
+  ✓   2 [desktop] › tests/e2e/development-login.spec.ts:14:1 › development staff buttons sign in without OTP (3.1s)
+  ✓   3 [desktop] › tests/e2e/development-login.spec.ts:22:1 › development accounts can switch in the same browser session across applications (6.4s)
+  ✓   4 [desktop] › tests/e2e/development-login.spec.ts:40:1 › development account switching clears provider state after losing the application cookie (4.1s)
+  ✓   5 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: buyer (7.2s)
+  ✓   6 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: owner (5.4s)
+  ✓   7 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: tenant (5.4s)
+  ✓   8 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: agent (4.4s)
+  ✓   9 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: manager (4.3s)
+  ✓  10 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: developer (4.4s)
+  ✓  11 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: vendor (4.3s)
+  ✓  12 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: moderator (4.5s)
+  ✓  13 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: support (4.2s)
+  ✘  14 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: admin (18.4s)
+  ✓  15 [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: outsider (5.3s)
+  ✓  16 [desktop] › tests/e2e/role-navigation.spec.ts:46:1 › explicit personal deep links are preserved and hidden owner sections remain unavailable (5.6s)
+  ✓  17 [desktop] › tests/e2e/role-navigation.spec.ts:54:1 › public home sign-in selects the professional workspace and explicit staff pages remain available (8.0s)
+  ✘  18 [mobile] › tests/e2e/development-login.spec.ts:4:1 › development buttons sign in as buyer and preserve the return route (3.4s)
+  ✘  19 [mobile] › tests/e2e/development-login.spec.ts:14:1 › development staff buttons sign in without OTP (1.5m)
+  ✓  20 [mobile] › tests/e2e/development-login.spec.ts:22:1 › development accounts can switch in the same browser session across applications (3.9s)
+  ✓  21 [mobile] › tests/e2e/development-login.spec.ts:40:1 › development account switching clears provider state after losing the application cookie (1.9s)
+  ✓  22 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: buyer (5.9s)
+  ✓  23 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: owner (4.0s)
+  ✓  24 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: tenant (4.0s)
+  ✓  25 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: agent (3.7s)
+  ✓  26 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: manager (3.3s)
+  ✓  27 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: developer (4.2s)
+  ✓  28 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: vendor (3.9s)
+  ✓  29 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: moderator (3.7s)
+  ✓  30 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: support (3.8s)
+  ✓  31 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: admin (3.6s)
+  ✓  32 [mobile] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: outsider (3.7s)
+  ✓  33 [mobile] › tests/e2e/role-navigation.spec.ts:46:1 › explicit personal deep links are preserved and hidden owner sections remain unavailable (3.4s)
+  ✓  34 [mobile] › tests/e2e/role-navigation.spec.ts:54:1 › public home sign-in selects the professional workspace and explicit staff pages remain available (6.6s)
+
+
+  1) [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: admin ──────
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Administration', exact: true, level: 1 })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Administration', exact: true, level: 1 }) with timeout 15000ms
+      - waiting for getByRole('heading', { name: 'Administration', exact: true, level: 1 })
+
+
+      30 |  await completeOtp(page,c.user);
+      31 |  await expect(page).toHaveURL(c.origin+c.path);
+    > 32 |  await expect(page.getByRole('heading',{name:c.heading,exact:true,level:1})).toBeVisible();
+         |                                                                              ^
+      33 |  const me=await page.request.get(c.origin+'/api/v1/me');expect(me.ok()).toBe(true);expect((await me.json()).data.roles).toContain(c.role);
+      34 |  const admin=await page.request.get(c.origin+'/api/v1/ops/users');expect(admin.status()).toBe(c.user==='admin'?200:403);
+      35 |  if(c.user==='buyer'){
+        at /workspace/tests/e2e/role-navigation.spec.ts:32:78
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/role-navigation-verified/role-navigation-role-landing-and-navigation-admin-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/role-navigation-verified/role-navigation-role-landing-and-navigation-admin-desktop/error-context.md
+
+  2) [mobile] › tests/e2e/development-login.spec.ts:4:1 › development buttons sign in as buyer and preserve the return route 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+       9 |  await panel.getByRole('button',{name:'Sign in as buyer',exact:true}).click();
+      10 |  await expect(page).toHaveURL('http://localhost:8088/account/profile');
+    > 11 |  const me=await page.request.get('/api/v1/me');expect(me.ok()).toBe(true);expect((await me.json()).data.roles).toContain('consumer');
+         |                                                                ^
+      12 | });
+      13 |
+      14 | test('development staff buttons sign in without OTP',async({page})=>{
+        at /workspace/tests/e2e/development-login.spec.ts:11:64
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/role-navigation-verified/development-login-developm-68f67-d-preserve-the-return-route-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/role-navigation-verified/development-login-developm-68f67-d-preserve-the-return-route-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/role-navigation-verified/development-login-developm-68f67-d-preserve-the-return-route-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/role-navigation-verified/development-login-developm-68f67-d-preserve-the-return-route-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › tests/e2e/development-login.spec.ts:14:1 › development staff buttons sign in without OTP 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.click: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'Sign in as developer', exact: true })
+
+
+      14 | test('development staff buttons sign in without OTP',async({page})=>{
+      15 |  await page.goto('http://localhost:8089/api/v1/auth/login?prompt=login&returnTo=%2Fops');
+    > 16 |  await page.getByRole('button',{name:'Sign in as developer',exact:true}).click();
+         |                                                                          ^
+      17 |  await expect(page).toHaveURL('http://localhost:8089/ops');
+      18 |  await expect(page.getByLabel('One-time code',{exact:true})).toHaveCount(0);
+      19 |  const me=await page.request.get('http://localhost:8089/api/v1/me');expect(me.ok()).toBe(true);expect((await me.json()).data.roles).toContain('developer');
+        at /workspace/tests/e2e/development-login.spec.ts:16:74
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/role-navigation-verified/development-login-developm-c4d38-buttons-sign-in-without-OTP-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/role-navigation-verified/development-login-developm-c4d38-buttons-sign-in-without-OTP-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/role-navigation-verified/development-login-developm-c4d38-buttons-sign-in-without-OTP-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/role-navigation-verified/development-login-developm-c4d38-buttons-sign-in-without-OTP-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [desktop] › tests/e2e/role-navigation.spec.ts:25:22 › role landing and navigation: admin ───────
+    [mobile] › tests/e2e/development-login.spec.ts:4:1 › development buttons sign in as buyer and preserve the return route 
+    [mobile] › tests/e2e/development-login.spec.ts:14:1 › development staff buttons sign in without OTP 
+  31 passed (4.3m)
+

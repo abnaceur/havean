@@ -18,7 +18,9 @@ The script generates unique local credentials, imports a Keycloak realm, install
 - Local email inbox: http://localhost:8091
 - OpenAPI JSON: http://localhost:8088/api/v1/openapi.json
 
-Generated development accounts and their password are in **`infra/generated/personas.md`**. Personas: `buyer`, `owner`, `agent`, `manager`, `tenant`, `developer`, `vendor`, `moderator`, `support`, `admin`, and `outsider`. Staff personas use TOTP; local setup instructions are in that file. These files and all generated environment files are excluded from source control and Docker build contexts. Never reuse these demo accounts in production.
+Generated development accounts and their password are in **`infra/generated/personas.md`**. Personas: `buyer`, `owner`, `agent`, `manager`, `tenant`, `developer`, `vendor`, `moderator`, `support`, `admin`, and `outsider`. Development sign-in skips one-time codes; staff MFA remains required outside development. These files and all generated environment files are excluded from source control and Docker build contexts. Never reuse these demo accounts in production.
+
+In development, the sign-in page also offers a button for each test account. Selecting one submits its generated local credentials through the normal Keycloak login flow; one-time codes are skipped in development. Opening application sign-in again ends the previous test session and clears local provider cookies, so you can select a different account in the same browser. `./dev.sh` generates and enables this theme. Setup outside `NODE_ENV=development` removes its generated assets and uses the standard login theme.
 
 PostgreSQL, Valkey, Meilisearch and S3 infrastructure do not expose host ports. All published ports bind only to loopback. Named volumes preserve business data, identity, objects, search and queues. Secrets are generated once and retained on subsequent starts; do not change database passwords without rotating the corresponding database roles.
 
@@ -101,3 +103,16 @@ Native inboxes recover persisted messages after socket reconnect and stop live a
 Vendors author services at `/ops/providers`; independent reviewers use `/ops/provider-reviews`. Only approved profiles and current scanned portfolio images publish. See [provider catalog](docs/adr/provider-catalog-and-portfolio.md).
 
 Public renovation discovery supports category, service area and text filters with portfolio navigation and image fallback; see [provider discovery](docs/adr/provider-discovery-and-portfolio.md).
+
+The additive digitization CPU lane runs with `./test-processing.sh` and is also
+invoked by `./ci.sh`. It bootstraps hash-locked wheels, builds the pinned Python
+image and runs real pytest checks in a bounded private container. It uses a
+separate lock/network and never resets the marketplace integration stack. OCR and
+GPU reconstruction remain unavailable until their actual adapters and acceptance
+fixtures are implemented. Resume engine work from `docs/digitization/TASKS.json`.
+
+## Release and maintained infrastructure
+
+See [role guide](docs/guides/roles.md), [launch handoff](docs/runbooks/launch-handoff.md), [infrastructure security](docs/adr/infrastructure-security.md) and [production readiness](docs/runbooks/production-readiness.md). Development builds pinned database/identity/scanner images; production requires actual immutable IDs. `node scripts/build-infrastructure.mjs /absolute/protected/compose.env` keeps protected inputs outside the Docker build context. Existing databases need a new-cluster logical upgrade; startup refuses an unmarked old physical volume.
+
+For shared-host inotify exhaustion, add `-f compose.polling.yaml` to development commands. Release validation requires ordered task acceptance, hashed evidence and all CI outcomes from the exact release revision. Local baseline approval, unavailable original references, off-host recovery and remote CI remain distinct gates. External deployment is deferred; main-branch delivery is the authorized target.

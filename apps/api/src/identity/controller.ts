@@ -4,13 +4,40 @@ import {createHash,randomBytes} from 'node:crypto';
 import {jwtVerify,createRemoteJWKSet} from 'jose';
 import type {FastifyRequest,FastifyReply} from 'fastify';
 import {ownProfile} from './profile.js';
+import {requestedAcr} from './mfa-policy.js';
 import {Identity,env,encrypt,decrypt,cookie,fail,pool,data,transaction} from '../platform/core.js';
 function safePath(value:unknown){return typeof value==='string'&&value.startsWith('/')&&!value.startsWith('//')&&!/[\\\r\n]/.test(value)?value:'/account';}
-function setCookie(reply:FastifyReply,name:string,value:string,age:number){reply.header('Set-Cookie',`${name}=${value}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${age}${env.NODE_ENV==='production'?'; Secure':''}`);}
+function setCookie(reply:FastifyReply,name:string,value:string,age:number,path='/'){
+ // Fastify appends repeated Set-Cookie headers itself.
+ reply.header('Set-Cookie',`${name}=${value}; Path=${path}; HttpOnly; SameSite=Lax; Max-Age=${age}${env.NODE_ENV==='production'?'; Secure':''}`);
+}
+async function resetDevelopmentLogin(req:FastifyRequest,reply:FastifyReply,origin:string){
+ if(env.NODE_ENV!=='development')return;
+ const session=cookie(req,'haven_session');
+ if(session){
+  const row=await pool.query('SELECT encrypted_tokens FROM sessions WHERE id=$1',[session]);
+  if(row.rowCount){
+   const tokens=decrypt<{refresh_token:string}>(row.rows[0].encrypted_tokens);
+   const response=await fetch(env.OIDC_INTERNAL_URL+'/protocol/openid-connect/logout',{method:'POST',body:new URLSearchParams({client_id:env.OIDC_CLIENT_ID,refresh_token:tokens.refresh_token}),signal:AbortSignal.timeout(10000)}).catch(()=>null);
+   if(!response||(!response.ok&&response.status!==400))fail(503,'Unable to end the previous test sign-in. Please try again.','SERVICE_UNAVAILABLE');
+   await pool.query('DELETE FROM sessions WHERE id=$1',[session]);
+  }
+  setCookie(reply,'haven_session','',0);
+ }
+ // Local applications and identity share a hostname (cookies ignore port).
+ // Clear stale provider cookies too, including when the application session has expired.
+ const issuer=new URL(env.OIDC_ISSUER);
+ if(issuer.hostname===new URL(origin).hostname){
+  for(const path of [issuer.pathname.replace(/\/$/,''),issuer.pathname.replace(/\/$/,'')+'/']){
+   for(const name of ['KEYCLOAK_IDENTITY','KEYCLOAK_SESSION','KEYCLOAK_IDENTITY_LEGACY','KEYCLOAK_SESSION_LEGACY','AUTH_SESSION_ID','AUTH_SESSION_ID_LEGACY','KC_RESTART','KEYCLOAK_REMEMBER_ME'])setCookie(reply,name,'',0,path);
+  }
+ }
+}
+
 @Controller('api/v1')
 export class IdentityController{
  constructor(@Inject(Identity) private readonly identity:Identity){}
- @Get('auth/login') async login(@Req() req:FastifyRequest,@Res() reply:FastifyReply){const q=req.query as Record<string,string>;if(q.returnTo&&safePath(q.returnTo)!==q.returnTo)fail(400,'Invalid return path');const origin=req.headers['x-bff-origin'];if(origin!==env.PUBLIC_WEB_URL&&origin!==env.PUBLIC_OPS_URL)fail(400,'Invalid application origin');const state=randomBytes(24).toString('hex'),nonce=randomBytes(24).toString('hex'),verifier=randomBytes(32).toString('base64url');setCookie(reply,'haven_oauth',encrypt({state,nonce,verifier,origin,returnTo:safePath(q.returnTo),expires:Date.now()+600000}),600);const url=new URL(env.OIDC_ISSUER+'/protocol/openid-connect/auth');if(q.prompt==='login')url.searchParams.set('prompt','login');url.search=new URLSearchParams({...(q.prompt==='login'?{prompt:'login'}:{}),client_id:env.OIDC_CLIENT_ID,response_type:'code',scope:'openid email profile',acr_values:'2',redirect_uri:origin+'/api/v1/auth/callback',state,nonce,code_challenge:createHash('sha256').update(verifier).digest('base64url'),code_challenge_method:'S256'}).toString();return reply.code(302).redirect(url.toString());}
+ @Get('auth/login') async login(@Req() req:FastifyRequest,@Res() reply:FastifyReply){const q=req.query as Record<string,string>;if(q.returnTo&&safePath(q.returnTo)!==q.returnTo)fail(400,'Invalid return path');const origin=req.headers['x-bff-origin'];if(origin!==env.PUBLIC_WEB_URL&&origin!==env.PUBLIC_OPS_URL)fail(400,'Invalid application origin');await resetDevelopmentLogin(req,reply,origin);const state=randomBytes(24).toString('hex'),nonce=randomBytes(24).toString('hex'),verifier=randomBytes(32).toString('base64url');setCookie(reply,'haven_oauth',encrypt({state,nonce,verifier,origin,returnTo:safePath(q.returnTo||(origin===env.PUBLIC_OPS_URL?'/ops/start':'/account/start')),expires:Date.now()+600000}),600);const url=new URL(env.OIDC_ISSUER+'/protocol/openid-connect/auth');if(q.prompt==='login')url.searchParams.set('prompt','login');url.search=new URLSearchParams({...(q.prompt==='login'?{prompt:'login'}:{}),client_id:env.OIDC_CLIENT_ID,response_type:'code',scope:'openid email profile',acr_values:requestedAcr(env.NODE_ENV),redirect_uri:origin+'/api/v1/auth/callback',state,nonce,code_challenge:createHash('sha256').update(verifier).digest('base64url'),code_challenge_method:'S256'}).toString();return reply.code(302).redirect(url.toString());}
  @Get('auth/callback') async callback(@Req() req:FastifyRequest,@Res() reply:FastifyReply){const q=req.query as Record<string,string>;let flow;try{flow=decrypt<{state:string;nonce:string;verifier:string;origin:string;returnTo:string;expires:number}>(cookie(req,'haven_oauth')||'');}catch{fail(400,'Login verification failed. Start sign-in again.');}if(flow.state!==q.state||flow.expires<Date.now()||!q.code)fail(400,'Login verification failed. Start sign-in again.');const result=await fetch(env.OIDC_INTERNAL_URL+'/protocol/openid-connect/token',{method:'POST',body:new URLSearchParams({grant_type:'authorization_code',client_id:env.OIDC_CLIENT_ID,code:q.code,redirect_uri:flow.origin+'/api/v1/auth/callback',code_verifier:flow.verifier})});if(!result.ok)fail(401,'Identity provider could not verify sign-in');const tokens=await result.json() as {access_token:string;id_token:string;refresh_token:string};let claims;try{claims=(await jwtVerify(tokens.id_token,createRemoteJWKSet(new URL(env.OIDC_INTERNAL_URL+'/protocol/openid-connect/certs')),{issuer:env.OIDC_ISSUER,audience:env.OIDC_CLIENT_ID})).payload;}catch{fail(401,'Invalid identity token');}if(claims.nonce!==flow.nonce)fail(401,'Invalid login nonce');const p=await transaction(null,async c=>{const profile=await c.query('INSERT INTO profiles(subject,display_name,email,email_verified,contact_synced_at) VALUES($1,$2,$3,$4,now()) ON CONFLICT(subject) DO UPDATE SET email=EXCLUDED.email,email_verified=EXCLUDED.email_verified,contact_synced_at=now(),version=profiles.version+CASE WHEN (profiles.email,profiles.email_verified) IS DISTINCT FROM (EXCLUDED.email,EXCLUDED.email_verified) THEN 1 ELSE 0 END WHERE profiles.state=\'active\' RETURNING id,state,version',[claims.sub,claims.name||claims.preferred_username||'Member',claims.email||'',claims.email_verified===true]);if(!profile.rowCount||profile.rows[0].state!=='active')fail(403,'This account is not active. Contact support.');await event(c,{id:profile.rows[0].id,orgId:null,roles:[]},profile.rows[0].id,'identity.contact_synced',{version:profile.rows[0].version});return profile;});await transaction({id:p.rows[0].id,orgId:null,roles:[]},c=>c.query('SELECT bootstrap_own_consumer()'));const oldSession=cookie(req,'haven_session');if(oldSession)await pool.query('DELETE FROM sessions WHERE id=$1',[oldSession]);const session=randomBytes(32).toString('base64url');await pool.query("INSERT INTO sessions(id,user_id,encrypted_tokens,expires_at) VALUES($1,$2,$3,now()+interval '8 hours')",[session,p.rows[0].id,encrypt(tokens)]);setCookie(reply,'haven_session',session,28800);return reply.code(302).redirect(flow.origin+safePath(flow.returnTo));}
  @Post('auth/logout') async logout(@Req() req:FastifyRequest,@Res() reply:FastifyReply){const token=cookie(req,'haven_session');const row=await pool.query('DELETE FROM sessions WHERE id=$1 RETURNING encrypted_tokens',[token]);if(row.rowCount){const tokens=decrypt<{refresh_token:string}>(row.rows[0].encrypted_tokens);await fetch(env.OIDC_INTERNAL_URL+'/protocol/openid-connect/logout',{method:'POST',body:new URLSearchParams({client_id:env.OIDC_CLIENT_ID,refresh_token:tokens.refresh_token})}).catch(()=>null);}setCookie(reply,'haven_session','',0);reply.send(data({signedOut:true}));}
  @Get('me') async me(@Req() req:FastifyRequest){const actor=await this.identity.actor(req);return transaction(actor,async c=>data(await ownProfile(c,actor)));}

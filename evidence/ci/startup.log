@@ -1,701 +1,475 @@
-NAME                           IMAGE                                                                                                      COMMAND                  SERVICE    CREATED          STATUS                      PORTS
-haven-integration-api-1        haven-integration-api                                                                                      "docker-entrypoint.s…"   api        22 minutes ago   Up 21 minutes (healthy)
-haven-integration-cache-1      valkey/valkey:8.1.6-alpine@sha256:1cb6b20b70d927560cc4cc5397b5f045e74aa603ff7696274778880bb6fadc75         "docker-entrypoint.s…"   cache      22 minutes ago   Up 22 minutes (healthy)     6379/tcp
-haven-integration-db-1         postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6             "docker-entrypoint.s…"   db         22 minutes ago   Up 22 minutes (healthy)     5432/tcp
-haven-integration-identity-1   quay.io/keycloak/keycloak:26.4.7@sha256:9409c59bdfb65dbffa20b11e6f18b8abb9281d480c7ca402f51ed3d5977e6007   "/opt/keycloak/bin/k…"   identity   22 minutes ago   Up 22 minutes (healthy)     8080/tcp, 8443/tcp, 9000/tcp
-haven-integration-install-1    haven-integration-install                                                                                  "docker-entrypoint.s…"   install    22 minutes ago   Exited (0) 22 minutes ago
-haven-integration-mail-1       axllent/mailpit:v1.27.8@sha256:6abc8e633df15eaf785cfcf38bae48e66f64beecdc03121e249d0f9ec15f0707            "/mailpit"               mail       22 minutes ago   Up 22 minutes (healthy)     1025/tcp, 1110/tcp, 8025/tcp
-haven-integration-migrate-1    haven-integration-migrate                                                                                  "docker-entrypoint.s…"   migrate    22 minutes ago   Exited (0) 22 minutes ago
-haven-integration-ops-1        haven-integration-ops                                                                                      "docker-entrypoint.s…"   ops        22 minutes ago   Up 21 minutes (healthy)
-haven-integration-proxy-1      traefik:v3.6.1@sha256:fd5932c796f7e2db9fd6bff485ef693d53797f0ee8ad03dc68aa424ea6f21958                     "/entrypoint.sh trae…"   proxy      22 minutes ago   Up 21 minutes (healthy)     80/tcp
-haven-integration-scanner-1    clamav/clamav:1.4.3@sha256:75fb5fd95fcbe1d7e6d240c369c1572b686ee2c95949d1042b5148de8eddebb4                "/init"                  scanner    22 minutes ago   Up 22 minutes (healthy)     3310/tcp, 7357/tcp
-haven-integration-search-1     getmeili/meilisearch:v1.37.0@sha256:9cde2774864e6c19cdd09fcd2950bc01ac9a0454b6f343fffafa14faae6eb7ea       "tini -- /bin/sh -c …"   search     22 minutes ago   Up 22 minutes (healthy)     7700/tcp
-haven-integration-storage-1    chrislusf/seaweedfs:4.46@sha256:08d516132314207d10c8e37cbffc1f32b147d870169688734cc61c6231625b62           "/entrypoint.sh serv…"   storage    22 minutes ago   Up 22 minutes (healthy)     7333/tcp, 8080/tcp, 8333/tcp, 8888/tcp, 9333/tcp, 18080/tcp, 18888/tcp, 19333/tcp
-haven-integration-web-1        haven-integration-web                                                                                      "docker-entrypoint.s…"   web        22 minutes ago   Up 21 minutes (healthy)
-haven-integration-worker-1     haven-integration-worker                                                                                   "docker-entrypoint.s…"   worker     22 minutes ago   Up 22 minutes
-worker-1  |
-worker-1  | > @haven/worker@0.1.0 dev /workspace/apps/worker
-worker-1  | > tsx watch src/main.ts
-worker-1  |
-worker-1  | Outbox worker running
-ops-1     |  GET /api/v1/me 200 in 9ms (next.js: 1.3ms, application-code: 7ms)
-ops-1     |  GET /api/v1/me 200 in 20ms (next.js: 15ms, application-code: 6ms)
-ops-1     |  GET /api/v1/ops/dashboard 200 in 19ms (next.js: 4ms, application-code: 15ms)
-ops-1     |  GET /ops 200 in 72ms (next.js: 27ms, application-code: 45ms)
-ops-1     |  GET /ops 200 in 65ms (next.js: 17ms, application-code: 48ms)
-ops-1     |  POST /api/v1/auth/logout 201 in 19ms (next.js: 13ms, application-code: 6ms)
-ops-1     |  GET /api/v1/auth/login?prompt=login&returnTo=%2Fops%2Flistings 302 in 7ms (next.js: 1.4ms, application-code: 5ms)
-ops-1     |  GET /api/v1/auth/callback?state=981085b8ad5e65daac12d638454c3e1155218a1de6b917cd&session_state=37aeb463-6188-ae8f-c439-296df77ca876&iss=http%3A%2F%2Flocalhost%3A8090%2Frealms%2Fhaven&code=7cd3f037-b554-5e72-b9bd-abb8204b3b45.37aeb463-6188-ae8f-c439-296df77ca876.77276489-44f3-4b61-a78d-91e0f44a59b3 302 in 37ms (next.js: 1.7ms, application-code: 35ms)
-ops-1     |  GET /ops/listings 200 in 41ms (next.js: 13ms, application-code: 28ms)
-ops-1     |  GET /api/v1/me 200 in 27ms (next.js: 18ms, application-code: 9ms)
-ops-1     |  GET /api/v1/ops/listings 200 in 22ms (next.js: 4ms, application-code: 18ms)
-ops-1     |  GET /api/v1/ops/listing-units 200 in 21ms (next.js: 5ms, application-code: 16ms)
-ops-1     |  GET /api/v1/communities?city=bj&limit=50 200 in 27ms (next.js: 6ms, application-code: 21ms)
-ops-1     |  GET /api/v1/ops/listings? 200 in 28ms (next.js: 6ms, application-code: 22ms)
-ops-1     |  GET /api/v1/ops/listing-units 200 in 29ms (next.js: 8ms, application-code: 21ms)
-ops-1     |  GET /api/v1/ops/listings 200 in 33ms (next.js: 5ms, application-code: 28ms)
-ops-1     |  GET /api/v1/communities?city=bj&limit=50 200 in 20ms (next.js: 3ms, application-code: 17ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 32ms (next.js: 1.5ms, application-code: 30ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 35ms (next.js: 1.2ms, application-code: 34ms)
-ops-1     |  GET /api/v1/media/2da63560-0ac4-4c9d-a193-0fdb9708e930/view 200 in 66ms (next.js: 27ms, application-code: 38ms)
-ops-1     |  GET /api/v1/media/e389c992-a0f7-4c0a-a0ee-f4416f0bf724/view 200 in 70ms (next.js: 24ms, application-code: 46ms)
-ops-1     |  GET /api/v1/media/992ea793-b534-4b6d-95c5-92cb26830061/view 200 in 46ms (next.js: 4ms, application-code: 41ms)
-ops-1     |  GET /api/v1/media/130a67d8-3f9d-47d2-92c1-003b2cae6056/view 200 in 57ms (next.js: 14ms, application-code: 43ms)
-ops-1     |  GET /api/v1/media/c0a968c4-3a4b-43f6-8b78-72fe8f958bfa/view 200 in 77ms (next.js: 14ms, application-code: 62ms)
-ops-1     |  GET /api/v1/media/68a84c2a-eabb-4b9e-af9c-a4a2f25f8dc7/view 200 in 79ms (next.js: 7ms, application-code: 72ms)
-ops-1     |  GET /api/v1/media/221560b6-c6e1-4adb-a509-4bcce11e96ab/view 200 in 43ms (next.js: 6ms, application-code: 37ms)
-ops-1     |  GET /api/v1/media/9ed25ae6-71a3-46e4-9410-965b94c6bf0c/view 200 in 44ms (next.js: 2ms, application-code: 41ms)
-ops-1     |  GET /api/v1/media/b42d9df4-6da8-42d1-b0d4-0c21af4728ef/view 200 in 39ms (next.js: 2ms, application-code: 37ms)
-ops-1     |  GET /api/v1/media/2a39541e-2c0e-4461-b5bb-cd9f0b7673db/view 200 in 45ms (next.js: 13ms, application-code: 33ms)
-ops-1     |  GET /api/v1/media/86aa78e5-1cd8-4e28-bd16-ec156552800a/view 200 in 45ms (next.js: 6ms, application-code: 39ms)
-ops-1     |  GET /api/v1/media/98c2f2d2-5c17-409d-932f-3b7f9f29a298/view 200 in 46ms (next.js: 9ms, application-code: 37ms)
-ops-1     |  POST /api/v1/media/upload-intents 201 in 58ms (next.js: 20ms, application-code: 37ms)
-ops-1     |  PUT /api/v1/media/e95cbef6-ef96-43ef-b6b0-0f3bda6ce981/content?signature=kWSYQ_wkisRhTgx7UYRHsrRBF5AAH1SHRO5Lgte0dg6OG_OzD1XZP4AVhTNpQv8lepfKwxX5gCJJhm_31c8fTTSd1DFtIzkj85UHp6ni5hlU07nHJnSnMYAMgW2KJ3fnsoG3br5QkXQPMo3IN8r43xfrDB0g2YfUp5-ZQBPSgX03hUnrC3VxfayGaIfhdzCsENv5mKYmaQ 200 in 262ms (next.js: 2.0ms, application-code: 260ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 51ms (next.js: 1.7ms, application-code: 49ms)
-ops-1     |  POST /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 201 in 67ms (next.js: 2ms, application-code: 64ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 71ms (next.js: 1.9ms, application-code: 69ms)
-ops-1     |  GET /api/v1/media/e95cbef6-ef96-43ef-b6b0-0f3bda6ce981/view 200 in 33ms (next.js: 2ms, application-code: 30ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 75ms (next.js: 19ms, application-code: 56ms)
-ops-1     |  POST /api/v1/media/upload-intents 201 in 49ms (next.js: 3ms, application-code: 46ms)
-ops-1     |  PUT /api/v1/media/460b7b55-a93f-43b7-aa25-0b1a51a3cc3e/content?signature=QDZR4x6K5TEBaj8JPTsCE1BxRiDlTCOhhz83pzl8utJkrxMLxtzYNRBZ7oD2Ji-IO8THdvXtqZ6PSsejeY4ybr67jJoSRr69IMKVnbwokZYxg_R7-A4twcoOfoArth5dgxF08DNrQFHlvS5plqKcSZ4jyqGM8jv2fLcqh2_XH-OJ457akLv-Df5jG8aS-MxHFFALobbjow 200 in 314ms (next.js: 22ms, application-code: 292ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 41ms (next.js: 2.0ms, application-code: 39ms)
-ops-1     |  POST /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 201 in 52ms (next.js: 2ms, application-code: 50ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 60ms (next.js: 19ms, application-code: 41ms)
-ops-1     |  GET /api/v1/media/460b7b55-a93f-43b7-aa25-0b1a51a3cc3e/view 200 in 49ms (next.js: 18ms, application-code: 31ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 56ms (next.js: 1.3ms, application-code: 54ms)
-ops-1     |  POST /api/v1/media/upload-intents 201 in 61ms (next.js: 19ms, application-code: 41ms)
-ops-1     |  PUT /api/v1/media/85734e6e-d7cb-475f-a16b-ced85347c4a8/content?signature=pJIbHq_WhueGXErMSgldgYQ1B0JgJMKOAOqpnK54IPYdbOQK_oQY07EZQSfNHzECisIquD5mXPt3wLDKpjHk_a_TYGiYnDlU0VmExpfBMAs9K6ba7N3F62zk7nUS5qPqyq1x0s4w-bk2lBiY4OkWogo7dp6FoqETLX2rCBlhUyckCULQM0SiZR3nYA1CuB7BFeQzjWn7Tg 200 in 374ms (next.js: 3ms, application-code: 371ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 53ms (next.js: 2ms, application-code: 50ms)
-ops-1     |  POST /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 201 in 60ms (next.js: 2ms, application-code: 57ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 58ms (next.js: 9ms, application-code: 49ms)
-ops-1     |  GET /api/v1/media/85734e6e-d7cb-475f-a16b-ced85347c4a8/view 200 in 48ms (next.js: 17ms, application-code: 31ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 59ms (next.js: 1.3ms, application-code: 58ms)
-ops-1     |  POST /api/v1/media/upload-intents 201 in 74ms (next.js: 19ms, application-code: 54ms)
-ops-1     |  GET /ops 200 in 78ms (next.js: 25ms, application-code: 53ms)
-ops-1     |  PUT /api/v1/media/207cc769-7ab8-4f00-ba8c-381d8add3be6/content?signature=DkpH6pfw02xKxl10k2NupblRmXubZYtdlCiFTankcsOta5tNx9W63p8uHJNWIv-GH5aELSjky7McKkypcrkvEAMZCuKqnLhfhvDNJ2d0JWOawTUKIeK_ZHKuZVD-KL3ElBrl9mHfvRkqo6FGIctFckALvfjWY2OiYd3jUy4_CHCl8aFE_9bnCtM8g47ZsGWrDCWxeagTug 200 in 383ms (next.js: 2ms, application-code: 381ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 56ms (next.js: 2ms, application-code: 54ms)
-ops-1     |  POST /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 201 in 89ms (next.js: 1.9ms, application-code: 87ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 70ms (next.js: 18ms, application-code: 52ms)
-ops-1     |  GET /api/v1/media/207cc769-7ab8-4f00-ba8c-381d8add3be6/view 200 in 25ms (next.js: 2.0ms, application-code: 23ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 52ms (next.js: 1.6ms, application-code: 51ms)
-ops-1     |  PATCH /api/v1/ops/property-media/f187001b-e357-4047-9074-c591d2638fbc 200 in 95ms (next.js: 21ms, application-code: 74ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 48ms (next.js: 1.4ms, application-code: 47ms)
-ops-1     |  PATCH /api/v1/ops/property-media/3fd9eb18-67d4-463e-9007-1c857f8c0f1f 200 in 95ms (next.js: 16ms, application-code: 79ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 56ms (next.js: 1.6ms, application-code: 54ms)
-ops-1     |  GET /api/v1/listings/10000000-0000-4000-8000-000000002000/media 200 in 48ms (next.js: 1.9ms, application-code: 46ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 61ms (next.js: 2ms, application-code: 59ms)
-ops-1     |  PATCH /api/v1/ops/property-media/f187001b-e357-4047-9074-c591d2638fbc 400 in 12ms (next.js: 4ms, application-code: 8ms)
-ops-1     |  PATCH /api/v1/ops/property-media/f187001b-e357-4047-9074-c591d2638fbc 400 in 34ms (next.js: 1.2ms, application-code: 33ms)
-ops-1     |  POST /api/v1/ops/property-media/f187001b-e357-4047-9074-c591d2638fbc/review 403 in 10ms (next.js: 1.7ms, application-code: 8ms)
-ops-1     |  POST /api/v1/auth/logout 201 in 9ms (next.js: 1.7ms, application-code: 7ms)
-ops-1     |  GET /api/v1/auth/login?prompt=login&returnTo=%2Fops%2Freviews 302 in 7ms (next.js: 1.4ms, application-code: 6ms)
-ops-1     |  GET /api/v1/auth/callback?state=fdee7ffc361d8d0beabadf2170d71756ef3081e1a6e8cafa&session_state=7909744e-828a-b024-ea71-49995f30c0a0&iss=http%3A%2F%2Flocalhost%3A8090%2Frealms%2Fhaven&code=98dde94c-ba69-3f9a-b426-b41603b54ba8.7909744e-828a-b024-ea71-49995f30c0a0.77276489-44f3-4b61-a78d-91e0f44a59b3 302 in 46ms (next.js: 19ms, application-code: 27ms)
-ops-1     |  GET /ops/reviews 200 in 74ms (next.js: 16ms, application-code: 58ms)
-ops-1     |  POST /api/v1/ops/property-media/f187001b-e357-4047-9074-c591d2638fbc/review 201 in 93ms (next.js: 15ms, application-code: 78ms)
-ops-1     |  GET /api/v1/me 200 in 13ms (next.js: 4ms, application-code: 9ms)
-ops-1     |  GET /api/v1/listings/10000000-0000-4000-8000-000000002000/media 200 in 45ms (next.js: 3ms, application-code: 41ms)
-ops-1     |  GET /api/v1/ops/property-media/reviews 200 in 49ms (next.js: 2ms, application-code: 47ms)
-ops-1     |  GET /api/v1/ops/property-media/reviews 200 in 52ms (next.js: 1.4ms, application-code: 51ms)
-ops-1     |  GET /api/v1/ops/reviews?page=1 200 in 87ms (next.js: 2ms, application-code: 85ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 89ms (next.js: 1.2ms, application-code: 88ms)
-ops-1     |  GET /api/v1/media/665eac60-8a0f-4f29-b6f6-b31f933b325b/view 200 in 41ms (next.js: 4ms, application-code: 37ms)
-ops-1     |  GET /api/v1/media/0ccbd327-1dfa-4584-af6d-472e0db996dc/view 200 in 45ms (next.js: 7ms, application-code: 37ms)
-ops-1     |  GET /api/v1/media/460b7b55-a93f-43b7-aa25-0b1a51a3cc3e/view 200 in 48ms (next.js: 8ms, application-code: 40ms)
-ops-1     |  GET /api/v1/media/85734e6e-d7cb-475f-a16b-ced85347c4a8/view 200 in 52ms (next.js: 11ms, application-code: 41ms)
-ops-1     |  GET /api/v1/media/207cc769-7ab8-4f00-ba8c-381d8add3be6/view 200 in 60ms (next.js: 2ms, application-code: 58ms)
-ops-1     |  POST /api/v1/ops/property-media/3fd9eb18-67d4-463e-9007-1c857f8c0f1f/review 201 in 74ms (next.js: 1.6ms, application-code: 73ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 37ms (next.js: 1.3ms, application-code: 35ms)
-ops-1     |  POST /api/v1/ops/property-media/acb9efc6-7128-42bd-86af-dd7043ef87b4/review 201 in 45ms (next.js: 1.1ms, application-code: 43ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 33ms (next.js: 1.4ms, application-code: 31ms)
-ops-1     |  POST /api/v1/ops/property-media/ce720128-2ab3-4fec-8e7c-cdba8f809006/review 201 in 41ms (next.js: 1.1ms, application-code: 40ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 29ms (next.js: 1.2ms, application-code: 28ms)
-ops-1     |  PATCH /api/v1/ops/property-media/f187001b-e357-4047-9074-c591d2638fbc 200 in 40ms (next.js: 1.5ms, application-code: 38ms)
-ops-1     |  GET /api/v1/listings/10000000-0000-4000-8000-000000002000/media 200 in 26ms (next.js: 1.5ms, application-code: 25ms)
-ops-1     |  POST /api/v1/ops/property-media/f187001b-e357-4047-9074-c591d2638fbc/review 201 in 68ms (next.js: 13ms, application-code: 55ms)
-ops-1     |  GET /api/v1/ops/listings/10000000-0000-4000-8000-000000002000/media 200 in 38ms (next.js: 1.3ms, application-code: 37ms)
-ops-1     |  PATCH /api/v1/ops/property-media/f187001b-e357-4047-9074-c591d2638fbc 200 in 40ms (next.js: 1.2ms, application-code: 39ms)
-ops-1     |  POST /api/v1/ops/property-media/f187001b-e357-4047-9074-c591d2638fbc/review 403 in 19ms (next.js: 1.8ms, application-code: 17ms)
-ops-1     |  POST /api/v1/ops/property-media/f187001b-e357-4047-9074-c591d2638fbc/review 201 in 37ms (next.js: 1.3ms, application-code: 35ms)
-ops-1     |  GET /ops 200 in 52ms (next.js: 18ms, application-code: 34ms)
-ops-1     |  GET /ops 200 in 63ms (next.js: 24ms, application-code: 39ms)
-identity-1  | 2026-10-05 17:25:03,190 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:03,899 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:04,437 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-28) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-scanner-1   | Starting Freshclamd
+NAME                           IMAGE                                                                                                  COMMAND                  SERVICE    CREATED              STATUS                                  PORTS
+haven-integration-api-1        haven-integration-api                                                                                  "docker-entrypoint.s…"   api        About a minute ago   Up 13 seconds (healthy)                 
+haven-integration-cache-1      valkey/valkey:9.1.2-alpine@sha256:48332870af354a799964c0012ae1194a0bf2bf894eb508f945810596dc2d8d11     "tini -- docker-entr…"   cache      About a minute ago   Up About a minute (healthy)             6379/tcp
+haven-integration-db-1         [REDACTED]-database:17.11-postgis3.6.4                                                                "/usr/local/bin/have…"   db         About a minute ago   Up About a minute (healthy)             5432/tcp
+haven-integration-identity-1   [REDACTED]-identity:26.8.0-java21                                                                     "/opt/keycloak/bin/k…"   identity   About a minute ago   Up About a minute (healthy)             
+haven-integration-install-1    haven-integration-install                                                                              "docker-entrypoint.s…"   install    About a minute ago   Exited (0) About a minute ago           
+haven-integration-mail-1       axllent/mailpit:v1.31.4@sha256:b68349e3a014b90c5610bfb26b2ae36f3892d7b8cf25ee140c6c71c98d2fcf48        "/mailpit"               mail       About a minute ago   Up About a minute (healthy)             1025/tcp, 1110/tcp, 8025/tcp
+haven-integration-migrate-1    haven-integration-migrate                                                                              "docker-entrypoint.s…"   migrate    About a minute ago   Exited (0) About a minute ago           
+haven-integration-ops-1        haven-integration-ops                                                                                  "docker-entrypoint.s…"   ops        About a minute ago   Restarting (1) Less than a second ago   
+haven-integration-proxy-1      traefik:v3.7.14@sha256:e849695bc5c317da0cec22bfee4794fd9e15871fe554f864d31b625983e883ff                "/entrypoint.sh trae…"   proxy      About a minute ago   Up 2 seconds (health: starting)         80/tcp
+haven-integration-scanner-1    [REDACTED]-scanner:1.5.4-pcre2-10.49                                                                  "/init"                  scanner    About a minute ago   Up About a minute (healthy)             3310/tcp, 7357/tcp
+haven-integration-search-1     getmeili/meilisearch:v1.54.3@sha256:e68913ab7d6f5b159529e472cfd362ce3c741fafd3c127961b2142abbe41b3c9   "tini -- /bin/sh -c …"   search     About a minute ago   Up About a minute (healthy)             7700/tcp
+haven-integration-storage-1    chrislusf/seaweedfs:4.48@sha256:4e61d15fd35994cb1e43e1e553dff106794841fd9a99ade2fc8c8bfce4d7872d       "/entrypoint.sh serv…"   storage    About a minute ago   Up About a minute (healthy)             7333/tcp, 8080/tcp, 8333/tcp, 8888/tcp, 9333/tcp, 18080/tcp, 18888/tcp, 19333/tcp
+haven-integration-web-1        haven-integration-web                                                                                  "docker-entrypoint.s…"   web        About a minute ago   Restarting (1) Less than a second ago   
+haven-integration-worker-1     haven-integration-worker                                                                               "docker-entrypoint.s…"   worker     About a minute ago   Up About a minute                       
+storage-1  | I1007 01:16:42.534045 master_server.go:359 snapshot taken to persist TopologyId 8112b32f-8b5e-4ee3-8041-4e42d8845529
+storage-1  | I1007 01:16:42.721338 masterclient.go:617 .master masterClient reconnection attempt #2
+storage-1  | I1007 01:16:42.722831 master_grpc_server.go:598 + client .master@storage:9333.19333
+storage-1  | I1007 01:16:42.723081 masterclient.go:397 updateVidMap ignore short heartbeat: volume_location:{leader:"storage:9333.19333"}
+storage-1  | I1007 01:16:42.723158 masterclient.go:331 + master@storage:9333 noticed .master storage:9333.19333
+storage-1  | I1007 01:16:42.724521 masterclient.go:617 .filer masterClient reconnection attempt #1
+storage-1  | I1007 01:16:42.725502 master_grpc_server.go:598 + client .filer@storage:8888.18888
+storage-1  | I1007 01:16:42.725725 masterclient.go:331 + master@storage:9333 noticed .filer storage:8888.18888
+storage-1  | I1007 01:16:42.725782 masterclient.go:397 updateVidMap ignore short heartbeat: volume_location:{leader:"storage:9333.19333"}
+storage-1  | I1007 01:16:42.727446 master_client.go:24 the cluster has 1 filer
+storage-1  | I1007 01:16:42.727489 filer_server.go:304 storage:8888 bootstrap from peers [node_type:"filer"  address:"storage:8888.18888"  is_add:true  created_at_ns:1791335802725560248]
+storage-1  | I1007 01:16:42.727593 filer.go:159 storage:8888 aggregate from peers [storage:8888]
+storage-1  | I1007 01:16:42.728005 filer.go:448 Start Seaweed Filer 30GB 4.48 530be3e37 at storage:8888
+storage-1  | I1007 01:16:42.728220 meta_aggregator.go:335 loopSubscribeToOneFiler read storage:8888 start from 2026-10-07 01:15:42.727462314 +0000 UTC 1791335742727462314
+storage-1  | I1007 01:16:42.728818 meta_aggregator.go:351 subscribing remote storage:8888 meta change: connecting to peer filer storage:8888: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial unix /tmp/seaweedfs-filer-grpc-18888.sock: connect: no such file or directory"
+storage-1  | I1007 01:16:42.730684 filer.go:477 Registered IAM gRPC service on filer (unauthenticated; set jwt.filer_signing.key in security.toml to require admin Bearer [REDACTED]
+storage-1  | I1007 01:16:42.731006 grpc_client_server.go:160 gRPC also listening on Unix socket /tmp/seaweedfs-filer-grpc-18888.sock
+storage-1  | I1007 01:16:43.712520 s3.go:312 S3 read filer buckets dir: /buckets
+storage-1  | I1007 01:16:43.712535 s3.go:313 S3 read filer maxMB: 4
+storage-1  | I1007 01:16:43.712541 s3.go:315 S3 read master addresses for discovery: [storage:9333]
+storage-1  | I1007 01:16:43.712553 s3.go:323 connected to filers [storage:8888]
+storage-1  | I1007 01:16:43.712568 s3.go:344 Starting S3 API Server with standard IAM
+storage-1  | I1007 01:16:43.714863 filer_client.go:177 FilerClient: started filer discovery for group '' (refresh interval: 5m0s)
+storage-1  | W1007 01:16:43.714903 s3_sse_s3.go:861 SSE-S3 KeyManager: neither s3.sse.kek.passphrase nor WEED_S3_SSE_KEK_PASSPHRASE is set; the KEK will be stored on the filer in plaintext. Set one to enable encrypted-at-rest KEK storage.
+storage-1  | I1007 01:16:43.715142 s3_sse_s3.go:566 SSE-S3 KeyManager: No KEK configured. SSE-S3 encryption is disabled. Set s3.sse.kek or s3.sse.key in security.toml to enable it.
+scanner-1  | Starting Freshclamd
+identity-1  | Updating the configuration and installing your custom providers, if any. Please wait.
 scanner-1   | Starting ClamAV
-web-1       |  GET /api/v1/me 401 in 13ms (next.js: 1.9ms, application-code: 11ms)
-identity-1  | 2026-10-05 17:25:12,582 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-28) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-api-1       | {"timestamp":"2026-10-05T17:30:44.780Z","event":"request.completed","requestId":"ca909321-78ec-4d49-9c07-efd3bbf88ede","method":"GET","route":"/api/v1/ops/:resource/:id/media","status":200}
-scanner-1   |
-Socket for clamd not found yet, retrying (0/1800) ...ClamAV update process started at Mon Oct  5 17:08:51 2026
-api-1       | {"timestamp":"2026-10-05T17:30:44.831Z","event":"request.completed","requestId":"c213db0a-0846-4a11-8900-52ef23678b0d","method":"GET","route":"/api/v1/media/:id/view","status":200}
-db-1        | CREATE EXTENSION
-api-1       | {"timestamp":"2026-10-05T17:30:44.887Z","event":"request.completed","requestId":"c070ea9d-49d3-44dd-8112-ba629aef5f9b","method":"GET","route":"/api/v1/ops/:resource/:id/media","status":200}
-db-1        | You are now connected to database "template_postgis" as user "postgres".
-storage-1   | I1005 17:09:53.093892 volume_growth.go:384 Created Volume 2 on topo:DefaultDataCenter:DefaultRack:storage:8080
-web-1       |  GET /api/v1/listings?city=bj&transaction=sale&segment=residential&beds=2 200 in 29ms (next.js: 5ms, application-code: 24ms)
-storage-1   | I1005 17:09:53.093905 volume_growth.go:397 Registered Volume 2 on topo:DefaultDataCenter:DefaultRack:storage:8080
-web-1       |  GET /bj/buy/home-14 200 in 125ms (next.js: 29ms, application-code: 96ms)
-storage-1   | I1005 17:09:53.094063 store.go:329 In dir /data (disk ID 0) adds volume:3 collection: replicaPlacement:000 ttl:
-web-1       |  GET /api/v1/cities/bj/geography 200 in 38ms (next.js: 26ms, application-code: 11ms)
-storage-1   | I1005 17:09:53.108244 store.go:334 add volume 3 on disk ID 0
-web-1       |  GET /api/v1/config?city=bj 200 in 16ms (next.js: 7ms, application-code: 10ms)
-storage-1   | I1005 17:09:53.108447 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 3
-web-1       |  GET /api/v1/cities/bj/districts 200 in 17ms (next.js: 3ms, application-code: 14ms)
-storage-1   | I1005 17:09:53.108713 volume_growth.go:384 Created Volume 3 on topo:DefaultDataCenter:DefaultRack:storage:8080
-web-1       |  GET /api/v1/me 401 in 18ms (next.js: 7ms, application-code: 11ms)
-storage-1   | I1005 17:09:53.108767 volume_growth.go:397 Registered Volume 3 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:09:53.109535 store.go:329 In dir /data (disk ID 0) adds volume:4 collection: replicaPlacement:000 ttl:
-storage-1   | I1005 17:09:53.124215 store.go:334 add volume 4 on disk ID 0
-storage-1   | I1005 17:09:53.124346 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 4
+scanner-1   | Socket for clamd not found yet, retrying (0/1800) ...ClamAV update process started at Wed Oct  7 01:16:40 2026
 scanner-1   | LibClamAV Warning: **************************************************
-identity-1  | 2026-10-05 17:25:12,888 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:20,943 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-db-1        | DO
-db-1        | Loading PostGIS extensions into haven
-db-1        | NOTICE:  extension "postgis" already exists, skipping
-db-1        | CREATE EXTENSION
-db-1        | CREATE EXTENSION
-db-1        | You are now connected to database "haven" as user "postgres".
-db-1        | DO
-db-1        |
-db-1        | waiting for server to shut down....2026-10-05 17:08:55.486 UTC [48] LOG:  received fast shutdown request
+identity-1  | 2026-10-07 01:17:00,462 WARN  [org.keycloak.common.Profile] (build-21) Deprecated features identity-brokering-api:v1, twitter-broker:v1 enabled by default. Check the upgrading guide for steps to use later versions if available.
 scanner-1   | LibClamAV Warning: ***  The virus database is older than 7 days!  ***
-web-1       |  GET /api/v1/listings?city=bj&transaction=sale&segment=residential&beds=2 200 in 31ms (next.js: 10ms, application-code: 21ms)
-api-1       | {"timestamp":"2026-10-05T17:30:45.989Z","event":"request.completed","requestId":"ebbef95c-303d-4504-b728-37dda251dbdd","method":"GET","route":"/api/v1/cities","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:46.028Z","event":"request.completed","requestId":"d4c61f64-8be2-4ed6-ab88-3b160a3c4c7c","method":"GET","route":"/api/v1/listings","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:46.208Z","event":"request.completed","requestId":"fc9402c3-a6a3-473d-963f-d67a06448b6b","method":"PATCH","route":"/api/v1/ops/property-media/:id","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:46.269Z","event":"request.completed","requestId":"bb22df95-7357-4f4f-b9dd-440920524ef3","method":"GET","route":"/api/v1/ops/:resource/:id/media","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:47.751Z","event":"request.completed","requestId":"ed39a813-7e57-4e9c-8a41-5a72f45569a9","method":"PATCH","route":"/api/v1/ops/property-media/:id","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:47.815Z","event":"request.completed","requestId":"cfbb59f4-2e83-4836-937d-82e66d99ba60","method":"GET","route":"/api/v1/ops/:resource/:id/media","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:47.869Z","event":"request.completed","requestId":"c80f8250-e9bc-4b92-8fbe-30254865539f","method":"GET","route":"/api/v1/:resource/:id/media","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:47.946Z","event":"request.completed","requestId":"919a33bb-4686-4413-b41f-dfe267baf310","method":"GET","route":"/api/v1/ops/:resource/:id/media","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:47.969Z","event":"request.completed","requestId":"2d8242d0-4d38-4ac7-93a4-d7a98e6e9631","method":"PATCH","route":"/api/v1/ops/property-media/:id","status":400}
-api-1       | {"timestamp":"2026-10-05T17:30:48.012Z","event":"request.completed","requestId":"8c3bebb8-a380-4a93-9d3e-014f41b7a817","method":"PATCH","route":"/api/v1/ops/property-media/:id","status":400}
-api-1       | {"timestamp":"2026-10-05T17:30:48.028Z","event":"request.completed","requestId":"97367de3-c69e-45bd-b0a0-91fc63cd9706","method":"POST","route":"/api/v1/ops/property-media/:id/review","status":403}
-api-1       | {"timestamp":"2026-10-05T17:30:48.084Z","event":"request.completed","requestId":"5e58847e-fd54-49de-8689-892ad34b7966","method":"POST","route":"/api/v1/auth/logout","status":201}
-api-1       | {"timestamp":"2026-10-05T17:30:48.102Z","event":"request.completed","requestId":"e46011fa-9033-4caa-97ac-39a651191320","method":"GET","route":"/api/v1/auth/login","status":302}
-api-1       | {"timestamp":"2026-10-05T17:30:48.801Z","event":"request.completed","requestId":"4f526f32-a183-4bb6-a1e4-35920212e1bc","method":"GET","route":"/api/v1/auth/callback","status":302}
-api-1       | {"timestamp":"2026-10-05T17:30:52.209Z","event":"request.completed","requestId":"b280ed9e-625c-4415-8e5a-47d249ca5df4","method":"POST","route":"/api/v1/ops/property-media/:id/review","status":201}
-storage-1   | I1005 17:09:53.124615 volume_growth.go:384 Created Volume 4 on topo:DefaultDataCenter:DefaultRack:storage:8080
 scanner-1   | LibClamAV Warning: ***   Please update it as soon as possible.    ***
-web-1       |  GET /bj 200 in 155ms (next.js: 29ms, application-code: 126ms)
-storage-1   | I1005 17:09:53.124746 volume_growth.go:397 Registered Volume 4 on topo:DefaultDataCenter:DefaultRack:storage:8080
+identity-1  | 2026-10-07 01:17:11,885 INFO  [io.quarkus.deployment.QuarkusAugmentor] (main) Quarkus augmentation completed in 16661ms
 scanner-1   | LibClamAV Warning: **************************************************
-scanner-1   | WARNING: Your ClamAV installation is OUTDATED!
-db-1        | 2026-10-05 17:08:55.496 UTC [48] LOG:  aborting any active transactions
-scanner-1   | WARNING: Local version: 1.4.3 Recommended version: 1.4.6
-storage-1   | I1005 17:09:53.125427 store.go:329 In dir /data (disk ID 0) adds volume:5 collection: replicaPlacement:000 ttl:
-db-1        | 2026-10-05 17:08:55.497 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
-db-1        | 2026-10-05 17:08:55.498 UTC [49] LOG:  shutting down
-storage-1   | I1005 17:09:53.139168 store.go:334 add volume 5 on disk ID 0
-web-1       |  POST /api/v1/auth/logout 201 in 27ms (next.js: 21ms, application-code: 6ms)
-storage-1   | I1005 17:09:53.139207 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 5
-api-1       | {"timestamp":"2026-10-05T17:30:52.219Z","event":"request.completed","requestId":"752834a2-2c7e-4409-ae09-cb406444b68d","method":"GET","route":"/api/v1/me","status":200}
-storage-1   | I1005 17:09:53.139334 volume_growth.go:384 Created Volume 5 on topo:DefaultDataCenter:DefaultRack:storage:8080
-api-1       | {"timestamp":"2026-10-05T17:30:52.258Z","event":"request.completed","requestId":"0b76779f-b269-49fd-8612-5863d34054f5","method":"GET","route":"/api/v1/:resource/:id/media","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:52.290Z","event":"request.completed","requestId":"b64ee6c3-69d7-4e7c-898f-6282fec6acbc","method":"GET","route":"/api/v1/ops/property-media/reviews","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:52.306Z","event":"request.completed","requestId":"5eb8b8de-d631-4b4b-9048-91422bb0070f","method":"GET","route":"/api/v1/ops/property-media/reviews","status":200}
-identity-1  | 2026-10-05 17:25:21,450 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-api-1       | {"timestamp":"2026-10-05T17:30:52.334Z","event":"request.completed","requestId":"af970fe0-2270-4c08-83a0-6a998d33d307","method":"GET","route":"/api/v1/ops/reviews","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:52.345Z","event":"request.completed","requestId":"bd5bfffb-7d66-416c-8da9-194ccc648e53","method":"GET","route":"/api/v1/ops/:resource/:id/media","status":200}
-identity-1  | 2026-10-05 17:25:22,548 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-scanner-1   | DON'T PANIC! Read https://docs.clamav.net/manual/Installing.html
-scanner-1   | daily database available for update (local version: 27927, remote version: 28144)
-scanner-1   |
-Socket for clamd not found yet, retrying (1/1800) ...WARNING: downloadFile: file not found: https://database.clamav.net/daily-27928.cdiff
-scanner-1   | WARNING: downloadPatch: Can't download daily-27928.cdiff from https://database.clamav.net/daily-27928.cdiff
-scanner-1   |
-Socket for clamd not found yet, retrying (2/1800) ...WARNING: downloadFile: file not found: https://database.clamav.net/daily-27928.cdiff
-scanner-1   | WARNING: downloadPatch: Can't download daily-27928.cdiff from https://database.clamav.net/daily-27928.cdiff
-scanner-1   |
-Socket for clamd not found yet, retrying (3/1800) ...
-Socket for clamd not found yet, retrying (4/1800) ...WARNING: downloadFile: file not found: https://database.clamav.net/daily-27928.cdiff
-scanner-1   | WARNING: downloadPatch: Can't download daily-27928.cdiff from https://database.clamav.net/daily-27928.cdiff
-storage-1   | I1005 17:09:53.139346 volume_growth.go:397 Registered Volume 5 on topo:DefaultDataCenter:DefaultRack:storage:8080
-api-1       | {"timestamp":"2026-10-05T17:30:52.376Z","event":"request.completed","requestId":"3d8d49b0-be58-49d9-8cae-252c96f6d5d3","method":"GET","route":"/api/v1/media/:id/view","status":200}
-storage-1   | I1005 17:09:53.139512 store.go:329 In dir /data (disk ID 0) adds volume:6 collection: replicaPlacement:000 ttl:
-api-1       | {"timestamp":"2026-10-05T17:30:52.385Z","event":"request.completed","requestId":"c9c5db63-11ab-4a7f-ac16-3533a2cac720","method":"GET","route":"/api/v1/media/:id/view","status":200}
-storage-1   | I1005 17:09:53.153760 store.go:334 add volume 6 on disk ID 0
-api-1       | {"timestamp":"2026-10-05T17:30:52.393Z","event":"request.completed","requestId":"a699deaa-3c30-4c97-a8ee-b94c2ede3927","method":"GET","route":"/api/v1/media/:id/view","status":200}
-storage-1   | I1005 17:09:53.153946 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 6
-api-1       | {"timestamp":"2026-10-05T17:30:52.398Z","event":"request.completed","requestId":"2a26cf0e-9b53-4c47-9b69-d5d3dc68d187","method":"GET","route":"/api/v1/media/:id/view","status":200}
-storage-1   | I1005 17:09:53.154149 volume_growth.go:384 Created Volume 6 on topo:DefaultDataCenter:DefaultRack:storage:8080
-api-1       | {"timestamp":"2026-10-05T17:30:52.422Z","event":"request.completed","requestId":"6162546f-a798-4f13-9905-b53e5f506405","method":"GET","route":"/api/v1/media/:id/view","status":200}
-storage-1   | I1005 17:09:53.154244 volume_growth.go:397 Registered Volume 6 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:09:53.154932 store.go:329 In dir /data (disk ID 0) adds volume:7 collection: replicaPlacement:000 ttl:
-api-1       | {"timestamp":"2026-10-05T17:30:52.446Z","event":"request.completed","requestId":"12c97661-b88d-41c0-b19d-81bfbd46f74d","method":"POST","route":"/api/v1/ops/property-media/:id/review","status":201}
-storage-1   | I1005 17:09:53.169647 store.go:334 add volume 7 on disk ID 0
-api-1       | {"timestamp":"2026-10-05T17:30:52.494Z","event":"request.completed","requestId":"a50c0206-aead-47a4-b148-dc864da6f559","method":"GET","route":"/api/v1/ops/:resource/:id/media","status":200}
-web-1       |  GET /api/v1/auth/login?prompt=login&returnTo=%2Faccount 302 in 5ms (next.js: 1.3ms, application-code: 4ms)
-scanner-1   | WARNING: Incremental update failed, trying to download daily.cvd
-scanner-1   |
-Socket for clamd not found yet, retrying (5/1800) ...
-Socket for clamd not found yet, retrying (6/1800) ...
-Socket for clamd not found yet, retrying (7/1800) ...
-Socket for clamd not found yet, retrying (8/1800) ...
-Socket for clamd not found yet, retrying (9/1800) ...
-Socket for clamd not found yet, retrying (10/1800) ...
-Socket for clamd not found yet, retrying (11/1800) ...
-Socket for clamd not found yet, retrying (12/1800) ...
-Socket for clamd not found yet, retrying (13/1800) ...
-Socket for clamd not found yet, retrying (14/1800) ...
-Socket for clamd not found yet, retrying (15/1800) ...Mon Oct  5 17:09:07 2026 -> Limits: Global time limit set to 120000 milliseconds.
-web-1       |  GET /api/v1/auth/callback?state=b988db9f0541f383d67c8e9526b424ec9bc1760917ba0ea0&session_state=30a8966f-467e-dbbe-a878-d52a1967f5f4&iss=http%3A%2F%2Flocalhost%3A8090%2Frealms%2Fhaven&code=542c511a-27e7-8cb5-653c-f298b305f559.30a8966f-467e-dbbe-a878-d52a1967f5f4.77276489-44f3-4b61-a78d-91e0f44a59b3 302 in 20ms (next.js: 1.3ms, application-code: 19ms)
-api-1       | {"timestamp":"2026-10-05T17:30:52.543Z","event":"request.completed","requestId":"4d9fc294-06a0-460c-979b-264732c280d8","method":"POST","route":"/api/v1/ops/property-media/:id/review","status":201}
-web-1       |  GET /account 200 in 78ms (next.js: 20ms, application-code: 57ms)
-api-1       | {"timestamp":"2026-10-05T17:30:52.582Z","event":"request.completed","requestId":"b5793f11-b880-4499-b6ea-acd3611b3fc2","method":"GET","route":"/api/v1/ops/:resource/:id/media","status":200}
-web-1       |  GET /bj/buy 200 in 195ms (next.js: 6ms, application-code: 189ms)
-api-1       | {"timestamp":"2026-10-05T17:30:52.628Z","event":"request.completed","requestId":"8b78609b-78de-411d-9551-2a80e72f06f2","method":"POST","route":"/api/v1/ops/property-media/:id/review","status":201}
-web-1       |  GET /api/v1/listings?city=bj&transaction=sale&segment=residential 200 in 42ms (next.js: 24ms, application-code: 18ms)
-storage-1   | I1005 17:09:53.169882 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 7
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: Global size limit set to 419430400 bytes.
-db-1        | 2026-10-05 17:08:55.505 UTC [49] LOG:  checkpoint starting: shutdown immediate
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: File size limit set to 104857600 bytes.
-db-1        | 2026-10-05 17:08:56.401 UTC [49] LOG:  checkpoint complete: wrote 5425 buffers (33.1%); 0 WAL file(s) added, 0 removed, 2 recycled; write=0.055 s, sync=0.806 s, total=0.904 s; sync files=1266, longest=0.013 s, average=0.001 s; distance=39689 kB, estimate=39689 kB; lsn=0/3BA3DF8, redo lsn=0/3BA3DF8
-storage-1   | I1005 17:09:53.170120 volume_growth.go:384 Created Volume 7 on topo:DefaultDataCenter:DefaultRack:storage:8080
-db-1        | 2026-10-05 17:08:56.415 UTC [48] LOG:  database system is shut down
+identity-1  | Running the server in development mode. DO NOT use this configuration in production.
+identity-1  | 2026-10-07 01:17:15,582 WARN  [org.keycloak.models.sessions.infinispan.InfinispanStickySessionEncoderProviderFactory] (main) The option `shouldAttachRoute` is deprecated and will be removed in a future release. Disable it by setting `spi-sticky-session-encoder--infinispan--should-attach-route` to `false`
+scanner-1   | daily database available for update (local version: 28136, remote version: 28145)
+identity-1  | 2026-10-07 01:17:15,585 INFO  [org.keycloak.url.HostnameV2ProviderFactory] (main) If hostname is specified, hostname-strict is effectively ignored
+identity-1  | 2026-10-07 01:17:18,296 INFO  [org.infinispan.CONTAINER] (main) ISPN000974: Virtual threads support: enabled
+identity-1  | 2026-10-07 01:17:20,156 INFO  [org.hibernate.orm.jdbc.batch] (JPA Startup Thread) HHH100501: Automatic JDBC statement batching enabled (maximum batch size 32)
+identity-1  | 2026-10-07 01:17:20,219 WARN  [org.keycloak.common.Profile] (main) Deprecated features identity-brokering-api:v1, twitter-broker:v1 enabled by default. Check the upgrading guide for steps to use later versions if available.
+identity-1  | 2026-10-07 01:17:21,980 INFO  [org.keycloak.quarkus.runtime.storage.database.liquibase.QuarkusJpaUpdaterProvider] (main) Initializing database schema. Using changelog META-INF/jpa-changelog-master.xml
+scanner-1   | Socket for clamd not found yet, retrying (1/1800) ...Socket for clamd not found yet, retrying (2/1800) ...Socket for clamd not found yet, retrying (3/1800) ...Socket for clamd not found yet, retrying (4/1800) ...Socket for clamd not found yet, retrying (5/1800) ...Socket for clamd not found yet, retrying (6/1800) ...Socket for clamd not found yet, retrying (7/1800) ...Socket for clamd not found yet, retrying (8/1800) ...Socket for clamd not found yet, retrying (9/1800) ...Socket for clamd not found yet, retrying (10/1800) ...Socket for clamd not found yet, retrying (11/1800) ...Socket for clamd not found yet, retrying (12/1800) ...Socket for clamd not found yet, retrying (13/1800) ...Socket for clamd not found yet, retrying (14/1800) ...Socket for clamd not found yet, retrying (15/1800) ...Socket for clamd not found yet, retrying (16/1800) ...Socket for clamd not found yet, retrying (17/1800) ...Socket for clamd not found yet, retrying (18/1800) ...Socket for clamd not found yet, retrying (19/1800) ...Socket for clamd not found yet, retrying (20/1800) ...Socket for clamd not found yet, retrying (21/1800) ...Socket for clamd not found yet, retrying (22/1800) ...Wed Oct  7 01:17:03 2026 -> Limits: Global time limit set to 120000 milliseconds.
+identity-1  | 2026-10-07 01:17:41,951 INFO  [org.infinispan.CONTAINER] (main) ISPN000556: Starting user marshaller 'org.infinispan.commons.marshall.ImmutableProtoStreamMarshaller'
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: Global size limit set to 419430400 bytes.
+identity-1  | 2026-10-07 01:17:42,393 INFO  [org.keycloak.connections.infinispan.DefaultInfinispanConnectionProviderFactory] (main) Node name: node_680663, Site name: null, Cluster name: ISPN
+storage-1  | E1007 01:16:43.715395 s3api_server.go:403 Failed to load IAM configuration: no signing key found for STS service; please provide 'signingKey' in IAM config, configure 'jwt.filer_signing.key' in security.toml, or ensure SSE-S3 is initialized
+identity-1  | 2026-10-07 01:17:42,754 INFO  [org.keycloak.models.workflow.WorkflowsEventListenerFactory] (main) Workflow runner task scheduled: next execution at 13:17:42, then every PT12H
+storage-1   | I1007 01:16:43.715427 master_grpc_server.go:598 + client .s3@storage:18333
+storage-1   | I1007 01:16:43.715565 masterclient.go:331 + master@storage:9333 noticed .s3 storage:18333
+identity-1  | 2026-10-07 01:17:42,785 INFO  [org.keycloak.exportimport.dir.DirImportProvider] (main) Importing from directory /opt/keycloak/bin/../data/import
+storage-1   | I1007 01:16:43.715604 masterclient.go:331 + filer@storage:8888 noticed .s3 storage:18333
+storage-1   | I1007 01:16:43.715620 masterclient.go:397 updateVidMap ignore short heartbeat: volume_location:{leader:"storage:9333.19333"}
+storage-1   | I1007 01:16:43.718405 master_client.go:24 the cluster has 1 filer
+storage-1   | I1007 01:16:43.718424 filer_client.go:430 FilerClient: removed 1 filer(s) no longer in group '': [storage:8888]
+identity-1  | 2026-10-07 01:17:42,838 INFO  [org.keycloak.services] (main) KC-SERVICES0050: Initializing master realm
+identity-1  | 2026-10-07 01:17:44,765 INFO  [org.keycloak.services] (main) KC-SERVICES0030: Full model import requested. Strategy: IGNORE_EXISTING
+identity-1  | 2026-10-07 01:17:48,103 INFO  [org.keycloak.exportimport.util.ImportUtils] (main) Realm 'haven' imported
+identity-1  | 2026-10-07 01:17:48,114 INFO  [org.keycloak.services] (main) KC-SERVICES0032: Import finished successfully
+identity-1  | 2026-10-07 01:17:48,275 INFO  [org.keycloak.services] (main) KC-SERVICES0077: Created temporary admin user with username local-admin
+identity-1  | 2026-10-07 01:17:48,546 INFO  [org.keycloak.services.resources.KeycloakApplication] (main) Bootstrap completed in 28.326000 seconds
+storage-1   | I1007 01:16:43.718434 filer_client.go:433 FilerClient: discovered 1 new filer(s) in group '': [storage:8888]
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: File size limit set to 104857600 bytes.
+storage-1   | I1007 01:16:43.720374 s3api_bucket_owner_index.go:277 bucket owner index ready
+storage-1   | I1007 01:16:43.725684 lock_ring_manager.go:159 LockRing: broadcasting ring update for group "" version 1791335803725641102: [storage:8888.18888]
+identity-1  | 2026-10-07 01:17:48,699 INFO  [io.quarkus] (main) Keycloak 26.8.0 on JVM (powered by Quarkus 3.40.1) started in 36.493s. Listening on: http://0.0.0.0:8080. Management interface listening on http://0.0.0.0:9000.
+storage-1   | I1007 01:16:43.725845 masterclient.go:346 LockRing: s3@storage:18333 received ring update v1791335803725641102: [storage:8888.18888]
+storage-1   | I1007 01:16:43.725845 masterclient.go:346 LockRing: filer@storage:8888 received ring update v1791335803725641102: [storage:8888.18888]
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: Recursion level limit set to 17.
+storage-1   | I1007 01:16:43.725872 filer.go:181 LockRing: applying master ring update v1791335803725641102: [storage:8888]
+storage-1   | I1007 01:16:43.731088 s3.go:636 Start Lance Namespace Server at http://storage:9101
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: Files limit set to 10000.
+storage-1   | I1007 01:16:43.731117 s3.go:591 Start Iceberg REST Catalog Server at http://storage:8181
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: MaxEmbeddedPE limit set to 41943040 bytes.
+storage-1   | I1007 01:16:43.731185 filer_grpc_server_sub_meta.go:1534 + local listener s3@@ clientId 889494650 clientEpoch 2
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: MaxHTMLNormalize limit set to 41943040 bytes.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: MaxHTMLNoTags limit set to 8388608 bytes.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: MaxScriptNormalize limit set to 20971520 bytes.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: MaxZipTypeRcg limit set to 1048576 bytes.
+identity-1  | 2026-10-07 01:17:48,700 INFO  [io.quarkus] (main) Profile dev activated. 
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: MaxPartitions limit set to 50.
+storage-1   | I1007 01:16:43.731203 filer_grpc_server_sub_meta.go:973  + s3@@ local subscribe /etc/ from {Time:2026-10-07 01:16:43.712582957 +0000 UTC Offset:-7 IsOffsetBased:false} clientId:889494650
+storage-1   | I1007 01:16:43.731780 grpc_client_server.go:160 gRPC also listening on Unix socket /tmp/seaweedfs-s3-grpc-18333.sock
+storage-1   | I1007 01:16:43.731809 s3.go:538 Start Seaweed S3 API Server 30GB 4.48 530be3e37 at http port 8333
+storage-1   | I1007 01:16:44.462081 meta_aggregator.go:335 loopSubscribeToOneFiler read storage:8888 start from 2026-10-07 01:15:42.727462314 +0000 UTC 1791335742727462314
+storage-1   | I1007 01:16:44.462494 meta_aggregator.go:462 subscribing remote storage:8888 meta change: 2026-10-07 01:15:42.727462314 +0000 UTC, clientId:1519360526
+storage-1   | I1007 01:16:44.463103 filer_grpc_server_sub_meta.go:1534 + local listener filer:storage:8888.18888@@ clientId -1519360526 clientEpoch 1
+storage-1   | I1007 01:16:44.463116 filer_grpc_server_sub_meta.go:973  + filer:storage:8888.18888@@ local subscribe / from {Time:2026-10-07 01:15:42.727462314 +0000 UTC Offset:-7 IsOffsetBased:false} clientId:-1519360526
+storage-1   | I1007 01:16:47.509947 volume_grpc_client_to_master.go:181 Heartbeat to: storage:9333
+storage-1   | I1007 01:16:47.510206 node.go:523 topo adds child DefaultDataCenter
+storage-1   | I1007 01:16:47.510230 node.go:523 topo:DefaultDataCenter adds child DefaultRack
+storage-1   | I1007 01:16:47.510242 node.go:523 topo:DefaultDataCenter:DefaultRack adds child storage:8080
+storage-1   | I1007 01:16:47.510256 node.go:523 topo:DefaultDataCenter:DefaultRack:storage:8080 adds child 
+storage-1   | I1007 01:16:47.510266 master_grpc_server.go:191 added volume server 0: storage:8080 (id=storage:8080, ip=storage:8080) [4330c6ca-9d35-4518-b464-1d815ee2b625]
+storage-1   | I1007 01:16:47.510285 master_grpc_server.go:75 found new uuid:storage:8080 [4330c6ca-9d35-4518-b464-1d815ee2b625] , map[storage:8080:[4330c6ca-9d35-4518-b464-1d815ee2b625]]
+storage-1   | I1007 01:17:13.726343 lock_ring_manager.go:159 LockRing: broadcasting ring update for group "" version 1791335833726317220: [storage:8888.18888]
+storage-1   | I1007 01:17:13.726538 masterclient.go:346 LockRing: s3@storage:18333 received ring update v1791335833726317220: [storage:8888.18888]
+identity-1  | 2026-10-07 01:17:48,700 INFO  [io.quarkus] (main) Installed features: [agroal, cdi, hibernate-orm, jdbc-postgresql, keycloak, narayana-jta, opentelemetry, rest, rest-jackson, smallrye-context-propagation, smallrye-health, vertx]
+storage-1   | I1007 01:17:13.726539 masterclient.go:346 LockRing: filer@storage:8888 received ring update v1791335833726317220: [storage:8888.18888]
+storage-1   | I1007 01:17:13.726570 filer.go:181 LockRing: applying master ring update v1791335833726317220: [storage:8888]
+storage-1   | I1007 01:17:23.720191 lock_client.go:275 Lock owner changed from  to storage:8888-s3-metrics
+storage-1   | I1007 01:17:41.721505 master_grpc_server_volume.go:143 volume grow &{Option:{"replication":{},"ttl":{"Count":0,"Unit":0},"version":3} Count:0 Force:false Reason:grpc assign}
+storage-1   | I1007 01:17:41.722849 store.go:338 In dir /data (disk ID 0) adds volume:1 collection: replicaPlacement:000 ttl:
+storage-1   | I1007 01:17:41.736427 store.go:343 add volume 1 on disk ID 0
+storage-1   | I1007 01:17:41.736599 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 1
+storage-1   | I1007 01:17:41.736842 volume_growth.go:395 Created Volume 1 on topo:DefaultDataCenter:DefaultRack:storage:8080
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/favorites/:id, DELETE} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/inquiries, POST} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/inquiries, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/leads, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/leads/:id, PATCH} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/viewings, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/viewings, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/viewings, POST} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/viewings/:id/cancel, POST} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/viewings/:id/confirm, POST} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/conversations, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/conversations/:id/messages, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/conversations/:id/messages, POST} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mInventoryController {/api/v1}:[39m[38;5;3m +0ms[39m
+storage-1   | I1007 01:17:41.736892 volume_growth.go:408 Registered Volume 1 on topo:DefaultDataCenter:DefaultRack:storage:8080
+storage-1   | I1007 01:17:41.737275 store.go:338 In dir /data (disk ID 0) adds volume:2 collection: replicaPlacement:000 ttl:
+storage-1   | I1007 01:17:41.750602 store.go:343 add volume 2 on disk ID 0
+storage-1   | I1007 01:17:41.750670 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 2
+ops-1       | 
+storage-1   | I1007 01:17:41.750767 volume_growth.go:395 Created Volume 2 on topo:DefaultDataCenter:DefaultRack:storage:8080
+ops-1       | > @haven/ops@0.1.0 dev /workspace/apps/ops
+storage-1   | I1007 01:17:41.750790 volume_growth.go:408 Registered Volume 2 on topo:DefaultDataCenter:DefaultRack:storage:8080
+storage-1   | I1007 01:17:41.751059 store.go:338 In dir /data (disk ID 0) adds volume:3 collection: replicaPlacement:000 ttl:
+storage-1   | I1007 01:17:41.764176 store.go:343 add volume 3 on disk ID 0
+ops-1       | > next dev --hostname 0.0.0.0 --port 3001
+storage-1   | I1007 01:17:41.764280 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 3
+ops-1       | 
+storage-1   | I1007 01:17:41.764416 volume_growth.go:395 Created Volume 3 on topo:DefaultDataCenter:DefaultRack:storage:8080
+ops-1       | ▲ Next.js 16.3.8 (Turbopack)
+storage-1   | I1007 01:17:41.764440 volume_growth.go:408 Registered Volume 3 on topo:DefaultDataCenter:DefaultRack:storage:8080
+ops-1       | - Local:         http://localhost:3001
+storage-1   | I1007 01:17:41.764771 store.go:338 In dir /data (disk ID 0) adds volume:4 collection: replicaPlacement:000 ttl:
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/owner-listings, GET} route[39m[38;5;3m +1ms[39m
+storage-1   | I1007 01:17:41.777985 store.go:343 add volume 4 on disk ID 0
+storage-1   | I1007 01:17:41.778073 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 4
+storage-1   | I1007 01:17:41.778224 volume_growth.go:395 Created Volume 4 on topo:DefaultDataCenter:DefaultRack:storage:8080
+storage-1   | I1007 01:17:41.778243 volume_growth.go:408 Registered Volume 4 on topo:DefaultDataCenter:DefaultRack:storage:8080
+storage-1   | I1007 01:17:41.778568 store.go:338 In dir /data (disk ID 0) adds volume:5 collection: replicaPlacement:000 ttl:
+storage-1   | I1007 01:17:41.791790 store.go:343 add volume 5 on disk ID 0
+storage-1   | I1007 01:17:41.791874 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 5
+storage-1   | I1007 01:17:41.792014 volume_growth.go:395 Created Volume 5 on topo:DefaultDataCenter:DefaultRack:storage:8080
+ops-1       | - Network:       http://0.0.0.0:3001
+ops-1       | ✓ Ready in 568ms
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/owner-listings/:id/price, PATCH} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/owner-listings/:id/actions, POST} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/owner-submissions/:id/progress, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/owner-submissions/agents, GET} route[39m[38;5;3m +1ms[39m
+storage-1   | I1007 01:17:41.792033 volume_growth.go:408 Registered Volume 5 on topo:DefaultDataCenter:DefaultRack:storage:8080
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/owner-submissions, GET} route[39m[38;5;3m +0ms[39m
+storage-1   | I1007 01:17:41.792327 store.go:338 In dir /data (disk ID 0) adds volume:6 collection: replicaPlacement:000 ttl:
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: MaxIconsPE limit set to 100.
+storage-1   | I1007 01:17:41.805512 store.go:343 add volume 6 on disk ID 0
+storage-1   | I1007 01:17:41.805598 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 6
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: MaxRecHWP3 limit set to 16.
+storage-1   | I1007 01:17:41.805728 volume_growth.go:395 Created Volume 6 on topo:DefaultDataCenter:DefaultRack:storage:8080
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: PCREMatchLimit limit set to 100000.
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/owner-submissions/:id/assignment, PATCH} route[39m[38;5;3m +0ms[39m
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: PCRERecMatchLimit limit set to 2000.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Limits: PCREMaxFileSize limit set to 104857600.
+ops-1       | ✓ Running next.config.ts took 86ms
+storage-1   | I1007 01:17:41.805753 volume_growth.go:408 Registered Volume 6 on topo:DefaultDataCenter:DefaultRack:storage:8080
+storage-1   | I1007 01:17:41.806047 store.go:338 In dir /data (disk ID 0) adds volume:7 collection: replicaPlacement:000 ttl:
+storage-1   | I1007 01:17:41.817335 store.go:343 add volume 7 on disk ID 0
+ops-1       | 
+ops-1       | -----
+ops-1       | [1m[31mFATAL[39m[0m: An unexpected Turbopack error occurred. A panic log has been written to /tmp/next-panic-e2b175db2434450155cd09a2e48d10ea.log.
+ops-1       | 
+storage-1   | I1007 01:17:41.817427 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 7
+storage-1   | I1007 01:17:41.817577 volume_growth.go:395 Created Volume 7 on topo:DefaultDataCenter:DefaultRack:storage:8080
+storage-1   | I1007 01:17:41.817601 volume_growth.go:408 Registered Volume 7 on topo:DefaultDataCenter:DefaultRack:storage:8080
+storage-1   | I1007 01:17:43.727235 lock_ring_manager.go:159 LockRing: broadcasting ring update for group "" version 1791335863727210855: [storage:8888.18888]
+storage-1   | I1007 01:17:43.727383 masterclient.go:346 LockRing: s3@storage:18333 received ring update v1791335863727210855: [storage:8888.18888]
+storage-1   | I1007 01:17:43.727391 masterclient.go:346 LockRing: filer@storage:8888 received ring update v1791335863727210855: [storage:8888.18888]
+storage-1   | I1007 01:17:43.727425 filer.go:181 LockRing: applying master ring update v1791335863727210855: [storage:8888]
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/owner-submissions, GET} route[39m[38;5;3m +1ms[39m
+worker-1    | 
+worker-1    | > @haven/worker@0.1.0 dev /workspace/apps/worker
+ops-1       | To help make Turbopack better, report this error by clicking here: https://bugs.nextjs.org/search?category=turbopack-error-report&title=Turbopack%20Error%3A%20Too%20many%20open%20files%20%28os%20error%2024%29&body=Turbopack%20version%3A%20%60b0fad0d4%60%0ANext.js%20version%3A%20%600.0.0%60%0A%0AError%20message%3A%0A%60%60%60%0AToo%20many%20open%20files%20%28os%20error%2024%29%0A%60%60%60&labels=Turbopack,Turbopack%20Panic%20Backtrace
+ops-1       | -----
+ops-1       | 
+ops-1       | Error [TurbopackInternalError]: Too many open files (os error 24)
+ops-1       |     at <unknown> (TurbopackInternalError: Too many open files (os error 24)) {
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Archive support enabled.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Image (graphics) scanning support enabled.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Detection using image fuzzy hash enabled.
+db-1        | The files belonging to this database system will be owned by user "postgres".
+db-1        | This user must also own the server process.
+db-1        | 
+db-1        | The database cluster will be initialized with locale "en_US.utf8".
+scanner-1   | Wed Oct  7 01:17:03 2026 -> AlertExceedsMax heuristic detection disabled.
+db-1        | The default database encoding has accordingly been set to "UTF8".
+db-1        | The default text search configuration will be set to "english".
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Heuristic alerts enabled.
+db-1        | 
+ops-1       |   location: undefined
+db-1        | Data page checksums are disabled.
+worker-1    | > tsx watch src/main.ts
+worker-1    | 
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | Outbox worker running
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+ops-1       | }
+db-1        | 
+db-1        | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+ops-1       | [?25h
+db-1        | creating subdirectories ... ok
+ops-1       | /workspace/apps/ops:
+db-1        | selecting dynamic shared memory implementation ... posix
+ops-1       |  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @haven/ops@0.1.0 dev: `next dev --hostname 0.0.0.0 --port 3001`
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/owner-submissions, POST} route[39m[38;5;3m +0ms[39m
+ops-1       | Exit status 1
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/owner-submissions/drafts, POST} route[39m[38;5;3m +1ms[39m
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/owner-submissions/:id, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/owner-submissions/:id/draft, PATCH} route[39m[38;5;3m +0ms[39m
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Portable Executable support enabled.
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/owner-submissions/:id/submit, POST} route[39m[38;5;3m +0ms[39m
+scanner-1   | Wed Oct  7 01:17:03 2026 -> ELF support enabled.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Mail files support enabled.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> OLE2 support enabled.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> PDF support enabled.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> SWF support enabled.
+web-1       | 
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/listings, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/listings/:id/workbench, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/listings/:id/expiration, PATCH} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/listings/:id/transition, POST} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/listings/:id, PATCH} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/reviews, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/revisions/:id/approve, POST} route[39m[38;5;3m +1ms[39m
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+db-1        | selecting default "max_connections" ... 100
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+scanner-1   | Wed Oct  7 01:17:03 2026 -> HTML support enabled.
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+web-1       | > @haven/web@0.1.0 dev /workspace/apps/web
+db-1        | selecting default "shared_buffers" ... 128MB
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/revisions/:id/reject, POST} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/listings/:id/history, GET} route[39m[38;5;3m +0ms[39m
+db-1        | selecting default time zone ... UTC
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/owner-submissions/:id/review, POST} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/developments/:id/floor-plans, GET} route[39m[38;5;3m +0ms[39m
+db-1        | creating configuration files ... ok
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+db-1        | running bootstrap script ... ok
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+db-1        | sh: locale: not found
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+db-1        | 2026-10-07 01:16:41.018 UTC [30] WARNING:  no usable system locales were found
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/developments/:id, PATCH} route[39m[38;5;3m +0ms[39m
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/floor-plans/:id, PATCH} route[39m[38;5;3m +1ms[39m
+web-1       | > node scripts/copy-maplibre-worker.mjs && next dev --hostname 0.0.0.0 --port 3000
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/assignments, POST} route[39m[38;5;3m +0ms[39m
+db-1        | performing post-bootstrap initialization ... ok
+db-1        | initdb: warning: enabling "trust" authentication for local connections
+db-1        | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+db-1        | syncing data to disk ... ok
+db-1        | 
+db-1        | 
+db-1        | Success. You can now start the database server using:
+db-1        | 
+db-1        |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/developments, GET} route[39m[38;5;3m +0ms[39m
+db-1        | 
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mManagementController {/api/v1}:[39m[38;5;3m +0ms[39m
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/management-dashboard, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/managed-properties, GET} route[39m[38;5;3m +0ms[39m
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+web-1       | 
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/tenants, GET} route[39m[38;5;3m +1ms[39m
+web-1       | ▲ Next.js 16.3.8 (Turbopack)
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/leases, GET} route[39m[38;5;3m +0ms[39m
+web-1       | - Local:         http://localhost:3000
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/owner-leases, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/charges, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/payment-records, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/leases, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/charges, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/leases/:id/statement, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/leases/:id/statement.csv, GET} route[39m[38;5;3m +0ms[39m
+web-1       | - Network:       http://0.0.0.0:3000
+web-1       | ✓ Ready in 568ms
+web-1       | ✓ Running next.config.ts took 86ms
+web-1       | 
+web-1       | -----
+web-1       | [1m[31mFATAL[39m[0m: An unexpected Turbopack error occurred. A panic log has been written to /tmp/next-panic-e53a0729a1ddb6c962c9c6b7c03ed18c.log.
+web-1       | 
+web-1       | To help make Turbopack better, report this error by clicking here: https://bugs.nextjs.org/search?category=turbopack-error-report&title=Turbopack%20Error%3A%20Too%20many%20open%20files%20%28os%20error%2024%29&body=Turbopack%20version%3A%20%60b0fad0d4%60%0ANext.js%20version%3A%20%600.0.0%60%0A%0AError%20message%3A%0A%60%60%60%0AToo%20many%20open%20files%20%28os%20error%2024%29%0A%60%60%60&labels=Turbopack,Turbopack%20Panic%20Backtrace
+web-1       | -----
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/leases/:id/statement/print, GET} route[39m[38;5;3m +1ms[39m
+db-1        | waiting for server to start....2026-10-07 01:16:42.439 UTC [36] LOG:  starting PostgreSQL 17.11 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mServicesController {/api/v1}:[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/quote-requests, POST} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/quotes, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/quotes, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/me/quotes/:id, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/quotes/:id, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/quotes/:id, PATCH} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdministrationController {/api/v1}:[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/support-cases, GET} route[39m[38;5;3m +0ms[39m
+web-1       | 
+web-1       | Error [TurbopackInternalError]: Too many open files (os error 24)
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+db-1        | 2026-10-07 01:16:42.445 UTC [36] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+db-1        | 2026-10-07 01:16:42.466 UTC [39] LOG:  database system was shut down at 2026-10-07 01:16:41 UTC
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+db-1        | 2026-10-07 01:16:42.477 UTC [36] LOG:  database system is ready to accept connections
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
 db-1        |  done
-storage-1   | I1005 17:09:53.170213 volume_growth.go:397 Registered Volume 7 on topo:DefaultDataCenter:DefaultRack:storage:8080
-identity-1  | 2026-10-05 17:25:23,067 WARN  [org.keycloak.events] (executor-thread-21) type="LOGIN_ERROR", realmId="34bd36a2-43fe-46c8-b01f-76e9a3557bdf", realmName="haven", clientId="haven-web", userId="00000000-0000-4000-8000-000000000011", ipAddress="::1", error="invalid_user_credentials", auth_method="openid-connect", auth_type="code", selected_credential_id="5e328110-fe5e-43c7-b063-5d1b687e58f9", redirect_uri="http://localhost:8089/api/v1/auth/callback", code_id="c3014101-7e0d-0216-335f-fdd9c0e7038c"
-storage-1   | I1005 17:13:55.067173 master_client.go:24 the cluster has 1 filer
-web-1       |  GET /api/v1/cities/bj/geography 200 in 14ms (next.js: 1.8ms, application-code: 13ms)
-web-1       |  GET /api/v1/config?city=bj 200 in 10ms (next.js: 3ms, application-code: 7ms)
-identity-1  | 2026-10-05 17:25:30,213 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-web-1       |  GET /api/v1/cities/bj/districts 200 in 11ms (next.js: 4ms, application-code: 7ms)
-web-1       |  GET /api/v1/me 200 in 11ms (next.js: 5ms, application-code: 6ms)
-web-1       |  PUT /api/v1/me/favorites/84bd9697-864b-4f52-95a0-2f5c8edd5fd9 200 in 22ms (next.js: 1.5ms, application-code: 21ms)
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: Recursion level limit set to 17.
-web-1       |  GET /api/v1/me/favorites 200 in 22ms (next.js: 1.1ms, application-code: 21ms)
-api-1       | {"timestamp":"2026-10-05T17:30:52.662Z","event":"request.completed","requestId":"94db3564-09f1-4ad7-93fc-5d419d948947","method":"GET","route":"/api/v1/ops/:resource/:id/media","status":200}
-identity-1  | 2026-10-05 17:25:39,332 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:39,664 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:42,365 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:42,906 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-api-1       | {"timestamp":"2026-10-05T17:30:52.706Z","event":"request.completed","requestId":"128b80c7-2790-4ae0-8f50-a7218faa8371","method":"PATCH","route":"/api/v1/ops/property-media/:id","status":200}
-storage-1   | I1005 17:14:06.752737 master_grpc_server_volume.go:143 volume grow &{Option:{"collection":"haven-private","replication":{},"ttl":{"Count":0,"Unit":0},"version":3} Count:0 Force:false Reason:grpc assign}
-api-1       | {"timestamp":"2026-10-05T17:30:52.738Z","event":"request.completed","requestId":"cb8f4a43-dd72-4c97-bffb-29a994b41409","method":"GET","route":"/api/v1/:resource/:id/media","status":200}
-storage-1   | I1005 17:14:06.753037 store.go:329 In dir /data (disk ID 0) adds volume:8 collection:haven-private replicaPlacement:000 ttl:
-api-1       | {"timestamp":"2026-10-05T17:30:52.812Z","event":"request.completed","requestId":"290fa80a-1544-4caf-8baa-cb0f83d8a5f5","method":"POST","route":"/api/v1/ops/property-media/:id/review","status":201}
-storage-1   | I1005 17:14:06.768524 store.go:334 add volume 8 on disk ID 0
-api-1       | {"timestamp":"2026-10-05T17:30:52.855Z","event":"request.completed","requestId":"80e53d03-3bbd-42d1-8220-ca7a51090266","method":"GET","route":"/api/v1/ops/:resource/:id/media","status":200}
-storage-1   | I1005 17:14:06.768623 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 8
-api-1       | {"timestamp":"2026-10-05T17:30:52.901Z","event":"request.completed","requestId":"a8dd42ca-535f-4d38-86ff-835658fea0b3","method":"PATCH","route":"/api/v1/ops/property-media/:id","status":200}
-storage-1   | I1005 17:14:06.769704 volume_growth.go:384 Created Volume 8 on topo:DefaultDataCenter:DefaultRack:storage:8080
-api-1       | {"timestamp":"2026-10-05T17:30:52.926Z","event":"request.completed","requestId":"69961c6d-7d0f-4511-98ab-26a94f506a91","method":"POST","route":"/api/v1/ops/property-media/:id/review","status":403}
-storage-1   | I1005 17:14:06.769724 volume_growth.go:397 Registered Volume 8 on topo:DefaultDataCenter:DefaultRack:storage:8080
-api-1       | {"timestamp":"2026-10-05T17:30:52.968Z","event":"request.completed","requestId":"9ba090d9-df90-43af-9f40-c95e66d7ff9e","method":"POST","route":"/api/v1/ops/property-media/:id/review","status":201}
-storage-1   | I1005 17:14:06.770055 store.go:329 In dir /data (disk ID 0) adds volume:9 collection:haven-private replicaPlacement:000 ttl:
-api-1       | {"timestamp":"2026-10-05T17:30:53.439Z","event":"request.completed","requestId":"01286a41-36ee-483d-af21-315c533973a4","method":"GET","route":"/api/v1/cities","status":200}
-storage-1   | I1005 17:14:06.785509 store.go:334 add volume 9 on disk ID 0
-api-1       | {"timestamp":"2026-10-05T17:30:53.458Z","event":"request.completed","requestId":"e73b5990-0179-4b10-bde2-1bc007e606bf","method":"GET","route":"/api/v1/listings/:id","status":200}
-storage-1   | I1005 17:14:06.785595 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 9
-storage-1   | I1005 17:14:06.785662 volume_growth.go:384 Created Volume 9 on topo:DefaultDataCenter:DefaultRack:storage:8080
-api-1       | {"timestamp":"2026-10-05T17:30:54.220Z","event":"request.completed","requestId":"7a8a9bfe-dffb-4ef6-bac4-255193396567","method":"GET","route":"/api/v1/listings/:id/history","status":200}
-storage-1   | I1005 17:14:06.785684 volume_growth.go:397 Registered Volume 9 on topo:DefaultDataCenter:DefaultRack:storage:8080
-api-1       | {"timestamp":"2026-10-05T17:30:54.221Z","event":"request.completed","requestId":"e420b893-bf5a-4a1d-af39-dc2631b6beaa","method":"GET","route":"/api/v1/agents/:id","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:54.230Z","event":"request.completed","requestId":"4a73b497-b988-4741-a221-90679ea83402","method":"GET","route":"/api/v1/:resource/:id/media","status":200}
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: Files limit set to 10000.
-web-1       |  GET /bj/rent 200 in 197ms (next.js: 23ms, application-code: 174ms)
-storage-1   | I1005 17:14:06.785958 store.go:329 In dir /data (disk ID 0) adds volume:10 collection:haven-private replicaPlacement:000 ttl:
-web-1       |  GET /api/v1/listings?city=bj&transaction=rent&segment=residential 200 in 59ms (next.js: 28ms, application-code: 31ms)
-web-1       |  GET /bj/commercial 200 in 127ms (next.js: 3ms, application-code: 124ms)
-storage-1   | I1005 17:14:06.801519 store.go:334 add volume 10 on disk ID 0
-identity-1  | 2026-10-05 17:25:44,585 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-storage-1   | I1005 17:14:06.801613 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 10
-storage-1   | I1005 17:14:06.801720 volume_growth.go:384 Created Volume 10 on topo:DefaultDataCenter:DefaultRack:storage:8080
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: MaxEmbeddedPE limit set to 41943040 bytes.
-identity-1  | 2026-10-05 17:25:44,946 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: MaxHTMLNormalize limit set to 41943040 bytes.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: MaxHTMLNoTags limit set to 8388608 bytes.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: MaxScriptNormalize limit set to 20971520 bytes.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: MaxZipTypeRcg limit set to 1048576 bytes.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: MaxPartitions limit set to 50.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: MaxIconsPE limit set to 100.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: MaxRecHWP3 limit set to 16.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: PCREMatchLimit limit set to 100000.
-db-1        | server stopped
-storage-1   | I1005 17:14:06.801741 volume_growth.go:397 Registered Volume 10 on topo:DefaultDataCenter:DefaultRack:storage:8080
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: PCRERecMatchLimit limit set to 2000.
-storage-1   | I1005 17:14:06.802106 store.go:329 In dir /data (disk ID 0) adds volume:11 collection:haven-private replicaPlacement:000 ttl:
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Limits: PCREMaxFileSize limit set to 104857600.
-storage-1   | I1005 17:14:06.817145 store.go:334 add volume 11 on disk ID 0
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Archive support enabled.
-storage-1   | I1005 17:14:06.817240 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 11
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Image (graphics) scanning support enabled.
-identity-1  | 2026-10-05 17:25:45,491 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-api-1       | {"timestamp":"2026-10-05T17:30:54.232Z","event":"request.completed","requestId":"20a776e0-81f4-4e16-bbdf-450c40575323","method":"GET","route":"/api/v1/me","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:54.263Z","event":"request.completed","requestId":"48e404a4-c844-47ec-a43e-5e401b0c634b","method":"GET","route":"/api/v1/listings/:id/similar","status":200}
-storage-1   | I1005 17:14:06.817768 volume_growth.go:384 Created Volume 11 on topo:DefaultDataCenter:DefaultRack:storage:8080
-db-1        |
-storage-1   | I1005 17:14:06.817793 volume_growth.go:397 Registered Volume 11 on topo:DefaultDataCenter:DefaultRack:storage:8080
-db-1        | PostgreSQL init process complete; ready for start up.
-storage-1   | I1005 17:14:06.818184 store.go:329 In dir /data (disk ID 0) adds volume:12 collection:haven-private replicaPlacement:000 ttl:
-identity-1  | 2026-10-05 17:25:46,050 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-storage-1   | I1005 17:14:06.832848 store.go:334 add volume 12 on disk ID 0
-storage-1   | I1005 17:14:06.833064 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 12
-web-1       |  GET /api/v1/cities/bj/geography 200 in 14ms (next.js: 1.9ms, application-code: 12ms)
-storage-1   | I1005 17:14:06.833205 volume_growth.go:384 Created Volume 12 on topo:DefaultDataCenter:DefaultRack:storage:8080
-web-1       |  GET /api/v1/config?city=bj 200 in 17ms (next.js: 5ms, application-code: 12ms)
-storage-1   | I1005 17:14:06.833223 volume_growth.go:397 Registered Volume 12 on topo:DefaultDataCenter:DefaultRack:storage:8080
-api-1       | {"timestamp":"2026-10-05T17:30:54.303Z","event":"request.completed","requestId":"d86fa8a7-998b-4e23-9529-bd066365abac","method":"GET","route":"/api/v1/me/favorites","status":200}
-storage-1   | I1005 17:14:06.833462 store.go:329 In dir /data (disk ID 0) adds volume:13 collection:haven-private replicaPlacement:000 ttl:
-api-1       | {"timestamp":"2026-10-05T17:30:54.439Z","event":"request.completed","requestId":"8104cef3-73e6-428a-b72d-c744b6098eee","method":"GET","route":"/api/v1/media/:id/view","status":200}
-storage-1   | I1005 17:14:06.848994 store.go:334 add volume 13 on disk ID 0
-api-1       | {"timestamp":"2026-10-05T17:30:54.484Z","event":"request.completed","requestId":"4f510956-0015-4cf8-b1ee-5b5b33f86555","method":"GET","route":"/api/v1/media/:id/view","status":200}
-storage-1   | I1005 17:14:06.849126 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 13
-api-1       | {"timestamp":"2026-10-05T17:30:54.866Z","event":"request.completed","requestId":"68aed5d8-180a-453d-b714-d00002c7c559","method":"GET","route":"/api/v1/media/:id/view","status":200}
-identity-1  | 2026-10-05 17:25:46,729 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-db-1        |
-identity-1  | 2026-10-05 17:25:47,066 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-db-1        | 2026-10-05 17:08:56.515 UTC [1] LOG:  starting PostgreSQL 17.5 (Debian 17.5-1.pgdg110+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 10.2.1-6) 10.2.1 20210110, 64-bit
-identity-1  | 2026-10-05 17:25:48,001 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:48,317 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:49,893 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:50,519 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:51,206 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:51,550 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-27) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:52,574 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-27) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:25:53,081 WARN  [org.keycloak.events] (executor-thread-26) type="LOGIN_ERROR", realmId="34bd36a2-43fe-46c8-b01f-76e9a3557bdf", realmName="haven", clientId="haven-web", userId="00000000-0000-4000-8000-000000000003", ipAddress="::1", error="invalid_user_credentials", auth_method="openid-connect", auth_type="code", selected_credential_id="f789a012-c689-4da6-a2fb-908ff8cbfec1", redirect_uri="http://localhost:8089/api/v1/auth/callback", code_id="b50cc416-a050-d602-4180-2c79e5aa3fd5"
-identity-1  | 2026-10-05 17:26:00,200 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-30) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:26:08,467 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-30) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:26:08,984 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-30) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:26:09,612 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-30) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Detection using image fuzzy hash enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> AlertExceedsMax heuristic detection disabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Heuristic alerts enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Portable Executable support enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> ELF support enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Mail files support enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> OLE2 support enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> PDF support enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> SWF support enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> HTML support enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> XMLDOCS support enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> HWP3 support enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> OneNote support enabled.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Self checking every 600 seconds.
-scanner-1   | Mon Oct  5 17:09:07 2026 -> Set stacksize to 1048576
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+db-1        | server started
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+db-1        | CREATE DATABASE
+scanner-1   | Wed Oct  7 01:17:03 2026 -> XMLDOCS support enabled.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> HWP3 support enabled.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> OneNote support enabled.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Self checking every 600 seconds.
+scanner-1   | Wed Oct  7 01:17:03 2026 -> Set stacksize to 1048576
 scanner-1   | socket found, clamd started.
-scanner-1   | Testing database: '/var/lib/clamav/tmp.112469f1a2/clamav-41428b56afae2b9e81f8581f436cb1bf.tmp-daily.cvd' ...
+scanner-1   | Testing database: '/var/lib/clamav/tmp.df05fe63ce/daily.cld' ...
+web-1       |     at <unknown> (TurbopackInternalError: Too many open files (os error 24)) {
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/support-cases/:id, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/support-cases, POST} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/support-cases, GET} route[39m[38;5;3m +1ms[39m
+web-1       |   location: undefined
+db-1        | 
+web-1       | }
+db-1        | 
+db-1        | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/00-haven-layout.sh
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/support-cases/:id, GET} route[39m[38;5;3m +0ms[39m
+db-1        | 
+db-1        | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/01-roles.sh
+db-1        | CREATE ROLE
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/support-cases/:id, PATCH} route[39m[38;5;3m +0ms[39m
+db-1        | CREATE ROLE
+db-1        | CREATE ROLE
+db-1        | CREATE ROLE
+db-1        | ALTER DATABASE
+db-1        | GRANT
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+web-1       | [?25h
+db-1        | CREATE EXTENSION
+db-1        | CREATE EXTENSION
+web-1       | /workspace/apps/web:
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+db-1        | CREATE DATABASE
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+web-1       |  ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @haven/web@0.1.0 dev: `node scripts/copy-maplibre-worker.mjs && next dev --hostname 0.0.0.0 --port 3000`
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
 scanner-1   | Database test passed.
-storage-1   | I1005 17:14:06.849217 volume_growth.go:384 Created Volume 13 on topo:DefaultDataCenter:DefaultRack:storage:8080
-web-1       |  GET /api/v1/cities/bj/districts 200 in 11ms (next.js: 2ms, application-code: 9ms)
-storage-1   | I1005 17:14:06.849238 volume_growth.go:397 Registered Volume 13 on topo:DefaultDataCenter:DefaultRack:storage:8080
-api-1       | {"timestamp":"2026-10-05T17:30:55.483Z","event":"request.completed","requestId":"3b2041bb-cf31-4d44-a396-5bcc64d09008","method":"GET","route":"/api/v1/media/:id/view","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:55.494Z","event":"request.completed","requestId":"98a99960-c28c-4ec9-9050-ca95a1144d93","method":"GET","route":"/api/v1/media/:id/view","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:56.342Z","event":"request.completed","requestId":"3e2b6bb0-9829-4d38-9512-2e3340720b67","method":"GET","route":"/api/v1/cities","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:56.364Z","event":"request.completed","requestId":"c5013ddd-db02-4108-858a-f5a0f750afee","method":"GET","route":"/api/v1/listings","status":200}
-api-1       | {"timestamp":"2026-10-05T17:30:59.425Z","event":"request.completed","requestId":"e046679e-082f-430c-ae04-87b4678d2c27","method":"GET","route":"/api/v1/media/:id/view","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:01.054Z","event":"request.completed","requestId":"84c070e8-78ba-43c1-aea7-0e890a5c1d08","method":"GET","route":"/api/v1/cities","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:01.067Z","event":"request.completed","requestId":"2f9b127e-82aa-43d7-8ff2-f25a29c973c0","method":"GET","route":"/api/v1/listings/:id","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:01.589Z","event":"request.completed","requestId":"76ce79b3-f3a0-4305-9c94-0b342a6c28bf","method":"GET","route":"/api/v1/cities/:city/geography","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:01.601Z","event":"request.completed","requestId":"4d199902-4886-4537-bde5-4324d9569336","method":"GET","route":"/api/v1/config","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:01.605Z","event":"request.completed","requestId":"11124642-deff-4fd4-9cf3-402636f78f9c","method":"GET","route":"/api/v1/cities/:id/districts","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:01.618Z","event":"request.completed","requestId":"0fc1e467-b1e9-436d-81f6-a949bf4ecc47","method":"GET","route":"/api/v1/me","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:01.624Z","event":"request.completed","requestId":"e85dcd13-5b43-4a64-a11a-8481768925a4","method":"GET","route":"/api/v1/listings/:id","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:01.672Z","event":"request.completed","requestId":"d18be3da-8bc7-4337-a256-98c2eec8584f","method":"GET","route":"/api/v1/me/favorites","status":200}
-db-1        | 2026-10-05 17:08:56.515 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-api-1       | {"timestamp":"2026-10-05T17:31:01.709Z","event":"request.completed","requestId":"2731310c-776c-4ca2-952e-e1e26e13a724","method":"GET","route":"/api/v1/listings/:id/history","status":200}
-identity-1  | 2026-10-05 17:26:09,930 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-27) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:26:11,179 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-27) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:26:11,696 WARN  [org.keycloak.events] (executor-thread-27) type="LOGIN_ERROR", realmId="34bd36a2-43fe-46c8-b01f-76e9a3557bdf", realmName="haven", clientId="haven-web", userId="00000000-0000-4000-8000-000000000003", ipAddress="::1", error="invalid_user_credentials", auth_method="openid-connect", auth_type="code", selected_credential_id="f789a012-c689-4da6-a2fb-908ff8cbfec1", redirect_uri="http://localhost:8089/api/v1/auth/callback", code_id="302ca3e1-ff24-0d79-8cf1-67f819596a08"
-identity-1  | 2026-10-05 17:26:30,182 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:26:30,967 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:26:31,278 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-27) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:26:33,385 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-27) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:26:33,977 WARN  [org.keycloak.events] (executor-thread-28) type="LOGIN_ERROR", realmId="34bd36a2-43fe-46c8-b01f-76e9a3557bdf", realmName="haven", clientId="haven-web", userId="00000000-0000-4000-8000-000000000003", ipAddress="::1", error="invalid_user_credentials", auth_method="openid-connect", auth_type="code", selected_credential_id="f789a012-c689-4da6-a2fb-908ff8cbfec1", redirect_uri="http://localhost:8089/api/v1/auth/callback", code_id="cc314ecc-1c36-80b2-8984-6768fbe8cc6c"
-identity-1  | 2026-10-05 17:27:00,211 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:27:02,090 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:27:02,628 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-30) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:27:07,337 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-30) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:27:07,957 WARN  [org.keycloak.events] (executor-thread-26) type="LOGIN_ERROR", realmId="34bd36a2-43fe-46c8-b01f-76e9a3557bdf", realmName="haven", clientId="haven-web", userId="00000000-0000-4000-8000-000000000003", ipAddress="::1", error="invalid_user_credentials", auth_method="openid-connect", auth_type="code", selected_credential_id="f789a012-c689-4da6-a2fb-908ff8cbfec1", redirect_uri="http://localhost:8089/api/v1/auth/callback", code_id="657b2ac4-39a1-ef9d-a3ac-547d30f98990"
-identity-1  | 2026-10-05 17:27:30,209 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-30) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:27:31,409 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-30) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:27:31,711 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:27:32,930 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:27:33,458 WARN  [org.keycloak.events] (executor-thread-28) type="LOGIN_ERROR", realmId="34bd36a2-43fe-46c8-b01f-76e9a3557bdf", realmName="haven", clientId="haven-web", userId="00000000-0000-4000-8000-000000000003", ipAddress="::1", error="invalid_user_credentials", auth_method="openid-connect", auth_type="code", selected_credential_id="f789a012-c689-4da6-a2fb-908ff8cbfec1", redirect_uri="http://localhost:8089/api/v1/auth/callback", code_id="63d40d79-a4ce-db3c-8e45-d1d97c8eb2ad"
-identity-1  | 2026-10-05 17:28:00,208 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:28:01,034 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:28:01,560 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-api-1       | {"timestamp":"2026-10-05T17:31:01.713Z","event":"request.completed","requestId":"bac0e1b6-83ee-483f-b143-a5c2a5f09ddf","method":"GET","route":"/api/v1/agents/:id","status":200}
-db-1        | 2026-10-05 17:08:56.515 UTC [1] LOG:  listening on IPv6 address "::", port 5432
-api-1       | {"timestamp":"2026-10-05T17:31:01.732Z","event":"request.completed","requestId":"7a746b24-f675-425e-9c5b-c2b77cdef761","method":"GET","route":"/api/v1/:resource/:id/media","status":200}
-db-1        | 2026-10-05 17:08:56.528 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-identity-1  | 2026-10-05 17:28:04,104 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-21) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:28:04,427 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-api-1       | {"timestamp":"2026-10-05T17:31:01.743Z","event":"request.completed","requestId":"8789bf2b-bde6-4f5a-8872-c544d3c28877","method":"GET","route":"/api/v1/listings/:id/similar","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:01.783Z","event":"request.completed","requestId":"74f751bf-9ec4-4bc0-bfa7-8f505d0fc199","method":"GET","route":"/api/v1/media/:id/view","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:01.796Z","event":"request.completed","requestId":"a0a00cc2-ed98-4728-b599-fd0d0b454b9a","method":"GET","route":"/api/v1/media/:id/view","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:02.017Z","event":"request.completed","requestId":"cd482e8d-4b78-4c7e-b5d5-29c967d9f150","method":"GET","route":"/api/v1/cities","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:02.034Z","event":"request.completed","requestId":"0459b1d4-239d-426f-9d18-9c6a022a8d56","method":"GET","route":"/api/v1/listings/:id","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:02.500Z","event":"request.completed","requestId":"9b2c97dd-6317-4d84-9146-b854b1a84e11","method":"GET","route":"/api/v1/cities/:city/geography","status":200}
-db-1        | 2026-10-05 17:08:56.543 UTC [75] LOG:  database system was shut down at 2026-10-05 17:08:56 UTC
-db-1        | 2026-10-05 17:08:56.552 UTC [1] LOG:  database system is ready to accept connections
-db-1        | 2026-10-05 17:08:58.724 UTC [87] WARNING:  no privileges were granted for "spatial_ref_sys"
-db-1        | 2026-10-05 17:08:58.725 UTC [87] WARNING:  no privileges were granted for "geography_columns"
-db-1        | 2026-10-05 17:08:58.725 UTC [87] WARNING:  no privileges were granted for "geometry_columns"
-db-1        | 2026-10-05 17:09:14.517 UTC [120] ERROR:  relation "migration_model" does not exist at character 25
-scanner-1   | daily.cvd updated (version: 28144, sigs: 355713, f-level: 90, builder: svc.clamav-publisher)
-db-1        | 2026-10-05 17:09:14.517 UTC [120] STATEMENT:  SELECT ID, VERSION FROM MIGRATION_MODEL ORDER BY UPDATE_TIME DESC
+scanner-1   | daily.cld updated (version: 28145, sigs: 355726, f-level: 90, builder: svc.clamav-publisher)
+db-1        | 
+worker-1    | {"event":"alert_dispatcher.unavailable"}
+db-1        | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/20-geometry-hardening.sql
+worker-1    | {"event":"reminder_dispatcher.unavailable"}
+db-1        | DO
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/support-cases/:id/actions, POST} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/support-cases/export, GET} route[39m[38;5;3m +0ms[39m
+db-1        | DO
+db-1        | 
+db-1        | 
+db-1        | waiting for server to shut down....2026-10-07 01:16:44.007 UTC [36] LOG:  received fast shutdown request
+db-1        | 2026-10-07 01:16:44.014 UTC [36] LOG:  aborting any active transactions
+db-1        | 2026-10-07 01:16:44.018 UTC [36] LOG:  background worker "logical replication launcher" (PID 42) exited with exit code 1
+db-1        | 2026-10-07 01:16:44.018 UTC [37] LOG:  shutting down
+db-1        | 2026-10-07 01:16:44.025 UTC [37] LOG:  checkpoint starting: shutdown immediate
+db-1        | .2026-10-07 01:16:45.467 UTC [37] LOG:  checkpoint complete: wrote 2890 buffers (17.6%); 0 WAL file(s) added, 0 removed, 1 recycled; write=0.053 s, sync=1.327 s, total=1.449 s; sync files=609, longest=0.015 s, average=0.003 s; distance=18579 kB, estimate=18579 kB; lsn=0/2713ED0, redo lsn=0/2713ED0
+db-1        | 2026-10-07 01:16:45.479 UTC [36] LOG:  database system is shut down
+web-1       | Exit status 1
+db-1        |  done
+db-1        | server stopped
+db-1        | 
+db-1        | PostgreSQL init process complete; ready for start up.
+db-1        | 
+db-1        | 2026-10-07 01:16:45.545 UTC [1] LOG:  starting PostgreSQL 17.11 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+db-1        | 2026-10-07 01:16:45.545 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1        | 2026-10-07 01:16:45.545 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+db-1        | 2026-10-07 01:16:45.556 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
 scanner-1   | main.cvd database is up-to-date (version: 63, sigs: 3287027, f-level: 90, builder: tomjudge)
-identity-1  | 2026-10-05 17:28:04,974 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-db-1        | 2026-10-05 17:09:15.585 UTC [121] ERROR:  relation "public.databasechangeloglock" does not exist at character 22
-identity-1  | 2026-10-05 17:28:05,528 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-28) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-web-1       |  GET /api/v1/me 200 in 15ms (next.js: 5ms, application-code: 10ms)
-api-1       | {"timestamp":"2026-10-05T17:31:02.508Z","event":"request.completed","requestId":"46ba7a19-5ed2-4d8d-8da5-35da2fa5e915","method":"GET","route":"/api/v1/config","status":200}
-web-1       |  GET /api/v1/me/favorites 200 in 32ms (next.js: 20ms, application-code: 12ms)
-api-1       | {"timestamp":"2026-10-05T17:31:02.521Z","event":"request.completed","requestId":"fc9a1fc3-c5b4-4030-b157-e2b83970b585","method":"GET","route":"/api/v1/cities/:id/districts","status":200}
-web-1       |  GET /bj/buy?beds=2 200 in 121ms (next.js: 21ms, application-code: 99ms)
-api-1       | {"timestamp":"2026-10-05T17:31:02.529Z","event":"request.completed","requestId":"46cfab08-eaa9-43ad-b749-e91ec302fbde","method":"GET","route":"/api/v1/me","status":200}
-web-1       |  GET /api/v1/me 401 in 40ms (next.js: 33ms, application-code: 7ms)
-web-1       |  GET /api/v1/cities/bj/geography 200 in 46ms (next.js: 25ms, application-code: 20ms)
-identity-1  | 2026-10-05 17:28:06,525 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-28) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:28:07,012 WARN  [org.keycloak.events] (executor-thread-28) type="LOGIN_ERROR", realmId="34bd36a2-43fe-46c8-b01f-76e9a3557bdf", realmName="haven", clientId="haven-web", userId="00000000-0000-4000-8000-000000000003", ipAddress="::1", error="invalid_user_credentials", auth_method="openid-connect", auth_type="code", selected_credential_id="f789a012-c689-4da6-a2fb-908ff8cbfec1", redirect_uri="http://localhost:8089/api/v1/auth/callback", code_id="f53e942b-dd32-5747-83a4-f245f9e7a6df"
-identity-1  | 2026-10-05 17:28:30,173 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:28:33,237 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:28:33,792 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:28:36,860 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:28:37,158 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:28:39,267 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:28:39,744 WARN  [org.keycloak.events] (executor-thread-32) type="LOGIN_ERROR", realmId="34bd36a2-43fe-46c8-b01f-76e9a3557bdf", realmName="haven", clientId="haven-web", userId="00000000-0000-4000-8000-000000000003", ipAddress="::1", error="invalid_user_credentials", auth_method="openid-connect", auth_type="code", selected_credential_id="f789a012-c689-4da6-a2fb-908ff8cbfec1", redirect_uri="http://localhost:8089/api/v1/auth/callback", code_id="2b23938f-0d59-f97d-f813-1a7bf3bb1953"
-identity-1  | 2026-10-05 17:29:00,189 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:29:00,913 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:29:01,440 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-28) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:29:09,819 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-28) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:29:10,361 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:29:14,055 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:29:14,552 WARN  [org.keycloak.events] (executor-thread-32) type="LOGIN_ERROR", realmId="34bd36a2-43fe-46c8-b01f-76e9a3557bdf", realmName="haven", clientId="haven-web", userId="00000000-0000-4000-8000-000000000003", ipAddress="::1", error="invalid_user_credentials", auth_method="openid-connect", auth_type="code", selected_credential_id="f789a012-c689-4da6-a2fb-908ff8cbfec1", redirect_uri="http://localhost:8089/api/v1/auth/callback", code_id="f542dbb9-1928-4a3f-50cf-5cbae72d89af"
-identity-1  | 2026-10-05 17:29:30,171 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:29:39,497 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:29:40,139 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-web-1       |  GET /api/v1/config?city=bj 200 in 51ms (next.js: 28ms, application-code: 22ms)
 scanner-1   | bytecode.cvd database is up-to-date (version: 339, sigs: 80, f-level: 90, builder: nrandolp)
-web-1       |  GET /api/v1/cities/bj/districts 200 in 53ms (next.js: 31ms, application-code: 22ms)
-db-1        | 2026-10-05 17:09:15.585 UTC [121] STATEMENT:  SELECT COUNT(*) FROM public.databasechangeloglock
-db-1        | 2026-10-05 17:10:30.740 UTC [250] ERROR:  must be owner of table listings
-db-1        | 2026-10-05 17:10:30.740 UTC [250] STATEMENT:  ALTER TABLE listings ADD COLUMN forbidden_test text
-db-1        | 2026-10-05 17:10:30.775 UTC [251] ERROR:  new row violates row-level security policy "lead_destination" for table "leads"
-db-1        | 2026-10-05 17:10:30.775 UTC [251] STATEMENT:  INSERT INTO leads(user_id,organization_id,resource_id,resource_type,name,email,phone,message) VALUES($1,$2,$3,$4,$5,$6,$7,$8)
-db-1        | 2026-10-05 17:10:30.790 UTC [251] ERROR:  conflicting key value violates exclusion constraint "leases_unit_id_daterange_excl"
-db-1        | 2026-10-05 17:10:30.790 UTC [251] DETAIL:  Key conflicts with existing key.
-identity-1  | 2026-10-05 17:29:48,956 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-26) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-db-1        | 2026-10-05 17:10:30.790 UTC [251] STATEMENT:  INSERT INTO leases(organization_id,unit_id,tenant_id,start_date,end_date,rent,currency,status) VALUES($1,$2,$3,'2026-11-01','2027-01-01','6500.00','CNY','active')
-db-1        | 2026-10-05 17:10:30.798 UTC [251] ERROR:  Posted financial records are immutable; create a reversal
-db-1        | 2026-10-05 17:10:30.798 UTC [251] CONTEXT:  PL/pgSQL function immutable_posted() line 1 at RAISE
-db-1        | 2026-10-05 17:10:30.798 UTC [251] STATEMENT:  UPDATE payments SET amount=200 WHERE id=$1
-db-1        | 2026-10-05 17:10:30.801 UTC [251] ERROR:  new row for relation "payments" violates check constraint "payments_amount_check"
-db-1        | 2026-10-05 17:10:30.801 UTC [251] STATEMENT:  INSERT INTO payments(lease_id,organization_id,amount,currency,source,reference,actor_id) VALUES($1,$2,'-1.00','CNY','receipt','invalid',$3)
-db-1        | 2026-10-05 17:10:30.812 UTC [251] ERROR:  conflicting key value violates exclusion constraint "viewings_agent_id_tstzrange_excl"
-db-1        | 2026-10-05 17:10:30.812 UTC [251] DETAIL:  Key conflicts with existing key.
-db-1        | 2026-10-05 17:10:30.812 UTC [251] STATEMENT:  INSERT INTO viewings(listing_id,user_id,agent_id,start_at,end_at) VALUES($1,$2,$3,'2031-01-04T10:30:00Z','2031-01-04T11:30:00Z')
-db-1        | 2026-10-05 17:10:35.485 UTC [262] ERROR:  Listing history is immutable
-db-1        | 2026-10-05 17:10:35.485 UTC [262] CONTEXT:  PL/pgSQL function immutable_listing_history() line 1 at RAISE
-web-1       |  GET /api/v1/listings?city=bj&transaction=sale&segment=residential&beds=2 200 in 80ms (next.js: 25ms, application-code: 55ms)
-web-1       |  GET /bj/buy?text=unmatchable-ui-fixture 200 in 128ms (next.js: 25ms, application-code: 103ms)
-web-1       |  GET /api/v1/cities/bj/geography 200 in 50ms (next.js: 29ms, application-code: 21ms)
-web-1       |  GET /api/v1/config?city=bj 200 in 23ms (next.js: 5ms, application-code: 18ms)
-web-1       |  GET /api/v1/cities/bj/districts 200 in 23ms (next.js: 7ms, application-code: 16ms)
-web-1       |  GET /api/v1/me 401 in 20ms (next.js: 6ms, application-code: 14ms)
-web-1       |  GET /api/v1/listings?city=bj&transaction=sale&segment=residential&text=unmatchable-ui-fixture 200 in 40ms (next.js: 9ms, application-code: 30ms)
-web-1       |  GET /bj/commercial/workspace-100 200 in 84ms (next.js: 23ms, application-code: 61ms)
-web-1       |  GET /bj/communities/willow-park 200 in 108ms (next.js: 21ms, application-code: 86ms)
-web-1       |  GET /api/v1/me 401 in 29ms (next.js: 23ms, application-code: 6ms)
-web-1       |  GET /api/v1/communities/10000000-0000-4000-8000-000000000040/statistics 200 in 15ms (next.js: 4ms, application-code: 11ms)
-web-1       |  GET /api/v1/communities/10000000-0000-4000-8000-000000000040/buildings 200 in 10ms (next.js: 1.2ms, application-code: 9ms)
-web-1       |  GET /api/v1/communities/10000000-0000-4000-8000-000000000040/listings?transaction=sale 200 in 37ms (next.js: 1.3ms, application-code: 36ms)
-web-1       |  GET /bj 200 in 158ms (next.js: 25ms, application-code: 133ms)
-web-1       |  GET /bj 200 in 194ms (next.js: 33ms, application-code: 161ms)
-web-1       |  GET /bj/buy/home-1 200 in 103ms (next.js: 21ms, application-code: 82ms)
-web-1       |  GET /api/v1/listings/home-1/history 200 in 20ms (next.js: 3ms, application-code: 17ms)
-web-1       |  GET /api/v1/agents/10000000-0000-4000-8000-000000000060 200 in 16ms (next.js: 3ms, application-code: 14ms)
-web-1       |  GET /api/v1/listings/10000000-0000-4000-8000-000000002000/media 200 in 57ms (next.js: 25ms, application-code: 33ms)
-web-1       |  GET /api/v1/me 200 in 19ms (next.js: 9ms, application-code: 10ms)
-web-1       |  GET /api/v1/listings/10000000-0000-4000-8000-000000002000/similar 200 in 50ms (next.js: 7ms, application-code: 43ms)
-storage-1   | I1005 17:14:06.849489 store.go:329 In dir /data (disk ID 0) adds volume:14 collection:haven-private replicaPlacement:000 ttl:
-web-1       |  GET /api/v1/me/favorites 200 in 17ms (next.js: 1.7ms, application-code: 15ms)
-web-1       |  GET /api/v1/media/e389c992-a0f7-4c0a-a0ee-f4416f0bf724/view 200 in 35ms (next.js: 2.0ms, application-code: 33ms)
-web-1       |  GET /api/v1/media/e95cbef6-ef96-43ef-b6b0-0f3bda6ce981/view 200 in 25ms (next.js: 1.6ms, application-code: 24ms)
-web-1       |  GET /api/v1/media/85734e6e-d7cb-475f-a16b-ced85347c4a8/view 200 in 24ms (next.js: 1.4ms, application-code: 23ms)
-web-1       |  GET /api/v1/media/207cc769-7ab8-4f00-ba8c-381d8add3be6/view 200 in 63ms (next.js: 29ms, application-code: 34ms)
-web-1       |  GET /api/v1/media/460b7b55-a93f-43b7-aa25-0b1a51a3cc3e/view 200 in 75ms (next.js: 34ms, application-code: 41ms)
-web-1       |  GET /bj 200 in 147ms (next.js: 28ms, application-code: 119ms)
-web-1       |  GET /api/v1/media/85734e6e-d7cb-475f-a16b-ced85347c4a8/view 200 in 62ms (next.js: 27ms, application-code: 35ms)
-web-1       |  GET /bj/buy/home-1?media=vr&floor=f187001b-e357-4047-9074-c591d2638fbc 200 in 94ms (next.js: 20ms, application-code: 74ms)
-web-1       |  GET /api/v1/cities/bj/geography 200 in 45ms (next.js: 26ms, application-code: 19ms)
-web-1       |  GET /api/v1/config?city=bj 200 in 17ms (next.js: 3ms, application-code: 14ms)
-web-1       |  GET /api/v1/cities/bj/districts 200 in 26ms (next.js: 11ms, application-code: 15ms)
-web-1       |  GET /api/v1/me 200 in 16ms (next.js: 4ms, application-code: 12ms)
-web-1       |  GET /api/v1/listings/home-1?city=bj 200 in 21ms (next.js: 6ms, application-code: 15ms)
-web-1       |  GET /api/v1/me/favorites 200 in 13ms (next.js: 1.6ms, application-code: 12ms)
-web-1       |  GET /api/v1/listings/home-1/history 200 in 15ms (next.js: 2ms, application-code: 13ms)
-web-1       |  GET /api/v1/agents/10000000-0000-4000-8000-000000000060 200 in 13ms (next.js: 1.6ms, application-code: 11ms)
-web-1       |  GET /api/v1/listings/10000000-0000-4000-8000-000000002000/media 200 in 44ms (next.js: 1.6ms, application-code: 42ms)
-web-1       |  GET /api/v1/listings/10000000-0000-4000-8000-000000002000/similar 200 in 41ms (next.js: 4ms, application-code: 37ms)
-web-1       |  GET /api/v1/media/e95cbef6-ef96-43ef-b6b0-0f3bda6ce981/view 200 in 24ms (next.js: 1.4ms, application-code: 22ms)
-web-1       |  GET /api/v1/media/85734e6e-d7cb-475f-a16b-ced85347c4a8/view 200 in 30ms (next.js: 2.0ms, application-code: 28ms)
-web-1       |  GET /bj/buy/home-1?media=plan&floor=f187001b-e357-4047-9074-c591d2638fbc 200 in 127ms (next.js: 28ms, application-code: 98ms)
-web-1       |  GET /api/v1/cities/bj/geography 200 in 41ms (next.js: 26ms, application-code: 15ms)
-web-1       |  GET /api/v1/config?city=bj 200 in 12ms (next.js: 4ms, application-code: 8ms)
-identity-1  | 2026-10-05 17:29:49,270 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-storage-1   | I1005 17:14:06.862814 store.go:334 add volume 14 on disk ID 0
-storage-1   | I1005 17:14:06.862942 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 14
-storage-1   | I1005 17:14:06.863031 volume_growth.go:384 Created Volume 14 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:14:06.863059 volume_growth.go:397 Registered Volume 14 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:18:55.066994 master_client.go:24 the cluster has 1 filer
-storage-1   | I1005 17:23:55.066881 master_client.go:24 the cluster has 1 filer
-storage-1   | I1005 17:28:55.067077 master_client.go:24 the cluster has 1 filer
-storage-1   | I1005 17:31:12.577748 master_grpc_server_volume.go:143 volume grow &{Option:{"collection":"haven-ci-reports","replication":{},"ttl":{"Count":0,"Unit":0},"version":3} Count:0 Force:false Reason:grpc assign}
-storage-1   | I1005 17:31:12.578014 store.go:329 In dir /data (disk ID 0) adds volume:15 collection:haven-ci-reports replicaPlacement:000 ttl:
-storage-1   | I1005 17:31:12.600655 store.go:334 add volume 15 on disk ID 0
-storage-1   | I1005 17:31:12.600721 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 15
-storage-1   | I1005 17:31:12.600783 volume_growth.go:384 Created Volume 15 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:31:12.600804 volume_growth.go:397 Registered Volume 15 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:31:12.601032 store.go:329 In dir /data (disk ID 0) adds volume:16 collection:haven-ci-reports replicaPlacement:000 ttl:
-storage-1   | I1005 17:31:12.614389 store.go:334 add volume 16 on disk ID 0
-storage-1   | I1005 17:31:12.614433 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 16
-storage-1   | I1005 17:31:12.614597 volume_growth.go:384 Created Volume 16 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:31:12.614612 volume_growth.go:397 Registered Volume 16 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:31:12.614887 store.go:329 In dir /data (disk ID 0) adds volume:17 collection:haven-ci-reports replicaPlacement:000 ttl:
-storage-1   | I1005 17:31:12.628844 store.go:334 add volume 17 on disk ID 0
-storage-1   | I1005 17:31:12.629062 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 17
-db-1        | 2026-10-05 17:10:35.485 UTC [262] STATEMENT:  UPDATE listing_price_history SET next_price='1.00' WHERE listing_id=$1
-api-1       | {"timestamp":"2026-10-05T17:31:02.534Z","event":"request.completed","requestId":"39f39f59-30e0-4600-aebd-332ac0abc4cb","method":"GET","route":"/api/v1/listings/:id","status":200}
-db-1        | 2026-10-05 17:10:35.487 UTC [262] ERROR:  Listing history is immutable
-db-1        | 2026-10-05 17:10:35.487 UTC [262] CONTEXT:  PL/pgSQL function immutable_listing_history() line 1 at RAISE
-db-1        | 2026-10-05 17:10:35.487 UTC [262] STATEMENT:  DELETE FROM listing_price_history WHERE listing_id=$1
-db-1        | 2026-10-05 17:10:35.488 UTC [262] ERROR:  Listing history is immutable
-db-1        | 2026-10-05 17:10:35.488 UTC [262] CONTEXT:  PL/pgSQL function immutable_listing_history() line 1 at RAISE
-db-1        | 2026-10-05 17:10:35.488 UTC [262] STATEMENT:  UPDATE listing_status_history SET reason='changed' WHERE listing_id=$1
-db-1        | 2026-10-05 17:10:37.521 UTC [264] ERROR:  Expiration worker authority required
-db-1        | 2026-10-05 17:10:37.521 UTC [264] CONTEXT:  PL/pgSQL function expire_scheduled_listing(uuid,timestamp with time zone,timestamp with time zone) line 4 at RAISE
-db-1        | 2026-10-05 17:10:37.521 UTC [264] STATEMENT:  SELECT expire_scheduled_listing($1,$2,$3)
-db-1        | 2026-10-05 17:10:40.839 UTC [275] LOG:  unexpected EOF on client connection with an open transaction
-db-1        | 2026-10-05 17:10:45.419 UTC [288] ERROR:  new row for relation "units" violates check constraint "units_area_check"
-db-1        | 2026-10-05 17:10:45.419 UTC [288] STATEMENT:  UPDATE units SET area=-1 WHERE id=$1
-db-1        | 2026-10-05 17:10:45.422 UTC [288] ERROR:  Listing requires a unit in its organization or an active mandate
-db-1        | 2026-10-05 17:10:45.422 UTC [288] CONTEXT:  PL/pgSQL function listing_unit_parent() line 4 at RAISE
-db-1        | 2026-10-05 17:10:45.422 UTC [288] STATEMENT:  INSERT INTO listings(unit_id,organization_id,owner_id,slug,title,description,transaction,segment,currency,price,status) SELECT unit_id,$2,owner_id,$3,title,description,transaction,segment,currency,'1234567.89','draft' FROM listings WHERE id=$1 RETURNING id,unit_id,price::text
-db-1        | 2026-10-05 17:10:45.428 UTC [288] ERROR:  new row violates row-level security policy for table "listing_mandates"
-db-1        | 2026-10-05 17:10:45.428 UTC [288] STATEMENT:  INSERT INTO listing_mandates(unit_id,organization_id,owner_id,expires_at) VALUES($1,$2,$3,now()+interval '1 year')
-db-1        | 2026-10-05 17:10:45.431 UTC [288] ERROR:  Listing details do not match their parent
-db-1        | 2026-10-05 17:10:45.431 UTC [288] CONTEXT:  PL/pgSQL function listing_details_parent() line 6 at RAISE
-identity-1  | 2026-10-05 17:29:50,244 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:29:50,774 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:29:53,739 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:29:54,244 WARN  [org.keycloak.events] (executor-thread-26) type="LOGIN_ERROR", realmId="34bd36a2-43fe-46c8-b01f-76e9a3557bdf", realmName="haven", clientId="haven-web", userId="00000000-0000-4000-8000-000000000008", ipAddress="::1", error="invalid_user_credentials", auth_method="openid-connect", auth_type="code", selected_credential_id="73fc2892-22c7-4066-9364-2adaac3f151b", redirect_uri="http://localhost:8089/api/v1/auth/callback", code_id="0872a447-dd0a-aa10-4456-b40089eeecf6"
-identity-1  | 2026-10-05 17:30:00,194 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-28) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:08,569 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-28) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:08,887 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:12,165 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:12,655 WARN  [org.keycloak.events] (executor-thread-28) type="LOGIN_ERROR", realmId="34bd36a2-43fe-46c8-b01f-76e9a3557bdf", realmName="haven", clientId="haven-web", userId="00000000-0000-4000-8000-000000000006", ipAddress="::1", error="invalid_user_credentials", auth_method="openid-connect", auth_type="code", selected_credential_id="4932b962-5ef7-49fc-9e77-d06efdf3e134", redirect_uri="http://localhost:8089/api/v1/auth/callback", code_id="f1102a26-0642-3cdb-869e-19e19ed5f576"
-identity-1  | 2026-10-05 17:30:12,889 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-33) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:13,820 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-33) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:14,118 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-28) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:14,377 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-28) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:14,750 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:16,771 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:17,096 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:26,901 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-31) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:27,229 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:36,339 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:36,879 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:48,112 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-32) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-identity-1  | 2026-10-05 17:30:48,739 WARN  [org.keycloak.cookie.DefaultCookieProvider] (executor-thread-33) Non-secure context detected; cookies are not secured, and will not be available in cross-origin POST requests. Please review your proxy settings as the request appears to have originated from a proxy.
-web-1       |  GET /api/v1/cities/bj/districts 200 in 20ms (next.js: 6ms, application-code: 14ms)
-storage-1   | I1005 17:31:12.629269 volume_growth.go:384 Created Volume 17 on topo:DefaultDataCenter:DefaultRack:storage:8080
-db-1        | 2026-10-05 17:10:45.431 UTC [288] STATEMENT:  INSERT INTO commercial_details(listing_id,gross_area) VALUES($1,$2)
-storage-1   | I1005 17:31:12.629323 volume_growth.go:397 Registered Volume 17 on topo:DefaultDataCenter:DefaultRack:storage:8080
-api-1       | {"timestamp":"2026-10-05T17:31:02.590Z","event":"request.completed","requestId":"17d58d0c-bb42-4b92-aa86-4521b72141cc","method":"GET","route":"/api/v1/listings/:id/history","status":200}
-db-1        | 2026-10-05 17:10:45.436 UTC [288] ERROR:  new row for relation "rental_terms" violates check constraint "rental_terms_deposit_amount_check"
-db-1        | 2026-10-05 17:10:45.436 UTC [288] STATEMENT:  UPDATE rental_terms SET deposit_amount=-0.01 WHERE listing_id='10000000-0000-4000-8000-000000002061'
-db-1        | 2026-10-05 17:10:45.441 UTC [288] ERROR:  new row for relation "commercial_details" violates check constraint "commercial_details_check"
-db-1        | 2026-10-05 17:10:45.441 UTC [288] STATEMENT:  UPDATE commercial_details SET usable_area=gross_area+1 WHERE listing_id='10000000-0000-4000-8000-000000002090'
-db-1        | 2026-10-05 17:10:45.444 UTC [288] ERROR:  new row violates row-level security policy for table "listing_mandates"
-db-1        | 2026-10-05 17:10:45.444 UTC [288] STATEMENT:  INSERT INTO listing_mandates(unit_id,organization_id,owner_id,expires_at) VALUES($1,$2,'00000000-0000-4000-8000-000000000002',now()+interval '1 year')
-db-1        | 2026-10-05 17:10:46.014 UTC [289] ERROR:  new row violates row-level security policy for table "moderation_evidence_grants"
-db-1        | 2026-10-05 17:10:46.014 UTC [289] STATEMENT:  INSERT INTO moderation_evidence_grants(reviewer_id,submission_id,expires_at) VALUES($1,$2,now()+interval '1 hour')
-db-1        | 2026-10-05 17:10:49.094 UTC [299] ERROR:  insert or update on table "transit_stations" violates foreign key constraint "transit_stations_district_id_city_id_fkey"
-db-1        | 2026-10-05 17:10:49.094 UTC [299] DETAIL:  Key is not present in table "districts".
-db-1        | 2026-10-05 17:10:49.094 UTC [299] STATEMENT:  INSERT INTO transit_stations(city_id,line_id,district_id,slug,name,latitude,longitude) VALUES($1,$2,$3,'invalid-city','Invalid city',39.9,116.4)
-db-1        | 2026-10-05 17:10:49.098 UTC [299] ERROR:  Geography slugs are immutable
-db-1        | 2026-10-05 17:10:49.098 UTC [299] CONTEXT:  PL/pgSQL function stable_geography_slug() line 1 at RAISE
-db-1        | 2026-10-05 17:10:49.098 UTC [299] STATEMENT:  UPDATE cities SET slug='changed-city-slug' WHERE slug='bj'
-db-1        | 2026-10-05 17:10:49.104 UTC [299] ERROR:  Unit building belongs to another community
-db-1        | 2026-10-05 17:10:49.104 UTC [299] CONTEXT:  PL/pgSQL function unit_building_parent() line 1 at RAISE
-db-1        | 2026-10-05 17:10:49.104 UTC [299] STATEMENT:  UPDATE units SET building_id=$1 WHERE id='10000000-0000-4000-8000-000000001000'
-db-1        | 2026-10-05 17:10:49.825 UTC [300] ERROR:  new row violates row-level security policy for table "recent_searches"
-db-1        | 2026-10-05 17:10:49.825 UTC [300] STATEMENT:  INSERT INTO recent_searches(user_id,city,query) VALUES($1,'bj',$2)
-api-1       | {"timestamp":"2026-10-05T17:31:02.593Z","event":"request.completed","requestId":"fb266cde-6633-4656-9f8d-25898bee4003","method":"GET","route":"/api/v1/agents/:id","status":200}
-db-1        | 2026-10-05 17:13:56.642 UTC [73] LOG:  checkpoint starting: time
 scanner-1   | Clamd successfully notified about the update.
-api-1       | {"timestamp":"2026-10-05T17:31:02.610Z","event":"request.completed","requestId":"93c5060a-e43c-45e7-89bd-dda23773a5fe","method":"GET","route":"/api/v1/me/favorites","status":200}
-scanner-1   | Mon Oct  5 17:09:17 2026 -> Reading databases from /var/lib/clamav
-scanner-1   | Mon Oct  5 17:09:31 2026 -> Database correctly reloaded (3628118 signatures)
-scanner-1   | Mon Oct  5 17:09:31 2026 -> Activating the newly loaded database...
-scanner-1   | Mon Oct  5 17:19:15 2026 -> SelfCheck: Database status OK.
-scanner-1   | Mon Oct  5 17:20:14 2026 -> instream(192.168.112.10@60090): Eicar-Test-Signature FOUND
-scanner-1   | Mon Oct  5 17:29:18 2026 -> SelfCheck: Database status OK.
-scanner-1   | Mon Oct  5 17:29:49 2026 -> instream(192.168.112.10@33034): Eicar-Test-Signature FOUND
-storage-1   | I1005 17:31:12.629845 store.go:329 In dir /data (disk ID 0) adds volume:18 collection:haven-ci-reports replicaPlacement:000 ttl:
-storage-1   | I1005 17:31:12.643848 store.go:334 add volume 18 on disk ID 0
-storage-1   | I1005 17:31:12.643898 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 18
-storage-1   | I1005 17:31:12.643979 volume_growth.go:384 Created Volume 18 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:31:12.644052 volume_growth.go:397 Registered Volume 18 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:31:12.644331 store.go:329 In dir /data (disk ID 0) adds volume:19 collection:haven-ci-reports replicaPlacement:000 ttl:
-storage-1   | I1005 17:31:12.658245 store.go:334 add volume 19 on disk ID 0
-storage-1   | I1005 17:31:12.658321 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 19
-storage-1   | I1005 17:31:12.658450 volume_growth.go:384 Created Volume 19 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:31:12.658466 volume_growth.go:397 Registered Volume 19 on topo:DefaultDataCenter:DefaultRack:storage:8080
-storage-1   | I1005 17:31:12.658747 store.go:329 In dir /data (disk ID 0) adds volume:20 collection:haven-ci-reports replicaPlacement:000 ttl:
-storage-1   | I1005 17:31:12.678586 store.go:334 add volume 20 on disk ID 0
-storage-1   | I1005 17:31:12.678685 volume_grpc_client_to_master.go:303 volume server storage:8080 adds volume 20
-api-1       | {"timestamp":"2026-10-05T17:31:02.611Z","event":"request.completed","requestId":"c1fb3c10-fa58-4edd-819d-e392a9d3960d","method":"GET","route":"/api/v1/listings/:id/similar","status":200}
-storage-1   | I1005 17:31:12.678815 volume_growth.go:384 Created Volume 20 on topo:DefaultDataCenter:DefaultRack:storage:8080
-web-1       |  GET /api/v1/me 200 in 19ms (next.js: 10ms, application-code: 9ms)
-db-1        | 2026-10-05 17:17:00.407 UTC [73] LOG:  checkpoint complete: wrote 1834 buffers (11.2%); 0 WAL file(s) added, 0 removed, 1 recycled; write=183.233 s, sync=0.488 s, total=183.766 s; sync files=1012, longest=0.012 s, average=0.001 s; distance=17397 kB, estimate=17397 kB; lsn=0/4D181A8, redo lsn=0/4CA1510
-api-1       | {"timestamp":"2026-10-05T17:31:02.614Z","event":"request.completed","requestId":"a5286cde-b8aa-4252-811f-e106efff9404","method":"GET","route":"/api/v1/:resource/:id/media","status":200}
-db-1        | 2026-10-05 17:18:56.453 UTC [73] LOG:  checkpoint starting: time
-storage-1   | I1005 17:31:12.678845 volume_growth.go:397 Registered Volume 20 on topo:DefaultDataCenter:DefaultRack:storage:8080
-db-1        | 2026-10-05 17:19:11.497 UTC [73] LOG:  checkpoint complete: wrote 150 buffers (0.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=14.958 s, sync=0.049 s, total=15.045 s; sync files=82, longest=0.011 s, average=0.001 s; distance=760 kB, estimate=15734 kB; lsn=0/4D7EF30, redo lsn=0/4D5F548
-db-1        | 2026-10-05 17:23:56.597 UTC [73] LOG:  checkpoint starting: time
-storage-1   | I1005 17:31:12.678864 node.go:221 topo failed to pick 1 from  0 node candidates
-db-1        | 2026-10-05 17:24:11.244 UTC [73] LOG:  checkpoint complete: wrote 147 buffers (0.9%); 0 WAL file(s) added, 0 removed, 0 recycled; write=14.549 s, sync=0.061 s, total=14.648 s; sync files=90, longest=0.016 s, average=0.001 s; distance=663 kB, estimate=14226 kB; lsn=0/4E3C140, redo lsn=0/4E05208
-storage-1   | I1005 17:31:12.678872 volume_growth.go:142 create 7 volume, created 6: Not enough data nodes found!
-db-1        | 2026-10-05 17:28:56.307 UTC [73] LOG:  checkpoint starting: time
-web-1       |  GET /api/v1/listings/home-1?city=bj 200 in 24ms (next.js: 12ms, application-code: 12ms)
-web-1       |  GET /api/v1/listings/home-1/history 200 in 20ms (next.js: 3ms, application-code: 17ms)
-web-1       |  GET /api/v1/agents/10000000-0000-4000-8000-000000000060 200 in 17ms (next.js: 2ms, application-code: 14ms)
-web-1       |  GET /api/v1/me/favorites 200 in 27ms (next.js: 8ms, application-code: 19ms)
-web-1       |  GET /api/v1/listings/10000000-0000-4000-8000-000000002000/similar 200 in 30ms (next.js: 5ms, application-code: 25ms)
-web-1       |  GET /api/v1/listings/10000000-0000-4000-8000-000000002000/media 200 in 48ms (next.js: 1.8ms, application-code: 46ms)
-web-1       |  GET /api/v1/media/e95cbef6-ef96-43ef-b6b0-0f3bda6ce981/view 200 in 25ms (next.js: 1.5ms, application-code: 23ms)
-web-1       |  GET /api/v1/media/e389c992-a0f7-4c0a-a0ee-f4416f0bf724/view 200 in 30ms (next.js: 1.7ms, application-code: 29ms)
-web-1       |  GET /bj/buy 200 in 221ms (next.js: 21ms, application-code: 199ms)
-web-1       |  GET /api/v1/cities/bj/geography 200 in 40ms (next.js: 26ms, application-code: 14ms)
-web-1       |  GET /api/v1/config?city=bj 200 in 15ms (next.js: 3ms, application-code: 13ms)
-web-1       |  GET /api/v1/cities/bj/districts 200 in 12ms (next.js: 1.9ms, application-code: 10ms)
-web-1       |  GET /api/v1/me 401 in 13ms (next.js: 4ms, application-code: 9ms)
-db-1        | 2026-10-05 17:29:18.287 UTC [73] LOG:  checkpoint complete: wrote 219 buffers (1.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=21.859 s, sync=0.082 s, total=21.981 s; sync files=116, longest=0.012 s, average=0.001 s; distance=968 kB, estimate=12901 kB; lsn=0/4F211F8, redo lsn=0/4EF75B0
-web-1       |  GET /bj/buy 200 in 162ms (next.js: 20ms, application-code: 142ms)
-web-1       |  GET /bj 200 in 102ms (next.js: 1.7ms, application-code: 101ms)
-web-1       |  GET /api/v1/cities/bj/geography 200 in 34ms (next.js: 21ms, application-code: 13ms)
-web-1       |  GET /api/v1/config?city=bj 200 in 9ms (next.js: 2ms, application-code: 7ms)
-web-1       |  GET /api/v1/cities/bj/districts 200 in 11ms (next.js: 4ms, application-code: 8ms)
-web-1       |  GET /api/v1/me 401 in 11ms (next.js: 5ms, application-code: 5ms)
-api-1       | {"timestamp":"2026-10-05T17:31:02.673Z","event":"request.completed","requestId":"e5253360-2531-46f0-a489-0fe72187094b","method":"GET","route":"/api/v1/media/:id/view","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:02.708Z","event":"request.completed","requestId":"d2826498-2235-48c7-a0f0-8ebe4b028e7e","method":"GET","route":"/api/v1/media/:id/view","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:03.274Z","event":"request.completed","requestId":"a3951807-815c-4a97-af19-0db8805ac846","method":"GET","route":"/api/v1/cities","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:03.307Z","event":"request.completed","requestId":"d16fa765-d1eb-4f60-abdc-2fb7032d9c1e","method":"GET","route":"/api/v1/listings","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:04.294Z","event":"request.completed","requestId":"00d73871-2aa3-4903-9ba2-dd4d1b744df5","method":"GET","route":"/api/v1/cities/:city/geography","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:04.304Z","event":"request.completed","requestId":"fc5df2dc-e7db-4d57-8f6d-031dfa763cb6","method":"GET","route":"/api/v1/config","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:04.308Z","event":"request.completed","requestId":"4da85fda-4cf9-4898-bb95-77658ddd3530","method":"GET","route":"/api/v1/cities/:id/districts","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:04.314Z","event":"request.completed","requestId":"d989d297-9510-4813-885c-a01974c8cb5c","method":"GET","route":"/api/v1/me","status":401}
-api-1       | {"timestamp":"2026-10-05T17:31:06.299Z","event":"request.completed","requestId":"914491d3-d4c0-4fea-85e3-d931a604e62e","method":"GET","route":"/api/v1/cities","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:06.325Z","event":"request.completed","requestId":"168446cb-ddcc-47ff-b04d-460e7aef45c8","method":"GET","route":"/api/v1/listings","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:06.632Z","event":"request.completed","requestId":"078410e3-2b4e-4c3a-ab92-35e534230295","method":"GET","route":"/api/v1/cities","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:06.658Z","event":"request.completed","requestId":"d6db7f38-1297-4e64-93e0-ed22581f7576","method":"GET","route":"/api/v1/listings","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:07.235Z","event":"request.completed","requestId":"5bde0cf6-311c-4191-bb3f-f092ff94bbe9","method":"GET","route":"/api/v1/cities/:city/geography","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:07.239Z","event":"request.completed","requestId":"ba09dbc3-698f-495c-a7e6-5920a5de86d2","method":"GET","route":"/api/v1/config","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:07.248Z","event":"request.completed","requestId":"daccaa7e-ad18-4be3-9425-f4d2c3b94631","method":"GET","route":"/api/v1/cities/:id/districts","status":200}
-api-1       | {"timestamp":"2026-10-05T17:31:07.251Z","event":"request.completed","requestId":"d9b0e8f9-ec09-41a0-adf6-57941fb3fdad","method":"GET","route":"/api/v1/me","status":401}
+scanner-1   | Wed Oct  7 01:17:14 2026 -> Reading databases from /var/lib/clamav
+scanner-1   | Wed Oct  7 01:17:34 2026 -> Database correctly reloaded (3628131 signatures)
+scanner-1   | Wed Oct  7 01:17:34 2026 -> Activating the newly loaded database...
+db-1        | 2026-10-07 01:16:45.571 UTC [64] LOG:  database system was shut down at 2026-10-07 01:16:45 UTC
+db-1        | 2026-10-07 01:16:45.583 UTC [1] LOG:  database system is ready to accept connections
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/support-assignees, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/support-cases/:id, PATCH} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/support-cases/:id/attachments/:assetId, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/home-content, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/home-content, POST} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/home-content/:id, PATCH} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/home-content/:id/actions, POST} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/home-content/:id/preview, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/home-taxonomy, POST} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/analytics, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/analytics/export, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/audit, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/users, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/users/:id, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/users/:id/suspend, POST} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/users/:id/staff, POST} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/memberships, GET} route[39m[38;5;3m +1ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/v1/ops/dashboard, GET} route[39m[38;5;3m +0ms[39m
+api-1       | [32m[Nest] 37  - [39m10/07/2026, 1:17:56 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +3ms[39m
+api-1       | {"timestamp":"2026-10-07T01:17:57.297Z","event":"request.completed","requestId":"e32f5050-4ccc-4826-ad46-803227ef0b0d","method":"GET","route":"/api/v1/internal/alerts/due","status":200}
+api-1       | {"timestamp":"2026-10-07T01:17:57.304Z","event":"request.completed","requestId":"a0e16674-5ca0-4f2a-8350-f2a5d66ecc39","method":"GET","route":"/api/v1/internal/viewing-reminders/due","status":200}
+api-1       | {"timestamp":"2026-10-07T01:17:59.264Z","event":"request.completed","requestId":"c3a1f636-cc98-49ad-b246-73ecef3ea3d2","method":"GET","route":"/api/v1/internal/alerts/due","status":200}
+api-1       | {"timestamp":"2026-10-07T01:17:59.268Z","event":"request.completed","requestId":"27738640-0b85-4711-8a31-b6eedfdfef1d","method":"GET","route":"/api/v1/internal/viewing-reminders/due","status":200}
+api-1       | {"timestamp":"2026-10-07T01:18:01.263Z","event":"request.completed","requestId":"918a8ecf-361b-47b4-996f-f98b8b329917","method":"GET","route":"/api/v1/internal/alerts/due","status":200}
+api-1       | {"timestamp":"2026-10-07T01:18:01.267Z","event":"request.completed","requestId":"6f9807b4-3d46-411b-9cb7-1e1cb7cf416b","method":"GET","route":"/api/v1/internal/viewing-reminders/due","status":200}
+api-1       | {"timestamp":"2026-10-07T01:18:03.269Z","event":"request.completed","requestId":"14f60d45-6a7c-4b86-9f5e-d8596cda09bd","method":"GET","route":"/api/v1/internal/alerts/due","status":200}
+api-1       | {"timestamp":"2026-10-07T01:18:03.274Z","event":"request.completed","requestId":"1dac4125-e347-4407-9355-7158b0f75661","method":"GET","route":"/api/v1/internal/viewing-reminders/due","status":200}
+api-1       | {"timestamp":"2026-10-07T01:18:05.264Z","event":"request.completed","requestId":"6fb9fe0e-53ee-4845-966d-5e3b9e056a95","method":"GET","route":"/api/v1/internal/alerts/due","status":200}
+api-1       | {"timestamp":"2026-10-07T01:18:05.268Z","event":"request.completed","requestId":"14055b74-c8a9-4ea5-994d-47dadcdd508e","method":"GET","route":"/api/v1/internal/viewing-reminders/due","status":200}
+db-1        | 2026-10-07 01:16:55.992 UTC [75] WARNING:  no privileges were granted for "spatial_ref_sys"
+db-1        | 2026-10-07 01:16:55.999 UTC [75] WARNING:  no privileges were granted for "geography_columns"
+db-1        | 2026-10-07 01:16:55.999 UTC [75] WARNING:  no privileges were granted for "geometry_columns"
+db-1        | 2026-10-07 01:17:20.238 UTC [118] ERROR:  relation "migration_model" does not exist at character 25
+db-1        | 2026-10-07 01:17:20.238 UTC [118] STATEMENT:  SELECT ID, VERSION FROM MIGRATION_MODEL ORDER BY UPDATE_TIME DESC
+db-1        | 2026-10-07 01:17:21.893 UTC [126] ERROR:  relation "public.databasechangeloglock" does not exist at character 22
+db-1        | 2026-10-07 01:17:21.893 UTC [126] STATEMENT:  SELECT COUNT(*) FROM public.databasechangeloglock

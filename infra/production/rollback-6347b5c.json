@@ -157,7 +157,11 @@
     "160-index-canonical-room-parent-lookup.sql",
     "161-versioned-public-read-cache-stamp.sql",
     "162-set-based-public-rental-eligibility.sql",
-    "163-residential-detail-public-cache-revisions.sql"
+    "163-residential-detail-public-cache-revisions.sql",
+    "164-deny-unused-flatgeobuf-decoders-to-runtime.sql",
+    "165-verify-runtime-geometry-decoder-denial.sql",
+    "166-cache-public-stamp-query-plans.sql",
+    "167-materialize-public-rental-eligibility.sql"
   ],
   "previousImage": "sha256:3fa5a3cb5e02562ac93d92e89fcab84e7a6656585f6168e75187d9ebabb14be7",
   "sha256": {
@@ -315,10 +319,14 @@
     "160-index-canonical-room-parent-lookup.sql": "469f2c8ed8eda1d954195fcf5e9e82aa82c6740c8dedae803d4d3b9f5f50710b",
     "161-versioned-public-read-cache-stamp.sql": "3a147d626cc96f7ae8e7bce69090c2f4ed7da9d9a5cdcd3c98e61c628b97ee3c",
     "162-set-based-public-rental-eligibility.sql": "14e2887075ea7c21745563544e1cfc21e6636cd172bad5a3fd2790f27c62c3a9",
-    "163-residential-detail-public-cache-revisions.sql": "7d6d53b1d14e272c92133bccc9dec1999ce8c3e64ff0cbaeb1add70d6f9e6cbf"
+    "163-residential-detail-public-cache-revisions.sql": "7d6d53b1d14e272c92133bccc9dec1999ce8c3e64ff0cbaeb1add70d6f9e6cbf",
+    "164-deny-unused-flatgeobuf-decoders-to-runtime.sql": "e0cc67f9057db06c330867c0ec75ca3b37dc64041901d32ea873acb129f6802a",
+    "165-verify-runtime-geometry-decoder-denial.sql": "2b1ff557431498e6f3bb5a6170e4d30128cc739d7f2c839fb88c5f5148f7e556",
+    "166-cache-public-stamp-query-plans.sql": "77df891cc1b2ceda1c2d105a5c914cadc84c76cab92141f86ce2e6e49567f17e",
+    "167-materialize-public-rental-eligibility.sql": "d1ccc45de3fdf6f8f5db1774802729a8592659ce0979673b0ebdeb889fb09ed7"
   },
   "review": {
     "sourceCommit": "6347b5c",
-    "reason": "Only 160\u2013163 are permitted: additive parent/order indexes and public revision/deadline triggers, same-column availability view with equivalent active-lease predicates, and residential detail invalidation. No posted-money table or API contract removed. Q07 retained native eligibility, scope and finance regressions pass. This manifest grants no compatibility with other migrations."
+    "reason": "Only 160\u2013163 are permitted: additive parent/order indexes and public revision/deadline triggers, same-column availability view with equivalent active-lease predicates, and residential detail invalidation. No posted-money table or API contract removed. Q07 retained native eligibility, scope and finance regressions pass. This manifest grants no compatibility with other migrations. Additional 164\u2013165 permission-only hardening denies unused FlatGeobuf decoders and verifies runtime denial; no application geometry/GeoJSON or financial table is changed. Previous business code has no FlatGeobuf decoder calls. Native populated SQL165 rehearsal passed reviewed rollback, inquiry/staff OTP/scanned PDF/foreign denial and unchanged full financial hashes. Compatibility remains limited to the listed migrations. Additional SQL166 changes only the internal stamp function language to retain query plans: every call still reads the same committed count and publication/curation/UTC deadlines with the same signature, definer scope and permissions. No API or financial table changes. Actual native populated schema166 preflight and previous API inquiry/staff MFA/scanned PDF/foreign denial pass (two checks, 26.8 seconds); schema is retained and no reset occurs. Financial reconciliation is recorded separately. Additional SQL167 changes only the same-column security-invoker public view rental predicate to a non-null uncorrelated blocked-unit set. Current parent/child/lease scope regressions pass (19 checks). No financial tables or API columns change. The populated native previous-image proof, compatibility refusal before review, and identical SHA256 full-row financial hashes are recorded under evidence/performance/finalization; compatibility remains limited to enumerated migrations."
   }
 }

@@ -1,5 +1,9 @@
 // This flow grants level 2 only after a successful OTP challenge for staff.
 export const staffRole='haven-staff-mfa';
+export const developmentFlow={alias:'haven-development-browser',providerId:'basic-flow',topLevel:true,builtIn:false,authenticationExecutions:[
+ {authenticator:'auth-username-password-form',requirement:'REQUIRED',priority:10,authenticatorFlow:false}
+]};
+export const browserFlowFor=mode=>mode==='development'?developmentFlow.alias:'haven-browser';
 export const mfaFlows=[
  {alias:'haven-browser',providerId:'basic-flow',topLevel:true,builtIn:false,authenticationExecutions:[
   {authenticator:'auth-username-password-form',requirement:'REQUIRED',priority:10,authenticatorFlow:false},

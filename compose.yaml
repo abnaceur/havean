@@ -22,14 +22,15 @@ x-app: &app
   restart: unless-stopped
 services:
   db:
-    image: postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6
+    build: {context: ., dockerfile: infra/Dockerfile.database}
+    image: haven-local-database:17.11-postgis3.6.4
     environment:
       POSTGRES_DB: haven
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run ./dev.sh to generate secrets}
       APP_DB_PASSWORD: ${APP_DB_PASSWORD:?Missing APP_DB_PASSWORD}
       IDENTITY_DB_PASSWORD: ${IDENTITY_DB_PASSWORD:?Missing IDENTITY_DB_PASSWORD}
-    volumes: [database:/var/lib/postgresql/data, ./infra/init-db.sh:/docker-entrypoint-initdb.d/01-roles.sh:ro]
+    volumes: [database:/var/lib/postgresql/data, ./infra/init-db.sh:/docker-entrypoint-initdb.d/01-roles.sh:ro, ./infra/geometry-hardening.sql:/docker-entrypoint-initdb.d/20-geometry-hardening.sql:ro]
     networks: [private]
     healthcheck:
       test: [CMD-SHELL, 'pg_isready -U postgres -d haven']
@@ -50,7 +51,8 @@ services:
       db: {condition: service_healthy}
       install: {condition: service_completed_successfully}
   identity:
-    image: quay.io/keycloak/keycloak:26.4.7@sha256:9409c59bdfb65dbffa20b11e6f18b8abb9281d480c7ca402f51ed3d5977e6007
+    build: {context: ., dockerfile: infra/Dockerfile.identity}
+    image: haven-local-identity:26.8.0-java21
     group_add: ['1000']
     command: start-dev --import-realm
     environment:
@@ -64,7 +66,7 @@ services:
       KC_HEALTH_ENABLED: 'true'
       KC_BOOTSTRAP_ADMIN_USERNAME: local-admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?Missing KEYCLOAK_ADMIN_PASSWORD}
-    volumes: [./infra/generated/haven-realm.json:/opt/keycloak/data/import/haven-realm.json:ro]
+    volumes: [./infra/generated/haven-realm.json:/opt/keycloak/data/import/haven-realm.json:ro, ./infra/generated/themes:/opt/keycloak/themes:ro]
     networks: [private]
     depends_on:
       db: {condition: service_healthy}
@@ -75,7 +77,7 @@ services:
       retries: 30
       start_period: 30s
   search:
-    image: getmeili/meilisearch:v1.37.0@sha256:9cde2774864e6c19cdd09fcd2950bc01ac9a0454b6f343fffafa14faae6eb7ea
+    image: getmeili/meilisearch:v1.54.3@sha256:e68913ab7d6f5b159529e472cfd362ce3c741fafd3c127961b2142abbe41b3c9
     environment:
       MEILI_MASTER_KEY: ${SEARCH_KEY:?Missing SEARCH_KEY}
       MEILI_NO_ANALYTICS: 'true'
@@ -88,7 +90,7 @@ services:
       timeout: 3s
       retries: 20
   cache:
-    image: valkey/valkey:8.1.6-alpine@sha256:1cb6b20b70d927560cc4cc5397b5f045e74aa603ff7696274778880bb6fadc75
+    image: valkey/valkey:9.1.2-alpine@sha256:48332870af354a799964c0012ae1194a0bf2bf894eb508f945810596dc2d8d11
     command: valkey-server --appendonly yes
     volumes: [cache:/data]
     networks: [private]
@@ -98,7 +100,7 @@ services:
       timeout: 3s
       retries: 20
   storage:
-    image: chrislusf/seaweedfs:4.46@sha256:08d516132314207d10c8e37cbffc1f32b147d870169688734cc61c6231625b62
+    image: chrislusf/seaweedfs:4.48@sha256:4e61d15fd35994cb1e43e1e553dff106794841fd9a99ade2fc8c8bfce4d7872d
     command: server -s3 -s3.config=/etc/seaweedfs/s3.json -dir=/data -ip=storage -volume.max=20 -master.volumeSizeLimitMB=100
     volumes: [objects:/data, ./infra/generated/s3.json:/etc/seaweedfs/s3.json:ro]
     networks: [private]
@@ -108,7 +110,8 @@ services:
       timeout: 5s
       retries: 20
   scanner:
-    image: clamav/clamav:1.4.3@sha256:75fb5fd95fcbe1d7e6d240c369c1572b686ee2c95949d1042b5148de8eddebb4
+    build: {context: ., dockerfile: infra/Dockerfile.scanner}
+    image: haven-local-scanner:1.5.4-pcre2-10.49
     networks: [private]
     volumes: [virus-signatures:/var/lib/clamav]
     healthcheck:
@@ -121,7 +124,7 @@ services:
     environment:
       MP_DATABASE: /data/mailpit.db
     volumes: [mail-data:/data]
-    image: axllent/mailpit:v1.27.8@sha256:6abc8e633df15eaf785cfcf38bae48e66f64beecdc03121e249d0f9ec15f0707
+    image: axllent/mailpit:v1.31.4@sha256:b68349e3a014b90c5610bfb26b2ae36f3892d7b8cf25ee140c6c71c98d2fcf48
     networks: [private]
     healthcheck:
       test: [CMD, /mailpit, readyz]
@@ -173,7 +176,7 @@ services:
       timeout: 10s
       retries: 20
   proxy:
-    image: traefik:v3.6.1@sha256:fd5932c796f7e2db9fd6bff485ef693d53797f0ee8ad03dc68aa424ea6f21958
+    image: traefik:v3.7.14@sha256:e849695bc5c317da0cec22bfee4794fd9e15871fe554f864d31b625983e883ff
     ports: ['127.0.0.1:8088:8088','127.0.0.1:8089:8089','127.0.0.1:8090:8090','127.0.0.1:8091:8091']
     volumes: [./infra/traefik.yml:/etc/traefik/traefik.yml:ro, ./infra/routes.yml:/etc/traefik/routes.yml:ro]
     networks: [private]

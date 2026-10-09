@@ -1,0 +1,103 @@
+{"project":"desktop","privatePageCommitted":true}
+{"project":"mobile","privatePageCommitted":true}
+{"project":"desktop-floors","privatePageCommitted":true}
+{"project":"mobile-floors","privatePageCommitted":true}
+{"project":"conflicts","privatePageCommitted":true}
+{"project":"reuse","privatePageCommitted":true}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-render-reuse.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1864[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C10 unchanged document pixels reuse real private storage/current lineage; media invalidates synthetic scene approval and preserves OCR dependency identity[33m 1861[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-trace-checkpoints.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 628[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-E07 two distinct current reviewers preserve their own checkpoints and the winning canonical reference on a real concurrent 409[33m 625[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 14:31:16
+[2m   Duration [22m 5.07s[2m (tests 51%, import 37%, transform 11%)[22m
+
+ Container haven-integration-tests-run-30d578536580 Creating 
+ Container haven-integration-tests-run-30d578536580 Created 
+
+Running 12 tests using 1 worker
+
+  ✓   1 [desktop] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (9.3s)
+  ✓   2 [desktop] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (7.2s)
+  ✓   3 [desktop] › tests/e2e/digitization-plan.spec.ts:44:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay (7.0s)
+  ✓   4 [desktop] › tests/e2e/digitization-plan.spec.ts:60:1 › HE-E06 actual split/merge and selected floor/stair persistence keep vertical dimensions unknown (9.5s)
+  ✓   5 [desktop] › tests/e2e/digitization-plan.spec.ts:72:1 › HE-E07 undo/redo and private autosave survive reload for explicit trace recovery (10.1s)
+  ✘   6 [desktop] › tests/e2e/digitization-plan.spec.ts:79:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts (3.1s)
+  ✓   7 [mobile] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (7.8s)
+  ✓   8 [mobile] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (6.1s)
+  ✓   9 [mobile] › tests/e2e/digitization-plan.spec.ts:44:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay (4.7s)
+  ✓  10 [mobile] › tests/e2e/digitization-plan.spec.ts:60:1 › HE-E06 actual split/merge and selected floor/stair persistence keep vertical dimensions unknown (7.0s)
+  ✓  11 [mobile] › tests/e2e/digitization-plan.spec.ts:72:1 › HE-E07 undo/redo and private autosave survive reload for explicit trace recovery (7.2s)
+  ✘  12 [mobile] › tests/e2e/digitization-plan.spec.ts:79:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts (1.6s)
+
+
+  1) [desktop] › tests/e2e/digitization-plan.spec.ts:79:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 201
+    Received: 403
+
+      81 |  await login(page,'agent',origin,'/ops');const workspace=(await (await page.request.get(origin+route)).json()).data;
+      82 |  const captureRoute=origin+'/api/v1/ops/digitization-intakes/'+fixture.engineId+'/capture-uploads';
+    > 83 |  const created=await page.request.post(captureRoute,{headers:{'idempotency-key':crypto.randomUUID()},data:{digitizationVersion:workspace.version,mime:'video/mp4',bytes:8388625,rights:'Self-authored multipart room-resume test; quarantined bytes only',authorityConfirmed:true}});expect(created.status()).toBe(201);const upload=(await created.json()).data;
+         |                                                                                                                                                                                                                                                                                                               ^
+      84 |  let reopened:Page|undefined;
+      85 |  try{
+      86 |   const grantResponse=await page.request.post(captureRoute+'/'+upload.id+'/parts',{headers:{'idempotency-key':crypto.randomUUID()},data:{version:upload.version,partNumber:1}});expect(grantResponse.status()).toBe(201);const grant=(await grantResponse.json()).data,url=new URL(grant.url),host=url.host;url.hostname='proxy';
+        at /workspace/tests/e2e/digitization-plan.spec.ts:83:303
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-F04-c-03c65--actual-uploaded-clip-parts-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-plan-HE-F04-c-03c65--actual-uploaded-clip-parts-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-F04-c-03c65--actual-uploaded-clip-parts-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-F04-c-03c65--actual-uploaded-clip-parts-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-plan.spec.ts:79:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 201
+    Received: 403
+
+      81 |  await login(page,'agent',origin,'/ops');const workspace=(await (await page.request.get(origin+route)).json()).data;
+      82 |  const captureRoute=origin+'/api/v1/ops/digitization-intakes/'+fixture.engineId+'/capture-uploads';
+    > 83 |  const created=await page.request.post(captureRoute,{headers:{origin,'idempotency-key':crypto.randomUUID()},data:{digitizationVersion:workspace.version,mime:'video/mp4',bytes:8388625,rights:'Self-authored multipart room-resume test; quarantined bytes only',authorityConfirmed:true}});expect(created.status()).toBe(201);const upload=(await created.json()).data;
+         |                                                                                                                                                                                                                                                                                                               ^
+      84 |  let reopened:Page|undefined;
+      85 |  try{
+      86 |   const grantResponse=await page.request.post(captureRoute+'/'+upload.id+'/parts',{headers:{origin,'idempotency-key':crypto.randomUUID()},data:{version:upload.version,partNumber:1}});expect(grantResponse.status()).toBe(201);const grant=(await grantResponse.json()).data,url=new URL(grant.url),host=url.host;url.hostname='proxy';
+        at /workspace/tests/e2e/digitization-plan.spec.ts:83:303
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-F04-c-03c65--actual-uploaded-clip-parts-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-plan-HE-F04-c-03c65--actual-uploaded-clip-parts-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-F04-c-03c65--actual-uploaded-clip-parts-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-F04-c-03c65--actual-uploaded-clip-parts-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-plan.spec.ts:79:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts 
+    [mobile] › tests/e2e/digitization-plan.spec.ts:79:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts 
+  10 passed (1.4m)
+

@@ -1,0 +1,54 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-runner-protocol.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 2258[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C03 API transport sends scoped source bytes to a real Python runner and observes its actual raster output[33m 2256[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 11:41:31
+[2m   Duration [22m 3.55s[2m (tests 66%, transform 21%, import 13%)[22m
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-coordinator.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 6963[2mms[22m[39m
+[31m   [31m×[31m HE-R06/C02 dedicated real queue recovers both enqueue crash boundaries; duplicate events reuse one actual CPU execution and private result[39m[33m 6669[2mms[22m[39m
+   [32m✓[39m HE-C06 real HTTP outage and BullMQ delivery obey five retries without resetting the failed job[32m 291[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-authorized-runner.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 7097[2mms[22m[39m
+   [33m[2m✓[22m[39m current API-owned lease transfers real scoped S3 input to the CPU runner and cancels a superseded acknowledgement[33m 1695[2mms[22m[39m
+   [33m[2m✓[22m[39m real CPU upright-image-v1 renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[33m 2508[2mms[22m[39m
+   [33m[2m✓[22m[39m real CPU pdfium-150dpi-v1 renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[33m 1725[2mms[22m[39m
+   [33m[2m✓[22m[39m real CPU pdfium-overbudget renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[33m 1165[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-coordinator.test.ts[2m > [22mHE-R06/C02 dedicated real queue recovers both enqueue crash boundaries; duplicate events reuse one actual CPU execution and private result
+[31m[1mAssertionError[22m: expected HttpException: A current agency assignmen… { …(4) } to match object { status: 404 }
+(8 matching properties omitted from actual)[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- {[39m
+[32m-   "status": 404,[39m
+[31m+ HttpException {[39m
+[31m+   "status": 403,[39m
+[2m  }[22m
+
+[36m [2m❯[22m tests/integration/digitization-coordinator.test.ts:[2m93:159[22m[39m
+    [90m 91|[39m   const preview=(await transaction(actor,async c=>(await c.query('SELE…
+    [90m 92|[39m   const shown=await readArtifactPreview(actor,workspace.id,preview.id)…
+    [90m 93|[39m   await expect(readArtifactPreview({...actor,id:'00000000-0000-4000-80…
+    [90m   |[39m                                                                                                                                                               [31m^[39m
+    [90m 94|[39m   await expect(readArtifactPreview(actor,crypto.randomUUID(),preview.i…
+    [90m 95|[39m   await storage.send(new PutObjectCommand({Bucket:'haven-private',Key:…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m5 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 11:41:35
+[2m   Duration [22m 16.68s[2m (tests 85%, import 11%, transform 3%)[22m
+

@@ -1,9 +1,10 @@
 #!/bin/sh
 set -eu
 mkdir -p evidence/ci
+rm -f evidence/ci/gates.json
 # A real intentionally wrong workflow assertion exercises the same business-test gate.
 negative=tests/unit/ci-negative.test.ts
-cleanup() { rm -f "$negative"; node scripts/sanitize-ci.mjs; pnpm exec tsx scripts/publish-ci-report.ts; }
+cleanup() { rm -f "$negative"; node scripts/sanitize-ci.mjs; node scripts/record-ci-check.mjs --sanitized; pnpm exec tsx scripts/publish-ci-report.ts; }
 trap cleanup EXIT HUP INT TERM
 if [ "${HAVEN_CI_NEGATIVE:-0}" = 1 ]; then
   cat > "$negative" <<'TEST'
@@ -16,8 +17,10 @@ check() {
   name=$1
   shift
   if "$@" > "evidence/ci/$name.log" 2>&1; then
+    node scripts/record-ci-check.mjs "$name" passed
     echo "$name passed"
   else
+    node scripts/record-ci-check.mjs "$name" failed
     echo "$name failed; see retained sanitized evidence/ci/$name.log"
     return 1
   fi

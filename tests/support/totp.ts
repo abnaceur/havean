@@ -11,7 +11,7 @@ export function totp(secret:string,now=Date.now()){
 }
 export function personaOtp(persona:string){const secrets=JSON.parse(fs.readFileSync((process.env.HAVEN_GENERATED_DIR||'infra/generated')+'/otp.json','utf8'));return secrets[persona]?totp(secrets[persona]):null;}
 export async function completeOtp(page:Page,persona:string){
- if(!personaOtp(persona))return;
+ if(process.env.NODE_ENV==='development'||!personaOtp(persona))return;
  for(let attempt=0;attempt<3;attempt++){
   await page.getByLabel('One-time code',{exact:true}).fill(personaOtp(persona)!);
   await page.getByRole('button',{name:'Sign In',exact:true}).click();

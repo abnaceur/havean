@@ -1,0 +1,400 @@
+Local environment and identity fixtures ready. Account credentials: infra/generated/personas.md
+ Container haven-processing-tests-wheel-download-run-52b08f10906d Creating 
+ Container haven-processing-tests-wheel-download-run-52b08f10906d Created 
+Verified cached pypdf-6.1.1-py3-none-any.whl
+Verified cached pillow-11.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+Verified cached pytest-8.4.2-py3-none-any.whl
+Verified cached iniconfig-2.1.0-py3-none-any.whl
+Verified cached packaging-25.0-py3-none-any.whl
+Verified cached pluggy-1.6.0-py3-none-any.whl
+Verified cached pygments-2.19.2-py3-none-any.whl
+ Image haven-web Building 
+ Image haven-processing-cpu Building 
+ Image haven-migrate Building 
+ Image haven-api Building 
+ Image haven-install Building 
+ Image haven-ops Building 
+ Image haven-worker Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 3.45kB done
+#1 DONE 0.0s
+
+#2 [api internal] load build definition from Dockerfile.dev
+#2 transferring dockerfile: 1.33kB done
+#2 DONE 0.0s
+
+#3 [processing-cpu internal] load build definition from Dockerfile.cpu
+#3 transferring dockerfile: 1.34kB done
+#3 DONE 0.0s
+
+#4 [processing-cpu internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#4 DONE 0.0s
+
+#5 [processing-cpu internal] load .dockerignore
+#5 transferring context: 192B done
+#5 DONE 0.0s
+
+#6 [install internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#6 ...
+
+#7 [processing-cpu cpu 1/6] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#7 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#7 DONE 0.0s
+
+#8 [processing-cpu internal] load build context
+#8 transferring context: 1.38kB done
+#8 DONE 0.0s
+
+#9 [processing-cpu cpu 2/6] WORKDIR /opt/processing
+#9 CACHED
+
+#10 [processing-cpu cpu 3/6] COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
+#10 CACHED
+
+#11 [processing-cpu cpu 4/6] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
+#11 CACHED
+
+#12 [processing-cpu cpu 5/6] COPY services/property-processing/property_processing ./property_processing
+#12 CACHED
+
+#13 [processing-cpu cpu 6/6] RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+#13 CACHED
+
+#14 [processing-cpu] exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:e03dc3dbcf7257dcae74d16ed0fae7a70f8d6a97bd613e4802bda5690d37996b 0.0s done
+#14 exporting config sha256:4a5f35573c4d1daedb7d5577fe9ba0b5669df8a49a162c35e1a98d41cc416de9 0.0s done
+#14 exporting attestation manifest sha256:d42564155946f1eceedb4f4ea68dd0ce167242f286226a83ecf9496151bb873f 0.1s done
+#14 exporting manifest list sha256:a3b384ea5de33000a105ec7d596ee8da11bd3992ea5bf83ad54e90e3efd82edb
+#14 exporting manifest list sha256:a3b384ea5de33000a105ec7d596ee8da11bd3992ea5bf83ad54e90e3efd82edb 0.0s done
+#14 naming to docker.io/library/haven-processing-cpu:latest done
+#14 unpacking to docker.io/library/haven-processing-cpu:latest 0.0s done
+#14 DONE 0.3s
+
+#6 [install internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#6 ...
+
+#15 [processing-cpu] resolving provenance for metadata file
+#15 DONE 0.0s
+
+#6 [install internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#6 ...
+
+#16 [auth] library/node:pull token for registry-1.docker.io
+#16 DONE 0.0s
+
+#6 [install internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#6 DONE 2.6s
+
+#5 [api internal] load .dockerignore
+#5 CACHED
+
+#17 [web dependencies  1/15] FROM docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#17 resolve docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 0.0s done
+#17 DONE 0.0s
+
+#18 [worker internal] load build context
+#18 transferring context: 215.44MB 1.4s done
+#18 DONE 1.4s
+
+#19 [web dependencies 11/15] COPY packages/contracts/package.json ./packages/contracts/package.json
+#19 CACHED
+
+#20 [web dependencies  8/15] COPY apps/ops/package.json ./apps/ops/package.json
+#20 CACHED
+
+#21 [web dependencies 13/15] COPY packages/ui/package.json ./packages/ui/package.json
+#21 CACHED
+
+#22 [web dependencies  7/15] COPY apps/web/package.json ./apps/web/package.json
+#22 CACHED
+
+#23 [web dependencies 10/15] COPY packages/config/package.json ./packages/config/package.json
+#23 CACHED
+
+#24 [web dependencies  4/15] WORKDIR /workspace
+#24 CACHED
+
+#25 [web dependencies  5/15] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#25 CACHED
+
+#26 [web dependencies 12/15] COPY packages/database/package.json ./packages/database/package.json
+#26 CACHED
+
+#27 [web dependencies  9/15] COPY apps/worker/package.json ./apps/worker/package.json
+#27 CACHED
+
+#28 [web dependencies  3/15] RUN npm install --global pnpm@10.32.1
+#28 CACHED
+
+#29 [web dependencies  6/15] COPY apps/api/package.json ./apps/api/package.json
+#29 CACHED
+
+#30 [web dependencies 14/15] COPY packages/test-support/package.json ./packages/test-support/package.json
+#30 CACHED
+
+#31 [web dependencies  2/15] RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg=7:5.1.9-0+deb12u1 && rm -rf /var/lib/apt/lists/*
+#31 CACHED
+
+#32 [web dependencies 15/15] RUN --mount=type=cache,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
+#32 CACHED
+
+#23 [api dependencies 10/15] COPY packages/config/package.json ./packages/config/package.json
+#23 CACHED
+
+#24 [api dependencies  4/15] WORKDIR /workspace
+#24 CACHED
+
+#22 [api dependencies  7/15] COPY apps/web/package.json ./apps/web/package.json
+#22 CACHED
+
+#28 [api dependencies  3/15] RUN npm install --global pnpm@10.32.1
+#28 CACHED
+
+#25 [api dependencies  5/15] COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+#25 CACHED
+
+#20 [api dependencies  8/15] COPY apps/ops/package.json ./apps/ops/package.json
+#20 CACHED
+
+#19 [api dependencies 11/15] COPY packages/contracts/package.json ./packages/contracts/package.json
+#19 CACHED
+
+#27 [api dependencies  9/15] COPY apps/worker/package.json ./apps/worker/package.json
+#27 CACHED
+
+#21 [api dependencies 13/15] COPY packages/ui/package.json ./packages/ui/package.json
+#21 CACHED
+
+#31 [api dependencies  2/15] RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg=7:5.1.9-0+deb12u1 && rm -rf /var/lib/apt/lists/*
+#31 CACHED
+
+#29 [api dependencies  6/15] COPY apps/api/package.json ./apps/api/package.json
+#29 CACHED
+
+#26 [api dependencies 12/15] COPY packages/database/package.json ./packages/database/package.json
+#26 CACHED
+
+#30 [api dependencies 14/15] COPY packages/test-support/package.json ./packages/test-support/package.json
+#30 CACHED
+
+#33 [install development 1/1] COPY . .
+#33 DONE 0.4s
+
+#34 [web] exporting to image
+#34 ...
+
+#35 [migrate] exporting to image
+#35 exporting layers 8.2s done
+#35 exporting manifest sha256:b7b356e20c1d70352cfa88814fa4fae74cce1eea515d830b58ad6f2a55d169c5
+#35 ...
+
+#34 [web] exporting to image
+#34 exporting layers 8.2s done
+#34 exporting manifest sha256:42107001527eb556040bbbfbc904d6806494f44653e38e69fbbc87b350a999d4
+#34 exporting manifest sha256:42107001527eb556040bbbfbc904d6806494f44653e38e69fbbc87b350a999d4 0.2s done
+#34 exporting config sha256:c29ba215b7b79b201726e3a818925e38ab58eb31f53d0478fca865a48fe3441b
+#34 exporting config sha256:c29ba215b7b79b201726e3a818925e38ab58eb31f53d0478fca865a48fe3441b 0.2s done
+#34 exporting attestation manifest sha256:0ad12ee97a3b4dc7760839900b5e7b9023953aeea7c63594ee768ccbbbd58fe3
+#34 exporting attestation manifest sha256:0ad12ee97a3b4dc7760839900b5e7b9023953aeea7c63594ee768ccbbbd58fe3 0.4s done
+#34 exporting manifest list sha256:96b8a04277ee5b70600a6002b46c6f29ec08d907c48ab6de530aa4bfe291b3a5
+#34 exporting manifest list sha256:96b8a04277ee5b70600a6002b46c6f29ec08d907c48ab6de530aa4bfe291b3a5 0.2s done
+#34 naming to docker.io/library/haven-web:latest 0.1s done
+#34 unpacking to docker.io/library/haven-web:latest
+#34 ...
+
+#36 [ops] exporting to image
+#36 exporting layers 8.2s done
+#36 exporting manifest sha256:f62932b530976a3d45fd074caa3576f6eb84c3754336663060e7f0b9c573b2eb 0.2s done
+#36 exporting config sha256:c8bb720bd5b1752f90f44b3d3e5d4dd3c1311eaf1fdb5fa408a9254822e98f0a 0.2s done
+#36 exporting attestation manifest sha256:66f2f66f673c958d112a6060d34970ba5ad4f8b047206d5e931751d79ae5c97d 0.4s done
+#36 exporting manifest list sha256:781396faaf81b711e6d1045a5bc1fcf240f7887e4320abe8a0102ac19ffdb40a 0.2s done
+#36 naming to docker.io/library/haven-ops:latest 0.0s done
+#36 unpacking to docker.io/library/haven-ops:latest
+#36 ...
+
+#37 [install] exporting to image
+#37 exporting layers 8.2s done
+#37 exporting manifest sha256:f8a75071107b894a893e0f5aba4bbac91676a1885c9fd857c378aa241f261a93 0.2s done
+#37 exporting config sha256:2f49185a656a211694c1af0df9a94c9a8c041493972218754c589fcb55217f2b 0.2s done
+#37 exporting attestation manifest sha256:c6e5bf70677cd99c804a171efcb21a7b3be51428f9498bc783a3183e5bf81bfc 0.4s done
+#37 exporting manifest list sha256:3d61495e0769452225338864bba2303a299a17d1fba9d0e7ee55f5121fd32f06 0.2s done
+#37 naming to docker.io/library/haven-install:latest 0.0s done
+#37 unpacking to docker.io/library/haven-install:latest
+#37 ...
+
+#38 [worker] exporting to image
+#38 exporting layers 8.2s done
+#38 exporting manifest sha256:2feee7b9898158b65cef3f6f58c6f9b839d6b606a0cf4febb398d9426617f303 0.2s done
+#38 exporting config sha256:03d051ccb1c0e1644364a7f994b98f5d79306d5d47919c129c672236be9270c6 0.2s done
+#38 exporting attestation manifest sha256:0ac59d62870b10533550889dc69a592a1d34c298d5472706e385b34ee7f586f7 0.4s done
+#38 exporting manifest list sha256:e4ff7b66329cfd7411a8061c0f52f202239d4739d455d70b52ab86235bf09223 0.2s done
+#38 naming to docker.io/library/haven-worker:latest 0.0s done
+#38 unpacking to docker.io/library/haven-worker:latest
+#38 ...
+
+#39 [api] exporting to image
+#39 exporting layers 8.2s done
+#39 exporting manifest sha256:0f2a7f048cb0aa4ec6b83b62c604cc2a39a702771a476cf9e6ff608efdd23325 0.2s done
+#39 exporting config sha256:f28b7b1b04259baaedc61cec8dc3dcdf1c4e335c929943ac6a4be4ae8ffeafff 0.2s done
+#39 exporting attestation manifest sha256:c1114e721c5b6e4121fd9e635b619c9a84f9420b67c431e31543294c3af2a4de 0.4s done
+#39 exporting manifest list sha256:0d1a42dc65664f19a7e60a8fe472328bfd3d55e5f4780f4bda9a6daf7e0ec768 0.2s done
+#39 naming to docker.io/library/haven-api:latest 0.1s done
+#39 unpacking to docker.io/library/haven-api:latest
+#39 ...
+
+#35 [migrate] exporting to image
+#35 exporting manifest sha256:b7b356e20c1d70352cfa88814fa4fae74cce1eea515d830b58ad6f2a55d169c5 0.2s done
+#35 exporting config sha256:6d57f9e49b65966eeaa5c6958317264f99f3a346cd06490e5d37d90ca299ce83 0.2s done
+#35 exporting attestation manifest sha256:c2ea96f87b7537fabf646b63c3cd491c1b66cf389ae86fcbff90da1a5ef2b041 0.4s done
+#35 exporting manifest list sha256:8e2a9ddb83e8277e68e77f5312aa009d72b55a4425331b1344035d1af6d204e2 0.2s done
+#35 naming to docker.io/library/haven-migrate:latest 0.1s done
+#35 unpacking to docker.io/library/haven-migrate:latest
+#35 unpacking to docker.io/library/haven-migrate:latest 2.0s done
+#35 DONE 11.6s
+
+#39 [api] exporting to image
+#39 unpacking to docker.io/library/haven-api:latest 2.0s done
+#39 DONE 11.6s
+
+#37 [install] exporting to image
+#37 unpacking to docker.io/library/haven-install:latest 2.0s done
+#37 DONE 11.7s
+
+#34 [web] exporting to image
+#34 unpacking to docker.io/library/haven-web:latest 2.0s done
+#34 DONE 11.6s
+
+#36 [ops] exporting to image
+#36 unpacking to docker.io/library/haven-ops:latest 2.0s done
+#36 DONE 11.7s
+
+#38 [worker] exporting to image
+#38 unpacking to docker.io/library/haven-worker:latest 2.0s done
+#38 DONE 11.7s
+
+#40 [migrate] resolving provenance for metadata file
+#40 DONE 0.2s
+
+#41 [web] resolving provenance for metadata file
+#41 DONE 0.2s
+
+#42 [ops] resolving provenance for metadata file
+#42 DONE 0.3s
+
+#43 [worker] resolving provenance for metadata file
+#43 DONE 0.4s
+
+#44 [install] resolving provenance for metadata file
+#44 DONE 0.1s
+
+#45 [api] resolving provenance for metadata file
+#45 DONE 0.0s
+ Image haven-migrate Built 
+ Image haven-install Built 
+ Image haven-processing-cpu Built 
+ Image haven-web Built 
+ Image haven-ops Built 
+ Image haven-worker Built 
+ Image haven-api Built 
+ Network haven_processing Creating 
+ Network haven_processing Created 
+ Container haven-processing-cpu-1 Creating 
+ Container haven-db-1 Running 
+ Container haven-storage-1 Running 
+ Container haven-cache-1 Running 
+ Container haven-identity-1 Recreate 
+ Container haven-mail-1 Recreate 
+ Container haven-scanner-1 Running 
+ Container haven-search-1 Running 
+ Container haven-install-1 Recreate 
+ Container haven-processing-cpu-1 Created 
+ Container haven-install-1 Recreated 
+ Container haven-migrate-1 Recreate 
+ Container haven-identity-1 Recreated 
+ Container haven-mail-1 Recreated 
+ Container haven-migrate-1 Recreated 
+ Container haven-worker-1 Recreate 
+ Container haven-api-1 Recreate 
+ Container haven-worker-1 Recreated 
+ Container haven-api-1 Recreated 
+ Container haven-web-1 Recreate 
+ Container haven-ops-1 Recreate 
+ Container haven-ops-1 Recreated 
+ Container haven-web-1 Recreated 
+ Container haven-proxy-1 Running 
+ Container haven-mail-1 Starting 
+ Container haven-db-1 Waiting 
+ Container haven-processing-cpu-1 Starting 
+ Container haven-install-1 Starting 
+ Container haven-mail-1 Started 
+ Container haven-processing-cpu-1 Started 
+ Container haven-install-1 Started 
+ Container haven-install-1 Waiting 
+ Container haven-db-1 Waiting 
+ Container haven-db-1 Healthy 
+ Container haven-identity-1 Starting 
+ Container haven-identity-1 Started 
+ Container haven-db-1 Healthy 
+ Container haven-install-1 Exited 
+ Container haven-migrate-1 Starting 
+ Container haven-migrate-1 Started 
+ Container haven-search-1 Waiting 
+ Container haven-mail-1 Waiting 
+ Container haven-migrate-1 Waiting 
+ Container haven-cache-1 Waiting 
+ Container haven-migrate-1 Waiting 
+ Container haven-identity-1 Waiting 
+ Container haven-scanner-1 Waiting 
+ Container haven-storage-1 Waiting 
+ Container haven-scanner-1 Healthy 
+ Container haven-mail-1 Healthy 
+ Container haven-cache-1 Healthy 
+ Container haven-storage-1 Healthy 
+ Container haven-search-1 Healthy 
+ Container haven-migrate-1 Exited 
+ Container haven-worker-1 Starting 
+ Container haven-migrate-1 Exited 
+ Container haven-worker-1 Started 
+ Container haven-identity-1 Healthy 
+ Container haven-api-1 Starting 
+ Container haven-api-1 Started 
+ Container haven-api-1 Waiting 
+ Container haven-api-1 Waiting 
+ Container haven-api-1 Healthy 
+ Container haven-ops-1 Starting 
+ Container haven-api-1 Healthy 
+ Container haven-web-1 Starting 
+ Container haven-web-1 Started 
+ Container haven-ops-1 Started 
+ Container haven-storage-1 Waiting 
+ Container haven-scanner-1 Waiting 
+ Container haven-web-1 Waiting 
+ Container haven-proxy-1 Waiting 
+ Container haven-search-1 Waiting 
+ Container haven-cache-1 Waiting 
+ Container haven-ops-1 Waiting 
+ Container haven-identity-1 Waiting 
+ Container haven-worker-1 Waiting 
+ Container haven-install-1 Waiting 
+ Container haven-db-1 Waiting 
+ Container haven-api-1 Waiting 
+ Container haven-mail-1 Waiting 
+ Container haven-migrate-1 Waiting 
+ Container haven-processing-cpu-1 Waiting 
+ Container haven-db-1 Healthy 
+ Container haven-processing-cpu-1 Healthy 
+ Container haven-cache-1 Healthy 
+ Container haven-proxy-1 Healthy 
+ Container haven-mail-1 Healthy 
+ Container haven-worker-1 Healthy 
+ Container haven-install-1 Exited 
+ Container haven-migrate-1 Exited 
+ Container haven-search-1 Healthy 
+ Container haven-scanner-1 Healthy 
+ Container haven-identity-1 Healthy 
+ Container haven-api-1 Healthy 
+ Container haven-storage-1 Healthy 
+ Container haven-web-1 Healthy 
+ Container haven-ops-1 Healthy 
+Identity staff OTP and verified level-2 policy configured.

@@ -15,7 +15,9 @@ services:
     environment: *test-environment
   api:
     env_file: !override [.env.integration]
-    environment: *test-environment
+    environment:
+      <<: *test-environment
+      CAPTURE_UPLOAD_ORIGIN: ${PUBLIC_OPS_URL}
   worker:
     env_file: !override [.env.integration]
     environment: *test-environment
@@ -31,6 +33,7 @@ services:
   identity:
     volumes: !override
       - ./infra/generated/integration/haven-realm.json:/opt/keycloak/data/import/haven-realm.json:ro
+      - ./infra/generated/integration/themes:/opt/keycloak/themes:ro
   storage:
     volumes: !override
       - objects:/data

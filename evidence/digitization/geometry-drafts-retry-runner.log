@@ -1,0 +1,46 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-runner-protocol.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1565[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C03 API transport sends scoped source bytes to a real Python runner and observes its actual raster output[33m 1563[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 12:24:48
+[2m   Duration [22m 2.43s[2m (tests 68%, transform 19%, import 12%)[22m
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-authorized-runner.test.ts [2m([22m[2m4 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 7932[2mms[22m[39m
+   [33m[2m✓[22m[39m current API-owned lease transfers real scoped S3 input to the CPU runner and cancels a superseded acknowledgement[33m 1789[2mms[22m[39m
+[31m   [31m×[31m real CPU upright-image-v1 renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[39m[33m 2956[2mms[22m[39m
+   [33m[2m✓[22m[39m real CPU pdfium-150dpi-v1 renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[33m 2042[2mms[22m[39m
+   [33m[2m✓[22m[39m real CPU pdfium-overbudget renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[33m 1142[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-coordinator.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 8595[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-R06/C02 dedicated real queue recovers both enqueue crash boundaries; duplicate events reuse one actual CPU execution and private result[33m 8217[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C06 real HTTP outage and BullMQ delivery obey five retries without resetting the failed job[33m 374[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-public-derivatives.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 294[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-authorized-runner.test.ts[2m > [22mreal CPU upright-image-v1 renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit
+[31m[1mAssertionError[22m: [{"status":409,"message":"The geometry parent changed. Reload before saving."},{"status":409,"message":"The geometry parent changed. Reload before saving."}]: expected [] to have a length of 1 but got +0[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+[36m [2m❯[22m tests/integration/digitization-authorized-runner.test.ts:[2m164:186[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (7)[39m
+[2m   Start at [22m 12:24:51
+[2m   Duration [22m 20.64s[2m (tests 83%, import 14%, transform 3%)[22m
+

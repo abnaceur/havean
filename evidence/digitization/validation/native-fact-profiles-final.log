@@ -1,0 +1,83 @@
+ Container haven-processing-tests-wheel-download-run-b427cbcc1ec6 Creating 
+ Container haven-processing-tests-wheel-download-run-b427cbcc1ec6 Created 
+Verified cached pypdf-6.1.1-py3-none-any.whl
+Verified cached pillow-11.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
+Verified cached pytest-8.4.2-py3-none-any.whl
+Verified cached iniconfig-2.1.0-py3-none-any.whl
+Verified cached packaging-25.0-py3-none-any.whl
+Verified cached pluggy-1.6.0-py3-none-any.whl
+Verified cached pygments-2.19.2-py3-none-any.whl
+Verified cached pypdfium2-5.14.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+ Image haven-processing-tests-cpu Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 608B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.cpu
+#2 transferring dockerfile: 1.49kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 192B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 22.06kB done
+#5 DONE 0.0s
+
+#6 [cpu 1/8] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#6 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#6 DONE 0.0s
+
+#7 [cpu 4/8] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
+#7 CACHED
+
+#8 [cpu 5/8] COPY docs/adr/processing-dependencies.json ./dependencies.json
+#8 CACHED
+
+#9 [cpu 2/8] WORKDIR /opt/processing
+#9 CACHED
+
+#10 [cpu 6/8] COPY docs/adr/licenses/pypdfium2-5.14.0 /usr/share/doc/haven-processing/pypdfium2-5.14.0
+#10 CACHED
+
+#11 [cpu 3/8] COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
+#11 CACHED
+
+#12 [cpu 7/8] COPY services/property-processing/property_processing ./property_processing
+#12 CACHED
+
+#13 [cpu 8/8] RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+#13 CACHED
+
+#14 [cpu-tests 1/3] COPY services/property-processing/locks/test.lock /tmp/test.lock
+#14 CACHED
+
+#15 [cpu-tests 2/3] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/test.lock && python -m pip check
+#15 CACHED
+
+#16 [cpu-tests 3/3] COPY services/property-processing/tests ./tests
+#16 DONE 0.1s
+
+#17 exporting to image
+#17 exporting layers 0.1s done
+#17 exporting manifest sha256:b0947e73b0220cb6811a8a752182addd62b0298e58333bc45f442e00e69e675a 0.0s done
+#17 exporting config sha256:51aaafcac6aff5821bce897adeb8fd343e1eafdb57ba6e148cccd044d6a839fc 0.0s done
+#17 exporting attestation manifest sha256:19c9b7e07cc73a82ca33b5b355fe27e73a423c8138609c6d99e9aca9f181d869
+#17 exporting attestation manifest sha256:19c9b7e07cc73a82ca33b5b355fe27e73a423c8138609c6d99e9aca9f181d869 0.1s done
+#17 exporting manifest list sha256:3c66bf5c3a7e6258b7f4786435787b1fd92c20ecf7ad36605e63044e1c96ab32 0.0s done
+#17 naming to docker.io/library/haven-processing-tests-cpu:latest
+#17 naming to docker.io/library/haven-processing-tests-cpu:latest done
+#17 unpacking to docker.io/library/haven-processing-tests-cpu:latest 0.0s done
+#17 DONE 0.4s
+
+#18 resolving provenance for metadata file
+#18 DONE 0.0s
+ Image haven-processing-tests-cpu Built 
+ Container haven-processing-tests-cpu-run-75d4d2a7bab4 Creating 
+ Container haven-processing-tests-cpu-run-75d4d2a7bab4 Created 
+.....................................................................    [100%]
+69 passed in 10.49s

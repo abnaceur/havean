@@ -1,0 +1,55 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-runner-protocol.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1344[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C03 API transport sends scoped source bytes to a real Python runner and observes its actual raster output[33m 1342[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 14:02:15
+[2m   Duration [22m 2.11s[2m (tests 67%, transform 20%, import 12%)[22m
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+[90mstdout[2m | tests/integration/digitization-coordinator.test.ts[2m > [22m[2mHE-R06/C02 dedicated real queue recovers both enqueue crash boundaries; duplicate events reuse one actual CPU execution and private result
+[22m[39m{"event":"test.coordinator.failed","code":"INVALID_DATA"}
+
+ [31m❯[39m tests/integration/digitization-coordinator.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 24691[2mms[22m[39m
+[31m   [31m×[31m HE-R06/C02 dedicated real queue recovers both enqueue crash boundaries; duplicate events reuse one actual CPU execution and private result[39m[33m 24325[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C06 real HTTP outage and BullMQ delivery obey five retries without resetting the failed job[33m 363[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-authorized-runner.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 8403[2mms[22m[39m
+   [33m[2m✓[22m[39m current API-owned lease transfers real scoped S3 input to the CPU runner and cancels a superseded acknowledgement[33m 1736[2mms[22m[39m
+   [33m[2m✓[22m[39m real CPU upright-image-v1 renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[33m 3276[2mms[22m[39m
+   [33m[2m✓[22m[39m real CPU pdfium-150dpi-v1 renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[33m 2052[2mms[22m[39m
+   [33m[2m✓[22m[39m real CPU pdfium-overbudget renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[33m 1336[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-public-derivatives.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 309[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B06 actual scanned public photo variants omit source GPS EXIF and private location metadata[33m 307[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-coordinator.test.ts[2m > [22mHE-R06/C02 dedicated real queue recovers both enqueue crash boundaries; duplicate events reuse one actual CPU execution and private result
+[31m[1mAssertionError[22m: expected 'running' to be 'succeeded' // Object.is equality[39m
+
+Expected: [32m"succeeded"[39m
+Received: [31m"running"[39m
+
+[36m [2m❯[22m tests/integration/digitization-coordinator.test.ts:[2m82:166[22m[39m
+    [90m 80|[39m   worker=new Worker(queueName,createDigitizationProcessor(apiOrigin,te…
+    [90m 81|[39m   worker.on('failed',(_job:any,error:Error)=>console.log(JSON.stringif…
+    [90m 82|[39m   await expect.poll(async()=>transaction(actor,async c=>(await c.query…
+    [90m   |[39m                                                                                                                                                                      [31m^[39m
+    [90m 83|[39m   await queue.add('engine-event',{id:eventId},{jobId:crypto.randomUUID…
+    [90m 84|[39m   await expect.poll(async()=>queue.getCompletedCount(),{timeout:10000}…
+
+[31m[1mCaused by: Error[22m: Matcher did not succeed in time.[39m
+[36m [2m❯[22m tests/integration/digitization-coordinator.test.ts:[2m82:3[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (7)[39m
+[2m   Start at [22m 14:02:18
+[2m   Duration [22m 37.29s[2m (tests 90%, import 8%, transform 2%)[22m
+

@@ -1,0 +1,78 @@
+{"project":"desktop","privatePageCommitted":true}
+{"project":"mobile","privatePageCommitted":true}
+ Container haven-integration-tests-run-16f5ee4e4b2f Creating 
+ Container haven-integration-tests-run-16f5ee4e4b2f Created 
+
+Running 4 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (8.0s)
+  ✘  2 [desktop] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (5.1s)
+  ✓  3 [mobile] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (6.0s)
+  ✘  4 [mobile] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (3.9s)
+
+
+  1) [desktop] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 500
+
+      39 |  const invalid={version:saved.workspaceVersion,artifactId:fixture.artifactId,clockwiseDegrees:0,geometry:{...saved.geometry,id:crypto.randomUUID(),revision:saved.geometry.revision+1,parentRevision:saved.geometry.revision,openings:[{...saved.geometry.openings[0],width:'999999'}]}};
+      40 |  const refused=await page.request.post(origin+route,{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:invalid});expect(refused.status()).toBe(422);expect((await (await page.request.get(origin+route)).json()).data).toEqual(saved);
+    > 41 |  const preview=await page.request.get(origin+route+'/preview.svg'),svg=await preview.text();expect(preview.status()).toBe(200);expect(preview.headers()['content-type']).toContain('image/svg+xml');expect(preview.headers()['cache-control']).toContain('no-store');expect(preview.headers()['content-security-policy']).toContain('sandbox');expect(svg).not.toContain('<script>');expect(svg).toContain('&lt;script&gt;');expect(svg).toContain('x1="128" y1="-128" x2="160" y2="-128"');expect(svg).toContain('x1="224" y1="-128" x2="512" y2="-128"');expect(svg).not.toContain('m²');
+         |                                                                                                                      ^
+      42 |  await page.reload();await expect(canvas.locator('polygon[data-room-id]')).toHaveCount(1);await expect(canvas.locator('line[data-opening-id]')).toHaveCount(1);await expect(canvas.locator('text[data-room-label]')).toHaveText('Living <script>alert(1)</script>');expect((await (await page.request.get(origin+route)).json()).data).toEqual(saved);
+      43 | });
+      44 |
+        at /workspace/tests/e2e/digitization-plan.spec.ts:41:118
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 500
+
+      39 |  const invalid={version:saved.workspaceVersion,artifactId:fixture.artifactId,clockwiseDegrees:0,geometry:{...saved.geometry,id:crypto.randomUUID(),revision:saved.geometry.revision+1,parentRevision:saved.geometry.revision,openings:[{...saved.geometry.openings[0],width:'999999'}]}};
+      40 |  const refused=await page.request.post(origin+route,{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:invalid});expect(refused.status()).toBe(422);expect((await (await page.request.get(origin+route)).json()).data).toEqual(saved);
+    > 41 |  const preview=await page.request.get(origin+route+'/preview.svg'),svg=await preview.text();expect(preview.status()).toBe(200);expect(preview.headers()['content-type']).toContain('image/svg+xml');expect(preview.headers()['cache-control']).toContain('no-store');expect(preview.headers()['content-security-policy']).toContain('sandbox');expect(svg).not.toContain('<script>');expect(svg).toContain('&lt;script&gt;');expect(svg).toContain('x1="128" y1="-128" x2="160" y2="-128"');expect(svg).toContain('x1="224" y1="-128" x2="512" y2="-128"');expect(svg).not.toContain('m²');
+         |                                                                                                                      ^
+      42 |  await page.reload();await expect(canvas.locator('polygon[data-room-id]')).toHaveCount(1);await expect(canvas.locator('line[data-opening-id]')).toHaveCount(1);await expect(canvas.locator('text[data-room-label]')).toHaveText('Living <script>alert(1)</script>');expect((await (await page.request.get(origin+route)).json()).data).toEqual(saved);
+      43 | });
+      44 |
+        at /workspace/tests/e2e/digitization-plan.spec.ts:41:118
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG 
+    [mobile] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG 
+  2 passed (24.8s)
+

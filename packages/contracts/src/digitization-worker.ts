@@ -1,0 +1,25 @@
+import {z} from 'zod';
+export const digitizationCleanupCommand=z.strictObject({});
+export const digitizationCleanupReceipt=z.strictObject({reclaimed:z.number().int().min(0).max(1)});
+import {digitizationStageType} from './digitization';
+const scope={engineId:z.uuid(),actorId:z.uuid(),organizationId:z.uuid()};
+export const digitizationStageLease=z.strictObject({...scope,expectedVersion:z.number().int().positive()});
+export const digitizationRunDispatch=digitizationStageLease;
+export const digitizationRunDispatchReceipt=z.strictObject({id:z.uuid(),state:z.literal('queued'),version:z.number().int().positive(),stageIds:z.array(z.uuid()).min(1)});
+export const digitizationStageExecution=z.strictObject({...scope,executionId:z.uuid(),fencingToken:z.string().regex(/^[1-9]\d{0,18}$/)});
+export const digitizationStagePreparation=digitizationStageExecution.extend({assetId:z.uuid()});
+export const digitizationLeaseRecord=z.strictObject({id:z.uuid(),run_id:z.uuid(),version:z.number().int().positive(),attempt:z.number().int().positive(),fencing_token:z.string().regex(/^[1-9]\d{0,18}$/),execution_id:z.uuid(),lease_until:z.iso.datetime(),input_revision:z.number().int().positive(),input_fingerprint:z.string().regex(/^[a-f0-9]{64}$/),profile_id:z.string().min(1).max(100),stage_type:digitizationStageType});
+export const digitizationLeaseRenewal=digitizationLeaseRecord.pick({version:true,lease_until:true,fencing_token:true,execution_id:true});
+
+export const digitizationExecutionAcknowledgement=z.strictObject({executionId:z.uuid(),state:z.enum(['awaiting_source','pending','running','succeeded','failed_retryable','failed_terminal','cancelled'])});
+export const digitizationRenderReceipt=z.strictObject({executionId:z.uuid(),state:z.literal('succeeded'),artifactIds:z.array(z.uuid()).min(1).max(50)});
+export const digitizationOutboxDelivery=z.strictObject({eventId:z.uuid()});
+export const digitizationExecutionHandoff=digitizationStagePreparation.extend({stageId:z.uuid()});
+export type DigitizationExecutionHandoff=z.infer<typeof digitizationExecutionHandoff>;
+export const digitizationCancellationHandoff=z.strictObject({...scope,runId:z.uuid()});
+export const digitizationCancellationReceipt=z.strictObject({id:z.uuid(),state:z.enum(['cancel_requested','cancelled']),version:z.number().int().positive()});
+export const digitizationRunCancellation=z.strictObject({expectedVersion:z.number().int().positive()});
+export const digitizationOutboxReceipt=z.strictObject({eventId:z.uuid(),executions:z.array(digitizationExecutionHandoff).max(100),cancellation:digitizationCancellationHandoff.nullable().default(null)});
+export const digitizationGpuLease=digitizationStageExecution;
+export const digitizationGpuLeaseRenewal=digitizationStageExecution.extend({slotId:z.uuid(),slotFence:z.string().regex(/^[1-9]\d{0,18}$/)});
+export const digitizationGpuLeaseRecord=z.strictObject({slot_id:z.uuid(),fencing_token:z.string().regex(/^[1-9]\d{0,18}$/),lease_until:z.iso.datetime(),execution_id:z.uuid()});

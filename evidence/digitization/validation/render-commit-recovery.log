@@ -1,0 +1,62 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-runner-protocol.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1350[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C03 API transport sends scoped source bytes to a real Python runner and observes its actual raster output[33m 1349[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 10:17:07
+[2m   Duration [22m 2.28s[2m (tests 63%, transform 23%, import 14%)[22m
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-authorized-runner.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 3080[2mms[22m[39m
+   [33m[2m✓[22m[39m current API-owned lease transfers real scoped S3 input to the CPU runner and cancels a superseded acknowledgement[33m 1679[2mms[22m[39m
+[31m   [31m×[31m real CPU renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[39m[33m 1399[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-authorized-runner.test.ts[2m > [22mreal CPU renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit
+[31m[1mAssertionError[22m: expected error: Agency manager scope is required { …(15) } to match object { status: 403 }
+(18 matching properties omitted from actual)[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- {[39m
+[32m-   "status": 403,[39m
+[31m+ error {[39m
+[31m+   "message": "Agency manager scope is required",[39m
+[31m+   "length": 155,[39m
+[31m+   "name": "error",[39m
+[31m+   "severity": "ERROR",[39m
+[31m+   "code": "42501",[39m
+[31m+   "detail": undefined,[39m
+[31m+   "hint": undefined,[39m
+[31m+   "position": undefined,[39m
+[31m+   "internalPosition": undefined,[39m
+[31m+   "internalQuery": undefined,[39m
+[31m+   "where": "PL/pgSQL function agency_membership_guard() line 5 at RAISE",[39m
+[31m+   "schema": undefined,[39m
+[31m+   "table": undefined,[39m
+[31m+   "column": undefined,[39m
+[31m+   "dataType": undefined,[39m
+[31m+   "constraint": undefined,[39m
+[31m+   "file": "pl_exec.c",[39m
+[31m+   "line": "3897",[39m
+[31m+   "routine": "exec_stmt_raise",[39m
+[2m  }[22m
+
+[36m [2m❯[22m tests/integration/digitization-authorized-runner.test.ts:[2m83:102[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 10:17:10
+[2m   Duration [22m 4.76s[2m (tests 66%, import 22%, transform 11%)[22m
+

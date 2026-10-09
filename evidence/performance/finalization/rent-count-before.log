@@ -1,0 +1,53 @@
+                                                                                                                                   QUERY PLAN                                                                                                                                   
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=94638.85..94638.86 rows=1 width=8) (actual time=108.311..108.318 rows=1 loops=1)
+   Buffers: shared hit=7866 read=181
+   ->  Hash Join  (cost=91459.81..94629.09 rows=3901 width=0) (actual time=68.801..106.213 rows=29998 loops=1)
+         Hash Cond: (u.community_id = co.id)
+         Buffers: shared hit=7866 read=181
+         ->  Hash Join  (cost=91456.41..94557.43 rows=7802 width=16) (actual time=68.557..99.713 rows=29998 loops=1)
+               Hash Cond: (u.id = l.unit_id)
+               Buffers: shared hit=7863 read=181
+               ->  Seq Scan on units u  (cost=0.00..2648.00 rows=100000 width=48) (actual time=0.024..7.803 rows=100000 loops=1)
+                     Buffers: shared hit=1648
+               ->  Hash  (cost=91358.88..91358.88 rows=7802 width=43) (actual time=68.355..68.357 rows=29998 loops=1)
+                     Buckets: 32768 (originally 8192)  Batches: 1 (originally 1)  Memory Usage: 2483kB
+                     Buffers: shared hit=6215 read=181
+                     ->  Bitmap Heap Scan on listings l  (cost=969.82..91358.88 rows=7802 width=43) (actual time=18.862..56.042 rows=29998 loops=1)
+                           Recheck Cond: ((transaction = 'rent'::text) AND (status = 'published'::text))
+                           Filter: ((currency = 'CNY'::bpchar) AND (segment = 'residential'::text) AND (rent_period = 'month'::text) AND ((expires_at IS NULL) OR (expires_at > now())) AND ((transaction <> 'rent'::text) OR (NOT (ANY (unit_id = (hashed SubPlan 2).col1)))))
+                           Heap Blocks: exact=6050
+                           Buffers: shared hit=6215 read=181
+                           ->  Bitmap Index Scan on listings_price_text_public  (cost=0.00..967.87 rows=30327 width=0) (actual time=10.852..10.852 rows=29998 loops=1)
+                                 Index Cond: (transaction = 'rent'::text)
+                                 Buffers: shared hit=2 read=181
+                           SubPlan 2
+                             ->  Function Scan on public_unavailable_rental_units blocked  (cost=0.25..10.25 rows=1000 width=16) (actual time=5.661..5.662 rows=1 loops=1)
+                                   Buffers: shared hit=163
+         ->  Hash  (cost=3.36..3.36 rows=3 width=16) (actual time=0.186..0.189 rows=6 loops=1)
+               Buckets: 1024  Batches: 1  Memory Usage: 9kB
+               Buffers: shared hit=3
+               ->  Hash Join  (cost=1.14..3.36 rows=3 width=16) (actual time=0.146..0.164 rows=6 loops=1)
+                     Hash Cond: (d.id = co.district_id)
+                     Buffers: shared hit=3
+                     ->  Nested Loop  (cost=0.00..2.18 rows=4 width=16) (actual time=0.044..0.055 rows=6 loops=1)
+                           Join Filter: (d.city_id = ci.id)
+                           Rows Removed by Join Filter: 1
+                           Buffers: shared hit=2
+                           ->  Seq Scan on cities ci  (cost=0.00..1.02 rows=1 width=16) (actual time=0.031..0.033 rows=1 loops=1)
+                                 Filter: (slug = 'bj'::text)
+                                 Rows Removed by Filter: 1
+                                 Buffers: shared hit=1
+                           ->  Seq Scan on districts d  (cost=0.00..1.07 rows=7 width=32) (actual time=0.006..0.009 rows=7 loops=1)
+                                 Buffers: shared hit=1
+                     ->  Hash  (cost=1.06..1.06 rows=6 width=32) (actual time=0.049..0.049 rows=6 loops=1)
+                           Buckets: 1024  Batches: 1  Memory Usage: 9kB
+                           Buffers: shared hit=1
+                           ->  Seq Scan on communities co  (cost=0.00..1.06 rows=6 width=32) (actual time=0.013..0.018 rows=6 loops=1)
+                                 Buffers: shared hit=1
+ Planning:
+   Buffers: shared hit=1044
+ Planning Time: 29.728 ms
+ Execution Time: 109.749 ms
+(49 rows)
+

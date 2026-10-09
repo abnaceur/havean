@@ -1,0 +1,20 @@
+
+> @haven/api@0.1.0 typecheck /workspace/apps/api
+> tsc --noEmit
+
+src/inventory/digitization/runner-client.ts(20,81): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(input: string | URL | Request, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Argument of type '{ signal: AbortSignal; body?: string | Buffer<ArrayBufferLike> | undefined; method: string; headers: { 'Content-Type'?: string | undefined; Authorization: string; }; }' is not assignable to parameter of type 'RequestInit'.
+      Types of property 'body' are incompatible.
+        Type 'string | Buffer<ArrayBufferLike> | undefined' is not assignable to type 'BodyInit | null | undefined'.
+          Type 'Buffer<ArrayBufferLike>' is not assignable to type 'BodyInit | null | undefined'.
+            Type 'Buffer<ArrayBufferLike>' is missing the following properties from type 'URLSearchParams': size, append, delete, get, and 2 more.
+  Overload 2 of 2, '(input: URL | RequestInfo, init?: RequestInit | undefined): Promise<Response>', gave the following error.
+    Argument of type '{ signal: AbortSignal; body?: string | Buffer<ArrayBufferLike> | undefined; method: string; headers: { 'Content-Type'?: string | undefined; Authorization: string; }; }' is not assignable to parameter of type 'RequestInit'.
+      Types of property 'body' are incompatible.
+        Type 'string | Buffer<ArrayBufferLike> | undefined' is not assignable to type 'BodyInit | null | undefined'.
+          Type 'Buffer<ArrayBufferLike>' is not assignable to type 'BodyInit | null | undefined'.
+            Type 'Buffer<ArrayBufferLike>' is missing the following properties from type 'URLSearchParams': size, append, delete, get, and 2 more.
+/workspace/apps/api:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @haven/api@0.1.0 typecheck: `tsc --noEmit`
+Exit status 2

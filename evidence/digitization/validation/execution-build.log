@@ -1,0 +1,40 @@
+
+> haven-real-estate@0.1.0 build /workspace
+> pnpm -r build
+
+Scope: 9 of 10 workspace projects
+packages/config build$ tsc --noEmit
+packages/contracts build$ tsc --noEmit
+packages/database build$ tsc --noEmit
+packages/test-support build$ tsc --noEmit
+packages/test-support build: Done
+packages/config build: Done
+packages/database build: Done
+packages/contracts build: Done
+apps/api build$ tsc
+apps/worker build$ tsc
+packages/ui build$ tsc --noEmit
+apps/worker build: Done
+packages/ui build: Done
+apps/api build: Done
+apps/ops build$ next build
+apps/web build$ node scripts/copy-maplibre-worker.mjs && next build
+apps/ops build: ▲ Next.js 16.3.8 (Turbopack)
+apps/web build: ▲ Next.js 16.3.8 (Turbopack)
+apps/ops build: ✓ Running next.config.ts took 25ms
+apps/web build: ✓ Running next.config.ts took 23ms
+apps/ops build:   Creating an optimized production build ...
+apps/web build:   Creating an optimized production build ...
+apps/ops build: ✓ Compiled successfully in 3.9s
+apps/ops build:   Running TypeScript ...
+apps/web build: ✓ Compiled successfully in 4.0s
+apps/web build:   Running TypeScript ...
+apps/ops build: src/market-configuration.tsx(8,369): error TS2551: Property 'GeographyController_marketRead' does not exist on type '{ AdministrationController_audit: (request: Request<{ readonly method: "GET"; readonly path: "/api/v1/ops/audit"; readonly params: ZodObject<{}, $strip>; readonly query: ZodObject<{}, $strip>; readonly body: ZodUndefined; readonly response: ZodArray<...>; }>) => Promise<...>; ... 324 more ...; ViewingReminderWorkerC...'. Did you mean 'GeographyController_market'?
+apps/ops build: src/market-configuration.tsx(8,512): error TS2551: Property 'GeographyController_marketHistory' does not exist on type '{ AdministrationController_audit: (request: Request<{ readonly method: "GET"; readonly path: "/api/v1/ops/audit"; readonly params: ZodObject<{}, $strip>; readonly query: ZodObject<{}, $strip>; readonly body: ZodUndefined; readonly response: ZodArray<...>; }>) => Promise<...>; ... 324 more ...; ViewingReminderWorkerC...'. Did you mean 'GeographyController_market'?
+apps/ops build: src/market-configuration.tsx(14,1624): error TS7006: Parameter 'h' implicitly has an 'any' type.
+apps/ops build: Failed to type check.
+apps/ops build: Failed
+/workspace/apps/ops:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @haven/ops@0.1.0 build: `next build`
+Exit status 1
+ ELIFECYCLE  Command failed with exit code 1.

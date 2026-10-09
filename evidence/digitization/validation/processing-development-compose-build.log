@@ -1,0 +1,59 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.cpu
+#1 transferring dockerfile: 1.49kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#2 ...
+
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#2 DONE 2.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context:
+#4 transferring context: 192B done
+#4 DONE 0.3s
+
+#5 [cpu 1/8] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#5 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 3.48kB done
+#6 DONE 0.0s
+
+#7 [cpu 4/8] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
+#7 CACHED
+
+#8 [cpu 7/8] COPY services/property-processing/property_processing ./property_processing
+#8 CACHED
+
+#9 [cpu 2/8] WORKDIR /opt/processing
+#9 CACHED
+
+#10 [cpu 5/8] COPY docs/adr/processing-dependencies.json ./dependencies.json
+#10 CACHED
+
+#11 [cpu 6/8] COPY docs/adr/licenses/pypdfium2-5.14.0 /usr/share/doc/haven-processing/pypdfium2-5.14.0
+#11 CACHED
+
+#12 [cpu 3/8] COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
+#12 CACHED
+
+#13 [cpu 8/8] RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+#13 CACHED
+
+#14 exporting to image
+#14 exporting layers done
+#14 exporting manifest sha256:488a000f94d85b1dc4f1252c70a56054dca55622fb99ad4057fcd4389956aae4 done
+#14 exporting config sha256:2788b751c727646d5c78240804885c368bd5011a70003e2e7a64698db37d2bc4 done
+#14 exporting attestation manifest sha256:0d78b5e60b2d24affda46060fef5c44a72e54256242f26ef67592b63e8d53c69 0.1s done
+#14 exporting manifest list sha256:fc1752c91a506593bcb075a3715930269ba2db7ac4078cef479c1462ad93c316
+#14 exporting manifest list sha256:fc1752c91a506593bcb075a3715930269ba2db7ac4078cef479c1462ad93c316 0.0s done
+#14 naming to docker.io/library/haven-processing-cpu:latest done
+#14 unpacking to docker.io/library/haven-processing-cpu:latest 0.0s done
+#14 DONE 0.2s

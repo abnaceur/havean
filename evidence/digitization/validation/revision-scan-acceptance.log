@@ -1,0 +1,61 @@
+ Container haven-integration-tests-run-14405515c6ca Creating 
+ Container haven-integration-tests-run-14405515c6ca Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-schema.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1667[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-A04 expired explicit evidence grant removes private derived reads[33m 1207[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-revision-authority.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 750[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B05 owner grants bootstrap an exact reserved revision; no grant carryover or historical exposure; revoked source can be removed immutably[33m 748[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-inputs.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 873[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B05 real stored source binds immutable revisions; removal does not mutate existing run snapshots[33m 870[2mms[22m[39m
+ [31m❯[39m tests/integration/digitization-workflow.test.ts [2m([22m[2m7 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 1097[2mms[22m[39m
+   [32m✓[39m HE-C01 real database rejects cycles, sealed graph edits, invalid transitions and unsatisfied dependencies[32m 191[2mms[22m[39m
+   [32m✓[39m HE-C01 cancellation fences active results and preserves terminal successful branches[32m 122[2mms[22m[39m
+   [32m✓[39m HE-C01 expired execution cannot commit success; recovery obtains a new execution and fence[32m 156[2mms[22m[39m
+   [32m✓[39m HE-C01 API-owned graph snapshot checks actor, target and current source/version before persistence[32m 74[2mms[22m[39m
+   [32m✓[39m HE-C01 skipping a required upstream stage does not authorize its dependent execution[32m 82[2mms[22m[39m
+   [32m✓[39m HE-C01 dispatch atomically queues only roots and emits one redacted durable event; duplicate and stale dispatch are denied[32m 274[2mms[22m[39m
+[31m   [31m×[31m HE-C01 dispatch rejects changed source authority, initiating actor and source revision without queuing a run[39m[32m 194[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-validation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 382[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-intakes.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 342[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-source-scan.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 24[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-workflow.test.ts[2m > [22mHE-C01 dispatch rejects changed source authority, initiating actor and source revision without queuing a run
+[31m[1mAssertionError[22m: expected HttpException: Processing run not found. { …(4) } to match object { status: 403 }
+(8 matching properties omitted from actual)[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- {[39m
+[32m-   "status": 403,[39m
+[31m+ HttpException {[39m
+[31m+   "status": 404,[39m
+[2m  }[22m
+
+[36m [2m❯[22m tests/integration/digitization-workflow.test.ts:[2m115:58[22m[39m
+    [90m113|[39m  await c.query('SAVEPOINT source_authority');
+    [90m114|[39m  await c.query("UPDATE media_assets SET status='rejected',version=vers…
+    [90m115|[39m  await expect(dispatchRunGraph(c,actor,f.engine,f.run,1)).rejects.toMa…
+    [90m   |[39m                                                          [31m^[39m
+    [90m116|[39m  await c.query('ROLLBACK TO SAVEPOINT source_authority');
+    [90m117|[39m  await c.query("INSERT INTO property_input_revisions(digitization_id,o…
+[90m [2m❯[22m tests/integration/digitization-workflow.test.ts:[2m8:125[22m[39m
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m rollback tests/integration/digitization-workflow.test.ts:[2m8:91[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (7)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m21 passed[39m[22m[90m (22)[39m
+[2m   Start at [22m 11:04:48
+[2m   Duration [22m 13.37s[2m (import 53%, tests 41%, transform 6%)[22m
+
+[2m    Isolate [22m [33m7 workers spawned[39m[2m · ~114ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~682ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+

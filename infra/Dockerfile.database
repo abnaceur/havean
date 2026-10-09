@@ -1,0 +1,22 @@
+# Core geometry only: this platform does not accept raster, GDAL or SFCGAL inputs.
+FROM postgres:17.11-alpine3.23@sha256:9ea644da56f1a82283b173fa38a316636fe7c538991a8ae41998cd3765434991 AS geometry
+RUN apk add --no-cache --virtual .geometry-build autoconf automake g++ gcc make perl gettext-dev \
+    libxml2-dev geos-dev proj-dev json-c-dev zlib-dev curl
+RUN curl --fail --location https://download.osgeo.org/postgis/source/postgis-3.6.4.tar.gz -o /tmp/postgis.tar.gz \
+    && echo 'ed8dc6679f1e06f7b113592b04cde2a7e00f1b1e681294c8ca2204058990cec6  /tmp/postgis.tar.gz' | sha256sum -c - \
+    && mkdir /tmp/postgis && tar -xzf /tmp/postgis.tar.gz -C /tmp/postgis --strip-components=1
+WORKDIR /tmp/postgis
+RUN ./configure --without-raster --without-sfcgal --without-protobuf \
+    && make -j2 with_llvm=no && make install with_llvm=no DESTDIR=/opt/geometry
+FROM postgres:17.11-alpine3.23@sha256:9ea644da56f1a82283b173fa38a316636fe7c538991a8ae41998cd3765434991
+RUN apk add --no-cache geos proj json-c libxml2 libstdc++ su-exec=0.3-r0 \
+    && rm /usr/local/bin/gosu \
+    && printf '#!/bin/sh\nexec /sbin/su-exec "$@"\n' > /usr/local/bin/gosu \
+    && chmod 755 /usr/local/bin/gosu
+COPY --from=geometry /opt/geometry/ /
+
+COPY --chmod=755 infra/database-entrypoint.sh /usr/local/bin/haven-database-entrypoint.sh
+COPY --chmod=755 infra/database-layout.sh /docker-entrypoint-initdb.d/00-haven-layout.sh
+ENTRYPOINT ["/usr/local/bin/haven-database-entrypoint.sh"]
+
+CMD ["postgres"]

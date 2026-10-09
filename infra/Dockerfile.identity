@@ -1,0 +1,10 @@
+# Preserve the official Keycloak distribution; use a maintained small Java runtime.
+FROM quay.io/keycloak/keycloak:26.8.0@sha256:b0f60d489d51c5d113390bdf5461d4c06e6051be026c05549f2e1e10ec352bcc AS distribution
+FROM eclipse-temurin:21-jre-alpine@sha256:51ab5e3302e7141ce665ca3ea85e8b5cd648eafbc3c0c90dd79d6537684e4555
+RUN apk add --no-cache bash=5.3.9-r1
+ENV KC_RUN_IN_CONTAINER=true
+WORKDIR /opt/keycloak
+COPY --from=distribution --chown=1000:0 /opt/keycloak /opt/keycloak
+USER 1000:0
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
+CMD ["start"]
