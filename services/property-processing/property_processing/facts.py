@@ -9,6 +9,7 @@ from datetime import date
 from .sources import SourceError
 
 _DIGITS = str.maketrans('٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹', '01234567890123456789')
+UNKNOWN_TEXT = frozenset(('unknown', 'not available', 'n/a', 'inconnu', 'non disponible', 'غير معروف', 'غير متوفر'))
 
 
 def normalize_decimal(raw: str, locale: str) -> str:
@@ -79,12 +80,39 @@ AREA_LABELS = (
 )
 _NUMBER = r'([0-9٠-٩۰-۹][0-9٠-٩۰-۹.,٫٬ \u00a0\u202f]{0,63}?)'
 _UNITS = r'(m²|m2|m\^2|م²|م2|متر مربع|ft²|ft2|ha)'
+COUNT_LABELS = (
+    ('bedrooms', r'(?:bedrooms|bedroom count|nombre de chambres|عدد غرف النوم)'),
+    ('livingRooms', r'(?:living rooms|living room count|nombre de salons|عدد غرف المعيشة)'),
+    ('bathrooms', r'(?:bathrooms|bathroom count|nombre de salles de bains|عدد الحمامات)'),
+    ('parkingSpaces', r'(?:parking spaces|parking space count|nombre de places de parking|عدد مواقف السيارات)'),
+)
+
+TEXT_LABELS = (
+    ('country', r'(?:country|pays|البلد|الدولة)'),
+    ('region', r'(?:region|emirate|wilaya|région|ولاية|إمارة)'),
+    ('city', r'(?:city|ville|المدينة)'),
+    ('district', r'(?:district|quartier|الحي)'),
+    ('address', r'(?:property address|address|adresse|عنوان العقار|العنوان)'),
+    ('propertyType', r'(?:property type|type de bien|نوع العقار)'),
+    ('tenure', r'(?:tenure|type de tenure|نوع الحيازة)'),
+    ('ownerName', r'(?:owner name|nom du propriétaire|اسم المالك)'),
+    ('boundary', r'(?:boundary|boundaries|limites|الحدود)'),
+)
+IDENTIFIER_LABELS = (
+    ('plotId', r'(?:plot (?:number|id)|numéro de parcelle|رقم القطعة)'),
+    ('buildingId', r'(?:building (?:number|id)|numéro du bâtiment|رقم المبنى)'),
+    ('floorId', r'(?:floor (?:number|id)|numéro de l.étage|رقم الطابق)'),
+    ('registryId', r'(?:registry (?:number|id)|numéro du registre|رقم السجل)'),
+    ('ownerId', r'(?:owner (?:number|id)|identifiant du propriétaire|رقم المالك)'),
+)
 
 
-def generic_candidates(lines: list[dict], locale: str) -> list[dict]:
+def generic_candidates(lines: list[dict], locale: str, *, include_counts=False, include_text=False) -> list[dict]:
     if locale not in ('en', 'fr', 'ar') or not isinstance(lines, list) or len(lines) > 10000:
         raise SourceError('INVALID_EXTRACTION_INPUT')
     candidates = []
+    extractor_version = 'generic-anchored-v3' if include_text else 'generic-anchored-v2' if include_counts else 'generic-anchored-v1'
+    score_method = extractor_version + '-uncalibrated'
     for line in lines:
         if not isinstance(line, dict):
             raise SourceError('INVALID_EVIDENCE')
@@ -109,13 +137,52 @@ def generic_candidates(lines: list[dict], locale: str) -> list[dict]:
                 candidates.append({'field': field, 'rawText': text,
                                    'normalizedValue': {'amount': amount, 'unit': unit, 'basis': basis},
                                    'origin': 'document', 'extractionScore': None,
-                                   'scoreMethod': 'generic-anchored-v1-uncalibrated', 'evidence': [evidence],
-                                   'extractorVersion': 'generic-anchored-v1'})
+                                   'scoreMethod': score_method, 'evidence': [evidence],
+                                   'extractorVersion': extractor_version})
         identifier = re.search(r'(?:unit (?:number|no\.?|id)|numéro de l.unité|رقم الوحدة)\s*[:：]\s*([\w/-]{1,200})(?!\S)', text, re.I)
-        if identifier:
+        if identifier and normalize_identifier(identifier.group(1)).casefold() not in UNKNOWN_TEXT:
             candidates.append({'field': 'unitId', 'rawText': text,
                                'normalizedValue': normalize_identifier(identifier.group(1)),
                                'origin': 'document', 'extractionScore': None,
-                               'scoreMethod': 'generic-anchored-v1-uncalibrated', 'evidence': [evidence],
-                               'extractorVersion': 'generic-anchored-v1'})
+                               'scoreMethod': score_method, 'evidence': [evidence],
+                               'extractorVersion': extractor_version})
+        # Only complete labeled integer segments are count evidence. Decimal,
+        # range, approximate and unknown phrases abstain; zero is accepted only
+        # when explicitly printed. Do not interpret an area/unit ID as a count.
+        for field, label in COUNT_LABELS if include_counts else ():
+            for match in re.finditer(r'(?:^|[;\n])\s*' + label + r'\s*[:：]\s*([0-9٠-٩۰-۹]{1,5})\s*(?=$|[;\n])', text, re.I):
+                count = int(match.group(1).translate(_DIGITS))
+                if count > 10000:
+                    continue
+                candidates.append({'field': field, 'rawText': text,
+                                   'normalizedValue': count, 'origin': 'document',
+                                   'extractionScore': None,
+                                   'scoreMethod': score_method,
+                                   'evidence': [evidence], 'extractorVersion': extractor_version})
+        if include_text:
+            suffixes = [('bedrooms', r'(?:bedrooms?|chambres?|غرف نوم)'), ('livingRooms', r'(?:living rooms?|salons?|غرف معيشة)'), ('bathrooms', r'(?:bathrooms?|salles? de bains?|حمامات)'), ('parkingSpaces', r'(?:parking spaces?|places? de parking|مواقف سيارات)')]
+            for field, noun in suffixes:
+                for match in re.finditer(r'(?:^|[;\n])\s*(?:[-•]\s*)?([0-9٠-٩۰-۹]{1,5})\s+' + noun + r'\s*(?=$|[;\n])', text, re.I):
+                    count = int(match[1].translate(_DIGITS))
+                    if count > 10000:
+                        continue
+                    candidates.append({'field': field, 'rawText': text, 'normalizedValue': count,
+                                       'origin': 'document', 'extractionScore': None, 'scoreMethod': score_method,
+                                       'evidence': [evidence], 'extractorVersion': extractor_version})
+            for field, label in TEXT_LABELS:
+                for match in re.finditer(r'(?:^|[;\n])\s*' + label + r'\s*[:：]\s*([^;\n]{1,500})\s*(?=$|[;\n])', text, re.I):
+                    value = match[1].strip()
+                    if not value or value.casefold() in UNKNOWN_TEXT:
+                        continue
+                    candidates.append({'field': field, 'rawText': text, 'normalizedValue': value,
+                                       'origin': 'document', 'extractionScore': None, 'scoreMethod': score_method,
+                                       'evidence': [evidence], 'extractorVersion': extractor_version})
+            for field, label in IDENTIFIER_LABELS:
+                for match in re.finditer(r'(?:^|[;\n])\s*' + label + r'\s*[:：]\s*([\w/-]{1,200})\s*(?=$|[;\n])', text, re.I):
+                    value = normalize_identifier(match[1])
+                    if value.casefold() in UNKNOWN_TEXT:
+                        continue
+                    candidates.append({'field': field, 'rawText': text, 'normalizedValue': value,
+                                       'origin': 'document', 'extractionScore': None, 'scoreMethod': score_method,
+                                       'evidence': [evidence], 'extractorVersion': extractor_version})
     return candidates

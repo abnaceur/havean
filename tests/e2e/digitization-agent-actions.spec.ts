@@ -1,0 +1,47 @@
+import {test,expect} from '@playwright/test';
+import {writeFileSync,mkdirSync} from 'node:fs';
+import {login} from '../support/browser';
+function pdf(){
+ const stream='BT /F1 12 Tf 20 160 Td (Unit number: 00123) Tj 0 -20 Td (City: Dubai; Plot number: 00123; 2 bedrooms) Tj ET';
+ const objects=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>','<< /Type /Page /Parent 2 0 R /MediaBox [0 0 500 200] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',`<< /Length ${Buffer.byteLength(stream)} >>\nstream\n${stream}\nendstream`];
+ let text='%PDF-1.4\n';const offsets:number[]=[];objects.forEach((object,index)=>{offsets.push(Buffer.byteLength(text));text+=`${index+1} 0 obj\n${object}\nendobj\n`;});const xref=Buffer.byteLength(text);text+=`xref\n0 6\n0000000000 65535 f \n${offsets.map(offset=>String(offset).padStart(10,'0')+' 00000 n \n').join('')}trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;return Buffer.from(text);
+}
+test('agent uploads document, confirms and fills facts, resumes inventory and creates listing digitization',async({page})=>{
+ test.skip(process.env.RUN_AGENT_WORKFLOW_EXAMPLE!=='true','Opt-in retained local property example.');
+ test.setTimeout(240000);
+ const origin='http://localhost:8089',title='Agent workflow example '+Date.now();
+ await login(page,'agent',origin,'/ops/digitization');
+ await page.getByRole('button',{name:'Create private draft',exact:true}).click();await expect(page).toHaveURL(/workspace=/);
+ const intakeId=new URL(page.url()).searchParams.get('workspace')!;
+ const sources=page.getByRole('region',{name:'Private source processing'});
+ await sources.getByLabel('Choose property source',{exact:true}).setInputFiles({name:'authored-agent-document.pdf',mimeType:'application/pdf',buffer:pdf()});
+ await sources.getByLabel('Source rights and origin',{exact:true}).fill('Self-authored functional test document; fictional property.');
+ await sources.getByRole('checkbox',{name:'I am authorized to upload and process this property source.'}).check();
+ await sources.getByRole('button',{name:'Upload private source',exact:true}).click();await expect(sources.getByRole('status')).toContainText('Source saved privately.');
+ await sources.getByRole('button',{name:'Extract available facts',exact:true}).click();await expect(sources.getByText(/Run 1 · revision 1 · awaiting_review/)).toBeVisible({timeout:90000});
+ const review=page.getByRole('region',{name:'Private document fact review'});await review.getByRole('button',{name:'Reload document facts',exact:true}).click();
+ const facts=(await (await page.request.get(`${origin}/api/v1/ops/digitizations/${intakeId}/facts`)).json()).data.candidates;
+ expect(facts.some((f:any)=>f.field==='bathrooms')).toBe(false);
+ await review.getByLabel('Source fact',{exact:true}).selectOption(facts.find((f:any)=>f.field==='bedrooms').id);
+ await expect(review.getByRole('img',{name:'Source crop for bedrooms, page 1'})).toBeVisible();
+ await review.getByLabel('Fact decision reason',{exact:true}).fill('Automated fixture review of the authored two-bedroom statement.');
+ await review.getByRole('button',{name:'Accept source value',exact:true}).click();await expect(review.getByRole('status').first()).toContainText('Private fact decision saved.');
+ await review.getByText('Create an inventory draft from confirmed facts',{exact:true}).click();
+ const form=review.getByRole('form',{name:'Confirmed intake inventory draft'});
+ const selected=form.getByRole('checkbox',{name:/bedrooms: 2/});await selected.check();await expect(form.getByLabel('Draft beds',{exact:true})).toHaveValue('2');
+ await selected.uncheck();await expect(form.getByLabel('Draft beds',{exact:true})).toHaveValue('');await selected.check();
+ await form.getByLabel('Draft beds',{exact:true}).fill('3');await selected.uncheck();await expect(form.getByLabel('Draft beds',{exact:true})).toHaveValue('3');await selected.check();await form.getByLabel('Draft beds',{exact:true}).fill('');await expect(form.getByLabel('Draft beds',{exact:true})).toHaveValue('2');
+ await expect(form.getByLabel('Draft baths',{exact:true})).toHaveValue('');
+ await form.getByLabel('Draft canonical city',{exact:true}).selectOption('bj');const communities=form.getByLabel('Draft canonical community',{exact:true});await expect.poll(()=>communities.locator('option').count()).toBeGreaterThan(1);await communities.selectOption((await communities.locator('option').nth(1).getAttribute('value'))!);
+ for(const [field,value] of Object.entries({area:'95.50',livingRooms:'1',baths:'1',orientation:'South',floor:'2',privateAddress:'Fictional functional test apartment 2'}))await form.getByLabel('Draft '+field,{exact:true}).fill(value);
+ await form.getByLabel('Draft listing title',{exact:true}).fill(title);await form.getByLabel('Draft listing description',{exact:true}).fill('Self-authored functional example for the agent document, plan and 360 workflow. Dimensions are synthetic, not surveyed.');await form.getByLabel('Draft price',{exact:true}).fill('2500000.25');
+ await form.getByRole('checkbox',{name:'I have authority to create this inventory draft and have checked its selected facts and location.',exact:true}).check();
+ const response=page.waitForResponse(r=>r.url().endsWith('/inventory-draft')&&r.request().method()==='POST');await form.getByRole('button',{name:'Create private inventory draft',exact:true}).click();const receipt=await response;expect(receipt.status(),await receipt.text()).toBe(201);const listingId=(await receipt.json()).data.listingId;
+ await page.reload();await expect(page.getByRole('link',{name:'Open inventory draft',exact:true})).toHaveAttribute('href','/ops/listings?edit='+listingId);await page.getByRole('link',{name:'Open inventory draft',exact:true}).click();await expect(page.getByRole('dialog',{name:'Edit listing',exact:true})).toBeVisible();await page.getByRole('button',{name:'Close dialog',exact:true}).click();
+ const row=page.locator(`tr[data-record-id="${listingId}"]`);await row.getByRole('button',{name:'Media',exact:true}).click();
+ await page.getByLabel('Media type',{exact:true}).selectOption('photo');await page.getByLabel('Media title',{exact:true}).fill('Self-authored example living room');await page.getByLabel('Rights / source',{exact:true}).fill('Project-authored synthetic property visualization.');await page.getByLabel('Property media file',{exact:true}).setInputFiles('apps/web/public/homes/home-1.jpg');await page.getByRole('checkbox',{name:'I have the rights and permission to publish this media.',exact:true}).check();await page.getByRole('button',{name:'Upload and submit for review',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'Upload prepared and submitted'})).toBeVisible();await page.getByRole('button',{name:'Close dialog',exact:true}).click();
+ await row.getByRole('button',{name:'Digitize property',exact:true}).click();await expect(page).toHaveURL(/workspace=/);const engineId=new URL(page.url()).searchParams.get('workspace')!;expect(engineId).not.toBe(intakeId);
+ await expect(page.getByRole('region',{name:'Digitization workflow'})).toBeVisible();await expect(page.getByRole('button',{name:'Reload capture scope',exact:true})).toBeVisible();await page.getByRole('button',{name:'Reload capture scope',exact:true}).click();await expect(page.getByRole('region',{name:'Private panorama capture review'})).toContainText('No processed panorama captures');
+ const workbench=(await (await page.request.get(`${origin}/api/v1/ops/listings/${listingId}/workbench`)).json()).data;expect(workbench).toMatchObject({beds:2,baths:1,area:'95.50',price:'2500000.25'});
+ mkdirSync('infra/generated',{recursive:true});writeFileSync('infra/generated/digitization-agent-actions.json',JSON.stringify({intakeId,listingId,engineId,title},null,2));
+});

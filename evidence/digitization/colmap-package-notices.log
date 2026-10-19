@@ -1,0 +1,12 @@
+time="2026-10-09T23:38:28+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-colmap-dependency-resolver-run-19eab266d566 Creating 
+ Container haven-colmap-dependency-resolver-run-19eab266d566 Created 
+Traceback (most recent call last):
+  File "/capture.py", line 6, in <module>
+    target=pathlib.Path('/license-out')/(name+'.copyright');shutil.copyfile(source,target);records[name]={'version':entry['version'],'copyrightFile':target.name,'sha256':hashlib.sha256(target.read_bytes()).hexdigest()}
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/shutil.py", line 262, in copyfile
+    with open(dst, 'wb') as fdst:
+         ^^^^^^^^^^^^^^^
+PermissionError: [Errno 13] Permission denied: '/license-out/adduser.copyright'
+

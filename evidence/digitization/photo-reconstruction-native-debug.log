@@ -1,0 +1,15 @@
+Prepared views: 16
+Traceback (most recent call last):
+  File "<stdin>", line 9, in <module>
+  File "/opt/processing/property_processing/colmap_cli.py", line 234, in solve
+    report['trainingInput'] = prepare_training_dataset(root, manifest, selected_model, output, run)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/colmap_cli.py", line 94, in prepare_training_dataset
+    verified = load_training_dataset(destination)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/training_data.py", line 64, in load_training_dataset
+    split = separated_views(frames)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/training_data.py", line 42, in separated_views
+    raise ValueError('Separated held-out views and six training views required')
+ValueError: Separated held-out views and six training views required

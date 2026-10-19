@@ -1,0 +1,301 @@
+
+Running 6 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/conversations.spec.ts:9:1 › M01 inquiry participants open the actual resource conversation; unrelated accounts cannot read or join its WebSocket room (23.3s)
+  ✓  2 [desktop] › tests/e2e/inbox.spec.ts:10:1 › Q04 / M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes (33.8s)
+  ✘  3 [desktop] › tests/e2e/messages.spec.ts:10:1 › M02 native lost-ACK retry keeps text/files and creates one inert message; current participants download its private PDF (24.8s)
+  ✘  4 [mobile] › tests/e2e/conversations.spec.ts:9:1 › M01 inquiry participants open the actual resource conversation; unrelated accounts cannot read or join its WebSocket room (18.4s)
+  ✘  5 [mobile] › tests/e2e/inbox.spec.ts:10:1 › Q04 / M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes (27.3s)
+  ✘  6 [mobile] › tests/e2e/messages.spec.ts:10:1 › M02 native lost-ACK retry keeps text/files and creates one inert message; current participants download its private PDF (8.9s)
+
+
+  1) [desktop] › tests/e2e/messages.spec.ts:10:1 › M02 native lost-ACK retry keeps text/files and creates one inert message; current participants download its private PDF 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByLabel('Conversation participants')
+    Expected substring: "Agent inquiry"
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByLabel('Conversation participants') with timeout 15000ms
+      - waiting for getByLabel('Conversation participants')
+
+
+      10 | test('M02 native lost-ACK retry keeps text/files and creates one inert message; current participants download its private PDF',async({page},info)=>{
+      11 |  test.setTimeout(180000);const agent=crypto.randomUUID(),slug='m02-browser-'+agent,pdf=Buffer.from('%PDF-1.4\n1 0 obj << /Type /Catalog >> endobj\n%%EOF'),text='<script>globalThis.chatExecuted=true</script> M02 '+agent.slice(0,8);let lead:string|undefined,thread:string|undefined;
+    > 12 |  try{await staff(c=>c.query("INSERT INTO agents(id,user_id,organization_id,name,slug,biography,languages,districts,city,verified_until) VALUES($1,'00000000-0000-4000-8000-000000000003',$2,'M02 browser agent',$3,'Synthetic durable message fixture',ARRAY['English'],ARRAY['Chaoyang'],'bj','2035-01-01')",[agent,org,slug]));await login(page,'buyer','http://localhost:8088','/account/messages');const inquiry=await page.request.post('/api/v1/inquiries',{headers:{Origin:'http://localhost:8088','idempotency-key':crypto.randomUUID()},data:{resourceId:agent,resourceType:'agent',resourceVersion:1,city:'bj',name:'M02 browser customer',email:'browser-'+agent+'@example.test',phone:'123456789',message:'Discuss this actual private conversation.',consent:true}});expect(inquiry.ok()).toBe(true);const receipt=(await inquiry.json()).data;lead=receipt.id;thread=receipt.conversationId;await page.goto('/account/messages?conversation='+thread);await expect(page.getByLabel('Conversation participants')).toContainText('Agent inquiry');
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ^
+      13 |  await page.getByRole('textbox',{name:'Your message',exact:true}).fill(text);await page.getByLabel('Attach images or PDF',{exact:true}).setInputFiles({name:'remove-this.pdf',mimeType:'application/pdf',buffer:pdf});await expect(page.locator('.chat-pending-file')).toContainText('remove-this.pdf');await page.getByRole('button',{name:'Remove remove-this.pdf',exact:true}).click();await expect(page.getByText('remove-this.pdf',{exact:true})).toHaveCount(0);await page.getByLabel('Attach images or PDF',{exact:true}).setInputFiles({name:'inspection-note.pdf',mimeType:'application/pdf',buffer:pdf});await page.getByLabel('I have permission to share these files with the conversation participants.',{exact:true}).check();let lost=true,clientId:string|undefined;await page.route('**/api/v1/conversations/'+thread+'/messages',async route=>{if(route.request().method()!=='POST'){await route.continue();return;}const body=route.request().postDataJSON(),response=await route.fetch();if(lost&&response.ok()){lost=false;clientId=body.clientId;await route.abort('failed');}else{expect(body.clientId).toBe(clientId);await route.fulfill({response});}});
+      14 |  await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.chat-composer:visible').getByRole('alert')).toBeVisible();await expect(page.getByRole('textbox',{name:'Your message',exact:true})).toHaveValue(text);await expect(page.getByLabel('I have permission to share these files with the conversation participants.',{exact:true})).toBeChecked();await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.getByRole('textbox',{name:'Your message',exact:true})).toHaveValue('');await page.unroute('**/api/v1/conversations/'+thread+'/messages');await expect(page.getByText(text,{exact:true})).toHaveCount(1);expect(await page.evaluate(()=>typeof(globalThis as any).chatExecuted)).toBe('undefined');const records=(await (await page.request.get('/api/v1/conversations/'+thread+'/messages')).json()).data;expect(records).toHaveLength(1);const message=records[0],attachment=message.attachments[0];expect(message.sequence).toBe('1');expect(message.body).toBe(text);expect(attachment.available).toBe(true);expect(await staff(async c=>(await c.query("SELECT count(*)::int n FROM outbox WHERE aggregate_id=$1 AND kind='message.persisted'",[thread])).rows[0].n)).toBe(1);const downloadPromise=page.waitForEvent('download');await page.getByRole('link',{name:'inspection-note.pdf',exact:true}).click();expect(await readFile((await (await downloadPromise).path())!)).toEqual(pdf);expect((await new AxeBuilder({page}).include('main#main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/chat-experience/attachment-consumer-${info.project.name}.png`,scale:'css'});
+      15 |  await login(page,'agent','http://localhost:8089','/ops/messages?conversation='+thread);await expect(page.getByText(text,{exact:true})).toBeVisible();expect((await page.request.get('http://localhost:8089'+attachment.url)).ok()).toBe(true);await page.getByRole('textbox',{name:'Reply to client',exact:true}).fill('The file reached its current assigned agent.');await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.message').filter({hasText:'The file reached its current assigned agent.'})).toBeVisible();expect((await (await page.request.get('http://localhost:8089/api/v1/conversations/'+thread+'/messages')).json()).data.map((m:any)=>m.sequence)).toEqual(['1','2']);expect((await new AxeBuilder({page}).include('main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);await page.screenshot({path:`evidence/chat-experience/attachment-agent-${info.project.name}.png`,scale:'css'});
+        at /workspace/tests/e2e/messages.spec.ts:12:992
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/chat-regression/messages-M02-native-lost-A-32670-ts-download-its-private-PDF-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/chat-regression/messages-M02-native-lost-A-32670-ts-download-its-private-PDF-desktop/error-context.md
+
+    Error Context: test-results/chat-regression/messages-M02-native-lost-A-32670-ts-download-its-private-PDF-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/chat-regression/messages-M02-native-lost-A-32670-ts-download-its-private-PDF-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/chat-regression/messages-M02-native-lost-A-32670-ts-download-its-private-PDF-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/conversations.spec.ts:9:1 › M01 inquiry participants open the actual resource conversation; unrelated accounts cannot read or join its WebSocket room 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 68
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure summary elements have discernible text",
+    +     "help": "Summary elements must have discernible text",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/summary-name?application=playwright",
+    +     "id": "summary-name",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "has-visible-text",
+    +             "impact": "serious",
+    +             "message": "Element does not have text that is visible to screen readers",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-label",
+    +             "impact": "serious",
+    +             "message": "aria-label attribute does not exist or is empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-labelledby",
+    +             "impact": "serious",
+    +             "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": Object {
+    +               "messageKey": "noAttr",
+    +             },
+    +             "id": "non-empty-title",
+    +             "impact": "serious",
+    +             "message": "Element has no title attribute",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element does not have text that is visible to screen readers
+    +   aria-label attribute does not exist or is empty
+    +   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+    +   Element has no title attribute",
+    +         "html": "<summary>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "summary",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.name-role-value",
+    +       "wcag2a",
+    +       "wcag412",
+    +       "section508",
+    +       "section508.22.a",
+    +       "TTv5",
+    +       "TT6.a",
+    +       "EN-301-549",
+    +       "EN-9.4.1.2",
+    +     ],
+    +   },
+    + ]
+
+      13 |  await login(page,'buyer','http://localhost:8088','/account/messages');const response=await page.request.post('/api/v1/inquiries',{headers:{Origin:'http://localhost:8088','idempotency-key':crypto.randomUUID()},data:{resourceId:agent,resourceType:'agent',resourceVersion:1,city:'bj',name:'M01 browser customer',email:'fixture@example.test',phone:'123456789',message:'Please discuss this agent service with me.',consent:true}});expect(response.ok()).toBe(true);const receipt=(await response.json()).data;lead=receipt.id;thread=receipt.conversationId;expect(thread).toBeTruthy();const detail=(await (await page.request.get('/api/v1/conversations/'+thread)).json()).data;expect(detail).toMatchObject({lead_id:lead,resource_id:agent,resource_type:'agent',state:'active'});expect(detail.members.map((m:any)=>m.user_id)).toEqual(expect.arrayContaining(['00000000-0000-4000-8000-000000000001','00000000-0000-4000-8000-000000000003']));
+      14 |  await page.goto('/account/messages?conversation='+thread);await expect(page.getByLabel('Conversation participants')).toContainText('Agent inquiry');expect(await socket(thread!)).toBe('subscribed:'+thread);const wrongRoom=await page.evaluate(id=>new Promise<number>(resolve=>{const ws=new WebSocket('ws://'+location.host+'/api/v1/realtime/conversations/'+id),timer=setTimeout(()=>{ws.close();resolve(0);},10000);ws.onmessage=()=>ws.send(JSON.stringify({type:'subscribe',conversationId:crypto.randomUUID()}));ws.onclose=e=>{clearTimeout(timer);resolve(e.code);};}),thread!);expect(wrongRoom).toBe(1008);await page.screenshot({path:`evidence/m01-consumer-${info.project.name}.png`,scale:'css'});
+    > 15 |  await login(page,'agent','http://localhost:8089','/ops/messages?conversation='+thread);await expect(page.getByLabel('Conversation participants')).toContainText('Agent inquiry');expect((await page.request.get('http://localhost:8089/api/v1/conversations/'+thread)).ok()).toBe(true);expect(await socket(thread!)).toBe('subscribed:'+thread);expect((await new AxeBuilder({page}).include('main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);await page.screenshot({path:`evidence/m01-agent-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+      16 |  await login(page,'outsider','http://localhost:8089','/ops/messages');expect((await page.request.get('http://localhost:8089/api/v1/conversations/'+thread)).status()).toBe(404);expect((await page.request.get('http://localhost:8089/api/v1/conversations/'+thread+'/messages')).status()).toBe(404);expect(await socket(thread!)).toBe('denied');expect((await apiRequest(page,'/conversations/'+thread+'/messages',{version:0,conversationVersion:detail.version,body:'Unrelated actor must be denied',clientId:crypto.randomUUID()})).status()).toBe(404);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+      17 |  }finally{await staff(async c=>{if(lead)await c.query('DELETE FROM leads WHERE id=$1',[lead]);if(thread){await c.query('DELETE FROM messages WHERE conversation_id=$1',[thread]);await c.query('DELETE FROM conversations WHERE id=$1',[thread]);}await c.query('UPDATE agents SET verified_until=NULL,version=version+1 WHERE id=$1',[agent]);});}
+      18 | });
+        at /workspace/tests/e2e/conversations.spec.ts:15:470
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/chat-regression/conversations-M01-inquiry--241a9--or-join-its-WebSocket-room-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/chat-regression/conversations-M01-inquiry--241a9--or-join-its-WebSocket-room-mobile/error-context.md
+
+    Error Context: test-results/chat-regression/conversations-M01-inquiry--241a9--or-join-its-WebSocket-room-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/chat-regression/conversations-M01-inquiry--241a9--or-join-its-WebSocket-room-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/chat-regression/conversations-M01-inquiry--241a9--or-join-its-WebSocket-room-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › tests/e2e/inbox.spec.ts:10:1 › Q04 / M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  locator('[data-conversation-id="8672b816-1749-4fcd-9777-8f0bf8e355b3"]').getByLabel('2 unread messages', { exact: true })
+    Expected: visible
+    Received: hidden
+    Timeout:  15000ms
+
+    Call log:
+      - Expect "toBeVisible" locator('[data-conversation-id="8672b816-1749-4fcd-9777-8f0bf8e355b3"]').getByLabel('2 unread messages', { exact: true }) with timeout 15000ms
+      - waiting for locator('[data-conversation-id="8672b816-1749-4fcd-9777-8f0bf8e355b3"]').getByLabel('2 unread messages', { exact: true })
+        25 × locator resolved to <span class="conversation-unread" aria-label="2 unread messages">2</span>
+           - unexpected value "hidden"
+
+
+      17 |  const message='M03 unconfirmed draft '+agent;await page.route('**/api/v1/conversations/'+second+'/messages',async route=>{if(route.request().method()==='POST')await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:{code:'TEST_UNAVAILABLE',message:'Synthetic temporary service failure'}})});else await route.continue();});await page.getByRole('textbox',{name:'Your message',exact:true}).fill(message);await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.chat-composer:visible').getByRole('alert')).toContainText('Message not confirmed');await expect(page.getByRole('textbox',{name:'Your message',exact:true})).toHaveValue(message);await expect(page.locator('.message').filter({hasText:message})).toHaveCount(0);await page.unroute('**/api/v1/conversations/'+second+'/messages');await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.message').filter({hasText:message})).toHaveCount(1);
+      18 |  // Two incoming messages remain unread while the professional opens the other room.
+    > 19 |  await login(page,'agent',(process.env.PUBLIC_OPS_URL||'http://localhost:8089'),'/ops/messages?conversation='+first);await showList();await expect(page.locator('[data-conversation-id="'+second+'"]').getByLabel('2 unread messages',{exact:true})).toBeVisible();expect((await (await page.request.get((process.env.PUBLIC_OPS_URL||'http://localhost:8089')+'/api/v1/conversations/'+second+'/read-cursor')).json()).data.sequence).toBe('0');await openRoom(second);await expect(page.locator('.message').filter({hasText:message})).toBeVisible();await expect.poll(async()=>(await (await page.request.get((process.env.PUBLIC_OPS_URL||'http://localhost:8089')+'/api/v1/conversations/'+second+'/read-cursor')).json()).data.sequence).toBe('2');await expect(page.locator('[data-conversation-id="'+second+'"]').getByLabel('2 unread messages',{exact:true})).toHaveCount(0);await page.reload();await expect(page).toHaveURL(new RegExp('conversation='+second));await expect(page.locator('.message').filter({hasText:message})).toBeVisible();await page.getByRole('textbox',{name:'Reply to client',exact:true}).fill('M03 native professional reply.');await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.message').filter({hasText:'M03 native professional reply.'})).toBeVisible();
+         |                                                                                                                                                                                                                                                      ^
+      20 |  expect((await new AxeBuilder({page}).include('main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/chat-experience/active-${info.project.name}.png`,scale:'css'});
+      21 |  await login(page,'buyer',(process.env.PUBLIC_WEB_URL||'http://localhost:8088'),'/account/messages?conversation='+first);await showList();await expect(page.locator('[data-conversation-id="'+second+'"]').getByLabel('1 unread messages',{exact:true})).toBeVisible();await openRoom(second);await expect(page.locator('.message').filter({hasText:'M03 native professional reply.'})).toBeVisible();await expect.poll(async()=>(await (await page.request.get('/api/v1/conversations/'+second+'/read-cursor')).json()).data.sequence).toBe('3');await expect(page.locator('[data-conversation-id="'+second+'"]').getByLabel('1 unread messages',{exact:true})).toHaveCount(0);expect((await new AxeBuilder({page}).include('main#main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);
+      22 |  }finally{await staff(async c=>{await c.query("UPDATE leads SET status='lost',version=version+1 WHERE id=ANY($1::uuid[])",[leads]);await c.query("UPDATE conversations SET state='closed',version=version+1 WHERE id=ANY($1::uuid[])",[ids]);await c.query('UPDATE agents SET verified_until=NULL,version=version+1 WHERE id=$1',[agent]);});}
+        at /workspace/tests/e2e/inbox.spec.ts:19:246
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/chat-regression/inbox-Q04-M03-unread-read--ef915-er-and-professional-inboxes-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/chat-regression/inbox-Q04-M03-unread-read--ef915-er-and-professional-inboxes-mobile/error-context.md
+
+    Error Context: test-results/chat-regression/inbox-Q04-M03-unread-read--ef915-er-and-professional-inboxes-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/chat-regression/inbox-Q04-M03-unread-read--ef915-er-and-professional-inboxes-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/chat-regression/inbox-Q04-M03-unread-read--ef915-er-and-professional-inboxes-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › tests/e2e/messages.spec.ts:10:1 › M02 native lost-ACK retry keeps text/files and creates one inert message; current participants download its private PDF 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 68
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure summary elements have discernible text",
+    +     "help": "Summary elements must have discernible text",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/summary-name?application=playwright",
+    +     "id": "summary-name",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "has-visible-text",
+    +             "impact": "serious",
+    +             "message": "Element does not have text that is visible to screen readers",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-label",
+    +             "impact": "serious",
+    +             "message": "aria-label attribute does not exist or is empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "aria-labelledby",
+    +             "impact": "serious",
+    +             "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": Object {
+    +               "messageKey": "noAttr",
+    +             },
+    +             "id": "non-empty-title",
+    +             "impact": "serious",
+    +             "message": "Element has no title attribute",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element does not have text that is visible to screen readers
+    +   aria-label attribute does not exist or is empty
+    +   aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+    +   Element has no title attribute",
+    +         "html": "<summary>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "summary",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.name-role-value",
+    +       "wcag2a",
+    +       "wcag412",
+    +       "section508",
+    +       "section508.22.a",
+    +       "TTv5",
+    +       "TT6.a",
+    +       "EN-301-549",
+    +       "EN-9.4.1.2",
+    +     ],
+    +   },
+    + ]
+
+      12 |  try{await staff(c=>c.query("INSERT INTO agents(id,user_id,organization_id,name,slug,biography,languages,districts,city,verified_until) VALUES($1,'00000000-0000-4000-8000-000000000003',$2,'M02 browser agent',$3,'Synthetic durable message fixture',ARRAY['English'],ARRAY['Chaoyang'],'bj','2035-01-01')",[agent,org,slug]));await login(page,'buyer','http://localhost:8088','/account/messages');const inquiry=await page.request.post('/api/v1/inquiries',{headers:{Origin:'http://localhost:8088','idempotency-key':crypto.randomUUID()},data:{resourceId:agent,resourceType:'agent',resourceVersion:1,city:'bj',name:'M02 browser customer',email:'browser-'+agent+'@example.test',phone:'123456789',message:'Discuss this actual private conversation.',consent:true}});expect(inquiry.ok()).toBe(true);const receipt=(await inquiry.json()).data;lead=receipt.id;thread=receipt.conversationId;await page.goto('/account/messages?conversation='+thread);await expect(page.getByLabel('Conversation participants')).toContainText('Agent inquiry');
+      13 |  await page.getByRole('textbox',{name:'Your message',exact:true}).fill(text);await page.getByLabel('Attach images or PDF',{exact:true}).setInputFiles({name:'remove-this.pdf',mimeType:'application/pdf',buffer:pdf});await expect(page.locator('.chat-pending-file')).toContainText('remove-this.pdf');await page.getByRole('button',{name:'Remove remove-this.pdf',exact:true}).click();await expect(page.getByText('remove-this.pdf',{exact:true})).toHaveCount(0);await page.getByLabel('Attach images or PDF',{exact:true}).setInputFiles({name:'inspection-note.pdf',mimeType:'application/pdf',buffer:pdf});await page.getByLabel('I have permission to share these files with the conversation participants.',{exact:true}).check();let lost=true,clientId:string|undefined;await page.route('**/api/v1/conversations/'+thread+'/messages',async route=>{if(route.request().method()!=='POST'){await route.continue();return;}const body=route.request().postDataJSON(),response=await route.fetch();if(lost&&response.ok()){lost=false;clientId=body.clientId;await route.abort('failed');}else{expect(body.clientId).toBe(clientId);await route.fulfill({response});}});
+    > 14 |  await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.chat-composer:visible').getByRole('alert')).toBeVisible();await expect(page.getByRole('textbox',{name:'Your message',exact:true})).toHaveValue(text);await expect(page.getByLabel('I have permission to share these files with the conversation participants.',{exact:true})).toBeChecked();await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.getByRole('textbox',{name:'Your message',exact:true})).toHaveValue('');await page.unroute('**/api/v1/conversations/'+thread+'/messages');await expect(page.getByText(text,{exact:true})).toHaveCount(1);expect(await page.evaluate(()=>typeof(globalThis as any).chatExecuted)).toBe('undefined');const records=(await (await page.request.get('/api/v1/conversations/'+thread+'/messages')).json()).data;expect(records).toHaveLength(1);const message=records[0],attachment=message.attachments[0];expect(message.sequence).toBe('1');expect(message.body).toBe(text);expect(attachment.available).toBe(true);expect(await staff(async c=>(await c.query("SELECT count(*)::int n FROM outbox WHERE aggregate_id=$1 AND kind='message.persisted'",[thread])).rows[0].n)).toBe(1);const downloadPromise=page.waitForEvent('download');await page.getByRole('link',{name:'inspection-note.pdf',exact:true}).click();expect(await readFile((await (await downloadPromise).path())!)).toEqual(pdf);expect((await new AxeBuilder({page}).include('main#main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/chat-experience/attachment-consumer-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ^
+      15 |  await login(page,'agent','http://localhost:8089','/ops/messages?conversation='+thread);await expect(page.getByText(text,{exact:true})).toBeVisible();expect((await page.request.get('http://localhost:8089'+attachment.url)).ok()).toBe(true);await page.getByRole('textbox',{name:'Reply to client',exact:true}).fill('The file reached its current assigned agent.');await page.getByRole('button',{name:'Send',exact:true}).click();await expect(page.locator('.message').filter({hasText:'The file reached its current assigned agent.'})).toBeVisible();expect((await (await page.request.get('http://localhost:8089/api/v1/conversations/'+thread+'/messages')).json()).data.map((m:any)=>m.sequence)).toEqual(['1','2']);expect((await new AxeBuilder({page}).include('main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);await page.screenshot({path:`evidence/chat-experience/attachment-agent-${info.project.name}.png`,scale:'css'});
+      16 |  await login(page,'outsider','http://localhost:8089','/ops/messages');expect((await page.request.get('http://localhost:8089'+attachment.url)).status()).toBe(404);expect((await apiRequest(page,'/conversations/'+thread+'/messages',{version:0,conversationVersion:2,clientId:crypto.randomUUID(),body:'Unrelated sender',attachments:[]})).status()).toBe(404);
+      17 |  }finally{await staff(async c=>{if(lead)await c.query("UPDATE leads SET status='lost',version=version+1 WHERE id=$1",[lead]);if(thread)await c.query("UPDATE conversations SET state='closed',version=version+1 WHERE id=$1",[thread]);await c.query('UPDATE agents SET verified_until=NULL,version=version+1 WHERE id=$1',[agent]);});}
+        at /workspace/tests/e2e/messages.spec.ts:14:1556
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/chat-regression/messages-M02-native-lost-A-32670-ts-download-its-private-PDF-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/chat-regression/messages-M02-native-lost-A-32670-ts-download-its-private-PDF-mobile/error-context.md
+
+    Error Context: test-results/chat-regression/messages-M02-native-lost-A-32670-ts-download-its-private-PDF-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/chat-regression/messages-M02-native-lost-A-32670-ts-download-its-private-PDF-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/chat-regression/messages-M02-native-lost-A-32670-ts-download-its-private-PDF-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › tests/e2e/messages.spec.ts:10:1 › M02 native lost-ACK retry keeps text/files and creates one inert message; current participants download its private PDF 
+    [mobile] › tests/e2e/conversations.spec.ts:9:1 › M01 inquiry participants open the actual resource conversation; unrelated accounts cannot read or join its WebSocket room 
+    [mobile] › tests/e2e/inbox.spec.ts:10:1 › Q04 / M03 unread read-cursor updates, refresh selection and failed draft retry work in native consumer and professional inboxes 
+    [mobile] › tests/e2e/messages.spec.ts:10:1 › M02 native lost-ACK retry keeps text/files and creates one inert message; current participants download its private PDF 
+  2 passed (2.4m)

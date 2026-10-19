@@ -1,0 +1,52 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-runner-protocol.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 1448[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C03 API transport sends scoped source bytes to a real Python runner and observes its actual raster output[33m 1446[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 23:31:36
+[2m   Duration [22m 2.46s[2m (tests 62%, transform 23%, import 14%)[22m
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-authorized-runner.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 25042[2mms[22m[39m
+   [33m[2m✓[22m[39m current API-owned lease transfers real scoped S3 input to the CPU runner and cancels a superseded acknowledgement[33m 2218[2mms[22m[39m
+   [33m[2m✓[22m[39m real CPU upright-image-v1 renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[33m 3526[2mms[22m[39m
+   [33m[2m✓[22m[39m real CPU pdfium-150dpi-v1 renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[33m 2404[2mms[22m[39m
+   [33m[2m✓[22m[39m real CPU pdfium-overbudget renders commit privately with checksum lineage and replay; invalid, revoked and superseded results cannot commit[33m 16891[2mms[22m[39m
+ [31m❯[39m tests/integration/digitization-coordinator.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 3919[2mms[22m[39m
+[31m   [31m×[31m HE-R06/C02 dedicated real queue recovers both enqueue crash boundaries; duplicate events reuse one actual CPU execution and private result[39m[33m 3622[2mms[22m[39m
+   [32m✓[39m HE-C06 real HTTP outage and BullMQ delivery obey five retries without resetting the failed job[32m 295[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-public-derivatives.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 410[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-B06 actual scanned public photo variants omit source GPS EXIF and private location metadata[33m 408[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-coordinator.test.ts[2m > [22mHE-R06/C02 dedicated real queue recovers both enqueue crash boundaries; duplicate events reuse one actual CPU execution and private result
+[31m[1mAssertionError[22m: expected +0 to be 1 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+[36m [2m❯[22m tests/integration/digitization-coordinator.test.ts:[2m63:41[22m[39m
+    [90m 61|[39m   await pool.query("UPDATE outbox SET dispatched_at=now()-interval '61…
+    [90m 62|[39m   await dispatchDigitizationEvents(pool,queue,{eventIds:[eventId]});
+    [90m 63|[39m   expect(await queue.getWaitingCount()).toBe(1);
+    [90m   |[39m                                         [31m^[39m
+    [90m 64|[39m   await transaction(actor,c=>c.query("UPDATE processing_stages SET lea…
+    [90m 65|[39m   await new Promise(resolve=>setTimeout(resolve,40));
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (7)[39m
+[2m   Start at [22m 23:31:39
+[2m   Duration [22m 33.96s[2m (tests 87%, import 10%, transform 2%)[22m
+

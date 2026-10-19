@@ -1,0 +1,22 @@
+# Guided agent property creation — 18 October 2026
+
+O/R: Implement the agreed four-step flow using current code: property basics, details/pricing, photos/media, and review/submit. Use labelled icons, allow incomplete drafts, autosave progress, Save & exit, and dashboard resume. Keep photos and floor plan required; video, 360° and GLB optional. Preserve the supplied specification and disabled digitization engine.
+
+P: Added private `property_authoring_drafts` checkpoints (migration 233), scoped to the current author and organization with forced RLS, optimistic versions, workflow checks and audit events. Early incomplete input does not create a canonical listing or unit. Preparing media validates through the existing canonical listing creation/editing functions. Final submission validates details and required media in an API transaction. Asking prices remain strings backed by NUMERIC. Checkpoints are included in the author's personal export. Migration 233 is applied to local development and the active integration database.
+
+P: Added a responsive four-step agent wizard with labelled icons, focus management, step navigation, automatic save status, Save & exit, retry/reload controls, dashboard continuation, image previews and a required-media checklist. Close/Escape saves progress; active uploads prevent leaving. Commercial fields, new units, shared-room rental terms, existing owner forms and independent media moderation are retained. Rental-term changes update the wizard's current unit, dates, billing period and listing version. Updated existing browser journeys for the new navigation and media requirements.
+
+V: Final combined browser verification passes 6/6. Confirmed evidence:
+
+- `browser-verified.log`: 6/6 desktop/mobile checks pass: real upload → moderation → public 3D viewing with optional media; partial-save/resume, failure recovery, personal export, cross-actor/stale-version denial, required media, 320px layout, accessibility and successful submission; both submission endpoints reject missing prices and roll back the failed transition.
+- `browser.log`: original desktop/mobile partial-draft, reload/resume, failed-save retry, actor/version denial, required uploads, review and submission checks passed 2/2; accessibility scans have no serious/critical violations.
+- `regressions-container.log`: new-unit editing/privacy and owner draft checks passed on desktop/mobile; shared-room rental terms passed on desktop/mobile; commercial passed on mobile (7/8 total). The desktop commercial run encountered a deliberate source hot restart of the API while saving. The form retained its changes and displayed the recoverable service error.
+- `regression-final.log`: stable rerun passed 4/4: commercial authoring/editing, full inventory editing/upload/order/filter/submit, unassigned actor denial, and moderator review/rejection. This includes explicit recovery from a listing changed outside the wizard.
+- `browser-final.log`: 4/6 passed, including mobile upload/moderation/public GLB, mobile wizard, and desktop/mobile missing-price rejection. Desktop media had an outdated test wait (the wizard dialog already exists before preparation completes); corrected it to await the media heading. Desktop wizard waited for the whole document load during reload; changed to DOM readiness followed by explicit UI assertions.
+- `types-final.log`: API, UI, web and ops TypeScript checks pass.
+- `lint-final.log`: focused lint passes. `boundaries.log`: application import boundaries pass.
+- `contracts.log`: 453 operations, canonical OpenAPI and runner schema checks pass. `models.log`: models regenerated from the migrated schema without exporting data.
+- `integration-migration.log`: migration 233 applied to the integration database.
+- `ledger-in-progress.log` and `release-in-progress.log`: root 120/120 and engine 56/95; unfinished wizard work and existing release gates were rejected while work was in progress. Final synchronized validation is in `ledger-final.log`; `release-blockers.log` retains the existing unfinished release rejection.
+
+V: Browser screenshots are `details-desktop.png`, `details-mobile.png`, `review-desktop.png` and `review-mobile.png`. Desktop and narrow mobile were visually inspected. Browser tests include 320 CSS pixel overflow and accessibility checks. No physical-device, reference-parity, new reconstruction quality or production deployment claim. Existing unfinished UI/reference, recovery, CI and digitization release gates remain separate.

@@ -1,0 +1,45 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-tenant-deletion.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 8918[2mms[22m[39m
+[31m   [31m×[31m tenant erasure fences active CPU work and removes originals and derivatives while retaining credential, account and organization history[39m[33m 3295[2mms[22m[39m
+   [33m[2m✓[22m[39m a tenant tombstone retains an original still bound to another live tenant and never inherits that tenant access[33m 353[2mms[22m[39m
+[31m   [31m×[31m a concurrent foreign-tenant binding cannot commit after erasure acquires the source lock[39m[33m 5246[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-tenant-deletion.test.ts[2m > [22mtenant erasure fences active CPU work and removes originals and derivatives while retaining credential, account and organization history
+[31m[1mAssertionError[22m: promise resolved "{ …(5) }" instead of rejecting[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Error {[39m
+[32m-   "message": "rejected promise",[39m
+[31m+ {[39m
+[31m+   "errorCode": null,[39m
+[31m+   "executionId": "e7baf972-5c4f-4513-9f09-9f4b156eec03",[39m
+[31m+   "processStopped": true,[39m
+[31m+   "result": null,[39m
+[31m+   "state": "cancelled",[39m
+[2m  }[22m
+
+[36m [2m❯[22m tests/integration/digitization-tenant-deletion.test.ts:[2m69:180[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-tenant-deletion.test.ts[2m > [22ma concurrent foreign-tenant binding cannot commit after erasure acquires the source lock
+[31m[1mError[22m: Expected scoped source lock wait was not observed[39m
+[36m [2m❯[22m waitFor tests/integration/digitization-tenant-deletion.test.ts:[2m106:252[22m[39m
+
+[90m [2m❯[22m tests/integration/digitization-tenant-deletion.test.ts:[2m107:195[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 20:47:14
+[2m   Duration [22m 10.59s[2m (tests 85%, import 9%, transform 6%)[22m
+

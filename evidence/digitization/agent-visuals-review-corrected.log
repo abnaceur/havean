@@ -1,0 +1,55 @@
+time="2026-10-12T22:27:18+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-25c48e8e100c Creating 
+ Container haven-tests-run-25c48e8e100c Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-agent-visuals.spec.ts:7:1 › agent authors plan and tour and publishes both on the same reviewed property (28.2s)
+
+
+  1) [desktop] › tests/e2e/digitization-agent-visuals.spec.ts:7:1 › agent authors plan and tour and publishes both on the same reviewed property 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('dialog')
+    Expected: 0
+    Received: 1
+    Timeout:  15000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('dialog') with timeout 15000ms
+      - waiting for getByRole('dialog')
+        34 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+      26 |  if(!f.listingPublished){const listingState=(await (await page.request.get(`${origin}/api/v1/ops/listings/${f.listingId}/workbench`)).json()).data.status;if(listingState==='draft'){await page.goto(origin+'/ops/listings?q='+encodeURIComponent(f.title));const row=page.locator(`tr[data-record-id="${f.listingId}"]`);await row.getByRole('button',{name:'Media',exact:true}).click();await page.getByLabel('Media type',{exact:true}).selectOption('floor_plan');await page.getByLabel('Media title',{exact:true}).fill('Self-authored functional plan');await page.getByLabel('Rights / source',{exact:true}).fill(note);await page.getByLabel('Property media file',{exact:true}).setInputFiles('assets/digitization-demo/floor-plan.png');await page.getByRole('checkbox',{name:'I have the rights and permission to publish this media.',exact:true}).check();await page.getByRole('button',{name:'Upload and submit for review',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'Upload prepared and submitted'})).toBeVisible();await page.getByRole('button',{name:'Close dialog',exact:true}).click();
+      27 |  await page.locator('.draft-workbench .record-row').filter({hasText:f.title}).getByRole('button',{name:'Submit for review',exact:true}).click();await expect(page.locator('.draft-workbench').getByRole('status')).toHaveText('Property submitted for review');
+    > 28 |  }const queueReady=staff.waitForResponse(r=>r.url().endsWith('/ops/property-media/reviews'));await staff.goto(origin+'/ops/reviews');await queueReady;const media=staff.locator('[id^="media-review-"]').filter({hasText:f.title});while(await media.count()){await media.first().getByRole('button',{name:'Review property media',exact:true}).click();await staff.getByLabel('Media review reason',{exact:true}).fill(note);await staff.getByRole('checkbox',{name:'I reviewed the media, its captions and publishing rights.',exact:true}).check();await staff.getByRole('button',{name:'Save media decision',exact:true}).click();await expect(staff.getByRole('dialog')).toHaveCount(0);}
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ^
+      29 |  for(const step of (listingState==='under_review'?[1]:[0,1])){await staff.reload();await staff.locator('#listing-review-'+f.listingId).getByRole('button',{name:'Review property',exact:true}).click();await staff.getByLabel('Decision reason',{exact:true}).fill(note);if(step)await staff.getByRole('checkbox',{name:'I verified property facts, listing authority, eligible agent and approved photos.',exact:true}).check();await staff.getByRole('button',{name:'Save publication decision',exact:true}).click();await expect(staff.getByRole('dialog')).toHaveCount(0);}f.listingPublished=true;save();}
+      30 |  await page.goto(`${origin}/ops/digitization?workspace=${f.engineId}`);
+      31 |  if(!f.modelReview){const model=page.getByRole('group',{name:'Independent structural model review',exact:true});await model.getByRole('combobox',{name:'Assigned model reviewer',exact:true}).selectOption('00000000-0000-4000-8000-000000000008');await model.getByRole('checkbox').check();f.modelReview=(await clickResponse(page,'/model-review-requests',model.getByRole('button',{name:'Request independent model review',exact:true}))).id;save();}
+        at /workspace/tests/e2e/digitization-agent-visuals.spec.ts:28:655
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-agent-visuals-49d3e--the-same-reviewed-property-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-agent-visuals-49d3e--the-same-reviewed-property-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-agent-visuals-49d3e--the-same-reviewed-property-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-agent-visuals-49d3e--the-same-reviewed-property-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-agent-visuals-49d3e--the-same-reviewed-property-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-agent-visuals.spec.ts:7:1 › agent authors plan and tour and publishes both on the same reviewed property 
+

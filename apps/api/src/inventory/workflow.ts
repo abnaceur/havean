@@ -1,3 +1,4 @@
+import {requireListingMedia} from './required-media.js';
 import {requireCommercialFacts} from './commercial-facts.js';
 import {lockRentalAvailability,requireRentalAvailability} from './availability.js';
 import type pg from 'pg';
@@ -17,7 +18,13 @@ export async function changeListingState(c:pg.PoolClient,a:Actor,id:string,input
  if(['published','rejected'].includes(input.status)&&(listing.created_by===a.id||listing.owner_id===a.id||assigned))fail(403,'You cannot approve or reject your own property');
  if(input.status==='sold'&&listing.transaction!=='sale'||input.status==='leased'&&listing.transaction!=='rent')fail(409,'Choose the completion state for this transaction type');
  transition(listingTransitions,listing.status,input.status);
+ if(input.status==='submitted'){
+  if(listing.title.trim().length<8||listing.description.trim().length<20||!listing.price||/^0+(\.0+)?$/.test(listing.price))fail(400,'Complete the property title, description and a positive asking price before submitting.');
+  if(listing.segment==='commercial')await requireCommercialFacts(c,id);
+  await requireListingMedia(c,id);
+ }
  if(input.status==='published'){
+  await requireListingMedia(c,id,true);
   if(!input.verified)fail(400,'Confirm verified property facts and authority to list');
   const unit=(await c.query('SELECT area,beds,living_rooms,baths FROM units WHERE id=$1',[listing.unit_id])).rows[0];
   const approved=(await c.query("SELECT '/api/v1/media/'||a.id||'/view' AS url FROM listing_media lm JOIN media_assets a ON a.id=lm.asset_id WHERE lm.listing_id=$1 AND lm.kind='photo' AND lm.status='approved' AND a.status='approved' AND a.scan_at IS NOT NULL AND a.visibility='public' ORDER BY lm.position,lm.id",[id])).rows.map(row=>row.url);

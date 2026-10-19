@@ -26,6 +26,12 @@ afterEach(()=>{for(const root of temporary.splice(0))fs.rmSync(root,{recursive:t
 describe('HE-R01 separate digitization acceptance and release gate',()=>{
  it('accepts complete baseline ledger without touching the 120 marketplace tasks',()=>{const result=run(fixture());expect(result.status,result.stderr).toBe(0);expect(result.stdout).toContain(`${engine.tasks.length} digitization tasks`);expect(JSON.parse(baseline).tasks).toHaveLength(120);});
  it('rejects unfinished engine release even when ordinary validation passes',()=>{const result=run(fixture(),'--release');expect(result.status).toBe(1);expect(result.stderr).toMatch(/HE-K08: todo/);});
+ it('retains paused VR tasks as unfinished release requirements',()=>{
+  const root=fixture();mutate(root,l=>{for(const task of l.tasks)if(['HE-I05','HE-I06'].includes(task.id))task.status='paused';});
+  expect(run(root,'--write').status).toBe(0);expect(run(root).status).toBe(0);
+  const release=run(root,'--release');expect(release.status).toBe(1);expect(release.stderr).toContain('HE-I05: paused');expect(release.stderr).toContain('HE-I06: paused');
+  expect(fs.readFileSync(path.join(root,'docs/digitization/TASKS.md'),'utf8')).toContain('— paused;');
+ });
  it('rejects duplicate IDs, removed baseline rows and dependency cycles',()=>{
   const root=fixture();mutate(root,l=>l.tasks[0].id='HE-A02');expect(run(root).stderr).toMatch(/duplicate ID|missing specification task/);
   mutate(root,l=>l.tasks.push({...l.tasks[0],id:'HE-A01-EXTRA',dependencies:['HE-A01-EXTRA']}));expect(run(root).stderr).toContain('dependency cycle');
@@ -53,7 +59,9 @@ describe('HE-R01 separate digitization acceptance and release gate',()=>{
   const platform=JSON.parse(baseline);platform.tasks.find((task:any)=>task.id==='Q11').status='todo';const platformBaseline=JSON.stringify(platform);
   const root=fixture();fs.writeFileSync(path.join(root,'TASKS.json'),platformBaseline);
   for(const task of JSON.parse(baseline).tasks) if(task.status==='done'){const file=path.join(root,task.evidence);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,'Preserved platform evidence fixture');}
+  for(const update of Object.values(platform) as any[])if(update?.evidence){const file=path.join(root,update.evidence);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,'Preserved supplemental task evidence fixture');}
   const validate=spawnSync(process.execPath,[path.join(checkout,'scripts/tasks.mjs')],{cwd:root,encoding:'utf8'});expect(validate.status,validate.stderr).toBe(0);expect(validate.stdout).toContain('120 tasks');expect(validate.stdout).toContain(`${engine.tasks.length} digitization tasks`);
   const release=spawnSync(process.execPath,[path.join(checkout,'scripts/tasks.mjs'),'--release'],{cwd:root,encoding:'utf8'});expect(release.status).toBe(1);expect(release.stderr).toContain('HE-K08: todo');expect(release.stderr).toMatch(/Q11: todo/);expect(fs.readFileSync(path.join(root,'TASKS.json'),'utf8')).toBe(platformBaseline);
+  if(platform.uiIntegration){platform.uiIntegration.status='done';platform.uiIntegration.referenceParity='unverified';fs.writeFileSync(path.join(root,'TASKS.json'),JSON.stringify(platform));const unverified=spawnSync(process.execPath,[path.join(checkout,'scripts/tasks.mjs')],{cwd:root,encoding:'utf8'});expect(unverified.status).toBe(1);expect(unverified.stderr).toContain('Haven UI integration: reference parity is unverified');}
  });
 });

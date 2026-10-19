@@ -1,0 +1,185 @@
+ Container haven-processing-tests-cpu-run-7a9ce49199b9 Creating 
+ Container haven-processing-tests-cpu-run-7a9ce49199b9 Created 
+Exported 27 authored Gaussian splats; not GPU training evidence.
+{"fixture":"authored_gaussians_not_gpu_training","realPrivateStorage":true,"splatCount":27}
+ Container haven-integration-tests-run-908f84b2c296 Creating 
+ Container haven-integration-tests-run-908f84b2c296 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-scene-preview.spec.ts:5:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit (10.4s)
+  ✘  2 [mobile] › tests/e2e/digitization-scene-preview.spec.ts:5:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit (8.4s)
+
+
+  1) [desktop] › tests/e2e/digitization-scene-preview.spec.ts:5:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<pre aria-label=\"Scene performance report\" style=\"white-space: pre-wrap; overflow-wrap: anywhere; max-height: 240px; overflow: auto;\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "pre",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+      16 |  const report=JSON.parse(await measured.getByLabel('Scene performance report').innerText());expect(report.splatCount).toBe(fixture.splatCount);expect(report.downloadBytes).toBe(Number(fixture.byteSize));expect(report.sample.frames).toBeGreaterThan(1);expect(report.sample.framesPerSecond).toBeGreaterThan(0);expect(report.memory.gpuBytes).toBeNull();expect(report.browser).toBe(await page.evaluate(()=>navigator.userAgent));
+      17 |  const {writeFileSync}=await import('node:fs');writeFileSync(`evidence/digitization/scene-performance-${info.project.name}.json`,JSON.stringify({...report,execution:`Playwright Chromium ${page.context().browser()?.version()} on local Docker host with SwiftShader; mobile is emulation`,fixture:'self-authored 27-splat binary; no reconstruction acceptance'},null,2)+'\n');
+    > 18 |  const accessibility=await new AxeBuilder({page}).include('section[aria-label="Private reconstructed property"]').analyze();expect(accessibility.violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);
+         |                                                                                                                                                                                                                     ^
+      19 |  for(const width of [320,375,390,768,1440]){await page.setViewportSize({width,height:900});expect(await panel.evaluate(element=>element.scrollWidth<=element.clientWidth+1)).toBe(true);}
+      20 |  const response=await page.request.get(`${origin}/api/v1/ops/digitizations/${fixture.engineId}/scene-tiers`);expect(response.status()).toBe(200);expect(JSON.stringify(await response.json())).not.toMatch(/object_key|quarantine|ownerName|sourceType|checksum/);
+      21 |  await panel.getByRole('button',{name:'Close scene preview',exact:true}).click();await expect(canvas).toHaveCount(0);expect(await page.evaluate(()=>(window as any).__deletedSplatBuffers)).toBeGreaterThan(0);
+        at /workspace/tests/e2e/digitization-scene-preview.spec.ts:18:213
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-scene-preview.spec.ts:5:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure elements that have scrollable content are accessible by keyboard in Safari",
+    +     "help": "Scrollable region must have keyboard access",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.13/scrollable-region-focusable?application=playwright",
+    +     "id": "scrollable-region-focusable",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-content",
+    +             "impact": "serious",
+    +             "message": "Element should have focusable content",
+    +             "relatedNodes": Array [],
+    +           },
+    +           Object {
+    +             "data": null,
+    +             "id": "focusable-element",
+    +             "impact": "serious",
+    +             "message": "Element should be focusable",
+    +             "relatedNodes": Array [],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element should have focusable content
+    +   Element should be focusable",
+    +         "html": "<pre aria-label=\"Scene performance report\" style=\"white-space: pre-wrap; overflow-wrap: anywhere; max-height: 240px; overflow: auto;\">",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "pre",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.keyboard",
+    +       "wcag2a",
+    +       "wcag211",
+    +       "wcag213",
+    +       "TTv5",
+    +       "TT4.a",
+    +       "EN-301-549",
+    +       "EN-9.2.1.1",
+    +       "EN-9.2.1.3",
+    +       "RGAAv4",
+    +       "RGAA-7.3.2",
+    +     ],
+    +   },
+    + ]
+
+      16 |  const report=JSON.parse(await measured.getByLabel('Scene performance report').innerText());expect(report.splatCount).toBe(fixture.splatCount);expect(report.downloadBytes).toBe(Number(fixture.byteSize));expect(report.sample.frames).toBeGreaterThan(1);expect(report.sample.framesPerSecond).toBeGreaterThan(0);expect(report.memory.gpuBytes).toBeNull();expect(report.browser).toBe(await page.evaluate(()=>navigator.userAgent));
+      17 |  const {writeFileSync}=await import('node:fs');writeFileSync(`evidence/digitization/scene-performance-${info.project.name}.json`,JSON.stringify({...report,execution:`Playwright Chromium ${page.context().browser()?.version()} on local Docker host with SwiftShader; mobile is emulation`,fixture:'self-authored 27-splat binary; no reconstruction acceptance'},null,2)+'\n');
+    > 18 |  const accessibility=await new AxeBuilder({page}).include('section[aria-label="Private reconstructed property"]').analyze();expect(accessibility.violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);
+         |                                                                                                                                                                                                                     ^
+      19 |  for(const width of [320,375,390,768,1440]){await page.setViewportSize({width,height:900});expect(await panel.evaluate(element=>element.scrollWidth<=element.clientWidth+1)).toBe(true);}
+      20 |  const response=await page.request.get(`${origin}/api/v1/ops/digitizations/${fixture.engineId}/scene-tiers`);expect(response.status()).toBe(200);expect(JSON.stringify(await response.json())).not.toMatch(/object_key|quarantine|ownerName|sourceType|checksum/);
+      21 |  await panel.getByRole('button',{name:'Close scene preview',exact:true}).click();await expect(canvas).toHaveCount(0);expect(await page.evaluate(()=>(window as any).__deletedSplatBuffers)).toBeGreaterThan(0);
+        at /workspace/tests/e2e/digitization-scene-preview.spec.ts:18:213
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-scene-preview.spec.ts:5:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit 
+    [mobile] › tests/e2e/digitization-scene-preview.spec.ts:5:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit 
+

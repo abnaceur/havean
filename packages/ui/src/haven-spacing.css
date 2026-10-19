@@ -1,0 +1,233 @@
+/* Shared layout rhythm. Load after the theme and page styles in both apps.
+   Use gap inside layouts and margins only between ordinary block siblings. */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --page-gutter: clamp(16px, 3.4vw, 48px);
+  --panel-padding: clamp(16px, 2.2vw, 32px);
+  --section-space: clamp(32px, 4.5vw, 64px);
+}
+
+/* Page titles and content have distinct, predictable breathing room. */
+.page-heading {
+  padding-block: var(--space-5) var(--space-6);
+  gap: var(--space-5);
+  flex-wrap: wrap;
+}
+.page-heading p, .workspace-title p {
+  margin-top: var(--space-3);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.page-heading .eyebrow, .workspace-title .eyebrow { margin-bottom: var(--space-3); }
+.section-heading { gap: var(--space-5); margin-bottom: var(--space-5); }
+.section-heading p { margin-top: var(--space-3); line-height: 1.6; }
+.home-section { margin-top: 0; padding-block: var(--section-space) 0; }
+.detail-section { margin-top: var(--space-6); }
+.detail-section h2 { margin-bottom: var(--space-4); }
+.detail-section p + p { margin-top: var(--space-3); }
+.detail-section > :is(.button, .row-actions, .text-link) { margin-top: var(--space-5); }
+
+/* Forms: related labels and hints stay close; separate questions get more room. */
+.field { gap: var(--space-2); min-width: 0; line-height: 1.5; }
+.field-form, .form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+.field-form { margin-top: var(--space-5); }
+.field-form > *, .form-stack > * { min-width: 0; flex-shrink: 0; }
+.field-form > :is(p, .fine-print, .button, .dialog-actions, .row-actions),
+.form-stack > :is(p, .fine-print, .button, .dialog-actions, .row-actions) { margin-block: 0; }
+.form-columns { gap: var(--space-5); }
+.field :is(input, select, textarea) { min-height: 48px; line-height: 1.5; }
+.field :is(input, select, textarea), .button { scroll-margin-block: 96px; }
+.field > :is(small, .fine-print) { margin: 0; font-size: 12px; line-height: 1.6; }
+.field-form fieldset { min-width: 0; padding: var(--space-4); }
+.field-form fieldset > .field + .field,
+.field-form fieldset > .checkbox-field + .checkbox-field { margin-top: var(--space-4); }
+.field-form legend { padding-inline: var(--space-2); line-height: 1.5; }
+.checkbox-field { gap: var(--space-3); min-height: 44px; align-items: flex-start; padding-block: var(--space-2); font-size: 13px; }
+.checkbox-field input { margin-block: 0; margin-top: 1px; }
+.fine-print { line-height: 1.6; }
+.form-panel > form { margin-top: var(--space-5); }
+.form-panel, .contact-panel, .mortgage-results { padding: var(--panel-padding); }
+.mortgage-results > .field { margin-top: var(--space-5); }
+.mortgage-results > .button { margin-top: var(--space-4); }
+
+/* Action groups wrap as groups, keeping a comfortable gap and touch area. */
+.button { min-height: 48px; gap: var(--space-2); padding: var(--space-3) var(--space-5); line-height: 1.5; }
+.button svg { flex-shrink: 0; }
+.button.small, .row-actions .button { min-height: 44px; padding: 10px var(--space-4); }
+.row-actions, .button-row, .dialog-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+.row-actions .button, .dialog-actions .button { white-space: normal; overflow-wrap: anywhere; max-width: 100%; }
+.dialog-actions { margin-top: var(--space-5); }
+.button-row { margin-top: var(--space-4); }
+.error-box { gap: var(--space-4); flex-wrap: wrap; padding: var(--space-4); line-height: 1.6; }
+.error-box button { min-height: 44px; padding: var(--space-2) var(--space-3); }
+.empty { gap: var(--space-4); padding: var(--space-6) var(--space-5); }
+.empty p { line-height: 1.7; }
+.empty > .button { margin-top: var(--space-2); }
+
+/* Workflow panels and record contents. Avoid global heading/paragraph margins:
+   those would disturb map overlays and full-screen media controls. */
+.workspace-content { padding: var(--space-6) var(--page-gutter); }
+.workspace-title { gap: var(--space-5); margin-bottom: var(--space-6); }
+.workspace-panel { padding: var(--panel-padding); margin-top: var(--space-5); }
+.workspace-panel > p { font-size: 14px; line-height: 1.6; }
+:is(.workspace-panel, .form-panel, .review-card) > :is(h2, h3) + p { margin-top: var(--space-3); }
+:is(.workspace-panel, .form-panel, .review-card) > p + p { margin-top: var(--space-2); }
+:is(.workspace-panel, .form-panel, .review-card) > :is(p, h2, h3) + :is(.button, .row-actions, .record-list, .ops-toolbar, .empty, .table-scroll, section) { margin-top: var(--space-5); }
+.workspace-panel > :is(section, .table-scroll, .record-list, .empty) + :is(section, h2, h3) { margin-top: var(--space-6); }
+.workspace-panel > section + section { margin-top: var(--space-6); }
+.workspace-panel .workspace-panel { margin-block: var(--space-5); }
+.record-list { gap: var(--space-4); margin-top: var(--space-5); }
+.record-row { padding: var(--space-5); gap: var(--space-4); }
+.record-row > div { min-width: 0; }
+.record-row p { margin-top: var(--space-2); line-height: 1.6; }
+.review-card { padding: var(--space-5); margin-top: var(--space-4); }
+.review-card p { line-height: 1.6; }
+.review-card .row-actions { margin-top: var(--space-5); }
+.ops-toolbar { gap: var(--space-4); margin-bottom: var(--space-5); flex-wrap: wrap; }
+.ops-toolbar label.field { border: 0; padding: 0; background: transparent; align-items: stretch; }
+.ops-toolbar > label:not(.field) { min-height: 48px; }
+.ops-toolbar > label:not(.field) input { min-height: 44px; }
+.table-scroll { margin-block: var(--space-5); }
+.table-scroll :is(th, td) { padding: var(--space-4); line-height: 1.6; }
+.table-scroll .row-actions { gap: var(--space-2); }
+.account-overview { gap: var(--space-4); margin-block: var(--space-5); }
+.account-overview > :is(a, div) { padding: var(--space-5); gap: var(--space-3); }
+.account-links { gap: var(--space-3); margin-block: var(--space-5) var(--space-6); }
+.account-links a { padding: var(--space-4); gap: var(--space-4); }
+.account-tabs { margin-block: 0 var(--space-5); gap: var(--space-5); }
+
+/* Discovery cards, filters and media upload cards use the same internal scale. */
+.card-body, .listing-card .card-body { padding: var(--space-5); }
+.card-location { margin-top: var(--space-2); line-height: 1.6; }
+.card-facts, .listing-card .card-facts { margin-block: var(--space-3); gap: var(--space-2); }
+.card-bottom, .listing-card .card-bottom { margin-top: var(--space-4); padding-top: var(--space-4); gap: var(--space-3); }
+.filter-bar { gap: var(--space-3); padding-bottom: var(--space-4); }
+.filter-bar :is(button, select), .haven-search-tabs button { min-height: 44px; }
+.media-studio-grid, .plan-gallery { gap: var(--space-5); margin-top: var(--space-5); }
+.media-studio-grid .review-card { margin-top: 0; }
+.media-studio > .error-box { margin-block: var(--space-4); }
+.media-studio > [role=status]:not(:empty) { margin-block: var(--space-4); }
+.media-studio > .field-form { margin-bottom: var(--space-6); }
+
+/* Standard dialogs only: immersive media and wizard shells keep their layouts. */
+.dialog:not(:is(.media-experience-dialog, .property-tour-dialog, .reviewed-media-dialog, .property-model-dialog, .property-wizard-dialog)) { padding: var(--panel-padding); }
+.dialog:not(:is(.media-experience-dialog, .property-tour-dialog, .reviewed-media-dialog, .property-model-dialog, .property-wizard-dialog)) > .dialog-head { margin-bottom: var(--space-5); }
+.dialog > .dialog-head + p { line-height: 1.6; }
+.wizard-content .field-form { gap: var(--space-5); }
+.wizard-content fieldset > .field + .field { margin-top: 0; }
+.wizard-content .media-studio-grid { gap: var(--space-4); }
+
+@media (max-width: 760px) {
+  .page-heading { padding-block: var(--space-5); gap: var(--space-4); }
+  .section-heading { gap: var(--space-4); }
+  .section-heading p { max-width: none; }
+  .workspace-content { padding: var(--space-5) var(--space-4); }
+  .workspace-title { margin-bottom: var(--space-5); }
+  .form-columns { gap: var(--space-5); }
+  .record-row, .review-card, .card-body, .listing-card .card-body { padding: var(--space-4); }
+  .record-row > div { min-width: 0; flex-basis: 100%; }
+  .record-row > .row-actions { flex-basis: 100%; justify-content: flex-start; }
+  .account-overview > :is(a, div) { padding: var(--space-4); }
+  .dialog-actions { gap: var(--space-3); }
+  .dialog-actions > .button { flex: 1 1 140px; }
+  .ops-toolbar > label { max-width: none; }
+  .table-scroll :is(th, td) { padding: var(--space-3); }
+}
+
+/* Long listing names must also wrap in the narrower desktop map column. */
+.button { white-space: normal; max-width: 100%; overflow-wrap: anywhere; }
+.map-property, .map-property-list { min-width: 0; }
+.filter-draft, .advanced-filters { gap: var(--space-5); }
+
+/* Plain content sections (privacy, statements, reviews and service pages) do
+   not all use a panel. Low specificity preserves their specialized layouts. */
+:where(main, main section, main article, .dialog) > :where(h2, h3, h4) + p { margin-top: var(--space-3); }
+:where(main, main section, main article, .dialog) > p + p { margin-top: var(--space-3); }
+:where(main, main section, main article, .dialog) > :where(p, h2, h3, h4) + :is(.button, .row-actions, .field, .empty) { margin-top: var(--space-5); }
+:where(main, main section, main article) > :where(p, form, .button, .record-list, .table-scroll) + :is(h2, h3) { margin-top: var(--space-6); }
+:where(main, main section) > :where(.record-list, .empty, .workspace-panel) + :is(h2, h3) { margin-top: var(--space-6); }
+.check-label { display: flex; align-items: flex-start; gap: var(--space-3); padding-block: var(--space-2); min-height: 44px; line-height: 1.6; }
+.check-label input { flex-shrink: 0; margin-top: var(--space-1); }
+.management-tabs { gap: var(--space-2); margin-bottom: var(--space-5); }
+.management-tabs button { min-height: 44px; padding: var(--space-3) var(--space-4); line-height: 1.5; background: var(--surface); color: var(--ink); border-color: var(--line); }
+.management-tabs button.active { background: var(--primary); color: var(--on-primary); }
+.owner-banner p, .detail-main > h1 + p { margin-top: var(--space-3); }
+.detail-main > p + .badge { margin-top: var(--space-3); }
+
+/* Step validation keeps each message beside its field and in a focusable summary. */
+.property-wizard [aria-invalid=true] { border-color: var(--danger); }
+.property-wizard .field-error { color: var(--danger); font-size: 13px; line-height: 1.6; }
+.wizard-errors ul { padding-left: 20px; margin: 12px 0 0; display: grid; gap: 8px; }
+.wizard-errors a { color: var(--danger); text-decoration: underline; text-underline-offset: 3px; }
+.wizard-errors { scroll-margin-top: 100px; }
+
+/* Viewing calendars share the same date and slot controls in both applications. */
+.date-calendar { border: 1px solid var(--line); border-radius: 16px; padding: 12px; background: var(--surface, #fff); min-width: 0; color: var(--text); }
+.date-calendar-header, .date-calendar-header > div, .date-calendar-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.date-calendar-header { margin-bottom: 12px; }
+.date-calendar-header strong { font-size: 16px; }
+.date-calendar button { border: 0; border-radius: 9px; background: transparent; color: inherit; cursor: pointer; font: inherit; min-height: 44px; }
+.date-calendar-header button { width: 44px; display: grid; place-items: center; }
+.date-calendar button:hover:not(:disabled) { background: var(--soft); }
+.date-calendar button:focus-visible, .calendar-date-trigger:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+.date-calendar button:disabled { opacity: .35; cursor: default; }
+.date-calendar table { width: 100%; min-width: 0; table-layout: fixed; border-collapse: separate; border-spacing: 2px; margin: 0; }
+.date-calendar :is(th, td) { border: 0; padding: 0; text-align: center; background: transparent; }
+.date-calendar th { height: 32px; color: var(--muted); font-size: 11px; font-weight: 500; }
+.date-calendar abbr { text-decoration: none; }
+.date-calendar td button { position: relative; width: 100%; min-width: 0; padding: 8px 0; font-size: 13px; }
+.date-calendar td button[data-in-range=true] { background: var(--soft); }
+.date-calendar td button[aria-current=date] { box-shadow: inset 0 0 0 1px var(--primary); }
+.date-calendar td button[aria-pressed=true] { background: var(--primary); color: var(--surface, #fff); font-weight: 700; }
+.calendar-dot { display: inline-block; height: 5px; width: 5px; border-radius: 50%; background: currentColor; }
+.date-calendar td .calendar-dot { position: absolute; bottom: 4px; left: calc(50% - 2.5px); }
+.date-calendar-footer { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 8px; font-size: 11px; color: var(--muted); }
+.date-calendar-footer button { padding: 8px; color: var(--primary); font-size: 12px; }
+.calendar-date-field { position: relative; }
+.calendar-date-trigger { display: flex; align-items: center; gap: 10px; text-align: left; border: 1px solid var(--line); border-radius: 10px; background: var(--surface, #fff); color: var(--text); min-height: 48px; padding: 12px; font: inherit; cursor: pointer; }
+.calendar-date-trigger svg { flex-shrink: 0; }
+.calendar-date-panel { width: 100%; min-width: 0; display: grid; gap: 8px; }
+.calendar-date-panel > .button { justify-self: start; }
+.viewing-time-meta { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-bottom: 20px; color: var(--muted); font-size: 13px; }
+.viewing-time-meta > span { display: inline-flex; align-items: center; gap: 8px; }
+.viewing-time-layout { display: grid; grid-template-columns: minmax(0,1fr); gap: 24px; }
+.viewing-time-layout > div { min-width: 0; }
+.viewing-time-layout h3 { font-size: 16px; line-height: 1.5; margin: 0 0 12px; }
+.viewing-time-layout .fine-print { margin-top: 12px; }
+.viewing-slot-group, .field-form .viewing-slot-group { border: 0; padding: 0; margin: 16px 0; }
+.viewing-slot-group legend { font-size: 13px; color: var(--muted); padding: 0; margin-bottom: 12px; }
+.viewing-slots { display: grid; grid-template-columns: repeat(auto-fit,minmax(110px,1fr)); gap: 10px; max-height: 280px; overflow-y: auto; padding: 4px; }
+.viewing-slot { position: relative; display: block; min-width: 0; cursor: pointer; }
+.viewing-slot input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.viewing-slot > span, .viewing-slot-preview { display: flex; align-items: center; justify-content: center; min-height: 48px; padding: 10px 8px; border: 1px solid var(--line); border-radius: 10px; font-size: 13px; background: var(--surface, #fff); }
+.viewing-slot input:checked + span { background: var(--primary); border-color: var(--primary); color: var(--surface, #fff); font-weight: 600; }
+.viewing-slot input:focus-visible + span { outline: 3px solid var(--primary); outline-offset: 2px; }
+.viewing-slot input:disabled + span { opacity: .5; cursor: default; }
+.viewing-selection { padding: 16px; border-radius: 12px; background: var(--soft); line-height: 1.6; font-size: 14px; }
+.viewing-agenda-calendar { display: grid; grid-template-columns: minmax(260px,360px) minmax(0,1fr); gap: 32px; align-items: start; margin: 24px 0; }
+.viewing-agenda-calendar > div > p { margin: 12px 0 20px; }
+.availability-preview { padding: 24px 0; margin-top: 24px; border-block: 1px solid var(--line); }
+.availability-preview > p { margin: 12px 0 24px; }
+.working-week-days { display: grid; grid-template-columns: repeat(auto-fit,minmax(110px,1fr)); gap: 8px; }
+.working-week-days .checkbox-field { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin: 0; }
+.working-week-days .checkbox-field:has(:checked) { background: var(--soft); border-color: var(--primary); }
+.dialog.viewing-booking-dialog { width: min(860px,calc(100% - 32px)); max-width: 860px; }
+@media(min-width:800px) { :is(.availability-preview,.viewing-booking-dialog) .viewing-time-layout { grid-template-columns: minmax(280px,360px) minmax(0,1fr); } }
+@media(max-width:600px) { .viewing-agenda-calendar { grid-template-columns: minmax(0,1fr); gap: 20px; } .date-calendar { padding: 8px; } .viewing-calendar .ops-toolbar .calendar-date-field { flex-basis: 100%; } }

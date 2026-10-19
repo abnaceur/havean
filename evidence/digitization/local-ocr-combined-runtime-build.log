@@ -1,0 +1,55 @@
+ Image haven-processing-ocr:3.3.3-local-cpu-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 620B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.ocr-development
+#2 transferring dockerfile: 521B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/haven-processing-cpu:1.0.0-cpu-v4
+#3 DONE 0.1s
+
+#4 [internal] load metadata for docker.io/library/haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2
+#4 DONE 0.1s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 192B done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 170.23kB 0.0s done
+#6 DONE 0.1s
+
+#7 [stage-1 1/3] FROM docker.io/library/haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2@sha256:3d89260697f7ec0a06e0849ff9f00dc534c32503675320549d500ad81cb28324
+#7 resolve docker.io/library/haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2@sha256:3d89260697f7ec0a06e0849ff9f00dc534c32503675320549d500ad81cb28324
+#7 resolve docker.io/library/haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2@sha256:3d89260697f7ec0a06e0849ff9f00dc534c32503675320549d500ad81cb28324 0.1s done
+#7 DONE 0.4s
+
+#8 [media 1/1] FROM docker.io/library/haven-processing-cpu:1.0.0-cpu-v4@sha256:924ea4697d05544b843bf329d90856aea7936eda9834bfeb31199d4c24a1ec77
+#8 resolve docker.io/library/haven-processing-cpu:1.0.0-cpu-v4@sha256:924ea4697d05544b843bf329d90856aea7936eda9834bfeb31199d4c24a1ec77 0.1s done
+#8 DONE 0.4s
+
+#9 [stage-1 2/3] COPY --from=media /opt/media /opt/media
+#9 DONE 0.2s
+
+#10 [stage-1 3/3] COPY services/property-processing/property_processing /opt/processing/property_processing
+#10 DONE 0.1s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 1.5s done
+#11 exporting manifest sha256:c45ff598935acdde1ed7a0f3cbca3f7413f0e4c4e1077282f01300588aa63a2c
+#11 exporting manifest sha256:c45ff598935acdde1ed7a0f3cbca3f7413f0e4c4e1077282f01300588aa63a2c 0.1s done
+#11 exporting config sha256:faad5184404b66fe36ccb6a02e97d4a1a6e0b5562243e42379ab262c13c2b68e 0.1s done
+#11 exporting attestation manifest sha256:dfc76cd9113b7ba4984925bec985d383da98fd71fbc3aaae019c3610b4dc3bb8 0.1s done
+#11 exporting manifest list sha256:8eec42af186a1dc0b19b7ced2c5264c1ffd6ddf520d42471afd823bffd99c1f4
+#11 exporting manifest list sha256:8eec42af186a1dc0b19b7ced2c5264c1ffd6ddf520d42471afd823bffd99c1f4 0.1s done
+#11 naming to docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1 0.0s done
+#11 unpacking to docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1
+#11 unpacking to docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1 0.4s done
+#11 DONE 3.3s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ Image haven-processing-ocr:3.3.3-local-cpu-v1 Built 

@@ -1,0 +1,51 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/unit/digitization-ledger.test.ts [2m([22m[2m10 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 4129[2mms[22m[39m
+   [31m❯[39m HE-R01 separate digitization acceptance and release gate [2m(10)[22m
+     [32m✓[39m accepts complete baseline ledger without touching the 120 marketplace tasks[32m 252[2mms[22m[39m
+     [32m✓[39m rejects unfinished engine release even when ordinary validation passes[32m 257[2mms[22m[39m
+     [33m[2m✓[22m[39m retains paused VR tasks as unfinished release requirements[33m 493[2mms[22m[39m
+     [33m[2m✓[22m[39m rejects duplicate IDs, removed baseline rows and dependency cycles[33m 341[2mms[22m[39m
+     [33m[2m✓[22m[39m rejects unknown prerequisites and empty acceptance/tests[33m 441[2mms[22m[39m
+     [32m✓[39m requires passing minimum tests and evidence before marking done[32m 248[2mms[22m[39m
+     [33m[2m✓[22m[39m rejects missing provenance and unfinished done prerequisites[33m 437[2mms[22m[39m
+     [33m[2m✓[22m[39m accepts reviewed evidence and requires explicit markdown regeneration[33m 687[2mms[22m[39m
+     [32m✓[39m rejects evidence symlinks outside the checkout[32m 290[2mms[22m[39m
+[31m     [31m×[31m wires both root gates without modifying marketplace ledger bytes[39m[33m 677[2mms[22m[39m
+ [32m✓[39m tests/unit/engine-pause.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/unit/digitization-ledger.test.ts[2m > [22mHE-R01 separate digitization acceptance and release gate[2m > [22mwires both root gates without modifying marketplace ledger bytes
+[31m[1mAssertionError[22m: Manual property uploads and temporary engine pause: missing contract/evidence
+Full-screen property media experience: missing contract/evidence
+Guided agent property creation and durable partial drafts: missing contract/evidence
+Consistent spacing across public, account and professional pages: missing contract/evidence
+Validation at each property creation step: missing contract/evidence
+Calendar controls throughout viewing availability and bookings: missing contract/evidence
+Conversation inbox and chat experience: missing contract/evidence
+Pause all digitalization engine access and processing: missing contract/evidence
+: expected 1 to be +0 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 0[39m
+[31m+ 1[39m
+
+[36m [2m❯[22m tests/unit/digitization-ledger.test.ts:[2m63:155[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m13 passed[39m[22m[90m (14)[39m
+[2m   Start at [22m 06:50:38
+[2m   Duration [22m 11.15s[2m (tests 39%, transform 31%, import 30%)[22m
+
+[2m  Transform [22m [33mtransforming modules took 3.24s[39m[2m · 31% of tracked time, re-done on every run[22m
+[2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+

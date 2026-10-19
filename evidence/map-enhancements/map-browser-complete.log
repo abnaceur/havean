@@ -1,0 +1,41 @@
+ Container haven-tests-run-50cbe434a480 Creating 
+ Container haven-tests-run-50cbe434a480 Created 
+
+Running 6 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/map-enhancements.spec.ts:5:1 › price pin previews and selected panel retain map filters and support keyboard/mobile (1.5m)
+  ✓  2 [desktop] › tests/e2e/map-search.spec.ts:9:1 › D05 real MapLibre clusters, selected cards and URL bounds synchronize with the same public list criteria (15.6s)
+  ✓  3 [desktop] › tests/e2e/map-search.spec.ts:20:1 › D05 a genuine tile failure and unavailable WebGL retain the matching property list and attribution (4.8s)
+  ✓  4 [mobile] › tests/e2e/map-enhancements.spec.ts:5:1 › price pin previews and selected panel retain map filters and support keyboard/mobile (23.3s)
+  ✓  5 [mobile] › tests/e2e/map-search.spec.ts:9:1 › D05 real MapLibre clusters, selected cards and URL bounds synchronize with the same public list criteria (15.1s)
+  ✓  6 [mobile] › tests/e2e/map-search.spec.ts:20:1 › D05 a genuine tile failure and unavailable WebGL retain the matching property list and attribution (6.7s)
+
+
+  1) [desktop] › tests/e2e/map-enhancements.spec.ts:5:1 › price pin previews and selected panel retain map filters and support keyboard/mobile 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByLabel('Property transaction', { exact: true })
+
+
+      33 |  await page.getByRole('button',{name:'Close property details',exact:true}).press('Escape');await expect(panel).toHaveCount(0);
+      34 |  await page.getByLabel('Select a property on the map').selectOption(id!);await expect(panel).toBeVisible();
+    > 35 |  await page.getByLabel('Property transaction',{exact:true}).selectOption('rent');await expect(page).toHaveURL(/transaction=rent/);await expect(panel).toHaveCount(0);
+         |                                                             ^
+      36 |  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+      37 |  const axe=await new AxeBuilder({page}).include('main').analyze();expect(axe.violations.filter(v=>['serious','critical'].includes(v.impact||''))).toEqual([]);
+      38 |  await page.screenshot({path:info.outputPath('map-enhancements.png')});
+        at /workspace/tests/e2e/map-enhancements.spec.ts:35:61
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    infra/generated/map-browser-complete/map-enhancements-price-pin-d778a-and-support-keyboard-mobile-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: infra/generated/map-browser-complete/map-enhancements-price-pin-d778a-and-support-keyboard-mobile-desktop/error-context.md
+
+  1 failed
+    [desktop] › tests/e2e/map-enhancements.spec.ts:5:1 › price pin previews and selected panel retain map filters and support keyboard/mobile 
+  5 passed (2.7m)
+

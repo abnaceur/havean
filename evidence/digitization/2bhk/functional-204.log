@@ -1,0 +1,48 @@
+time="2026-10-13T23:28:05+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-processing-gpu-volume-init-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-cab0a88beebe Creating 
+ Container haven-tests-run-cab0a88beebe Created 
+
+Running 1 test using 1 worker
+
+Property capture inputs are uploaded and bound.
+  ✘  1 [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform (21.0m)
+
+
+  1) [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 204
+    Received: 192
+
+    Call Log:
+    - Timeout 1200000ms exceeded while waiting on the predicate
+
+      57 |   if(process.env.RECOVER_2BHK_DEMO==='true'){const retry=upload.getByRole('button',{name:'Retry cancellation',exact:true});if(await retry.count()){await retry.first().click();await expect(upload.getByRole('button',{name:'Reload processing status',exact:true})).toBeEnabled();}const cancelButtons=upload.getByRole('button',{name:'Cancel processing run',exact:true});while(await cancelButtons.count()){const before=await cancelButtons.count();await cancelButtons.first().click();await expect(cancelButtons).toHaveCount(before-1,{timeout:60000});}}
+      58 |   await upload.getByRole('button',{name:'Prepare all photo and video views',exact:true}).click();
+    > 59 |   await expect.poll(async()=>{const r=await page.request.get(base+'/frame-candidates');expect(r.ok()).toBe(true);candidates=(await r.json()).data;return candidates.frames.length;},{timeout:1200000,intervals:[2000,4000]}).toBe(204);
+         |                                                                                                                                                                                                                              ^
+      60 |  }
+      61 |  expect(candidates.frames.every((f:any)=>f.kind==='video_frame'&&f.timestampSeconds!==null&&f.width===1600&&f.height===1200)).toBe(true);
+      62 |
+        at /workspace/tests/e2e/digitization-2bhk-reconstruction.spec.ts:59:222
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Slow test file: [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts (21.0m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 failed
+    [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+

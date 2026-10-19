@@ -1,0 +1,724 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: map-enhancements.spec.ts >> price pin previews and selected panel retain map filters and support keyboard/mobile
+- Location: tests/e2e/map-enhancements.spec.ts:5:1
+
+# Error details
+
+```
+Test timeout of 90000ms exceeded.
+```
+
+```
+Error: locator.selectOption: Test timeout of 90000ms exceeded.
+Call log:
+  - waiting for getByLabel('Property transaction', { exact: true })
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "Haven home" [ref=e5] [cursor=pointer]:
+        - /url: /bj
+        - text: haven
+        - generic [ref=e10]: .
+      - button "Beijing" [ref=e11] [cursor=pointer]
+      - navigation "Main navigation" [ref=e17]:
+        - link "Buy" [ref=e18] [cursor=pointer]:
+          - /url: /bj/buy
+        - link "Rent" [ref=e19] [cursor=pointer]:
+          - /url: /bj/rent
+        - link "New homes" [ref=e20] [cursor=pointer]:
+          - /url: /bj/new-homes
+        - link "Find an agent" [ref=e21] [cursor=pointer]:
+          - /url: /bj/agents
+      - generic [ref=e22]:
+        - link "List your property" [ref=e23] [cursor=pointer]:
+          - /url: /bj/list-property
+        - button "Sign in" [ref=e27] [cursor=pointer]
+  - main [ref=e32]:
+    - generic [ref=e33]:
+      - link "Home" [ref=e34] [cursor=pointer]:
+        - /url: /bj
+      - generic [ref=e35]: Property map
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - generic [ref=e38]: EXPLORE BEIJING
+        - heading "Find your place on the map" [level=1] [ref=e39]
+        - paragraph [ref=e40]: Approximate community locations protect each home's private address.
+      - link "List view" [ref=e41] [cursor=pointer]:
+        - /url: /bj/search?transaction=sale&segment=residential&sort=newest
+    - generic [ref=e42]:
+      - generic [ref=e43]:
+        - generic [ref=e44]: Property transaction
+        - combobox "Property transaction" [ref=e45]:
+          - option "Sale and rental"
+          - option "For sale" [selected]
+          - option "To rent"
+      - generic [ref=e46]:
+        - generic [ref=e47]: Property category
+        - combobox "Property category" [ref=e48]:
+          - option "All categories"
+          - option "Residential" [selected]
+          - option "Commercial"
+    - generic [ref=e49]:
+      - generic [ref=e50]:
+        - button "Location" [ref=e51] [cursor=pointer]
+        - button "Price" [ref=e54] [cursor=pointer]
+        - button "Bedrooms" [ref=e57] [cursor=pointer]
+        - button "All filters 3" [ref=e60] [cursor=pointer]:
+          - text: All filters
+          - generic [ref=e62]: "3"
+      - generic [ref=e63]:
+        - button "Save search" [ref=e64] [cursor=pointer]
+        - combobox "Sort properties" [ref=e67]:
+          - option "Recommended"
+          - option "Just listed" [selected]
+          - option "Lowest price"
+          - option "Highest price"
+          - option "Largest area"
+    - generic [ref=e68]:
+      - generic [ref=e69]: "Transaction: sale"
+      - generic [ref=e70]: "Segment: residential"
+      - generic [ref=e71]: "Sort: Just listed"
+      - link "Clear all" [ref=e72] [cursor=pointer]:
+        - /url: /bj/map
+    - generic [ref=e73]:
+      - status [ref=e74]: 85 matching properties
+      - button "Search this area" [ref=e75] [cursor=pointer]
+    - generic [ref=e76]:
+      - region "Property locations" [ref=e78]:
+        - generic [ref=e79]:
+          - generic:
+            - region "Map" [ref=e80]
+            - button "Preview Contemporary home with city views" [ref=e81] [cursor=pointer]: CN¥8,520,000
+            - button "Preview Contemporary home with city views" [ref=e82] [cursor=pointer]: CN¥3,960,000
+            - button "Preview Contemporary home with city views" [ref=e83] [cursor=pointer]: CN¥7,380,000
+            - button "Preview Contemporary home with city views" [ref=e84] [cursor=pointer]: CN¥5,100,000
+            - button "Preview Contemporary home with city views" [ref=e85] [cursor=pointer]: CN¥8,520,000
+            - button "Preview Contemporary home with city views" [ref=e86] [cursor=pointer]: CN¥6,240,000
+            - button "Preview Contemporary home with city views" [ref=e87] [cursor=pointer]: CN¥3,960,000
+            - button "Preview Contemporary home with city views" [ref=e88] [cursor=pointer]: CN¥7,380,000
+            - button "Preview Contemporary home with city views" [ref=e89] [cursor=pointer]: CN¥5,100,000
+            - button "Preview Contemporary home with city views" [ref=e90] [cursor=pointer]: CN¥6,240,000
+          - generic [ref=e91]:
+            - button "Zoom in" [disabled] [ref=e92]
+            - button "Zoom out" [ref=e94] [cursor=pointer]
+            - button "Drag to rotate map, click to reset north" [ref=e96]
+        - paragraph [ref=e98]: Local synthetic map · Community positions rounded to 3 decimal places
+        - generic [ref=e99]:
+          - generic [ref=e100]: Select a property on the map
+          - combobox "Select a property on the map" [ref=e101]:
+            - option "Choose a property"
+            - option "Q01 native SEO synthetic home · Willow Park · CN¥123,457" [selected]
+            - option "Q01 native SEO synthetic home · Willow Park · CN¥123,457"
+            - option "Q01 native SEO synthetic home · Willow Park · CN¥123,457"
+            - option "Q01 native SEO synthetic home · Willow Park · CN¥123,457"
+            - option "S01 native synthetic complaint property · Willow Park · CN¥123,457"
+            - option "S01 native synthetic complaint property · Willow Park · CN¥123,457"
+            - option "S01 native synthetic complaint property · Willow Park · CN¥123,457"
+            - option "S01 native synthetic complaint property · Willow Park · CN¥123,457"
+            - option "S01 native synthetic complaint property · Willow Park · CN¥123,457"
+            - option "S01 native synthetic complaint property · Willow Park · CN¥123,457"
+            - option "S01 native synthetic complaint property · Willow Park · CN¥123,457"
+            - option "S01 native synthetic complaint property · Willow Park · CN¥123,457"
+            - option "S01 native synthetic complaint property · Willow Park · CN¥123,457"
+            - option "S01 native synthetic complaint property · Willow Park · CN¥123,457"
+            - option "S01 native synthetic complaint property · Willow Park · CN¥123,457"
+            - option "Browser-owned garden apartment mobile · Willow Park · CN¥4,200,000"
+            - option "Browser-owned garden apartment desktop · Willow Park · CN¥4,200,000"
+            - option "Browser-owned garden apartment desktop · Willow Park · CN¥4,200,000"
+            - option "Browser-owned garden apartment mobile · Willow Park · CN¥4,200,000"
+            - option "Browser-owned garden apartment desktop · Willow Park · CN¥4,200,000"
+            - option "Browser-owned garden apartment mobile · Willow Park · CN¥4,200,000"
+            - option "Browser-owned garden apartment desktop · Willow Park · CN¥4,200,000"
+            - option "Browser-owned garden apartment mobile · Willow Park · CN¥4,200,000"
+            - option "Browser-owned garden apartment mobile · Willow Park · CN¥4,200,000"
+            - option "Browser-owned garden apartment desktop · Willow Park · CN¥4,200,000"
+            - option "Light-filled home beside the gardens · Willow Park · CN¥3,200,000"
+            - option "A calm retreat with room to grow · Garden Residence · CN¥3,580,000"
+            - option "South-facing apartment near the metro · River Court · CN¥3,960,000"
+            - option "Open-plan living in a leafy community · East Lake Gardens · CN¥4,340,000"
+            - option "Spacious family home with a balcony · Maple Quarter · CN¥4,720,000"
+            - option "Contemporary home with city views · Skyline Community · CN¥5,100,000"
+            - option "Light-filled home beside the gardens · Willow Park · CN¥5,480,000"
+            - option "A calm retreat with room to grow · Garden Residence · CN¥5,860,000"
+            - option "South-facing apartment near the metro · River Court · CN¥6,240,000"
+            - option "Open-plan living in a leafy community · East Lake Gardens · CN¥6,620,000"
+            - option "Spacious family home with a balcony · Maple Quarter · CN¥7,000,000"
+            - option "Contemporary home with city views · Skyline Community · CN¥7,380,000"
+            - option "Light-filled home beside the gardens · Willow Park · CN¥7,760,000"
+            - option "A calm retreat with room to grow · Garden Residence · CN¥8,140,000"
+            - option "South-facing apartment near the metro · River Court · CN¥8,520,000"
+            - option "Open-plan living in a leafy community · East Lake Gardens · CN¥3,200,000"
+            - option "Spacious family home with a balcony · Maple Quarter · CN¥3,580,000"
+            - option "Contemporary home with city views · Skyline Community · CN¥3,960,000"
+            - option "Light-filled home beside the gardens · Willow Park · CN¥4,340,000"
+            - option "A calm retreat with room to grow · Garden Residence · CN¥4,720,000"
+            - option "South-facing apartment near the metro · River Court · CN¥5,100,000"
+            - option "Open-plan living in a leafy community · East Lake Gardens · CN¥5,480,000"
+            - option "Spacious family home with a balcony · Maple Quarter · CN¥5,860,000"
+            - option "Contemporary home with city views · Skyline Community · CN¥6,240,000"
+            - option "Light-filled home beside the gardens · Willow Park · CN¥6,620,000"
+            - option "A calm retreat with room to grow · Garden Residence · CN¥7,000,000"
+            - option "South-facing apartment near the metro · River Court · CN¥7,380,000"
+            - option "Open-plan living in a leafy community · East Lake Gardens · CN¥7,760,000"
+            - option "Spacious family home with a balcony · Maple Quarter · CN¥8,140,000"
+            - option "Contemporary home with city views · Skyline Community · CN¥8,520,000"
+            - option "Light-filled home beside the gardens · Willow Park · CN¥3,200,000"
+            - option "A calm retreat with room to grow · Garden Residence · CN¥3,580,000"
+            - option "South-facing apartment near the metro · River Court · CN¥3,960,000"
+            - option "Open-plan living in a leafy community · East Lake Gardens · CN¥4,340,000"
+            - option "Spacious family home with a balcony · Maple Quarter · CN¥4,720,000"
+            - option "Contemporary home with city views · Skyline Community · CN¥5,100,000"
+            - option "Light-filled home beside the gardens · Willow Park · CN¥5,480,000"
+            - option "A calm retreat with room to grow · Garden Residence · CN¥5,860,000"
+            - option "South-facing apartment near the metro · River Court · CN¥6,240,000"
+            - option "Open-plan living in a leafy community · East Lake Gardens · CN¥6,620,000"
+            - option "Spacious family home with a balcony · Maple Quarter · CN¥7,000,000"
+            - option "Contemporary home with city views · Skyline Community · CN¥7,380,000"
+            - option "Light-filled home beside the gardens · Willow Park · CN¥7,760,000"
+            - option "A calm retreat with room to grow · Garden Residence · CN¥8,140,000"
+            - option "South-facing apartment near the metro · River Court · CN¥8,520,000"
+            - option "Open-plan living in a leafy community · East Lake Gardens · CN¥3,200,000"
+            - option "Spacious family home with a balcony · Maple Quarter · CN¥3,580,000"
+            - option "Contemporary home with city views · Skyline Community · CN¥3,960,000"
+            - option "Light-filled home beside the gardens · Willow Park · CN¥4,340,000"
+            - option "A calm retreat with room to grow · Garden Residence · CN¥4,720,000"
+            - option "South-facing apartment near the metro · River Court · CN¥5,100,000"
+            - option "Open-plan living in a leafy community · East Lake Gardens · CN¥5,480,000"
+            - option "Spacious family home with a balcony · Maple Quarter · CN¥5,860,000"
+            - option "Contemporary home with city views · Skyline Community · CN¥6,240,000"
+            - option "Light-filled home beside the gardens · Willow Park · CN¥6,620,000"
+            - option "A calm retreat with room to grow · Garden Residence · CN¥7,000,000"
+            - option "South-facing apartment near the metro · River Court · CN¥7,380,000"
+            - option "Open-plan living in a leafy community · East Lake Gardens · CN¥7,760,000"
+            - option "Spacious family home with a balcony · Maple Quarter · CN¥8,140,000"
+            - option "Contemporary home with city views · Skyline Community · CN¥8,520,000"
+      - generic [ref=e102]:
+        - region "Selected property" [ref=e103]:
+          - generic [ref=e104]:
+            - heading "Selected property" [level=2] [ref=e105]
+            - button "Close property details" [active] [ref=e107] [cursor=pointer]: ×
+          - generic [ref=e108]:
+            - article [ref=e109]:
+              - link [aria-hidden] [ref=e110] [cursor=pointer]:
+                - /url: /bj/buy/q01-web-e3186539-d68a-4aa6-b8d0-4efa2d27471a
+                - generic [ref=e111]: Photo unavailable
+                - generic [ref=e116]: FOR SALE
+              - button "Save Q01 native SEO synthetic home" [ref=e117] [cursor=pointer]
+              - generic [ref=e120]:
+                - generic [ref=e121]: Willow Park · Chaoyang
+                - link "Q01 native SEO synthetic home" [ref=e125] [cursor=pointer]:
+                  - /url: /bj/buy/q01-web-e3186539-d68a-4aa6-b8d0-4efa2d27471a
+                - paragraph [ref=e126]:
+                  - text: 2 beds · 1 living
+                  - generic [ref=e127]: ·
+                  - text: 80.00 m²
+                  - generic [ref=e128]: ·
+                  - text: South
+                - generic [ref=e129]:
+                  - strong [ref=e130]: CN¥123,457
+                  - generic [ref=e131]: CN¥1,543 / m²
+            - paragraph [ref=e132]: Approximate community location; the private address is protected.
+            - link "View full property" [ref=e133] [cursor=pointer]:
+              - /url: /bj/buy/q01-web-e3186539-d68a-4aa6-b8d0-4efa2d27471a
+        - region "Matching properties" [ref=e134]:
+          - generic [ref=e135]:
+            - generic [ref=e136]:
+              - article [ref=e137]:
+                - link [aria-hidden] [ref=e138] [cursor=pointer]:
+                  - /url: /bj/buy/q01-web-e3186539-d68a-4aa6-b8d0-4efa2d27471a
+                  - generic [ref=e139]: Photo unavailable
+                  - generic [ref=e144]: FOR SALE
+                - button "Save Q01 native SEO synthetic home" [ref=e145] [cursor=pointer]
+                - generic [ref=e148]:
+                  - generic [ref=e149]: Willow Park · Chaoyang
+                  - link "Q01 native SEO synthetic home" [ref=e153] [cursor=pointer]:
+                    - /url: /bj/buy/q01-web-e3186539-d68a-4aa6-b8d0-4efa2d27471a
+                  - paragraph [ref=e154]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e155]: ·
+                    - text: 80.00 m²
+                    - generic [ref=e156]: ·
+                    - text: South
+                  - generic [ref=e157]:
+                    - strong [ref=e158]: CN¥123,457
+                    - generic [ref=e159]: CN¥1,543 / m²
+              - button "Show Q01 native SEO synthetic home on map" [pressed] [ref=e160] [cursor=pointer]
+            - generic [ref=e161]:
+              - article [ref=e162]:
+                - link [aria-hidden] [ref=e163] [cursor=pointer]:
+                  - /url: /bj/buy/q01-web-e0927b06-582a-4297-a1d9-7e0d450b6aec
+                  - generic [ref=e164]: Photo unavailable
+                  - generic [ref=e169]: FOR SALE
+                - button "Save Q01 native SEO synthetic home" [ref=e170] [cursor=pointer]
+                - generic [ref=e173]:
+                  - generic [ref=e174]: Willow Park · Chaoyang
+                  - link "Q01 native SEO synthetic home" [ref=e178] [cursor=pointer]:
+                    - /url: /bj/buy/q01-web-e0927b06-582a-4297-a1d9-7e0d450b6aec
+                  - paragraph [ref=e179]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e180]: ·
+                    - text: 80.00 m²
+                    - generic [ref=e181]: ·
+                    - text: South
+                  - generic [ref=e182]:
+                    - strong [ref=e183]: CN¥123,457
+                    - generic [ref=e184]: CN¥1,543 / m²
+              - button "Show Q01 native SEO synthetic home on map" [ref=e185] [cursor=pointer]
+            - generic [ref=e186]:
+              - article [ref=e187]:
+                - link [aria-hidden] [ref=e188] [cursor=pointer]:
+                  - /url: /bj/buy/q01-web-a5d8be5e-f3b6-48e8-812f-dd3c2db8ea41
+                  - generic [ref=e189]: Photo unavailable
+                  - generic [ref=e194]: FOR SALE
+                - button "Save Q01 native SEO synthetic home" [ref=e195] [cursor=pointer]
+                - generic [ref=e198]:
+                  - generic [ref=e199]: Willow Park · Chaoyang
+                  - link "Q01 native SEO synthetic home" [ref=e203] [cursor=pointer]:
+                    - /url: /bj/buy/q01-web-a5d8be5e-f3b6-48e8-812f-dd3c2db8ea41
+                  - paragraph [ref=e204]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e205]: ·
+                    - text: 80.00 m²
+                    - generic [ref=e206]: ·
+                    - text: South
+                  - generic [ref=e207]:
+                    - strong [ref=e208]: CN¥123,457
+                    - generic [ref=e209]: CN¥1,543 / m²
+              - button "Show Q01 native SEO synthetic home on map" [ref=e210] [cursor=pointer]
+            - generic [ref=e211]:
+              - article [ref=e212]:
+                - link [aria-hidden] [ref=e213] [cursor=pointer]:
+                  - /url: /bj/buy/q01-web-c8a60ae1-9f48-4f5e-9143-a67fa5154ad9
+                  - generic [ref=e214]: Photo unavailable
+                  - generic [ref=e219]: FOR SALE
+                - button "Save Q01 native SEO synthetic home" [ref=e220] [cursor=pointer]
+                - generic [ref=e223]:
+                  - generic [ref=e224]: Willow Park · Chaoyang
+                  - link "Q01 native SEO synthetic home" [ref=e228] [cursor=pointer]:
+                    - /url: /bj/buy/q01-web-c8a60ae1-9f48-4f5e-9143-a67fa5154ad9
+                  - paragraph [ref=e229]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e230]: ·
+                    - text: 80.00 m²
+                    - generic [ref=e231]: ·
+                    - text: South
+                  - generic [ref=e232]:
+                    - strong [ref=e233]: CN¥123,457
+                    - generic [ref=e234]: CN¥1,543 / m²
+              - button "Show Q01 native SEO synthetic home on map" [ref=e235] [cursor=pointer]
+            - generic [ref=e236]:
+              - article [ref=e237]:
+                - link [aria-hidden] [ref=e238] [cursor=pointer]:
+                  - /url: /bj/buy/s01-native-f87a8afa-7d74-446b-8c7e-623fd88ed6c1
+                  - generic [ref=e239]: Photo unavailable
+                  - generic [ref=e244]: FOR SALE
+                - button "Save S01 native synthetic complaint property" [ref=e245] [cursor=pointer]
+                - generic [ref=e248]:
+                  - generic [ref=e249]: Willow Park · Chaoyang
+                  - link "S01 native synthetic complaint property" [ref=e253] [cursor=pointer]:
+                    - /url: /bj/buy/s01-native-f87a8afa-7d74-446b-8c7e-623fd88ed6c1
+                  - paragraph [ref=e254]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e255]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e256]: ·
+                    - text: South
+                  - generic [ref=e257]:
+                    - strong [ref=e258]: CN¥123,457
+                    - generic [ref=e259]: CN¥1,395 / m²
+              - button "Show S01 native synthetic complaint property on map" [ref=e260] [cursor=pointer]
+            - generic [ref=e261]:
+              - article [ref=e262]:
+                - link [aria-hidden] [ref=e263] [cursor=pointer]:
+                  - /url: /bj/buy/s01-native-b16159f0-3def-46d9-9928-09dd0829d645
+                  - generic [ref=e264]: Photo unavailable
+                  - generic [ref=e269]: FOR SALE
+                - button "Save S01 native synthetic complaint property" [ref=e270] [cursor=pointer]
+                - generic [ref=e273]:
+                  - generic [ref=e274]: Willow Park · Chaoyang
+                  - link "S01 native synthetic complaint property" [ref=e278] [cursor=pointer]:
+                    - /url: /bj/buy/s01-native-b16159f0-3def-46d9-9928-09dd0829d645
+                  - paragraph [ref=e279]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e280]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e281]: ·
+                    - text: South
+                  - generic [ref=e282]:
+                    - strong [ref=e283]: CN¥123,457
+                    - generic [ref=e284]: CN¥1,395 / m²
+              - button "Show S01 native synthetic complaint property on map" [ref=e285] [cursor=pointer]
+            - generic [ref=e286]:
+              - article [ref=e287]:
+                - link [aria-hidden] [ref=e288] [cursor=pointer]:
+                  - /url: /bj/buy/s01-native-2bd8c284-345b-46fe-b497-13116060858b
+                  - generic [ref=e289]: Photo unavailable
+                  - generic [ref=e294]: FOR SALE
+                - button "Save S01 native synthetic complaint property" [ref=e295] [cursor=pointer]
+                - generic [ref=e298]:
+                  - generic [ref=e299]: Willow Park · Chaoyang
+                  - link "S01 native synthetic complaint property" [ref=e303] [cursor=pointer]:
+                    - /url: /bj/buy/s01-native-2bd8c284-345b-46fe-b497-13116060858b
+                  - paragraph [ref=e304]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e305]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e306]: ·
+                    - text: South
+                  - generic [ref=e307]:
+                    - strong [ref=e308]: CN¥123,457
+                    - generic [ref=e309]: CN¥1,395 / m²
+              - button "Show S01 native synthetic complaint property on map" [ref=e310] [cursor=pointer]
+            - generic [ref=e311]:
+              - article [ref=e312]:
+                - link [aria-hidden] [ref=e313] [cursor=pointer]:
+                  - /url: /bj/buy/s01-native-4aea64aa-3cb9-4162-8eb6-1053f611e464
+                  - generic [ref=e314]: Photo unavailable
+                  - generic [ref=e319]: FOR SALE
+                - button "Save S01 native synthetic complaint property" [ref=e320] [cursor=pointer]
+                - generic [ref=e323]:
+                  - generic [ref=e324]: Willow Park · Chaoyang
+                  - link "S01 native synthetic complaint property" [ref=e328] [cursor=pointer]:
+                    - /url: /bj/buy/s01-native-4aea64aa-3cb9-4162-8eb6-1053f611e464
+                  - paragraph [ref=e329]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e330]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e331]: ·
+                    - text: South
+                  - generic [ref=e332]:
+                    - strong [ref=e333]: CN¥123,457
+                    - generic [ref=e334]: CN¥1,395 / m²
+              - button "Show S01 native synthetic complaint property on map" [ref=e335] [cursor=pointer]
+            - generic [ref=e336]:
+              - article [ref=e337]:
+                - link [aria-hidden] [ref=e338] [cursor=pointer]:
+                  - /url: /bj/buy/s01-native-f1708ae5-6810-4695-8973-2dab4ff8d1fb
+                  - generic [ref=e339]: Photo unavailable
+                  - generic [ref=e344]: FOR SALE
+                - button "Save S01 native synthetic complaint property" [ref=e345] [cursor=pointer]
+                - generic [ref=e348]:
+                  - generic [ref=e349]: Willow Park · Chaoyang
+                  - link "S01 native synthetic complaint property" [ref=e353] [cursor=pointer]:
+                    - /url: /bj/buy/s01-native-f1708ae5-6810-4695-8973-2dab4ff8d1fb
+                  - paragraph [ref=e354]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e355]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e356]: ·
+                    - text: South
+                  - generic [ref=e357]:
+                    - strong [ref=e358]: CN¥123,457
+                    - generic [ref=e359]: CN¥1,395 / m²
+              - button "Show S01 native synthetic complaint property on map" [ref=e360] [cursor=pointer]
+            - generic [ref=e361]:
+              - article [ref=e362]:
+                - link [aria-hidden] [ref=e363] [cursor=pointer]:
+                  - /url: /bj/buy/s01-native-46ee1405-5b2f-4018-ad01-883aa80e2776
+                  - generic [ref=e364]: Photo unavailable
+                  - generic [ref=e369]: FOR SALE
+                - button "Save S01 native synthetic complaint property" [ref=e370] [cursor=pointer]
+                - generic [ref=e373]:
+                  - generic [ref=e374]: Willow Park · Chaoyang
+                  - link "S01 native synthetic complaint property" [ref=e378] [cursor=pointer]:
+                    - /url: /bj/buy/s01-native-46ee1405-5b2f-4018-ad01-883aa80e2776
+                  - paragraph [ref=e379]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e380]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e381]: ·
+                    - text: South
+                  - generic [ref=e382]:
+                    - strong [ref=e383]: CN¥123,457
+                    - generic [ref=e384]: CN¥1,395 / m²
+              - button "Show S01 native synthetic complaint property on map" [ref=e385] [cursor=pointer]
+            - generic [ref=e386]:
+              - article [ref=e387]:
+                - link [aria-hidden] [ref=e388] [cursor=pointer]:
+                  - /url: /bj/buy/s01-native-7444cdf2-f6f4-4aac-9d8c-f26ce193f762
+                  - generic [ref=e389]: Photo unavailable
+                  - generic [ref=e394]: FOR SALE
+                - button "Save S01 native synthetic complaint property" [ref=e395] [cursor=pointer]
+                - generic [ref=e398]:
+                  - generic [ref=e399]: Willow Park · Chaoyang
+                  - link "S01 native synthetic complaint property" [ref=e403] [cursor=pointer]:
+                    - /url: /bj/buy/s01-native-7444cdf2-f6f4-4aac-9d8c-f26ce193f762
+                  - paragraph [ref=e404]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e405]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e406]: ·
+                    - text: South
+                  - generic [ref=e407]:
+                    - strong [ref=e408]: CN¥123,457
+                    - generic [ref=e409]: CN¥1,395 / m²
+              - button "Show S01 native synthetic complaint property on map" [ref=e410] [cursor=pointer]
+            - generic [ref=e411]:
+              - article [ref=e412]:
+                - link [aria-hidden] [ref=e413] [cursor=pointer]:
+                  - /url: /bj/buy/s01-native-72ec650c-d4fe-4dd8-ac12-2ebc2742d127
+                  - generic [ref=e414]: Photo unavailable
+                  - generic [ref=e419]: FOR SALE
+                - button "Save S01 native synthetic complaint property" [ref=e420] [cursor=pointer]
+                - generic [ref=e423]:
+                  - generic [ref=e424]: Willow Park · Chaoyang
+                  - link "S01 native synthetic complaint property" [ref=e428] [cursor=pointer]:
+                    - /url: /bj/buy/s01-native-72ec650c-d4fe-4dd8-ac12-2ebc2742d127
+                  - paragraph [ref=e429]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e430]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e431]: ·
+                    - text: South
+                  - generic [ref=e432]:
+                    - strong [ref=e433]: CN¥123,457
+                    - generic [ref=e434]: CN¥1,395 / m²
+              - button "Show S01 native synthetic complaint property on map" [ref=e435] [cursor=pointer]
+            - generic [ref=e436]:
+              - article [ref=e437]:
+                - link [aria-hidden] [ref=e438] [cursor=pointer]:
+                  - /url: /bj/buy/s01-native-8f3597a2-2423-434a-8a00-865d2e64d9e7
+                  - generic [ref=e439]: Photo unavailable
+                  - generic [ref=e444]: FOR SALE
+                - button "Save S01 native synthetic complaint property" [ref=e445] [cursor=pointer]
+                - generic [ref=e448]:
+                  - generic [ref=e449]: Willow Park · Chaoyang
+                  - link "S01 native synthetic complaint property" [ref=e453] [cursor=pointer]:
+                    - /url: /bj/buy/s01-native-8f3597a2-2423-434a-8a00-865d2e64d9e7
+                  - paragraph [ref=e454]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e455]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e456]: ·
+                    - text: South
+                  - generic [ref=e457]:
+                    - strong [ref=e458]: CN¥123,457
+                    - generic [ref=e459]: CN¥1,395 / m²
+              - button "Show S01 native synthetic complaint property on map" [ref=e460] [cursor=pointer]
+            - generic [ref=e461]:
+              - article [ref=e462]:
+                - link [aria-hidden] [ref=e463] [cursor=pointer]:
+                  - /url: /bj/buy/s01-native-5a2162a6-2831-4da9-ba3b-6942d40f871b
+                  - generic [ref=e464]: Photo unavailable
+                  - generic [ref=e469]: FOR SALE
+                - button "Save S01 native synthetic complaint property" [ref=e470] [cursor=pointer]
+                - generic [ref=e473]:
+                  - generic [ref=e474]: Willow Park · Chaoyang
+                  - link "S01 native synthetic complaint property" [ref=e478] [cursor=pointer]:
+                    - /url: /bj/buy/s01-native-5a2162a6-2831-4da9-ba3b-6942d40f871b
+                  - paragraph [ref=e479]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e480]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e481]: ·
+                    - text: South
+                  - generic [ref=e482]:
+                    - strong [ref=e483]: CN¥123,457
+                    - generic [ref=e484]: CN¥1,395 / m²
+              - button "Show S01 native synthetic complaint property on map" [ref=e485] [cursor=pointer]
+            - generic [ref=e486]:
+              - article [ref=e487]:
+                - link [aria-hidden] [ref=e488] [cursor=pointer]:
+                  - /url: /bj/buy/s01-native-82039716-678d-47e5-bcf9-e5b032393fc5
+                  - generic [ref=e489]: Photo unavailable
+                  - generic [ref=e494]: FOR SALE
+                - button "Save S01 native synthetic complaint property" [ref=e495] [cursor=pointer]
+                - generic [ref=e498]:
+                  - generic [ref=e499]: Willow Park · Chaoyang
+                  - link "S01 native synthetic complaint property" [ref=e503] [cursor=pointer]:
+                    - /url: /bj/buy/s01-native-82039716-678d-47e5-bcf9-e5b032393fc5
+                  - paragraph [ref=e504]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e505]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e506]: ·
+                    - text: South
+                  - generic [ref=e507]:
+                    - strong [ref=e508]: CN¥123,457
+                    - generic [ref=e509]: CN¥1,395 / m²
+              - button "Show S01 native synthetic complaint property on map" [ref=e510] [cursor=pointer]
+            - generic [ref=e511]:
+              - article [ref=e512]:
+                - link [aria-hidden] [ref=e513] [cursor=pointer]:
+                  - /url: /bj/buy/home-628e9634-fe84-449e-9ecc-88b8423c5581
+                  - generic [ref=e515]: FOR SALE
+                - button "Save Browser-owned garden apartment mobile" [ref=e516] [cursor=pointer]
+                - generic [ref=e519]:
+                  - generic [ref=e520]: Willow Park · Chaoyang
+                  - link "Browser-owned garden apartment mobile" [ref=e524] [cursor=pointer]:
+                    - /url: /bj/buy/home-628e9634-fe84-449e-9ecc-88b8423c5581
+                  - paragraph [ref=e525]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e526]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e527]: ·
+                    - text: South
+                  - generic [ref=e528]:
+                    - strong [ref=e529]: CN¥4,200,000
+                    - generic [ref=e530]: CN¥47,458 / m²
+              - button "Show Browser-owned garden apartment mobile on map" [ref=e531] [cursor=pointer]
+            - generic [ref=e532]:
+              - article [ref=e533]:
+                - link [aria-hidden] [ref=e534] [cursor=pointer]:
+                  - /url: /bj/buy/home-4a3a447a-8e6c-45d9-89f8-7ce39284687b
+                  - generic [ref=e536]: FOR SALE
+                - button "Save Browser-owned garden apartment desktop" [ref=e537] [cursor=pointer]
+                - generic [ref=e540]:
+                  - generic [ref=e541]: Willow Park · Chaoyang
+                  - link "Browser-owned garden apartment desktop" [ref=e545] [cursor=pointer]:
+                    - /url: /bj/buy/home-4a3a447a-8e6c-45d9-89f8-7ce39284687b
+                  - paragraph [ref=e546]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e547]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e548]: ·
+                    - text: South
+                  - generic [ref=e549]:
+                    - strong [ref=e550]: CN¥4,200,000
+                    - generic [ref=e551]: CN¥47,458 / m²
+              - button "Show Browser-owned garden apartment desktop on map" [ref=e552] [cursor=pointer]
+            - generic [ref=e553]:
+              - article [ref=e554]:
+                - link [aria-hidden] [ref=e555] [cursor=pointer]:
+                  - /url: /bj/buy/home-1ed1f886-65c8-4dbf-a958-ddadc0156bb9
+                  - generic [ref=e557]: FOR SALE
+                - button "Save Browser-owned garden apartment desktop" [ref=e558] [cursor=pointer]
+                - generic [ref=e561]:
+                  - generic [ref=e562]: Willow Park · Chaoyang
+                  - link "Browser-owned garden apartment desktop" [ref=e566] [cursor=pointer]:
+                    - /url: /bj/buy/home-1ed1f886-65c8-4dbf-a958-ddadc0156bb9
+                  - paragraph [ref=e567]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e568]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e569]: ·
+                    - text: South
+                  - generic [ref=e570]:
+                    - strong [ref=e571]: CN¥4,200,000
+                    - generic [ref=e572]: CN¥47,458 / m²
+              - button "Show Browser-owned garden apartment desktop on map" [ref=e573] [cursor=pointer]
+            - generic [ref=e574]:
+              - article [ref=e575]:
+                - link [aria-hidden] [ref=e576] [cursor=pointer]:
+                  - /url: /bj/buy/home-e8b26a05-eea0-4e0f-986d-e6d268e3f943
+                  - generic [ref=e578]: FOR SALE
+                - button "Save Browser-owned garden apartment mobile" [ref=e579] [cursor=pointer]
+                - generic [ref=e582]:
+                  - generic [ref=e583]: Willow Park · Chaoyang
+                  - link "Browser-owned garden apartment mobile" [ref=e587] [cursor=pointer]:
+                    - /url: /bj/buy/home-e8b26a05-eea0-4e0f-986d-e6d268e3f943
+                  - paragraph [ref=e588]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e589]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e590]: ·
+                    - text: South
+                  - generic [ref=e591]:
+                    - strong [ref=e592]: CN¥4,200,000
+                    - generic [ref=e593]: CN¥47,458 / m²
+              - button "Show Browser-owned garden apartment mobile on map" [ref=e594] [cursor=pointer]
+            - generic [ref=e595]:
+              - article [ref=e596]:
+                - link [aria-hidden] [ref=e597] [cursor=pointer]:
+                  - /url: /bj/buy/home-abc054eb-c0c7-43a3-bfed-f728ecc61034
+                  - generic [ref=e599]: FOR SALE
+                - button "Save Browser-owned garden apartment desktop" [ref=e600] [cursor=pointer]
+                - generic [ref=e603]:
+                  - generic [ref=e604]: Willow Park · Chaoyang
+                  - link "Browser-owned garden apartment desktop" [ref=e608] [cursor=pointer]:
+                    - /url: /bj/buy/home-abc054eb-c0c7-43a3-bfed-f728ecc61034
+                  - paragraph [ref=e609]:
+                    - text: 2 beds · 1 living
+                    - generic [ref=e610]: ·
+                    - text: 88.50 m²
+                    - generic [ref=e611]: ·
+                    - text: South
+                  - generic [ref=e612]:
+                    - strong [ref=e613]: CN¥4,200,000
+                    - generic [ref=e614]: CN¥47,458 / m²
+              - button "Show Browser-owned garden apartment desktop on map" [ref=e615] [cursor=pointer]
+          - navigation "Pagination" [ref=e616]:
+            - generic [ref=e617]: Page 1 of 5
+            - link "Next" [ref=e618] [cursor=pointer]:
+              - /url: "?transaction=sale&segment=residential&sort=newest&page=2"
+  - contentinfo [ref=e619]:
+    - generic [ref=e620]:
+      - link "Haven home" [ref=e621] [cursor=pointer]:
+        - /url: /bj
+        - text: haven
+        - generic [ref=e626]: .
+      - paragraph [ref=e627]: A place for your next chapter.
+    - navigation "Footer" [ref=e628]:
+      - link "Help & support" [ref=e629] [cursor=pointer]:
+        - /url: /bj/support
+      - link "For property owners" [ref=e630] [cursor=pointer]:
+        - /url: /bj/list-property
+      - link "Professional workspace" [ref=e631] [cursor=pointer]:
+        - /url: http://localhost:8089/ops
+    - generic [ref=e635]:
+      - generic [ref=e636]: © 2026 Haven. English real estate marketplace.
+      - generic [ref=e637]: Synthetic demo inventory · Illustrative photography
+  - alert [ref=e638]
+```
+
+# Test source
+
+```ts
+  1  | import '../support/env';
+  2  | import {test,expect} from '@playwright/test';
+  3  | import AxeBuilder from '@axe-core/playwright';
+  4  | 
+  5  | test('price pin previews and selected panel retain map filters and support keyboard/mobile',async({page},info)=>{
+  6  |  await page.goto('/bj/map?transaction=sale&segment=residential&sort=newest');
+  7  |  await expect(page.locator('.map-canvas')).toHaveAttribute('data-map-ready','true');
+  8  |  // Read actual public locations and select through the accessible map picker.
+  9  |  const response=await page.request.get('/api/v1/listings/map?city=bj&transaction=sale&segment=residential');
+  10 |  expect(response.ok()).toBe(true);
+  11 |  const points=(await response.json()).data;
+  12 |  const picker=page.getByLabel('Select a property on the map');await expect(picker.locator('option')).not.toHaveCount(1);
+  13 |  const id=await picker.locator('option').nth(1).getAttribute('value');expect(id).toBeTruthy();
+  14 |  await picker.selectOption(id!);
+  15 |  const panel=page.getByRole('region',{name:'Selected property',exact:true});await expect(panel).toBeVisible();await expect(panel.locator('.listing-card')).toBeVisible();
+  16 |  const original=page.url();const positions=()=>page.locator('.maplibregl-marker').evaluateAll(elements=>elements.map(e=>[e.textContent,(e as HTMLElement).style.transform]).sort((a,b)=>String(a).localeCompare(String(b))));const before=await positions();
+  17 |  if(info.project.name==='mobile'){
+  18 |   await page.getByRole('button',{name:'Expand details',exact:true}).click();await expect(page.getByRole('button',{name:'Collapse details',exact:true})).toHaveAttribute('aria-expanded','true');
+  19 |   expect(await panel.evaluate(e=>getComputedStyle(e).position)).toBe('fixed');
+  20 |  }else expect(await panel.evaluate(e=>getComputedStyle(e).position)).toBe('sticky');
+  21 |  await page.getByRole('button',{name:'Close property details',exact:true}).click();await expect(panel).toHaveCount(0);expect(page.url()).toBe(original);
+  22 |  await expect.poll(positions).toEqual(before);
+  23 |  // Zooming separates clusters without changing the applied URL filters.
+  24 |  for(let i=0;i<6&&await page.locator('.map-price-pin').count()===0;i++){await page.locator('.map-cluster-count').first().click();await page.getByRole('button',{name:'Close area properties',exact:true}).click();await expect(page.locator('.map-price-pin').first()).toBeVisible({timeout:5000}).catch(()=>{});}
+  25 |  const pin=page.locator('.map-price-pin').last();await expect(pin).toBeVisible();await pin.focus();
+  26 |  const preview=page.getByRole('region',{name:'Property preview',exact:true});await expect(preview).toBeVisible();
+  27 |  await pin.press('Escape');await expect(preview).toHaveCount(0);
+  28 |  await pin.blur();await pin.focus();await expect(preview).toBeVisible();
+  29 |  if(info.project.name==='desktop'){await pin.hover();await preview.hover();await expect(preview).toBeVisible();}
+  30 |  await preview.getByRole('button',{name:'Show property details',exact:true}).click();await expect(panel).toBeVisible();await expect(panel.getByRole('link',{name:'View full property',exact:true})).toBeVisible();
+  31 |  await expect(page.getByRole('button',{name:'Close property details',exact:true})).toBeFocused();
+  32 |  await expect(panel.locator('.listing-card')).toBeVisible();await page.screenshot({path:info.outputPath('selected-property.png')});
+  33 |  await page.getByRole('button',{name:'Close property details',exact:true}).press('Escape');await expect(panel).toHaveCount(0);
+  34 |  await page.getByLabel('Select a property on the map').selectOption(id!);await expect(panel).toBeVisible();
+> 35 |  await page.getByLabel('Property transaction',{exact:true}).selectOption('rent');await expect(page).toHaveURL(/transaction=rent/);await expect(panel).toHaveCount(0);
+     |                                                             ^ Error: locator.selectOption: Test timeout of 90000ms exceeded.
+  36 |  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  37 |  const axe=await new AxeBuilder({page}).include('main').analyze();expect(axe.violations.filter(v=>['serious','critical'].includes(v.impact||''))).toEqual([]);
+  38 |  await page.screenshot({path:info.outputPath('map-enhancements.png')});
+  39 |  expect(points.length).toBeGreaterThan(0);
+  40 | });
+  41 | 
+```

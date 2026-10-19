@@ -25,10 +25,13 @@ WORKDIR /workspace
 USER node
 
 FROM runtime AS api
+COPY --from=builder --chown=node:node /workspace/services/property-processing/ocr-production-release.json /workspace/services/property-processing/ocr-production-release.json
 USER root
 RUN apk add --no-cache ffmpeg=8.0.1-r1
 USER node
 COPY --from=builder --chown=node:node /opt/runtime /workspace
+COPY --from=builder --chown=node:node /workspace/assets/digitization-fonts /workspace/assets/digitization-fonts
+COPY --from=builder /workspace/assets/digitization-fonts/DejaVuSans.ttf /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
 CMD ["node","apps/api/dist/apps/api/src/main.js"]
 
 FROM runtime AS worker

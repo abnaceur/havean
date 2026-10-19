@@ -1,0 +1,43 @@
+time="2026-10-14T18:56:23+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-processing-gpu-volume-init-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-be8c7af494ae Creating 
+ Container haven-tests-run-be8c7af494ae Created 
+
+Running 1 test using 1 worker
+
+Actual COLMAP camera job queued.
+  ✘  1 [desktop] › tests/e2e/digitization-ai-property-flow.spec.ts:6:1 › reference-constrained AI property sources exercise the actual agent digitization flow (3.9m)
+
+
+  1) [desktop] › tests/e2e/digitization-ai-property-flow.spec.ts:6:1 › reference-constrained AI property sources exercise the actual agent digitization flow 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "unstable camera calibration"
+    Received string:    "Review camera connectivity, missing rooms and privacy before further processing."
+
+      111 |   if(process.env.EXPECT_AI_CALIBRATION_REJECTION==='true'){
+      112 |    expect(status.camera?.stageState).toBe('succeeded');
+    > 113 |    expect(status.camera?.report?.nextAction).toContain('unstable camera calibration');
+          |                                              ^
+      114 |    expect(status.camera?.report?.trainingArchiveAvailable).toBe(false);
+      115 |    await expect(reconstruction.getByRole('button',{name:'Reconstruct captured property',exact:true})).toBeDisabled();
+      116 |    state.checks.invalidCalibrationExplainedAndTrainingBlocked=true;save();record();return;
+        at /workspace/tests/e2e/digitization-ai-property-flow.spec.ts:113:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results-ai-property-calibration/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results-ai-property-calibration/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results-ai-property-calibration/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results-ai-property-calibration/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-ai-property-flow.spec.ts:6:1 › reference-constrained AI property sources exercise the actual agent digitization flow 
+

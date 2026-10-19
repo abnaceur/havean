@@ -1,0 +1,79 @@
+{"project":"desktop","realPlanAndTwoPrivateCaptures":true,"unscaled":true,"reviewPending":true}
+{"project":"mobile","realPlanAndTwoPrivateCaptures":true,"unscaled":true,"reviewPending":true}
+ Container haven-integration-tests-run-b1623a2febc9 Creating 
+ Container haven-integration-tests-run-b1623a2febc9 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-tour-map.spec.ts:4:1 › HE-G04 confirmed private plan node opens its exact current panorama and invalid room positions are rejected (1.5m)
+  ✘  2 [mobile] › tests/e2e/digitization-tour-map.spec.ts:4:1 › HE-G04 confirmed private plan node opens its exact current panorama and invalid room positions are rejected (1.5m)
+
+
+  1) [desktop] › tests/e2e/digitization-tour-map.spec.ts:4:1 › HE-G04 confirmed private plan node opens its exact current panorama and invalid room positions are rejected 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Private panorama capture review' }).getByLabel('Preview capture', { exact: true })
+
+
+      3 | import {login} from '../support/browser';
+      4 | test('HE-G04 confirmed private plan node opens its exact current panorama and invalid room positions are rejected',async({page},info)=>{
+    > 5 |  const fixture=JSON.parse(readFileSync(`infra/generated/integration/tour-map-${info.project.name}.json`,'utf8')),origin='http://localhost:8089';await login(page,'agent',origin,'/ops');await page.goto(origin+'/ops/digitization?workspace='+fixture.engineId);const review=page.getByRole('region',{name:'Private panorama capture review'});await review.getByRole('button',{name:'Review private captures',exact:true}).click();const map=review.getByRole('region',{name:'Private panorama plan map'});await expect(map.getByText('This plan is unscaled; positions use drawing pixels.',{exact:false})).toBeVisible();await review.getByLabel('Preview capture',{exact:true}).selectOption({label:'Synthetic capture A'});await expect(review.getByRole('img',{name:'360 degree view: Synthetic capture A',exact:true})).toHaveAttribute('data-panorama-ready','true');await map.getByRole('button',{name:'Open plan capture Synthetic capture B',exact:true}).click();await expect(review.getByRole('img',{name:'360 degree view: Synthetic capture B',exact:true})).toHaveAttribute('data-panorama-ready','true');await expect(review.getByLabel('Preview capture',{exact:true})).toHaveValue(await review.getByLabel('Preview capture',{exact:true}).locator('option').filter({hasText:'Synthetic capture B'}).getAttribute('value') as string);
+        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ^
+      6 |  const route=origin+'/api/v1/ops/digitizations/'+fixture.engineId+'/tour-revisions',saved=(await (await page.request.get(route+'/latest')).json()).data;expect(saved).toMatchObject({genuinePanoramaConfirmed:false,reviewRequired:true,graph:{geometryRevisionId:fixture.geometryId}});const body={workspaceVersion:saved.workspaceVersion,inputRevision:saved.inputRevision,baseTourRevision:saved.revision,graph:{...saved.graph,nodes:saved.graph.nodes.map((node:any,index:number)=>index===0?{...node,planPosition:{...node.planPosition,x:950}}:node)}};const refused=await page.request.post(route,{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:body});expect(refused.status()).toBe(422);expect((await (await page.request.get(route+'/latest')).json()).data).toEqual(saved);
+      7 |  await page.reload();await review.getByRole('button',{name:'Review private captures',exact:true}).click();await map.getByRole('button',{name:'Open plan capture Synthetic capture A',exact:true}).focus();await map.getByRole('button',{name:'Open plan capture Synthetic capture A',exact:true}).press('Enter');await expect(review.getByRole('img',{name:'360 degree view: Synthetic capture A',exact:true})).toHaveAttribute('data-panorama-ready','true');
+      8 | });
+        at /workspace/tests/e2e/digitization-tour-map.spec.ts:5:661
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-tour-map-HE-G-056f1-room-positions-are-rejected-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-tour-map-HE-G-056f1-room-positions-are-rejected-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-tour-map-HE-G-056f1-room-positions-are-rejected-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-tour-map-HE-G-056f1-room-positions-are-rejected-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-tour-map.spec.ts:4:1 › HE-G04 confirmed private plan node opens its exact current panorama and invalid room positions are rejected 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Private panorama capture review' }).getByLabel('Preview capture', { exact: true })
+
+
+      3 | import {login} from '../support/browser';
+      4 | test('HE-G04 confirmed private plan node opens its exact current panorama and invalid room positions are rejected',async({page},info)=>{
+    > 5 |  const fixture=JSON.parse(readFileSync(`infra/generated/integration/tour-map-${info.project.name}.json`,'utf8')),origin='http://localhost:8089';await login(page,'agent',origin,'/ops');await page.goto(origin+'/ops/digitization?workspace='+fixture.engineId);const review=page.getByRole('region',{name:'Private panorama capture review'});await review.getByRole('button',{name:'Review private captures',exact:true}).click();const map=review.getByRole('region',{name:'Private panorama plan map'});await expect(map.getByText('This plan is unscaled; positions use drawing pixels.',{exact:false})).toBeVisible();await review.getByRole('combobox',{name:'Preview capture',exact:true}).selectOption({label:'Synthetic capture A'});await expect(review.getByRole('img',{name:'360 degree view: Synthetic capture A',exact:true})).toHaveAttribute('data-panorama-ready','true');await map.getByRole('button',{name:'Open plan capture Synthetic capture B',exact:true}).click();await expect(review.getByRole('img',{name:'360 degree view: Synthetic capture B',exact:true})).toHaveAttribute('data-panorama-ready','true');await expect(review.getByRole('combobox',{name:'Preview capture',exact:true})).toHaveValue(await review.getByRole('combobox',{name:'Preview capture',exact:true}).locator('option').filter({hasText:'Synthetic capture B'}).getAttribute('value') as string);
+        |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ^
+      6 |  const route=origin+'/api/v1/ops/digitizations/'+fixture.engineId+'/tour-revisions',saved=(await (await page.request.get(route+'/latest')).json()).data;expect(saved).toMatchObject({genuinePanoramaConfirmed:false,reviewRequired:true,graph:{geometryRevisionId:fixture.geometryId}});const body={workspaceVersion:saved.workspaceVersion,inputRevision:saved.inputRevision,baseTourRevision:saved.revision,graph:{...saved.graph,nodes:saved.graph.nodes.map((node:any,index:number)=>index===0?{...node,planPosition:{...node.planPosition,x:950}}:node)}};const refused=await page.request.post(route,{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:body});expect(refused.status()).toBe(422);expect((await (await page.request.get(route+'/latest')).json()).data).toEqual(saved);
+      7 |  await page.reload();await review.getByRole('button',{name:'Review private captures',exact:true}).click();await map.getByRole('button',{name:'Open plan capture Synthetic capture A',exact:true}).focus();await map.getByRole('button',{name:'Open plan capture Synthetic capture A',exact:true}).press('Enter');await expect(review.getByRole('img',{name:'360 degree view: Synthetic capture A',exact:true})).toHaveAttribute('data-panorama-ready','true');
+      8 | });
+        at /workspace/tests/e2e/digitization-tour-map.spec.ts:5:661
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-tour-map-HE-G-056f1-room-positions-are-rejected-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-tour-map-HE-G-056f1-room-positions-are-rejected-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-tour-map-HE-G-056f1-room-positions-are-rejected-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-tour-map-HE-G-056f1-room-positions-are-rejected-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-tour-map.spec.ts:4:1 › HE-G04 confirmed private plan node opens its exact current panorama and invalid room positions are rejected 
+    [mobile] › tests/e2e/digitization-tour-map.spec.ts:4:1 › HE-G04 confirmed private plan node opens its exact current panorama and invalid room positions are rejected 
+

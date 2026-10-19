@@ -1,0 +1,81 @@
+time="2026-10-09T23:47:15+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-ocr-confined-investigation-run-90078500f2e4 Creating 
+ Container haven-ocr-confined-investigation-run-90078500f2e4 Created 
+[33mConnectivity check to the model hoster has been skipped because `DISABLE_MODEL_SOURCE_CHECK` is enabled.[0m
+[32mCreating model: ('PP-OCRv5_mobile_det', '/opt/ocr-models/PP-OCRv5_mobile_det')[0m
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/processing/property_processing/ocr_cpu.py", line 90, in <module>
+    print(json.dumps(recognize(args.directory,args.name,args.locale,args.sha256,args.page),ensure_ascii=False))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/ocr_cpu.py", line 78, in recognize
+    return _recognize(directory,name,locale,source_sha256,page)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/ocr_cpu.py", line 59, in _recognize
+    ocr=PaddleOCR(text_detection_model_name='PP-OCRv5_mobile_det',text_detection_model_dir=str(models/'PP-OCRv5_mobile_det'),text_recognition_model_name=MODELS[locale],text_recognition_model_dir=str(models/MODELS[locale]),use_doc_orientation_classify=False,use_doc_unwarping=False,use_textline_orientation=False,device='cpu',cpu_threads=1,enable_mkldnn=False,text_rec_score_thresh=0.1)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddleocr/_pipelines/ocr.py", line 163, in __init__
+    super().__init__(**base_params)
+  File "/usr/local/lib/python3.12/site-packages/paddleocr/_pipelines/base.py", line 67, in __init__
+    self.paddlex_pipeline = self._create_paddlex_pipeline()
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddleocr/_pipelines/base.py", line 105, in _create_paddlex_pipeline
+    return create_pipeline(config=self._merged_paddlex_config, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/pipelines/__init__.py", line 167, in create_pipeline
+    pipeline = BasePipeline.get(pipeline_name)(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddlex/utils/deps.py", line 206, in _wrapper
+    return old_init_func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/pipelines/_parallel.py", line 103, in __init__
+    self._pipeline = self._create_internal_pipeline(config, self.device)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/pipelines/_parallel.py", line 158, in _create_internal_pipeline
+    return self._pipeline_cls(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/pipelines/ocr/pipeline.py", line 117, in __init__
+    self.text_det_model = self.create_model(
+                          ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/pipelines/base.py", line 106, in create_model
+    model = create_predictor(
+            ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/models/__init__.py", line 84, in create_predictor
+    return BasePredictor.get(model_name)(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/models/text_detection/predictor.py", line 48, in __init__
+    super().__init__(*args, **kwargs)
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/models/base/predictor/base_predictor.py", line 162, in __init__
+    self._pp_option = self._prepare_pp_option(pp_option, device)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/models/base/predictor/base_predictor.py", line 407, in _prepare_pp_option
+    pp_option.device_type = device_info[0]
+    ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/utils/pp_option.py", line 186, in device_type
+    set_env_for_device_type(device_type)
+  File "/usr/local/lib/python3.12/site-packages/paddlex/utils/device.py", line 101, in set_env_for_device_type
+    import paddle
+  File "/usr/local/lib/python3.12/site-packages/paddle/__init__.py", line 44, in <module>
+    from .base import core  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddle/base/__init__.py", line 38, in <module>
+    from . import (  # noqa: F401
+  File "/usr/local/lib/python3.12/site-packages/paddle/base/backward.py", line 28, in <module>
+    from . import core, framework, log_helper, unique_name
+  File "/usr/local/lib/python3.12/site-packages/paddle/base/core.py", line 258, in <module>
+    libc_type, libc_ver = get_libc_ver()
+                          ^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddle/base/core.py", line 225, in get_libc_ver
+    ldd_glibc = run_shell_command("ldd --version | awk '/ldd/{print $NF}'")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddle/base/core.py", line 187, in run_shell_command
+    out, err = subprocess.Popen(
+               ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/local/lib/python3.12/subprocess.py", line 1885, in _execute_child
+    self.pid = _fork_exec(
+               ^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+

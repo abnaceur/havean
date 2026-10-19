@@ -1,0 +1,47 @@
+ Image haven-processing-camera:3.10-local-cpu-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 625B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.camera-development
+#2 transferring dockerfile: 472B done
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1
+#3 ...
+
+#4 [auth] library/haven-colmap-runtime:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#5 [auth] library/haven-processing-ocr:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#6 [internal] load metadata for docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1
+#6 ERROR: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+
+#3 [internal] load metadata for docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1
+#3 ERROR: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+------
+ > [internal] load metadata for docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1:
+------
+------
+ > [internal] load metadata for docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1:
+------
+Dockerfile.camera-development:3
+
+--------------------
+
+   1 |     # Local CPU investigation; each native runtime verifies its exact file hashes.
+
+   2 |     FROM haven-colmap-runtime:3.10-source-cpu-v1 AS camera
+
+   3 | >>> FROM haven-processing-ocr:3.3.3-local-cpu-v1
+
+   4 |     COPY --from=camera /usr/bin/colmap /usr/bin/colmap
+
+   5 |     COPY --from=camera /opt/colmap /opt/colmap
+
+--------------------
+
+failed to solve: haven-processing-ocr:3.3.3-local-cpu-v1: failed to resolve source metadata for docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+

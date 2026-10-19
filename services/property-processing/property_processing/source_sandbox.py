@@ -8,12 +8,12 @@ import signal
 import subprocess
 import sys
 import time
-from .sources import SourceError
+from .errors import SourceError
 
 
 def inspect_source(directory: Path, name: str, kind: str, *, timeout: float = 15,
                    output_limit: int = 16 * 1024 * 1024, cancelled=None) -> dict:
-    if kind not in ("pdf", "pdf_raster", "image", "native_facts_en", "native_facts_fr", "native_facts_ar") or not 0 < timeout <= 15 or not 0 < output_limit <= 16 * 1024 * 1024:
+    if kind not in ("pdf", "pdf_raster", "pdf_ocr_pages", "image", "photo_frame", "image_ocr_page", "panorama", "native_facts_en", "native_facts_fr", "native_facts_ar", "native_facts_v3_en", "native_facts_v3_fr", "native_facts_v3_ar") or not 0 < timeout <= 15 or not 0 < output_limit <= 16 * 1024 * 1024:
         raise SourceError("SOURCE_PROFILE_INVALID")
     try:
         root = directory.resolve(strict=True)
@@ -26,6 +26,11 @@ def inspect_source(directory: Path, name: str, kind: str, *, timeout: float = 15
     environment = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"),
                    "PYTHONPATH": str(Path(__file__).resolve().parent.parent),
                    "PYTHONDONTWRITEBYTECODE": "1", "PYTHONUNBUFFERED": "1"}
+    return supervise_source(command, environment, timeout=timeout, output_limit=output_limit, cancelled=cancelled)
+
+
+def supervise_source(command, environment, *, timeout, output_limit, cancelled=None):
+    """Internal shared process supervisor; commands come from allowlisted ports."""
     child = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                              start_new_session=True, env=environment,
                              cwd=Path(__file__).resolve().parent.parent)

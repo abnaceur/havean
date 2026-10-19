@@ -1,0 +1,63 @@
+ Container haven-integration-tests-run-25360eea3c58 Creating 
+ Container haven-integration-tests-run-25360eea3c58 Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/property-media-upload.spec.ts:5:1 › agent requires photos and plan, uploads optional 360 and 3D, and engine stays disabled (4.0m)
+
+
+  1) [desktop] › tests/e2e/property-media-upload.spec.ts:5:1 › agent requires photos and plan, uploads optional 360 and 3D, and engine stays disabled 
+
+    Test timeout of 240000ms exceeded.
+
+    Error: browserContext.close: Test ended.
+    Browser logs:
+
+    <launching> /ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --use-angle=swiftshader --enable-unsafe-swiftshader --user-data-dir=/tmp/playwright_chromiumdev_profile-YYTCEe --remote-debugging-pipe --no-startup-window
+    <launched> pid=49
+    [pid=49][err] [1018/085113.741723:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+    [pid=49][err] [1018/085113.742387:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+    [pid=49][err] [1018/085113.749250:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+    [pid=49][err] [1018/085113.749527:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+    [pid=49][err] [1018/085113.781507:WARNING:media/gpu/vaapi/vaapi_wrapper.cc:1660] drmGetDevices2() has not found any devices
+    [pid=49][err] [1018/085113.787332:WARNING:sandbox/policy/linux/sandbox_linux.cc:405] InitializeSandbox() called with multiple threads in process gpu-process.
+    [pid=49][err] [1018/085113.857731:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+    [pid=49][err] [1018/085113.857813:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+    [pid=49][err] [1018/085113.858125:WARNING:device/bluetooth/dbus/bluez_dbus_manager.cc:209] Floss manager service not available, cannot set Floss enable/disable.
+    [pid=49][err] [1018/085113.866115:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+    [pid=49][err] [1018/085118.120645:INFO:CONSOLE:777] "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold", source: http://localhost:8089/_next/static/chunks/12s4_next_dist_13cck0d._.js (777)
+    [pid=49][err] [1018/085118.342217:INFO:CONSOLE:777] "[HMR] connected", source: http://localhost:8089/_next/static/chunks/12s4_next_dist_13cck0d._.js (777)
+    [pid=49][err] [1018/085203.634838:INFO:CONSOLE:45] "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold", source: webpack-internal:///(app-pages-browser)/../../node_modules/.pnpm/next@16.3.8_@playwright+test@1.63.0_@types+node@26.6.4_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/next/dist/next-devtools/shared/forward-logs-shared.js (45)
+    [pid=49][err] [1018/085204.317859:INFO:CONSOLE:45] "[HMR] connected", source: webpack-internal:///(app-pages-browser)/../../node_modules/.pnpm/next@16.3.8_@playwright+test@1.63.0_@types+node@26.6.4_react-dom@19.3.0_react@19.3.0__react@19.3.0/node_modules/next/dist/next-devtools/shared/forward-logs-shared.js (45)
+    [pid=49] <gracefully close start>
+
+      43 |   await consumer.goto('http://localhost:8088/bj/sale/'+listing.slug);
+      44 |   await consumer.getByRole('button',{name:'Uploaded 3D plans (1)',exact:true}).click();await consumer.getByRole('button',{name:'Preview 3D plan',exact:true}).click();await expect(consumer.getByLabel('Uploaded 3D plan canvas')).toBeVisible();await consumer.screenshot({path:'evidence/property-media-update/public-'+info.project.name+'.png',fullPage:true});
+    > 45 |  }finally{await publicContext.close();}
+         |           ^
+      46 |  await page.goto(origin+'/ops/digitization');await expect(page.getByRole('heading',{name:'Digitalization is temporarily disabled',exact:true})).toBeVisible();
+      47 | });
+      48 |
+        at /workspace/tests/e2e/property-media-upload.spec.ts:45:11
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/property-media-upload-agen-cdbc1-D-and-engine-stays-disabled-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/property-media-upload-agen-cdbc1-D-and-engine-stays-disabled-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/property-media-upload-agen-cdbc1-D-and-engine-stays-disabled-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/property-media-upload-agen-cdbc1-D-and-engine-stays-disabled-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/property-media-upload-agen-cdbc1-D-and-engine-stays-disabled-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/property-media-upload.spec.ts:5:1 › agent requires photos and plan, uploads optional 360 and 3D, and engine stays disabled 
+

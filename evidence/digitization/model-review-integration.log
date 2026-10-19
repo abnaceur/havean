@@ -1,0 +1,31 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-model-review.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 774[2mms[22m[39m
+[31m   [31m×[31m actual structural review requires assigned independent authority and exact private candidate, without publishing[39m[33m 351[2mms[22m[39m
+[31m   [31m×[31m actual splat review requires assigned independent authority and exact private candidate, without publishing[39m[33m 360[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-lifecycle-events.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 729[2mms[22m[39m
+   [33m[2m✓[22m[39m current review/capture/privacy/publication notifications acknowledge once without running or publishing; unknown versions remain pending[33m 727[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-model-review.test.ts[2m > [22mactual structural review requires assigned independent authority and exact private candidate, without publishing
+[41m[1m FAIL [22m[49m tests/integration/digitization-model-review.test.ts[2m > [22mactual splat review requires assigned independent authority and exact private candidate, without publishing
+[31m[1merror[22m: invalid input syntax for type json[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m submitModelReview apps/api/src/inventory/digitization/model-review.ts:[2m48:13[22m[39m
+
+[90m [2m❯[22m apps/api/src/inventory/digitization/model-review-controller.ts:[2m13:92[22m[39m
+[90m [2m❯[22m idempotent apps/api/src/platform/core.ts:[2m22:1047[22m[39m
+[90m [2m❯[22m apps/api/src/inventory/digitization/model-review-controller.ts:[2m13:47[22m[39m
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m tests/integration/digitization-model-review.test.ts:[2m24:23[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 19:42:53
+[2m   Duration [22m 4.04s[2m (import 46%, tests 39%, transform 14%)[22m
+

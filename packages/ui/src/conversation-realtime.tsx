@@ -15,5 +15,5 @@ export function ConversationRealtime({id,sequence,received,accessChanged}:{id:st
   retry.current=()=>{denied=false;attempt=0;connect();};const online=()=>{if(!denied)connect();};window.addEventListener('online',online);connect();return()=>{disposed=true;if(timer)clearTimeout(timer);window.removeEventListener('online',online);socket?.close();};
  // Start once per room. The ref advances as persisted rows arrive through either transport.
  },[id]);
- return <div className="conversation-connection"><p role="status" aria-label="Conversation connection">{state}</p>{state!=='Live updates connected.'&&<button type="button" className="button secondary small" onClick={()=>retry.current()}>Reconnect conversation</button>}</div>;
+ return <div className="conversation-connection" data-connected={state==='Live updates connected.'}><p role="status" aria-label="Conversation connection"><span className="connection-dot" aria-hidden="true"/>{state}</p>{state!=='Live updates connected.'&&<button type="button" className="button secondary small" onClick={()=>retry.current()}>Reconnect conversation</button>}</div>;
 }

@@ -1,0 +1,36 @@
+node:internal/errors:984
+  const err = new Error(message);
+              ^
+
+Error: Command failed: docker compose -f /home/abn/project/real-estate-solution/services/property-processing/compose.recovery-tests.yaml --profile client --profile restored run --rm --no-deps client python /fixture-test.py prepare
+ Network haven-recovery-1e8c8bb3-source_isolated Creating 
+ Network haven-recovery-1e8c8bb3-source_isolated Error Error response from daemon: all predefined address pools have been fully subnetted
+failed to create network haven-recovery-1e8c8bb3-source_isolated: Error response from daemon: all predefined address pools have been fully subnetted
+
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execFileSync (node:child_process:927:15)
+    at docker (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:12:41)
+    at compose (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:13:31)
+    at file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:17:2
+    at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+  status: 1,
+  signal: null,
+  output: [
+    null,
+    '',
+    ' Network haven-recovery-1e8c8bb3-source_isolated Creating \n' +
+      ' Network haven-recovery-1e8c8bb3-source_isolated Error Error response from daemon: all predefined address pools have been fully subnetted\n' +
+      'failed to create network haven-recovery-1e8c8bb3-source_isolated: Error response from daemon: all predefined address pools have been fully subnetted\n'
+  ],
+  pid: 3013215,
+  stdout: '',
+  stderr: ' Network haven-recovery-1e8c8bb3-source_isolated Creating \n' +
+    ' Network haven-recovery-1e8c8bb3-source_isolated Error Error response from daemon: all predefined address pools have been fully subnetted\n' +
+    'failed to create network haven-recovery-1e8c8bb3-source_isolated: Error response from daemon: all predefined address pools have been fully subnetted\n'
+}
+
+Node.js v20.20.0

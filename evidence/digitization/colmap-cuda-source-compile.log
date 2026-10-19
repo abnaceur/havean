@@ -1,0 +1,265 @@
+ Image haven-colmap-cuda:3.10-12.6.3-investigation-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 759B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.compile
+#2 transferring dockerfile: 2.23kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [resolve 1/3] FROM docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09
+#5 resolve docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09 0.1s done
+#5 DONE 0.1s
+
+#6 [resolve 2/3] RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates python3 cmake ninja-build gcc-13 g++-13 git libboost-filesystem-dev libboost-graph-dev libboost-program-options-dev libboost-system-dev libeigen3-dev libfreeimage-dev libflann-dev liblz4-dev libmetis-dev libgoogle-glog-dev libsqlite3-dev libglew-dev libceres-dev cuda-nvcc-12-6 cuda-cudart-dev-12-6 libcurand-dev-12-6 && mkdir /profile && dpkg-query -W -f='${Package}\t${Version}\n' > /profile/packages.tsv && apt-cache dumpavail > /profile/available-packages.txt
+#6 CACHED
+
+#7 [resolve 3/3] RUN /usr/local/cuda/bin/nvcc --version > /profile/nvcc-version.txt
+#7 CACHED
+
+#8 [internal] load build context
+#8 transferring context: 3.48MB 0.0s done
+#8 DONE 0.1s
+
+#9 [compile 1/6] COPY colmap-source.tar.gz /tmp/colmap-source.tar.gz
+#9 DONE 0.1s
+
+#10 [compile 2/6] RUN echo 'fe875165847c185ec2fb8d974a322852be3d118ddae4bf958d5ee8c29e6a6896  /tmp/colmap-source.tar.gz' | sha256sum -c - && mkdir /source && python3 -c "import tarfile; tarfile.open('/tmp/colmap-source.tar.gz').extractall('/source',filter='data')"
+#10 0.282 /tmp/colmap-source.tar.gz: OK
+#10 DONE 0.6s
+
+#11 [compile 3/6] RUN cmake -S /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73 -B /build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_C_COMPILER=/usr/bin/gcc-13 -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++-13 -DCMAKE_CUDA_ARCHITECTURES='75;86;89' -DGUI_ENABLED=OFF -DOPENGL_ENABLED=OFF -DCGAL_ENABLED=OFF -DCUDA_ENABLED=ON -DIPO_ENABLED=OFF -DCCACHE_ENABLED=OFF && cmake --build /build --parallel 2 && cmake --install /build
+#11 0.314 -- Enabling LSD support
+#11 0.419 -- The C compiler identification is GNU 13.3.0
+#11 0.518 -- The CXX compiler identification is GNU 13.3.0
+#11 0.539 -- Detecting C compiler ABI info
+#11 0.613 -- Detecting C compiler ABI info - done
+#11 0.628 -- Check for working C compiler: /usr/bin/gcc-13 - skipped
+#11 0.629 -- Detecting C compile features
+#11 0.629 -- Detecting C compile features - done
+#11 0.642 -- Detecting CXX compiler ABI info
+#11 0.722 -- Detecting CXX compiler ABI info - done
+#11 0.733 -- Check for working CXX compiler: /usr/bin/g++-13 - skipped
+#11 0.734 -- Detecting CXX compile features
+#11 0.735 -- Detecting CXX compile features - done
+#11 0.760 -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.83.0/BoostConfig.cmake (found version "1.83.0") found components: filesystem graph program_options system 
+#11 0.773 -- Found FreeImage
+#11 0.773 --   Includes : /usr/include
+#11 0.773 --   Libraries : /usr/lib/x86_64-linux-gnu/libfreeimage.so
+#11 0.774 -- Found FLANN
+#11 0.774 --   Includes : /usr/include
+#11 0.774 --   Libraries : /usr/lib/x86_64-linux-gnu/libflann.so
+#11 0.775 -- Found LZ4
+#11 0.775 --   Includes : /usr/include
+#11 0.775 --   Libraries : /usr/lib/x86_64-linux-gnu/liblz4.so
+#11 0.781 -- Found Metis
+#11 0.781 --   Includes : /usr/include
+#11 0.781 --   Libraries : /usr/lib/x86_64-linux-gnu/libmetis.so
+#11 0.789 -- Found Glog
+#11 0.789 --   Target : glog::glog
+#11 0.791 -- Found SQLite3: /usr/include (found version "3.45.1") 
+#11 0.797 -- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so   
+#11 0.802 -- Found Glew
+#11 0.802 --   Includes : /usr/include
+#11 0.802 --   Libraries : /usr/lib/x86_64-linux-gnu/libGLEW.so
+#11 0.809 -- Found Git: /usr/bin/git (found version "2.43.0") 
+#11 0.887 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+#11 0.958 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+#11 0.959 -- Found Threads: TRUE  
+#11 1.254 -- Found AMD headers in: /usr/include/suitesparse
+#11 1.255 -- Found AMD library: /usr/lib/x86_64-linux-gnu/libamd.so
+#11 1.256 -- Found CAMD headers in: /usr/include/suitesparse
+#11 1.256 -- Found CAMD library: /usr/lib/x86_64-linux-gnu/libcamd.so
+#11 1.257 -- Found CCOLAMD headers in: /usr/include/suitesparse
+#11 1.257 -- Found CCOLAMD library: /usr/lib/x86_64-linux-gnu/libccolamd.so
+#11 1.257 -- Found CHOLMOD headers in: /usr/include/suitesparse
+#11 1.258 -- Found CHOLMOD library: /usr/lib/x86_64-linux-gnu/libcholmod.so
+#11 1.258 -- Found COLAMD headers in: /usr/include/suitesparse
+#11 1.259 -- Found COLAMD library: /usr/lib/x86_64-linux-gnu/libcolamd.so
+#11 1.259 -- Found SPQR headers in: /usr/include/suitesparse
+#11 1.260 -- Found SPQR library: /usr/lib/x86_64-linux-gnu/libspqr.so
+#11 1.260 -- Found Config headers in: /usr/include/suitesparse
+#11 1.260 -- Found Config library: /usr/lib/x86_64-linux-gnu/libsuitesparseconfig.so
+#11 1.265 -- Did not find Intel TBB library, assuming SuiteSparseQR was not compiled with TBB.
+#11 1.265 -- Looking for shm_open in rt
+#11 1.326 -- Looking for shm_open in rt - found
+#11 1.326 -- Adding librt to SuiteSparse_config libraries (required on Linux & Unix [not OSX] if SuiteSparse is compiled with timing).
+#11 1.331 -- Found METIS: /usr/include (found version "5.1.0") 
+#11 1.331 -- Looking for cholmod_metis
+#11 1.460 -- Looking for cholmod_metis - found
+#11 1.462 -- Found SuiteSparse: /usr/include/suitesparse (found suitable version "7.6.1", minimum required is "7.6.1") found components: AMD CAMD CCOLAMD CHOLMOD COLAMD SPQR Config 
+#11 1.464 -- Found required Ceres dependency: Eigen version 3.4.0 in /usr/share/eigen3/cmake
+#11 1.466 -- Found required Ceres dependency: glog
+#11 1.466 -- Found required Ceres dependency: gflags
+#11 1.467 -- Found Ceres version: 2.2.0 installed in: /usr with components: [EigenSparse, SparseLinearAlgebraLibrary, LAPACK, SuiteSparse, SchurSpecializations]
+#11 1.790 -- Enabling OpenMP support
+#11 3.324 -- The CUDA compiler identification is NVIDIA 12.6.85
+#11 3.335 -- Detecting CUDA compiler ABI info
+#11 4.768 -- Detecting CUDA compiler ABI info - done
+#11 4.804 -- Check for working CUDA compiler: /usr/local/cuda/bin/nvcc - skipped
+#11 4.807 -- Detecting CUDA compile features
+#11 4.807 -- Detecting CUDA compile features - done
+#11 4.809 -- Enabling CUDA support (version: 12.6.85, archs: 75;86;89)
+#11 4.809 -- Disabling GUI support
+#11 4.809 -- Disabling OpenGL support
+#11 4.809 -- Enabling GPU support (OpenGL: OFF, CUDA: ON)
+#11 4.809 -- Build type specified as Release
+#11 4.809 -- Enabling SIMD support
+#11 4.809 -- Disabling interprocedural optimization
+#11 4.809 -- Disabling ccache support
+#11 4.809 -- Disabling profiling support
+#11 4.840 -- Configuring done (4.5s)
+#11 4.937 -- Generating done (0.1s)
+#11 4.941 -- Build files have been written to: /build
+#11 11.08 [1/187] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/bundle_adjustment.cc.o
+#11 13.26 [2/187] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/automatic_reconstruction.cc.o
+#11 17.57 [3/187] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/hierarchical_mapper.cc.o
+#11 18.84 [4/187] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/feature_extraction.cc.o
+#11 24.48 [5/187] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/feature_matching_utils.cc.o
+#11 29.16 [6/187] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/image_reader.cc.o
+#11 31.04 [7/187] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/feature_matching.cc.o
+#11 34.36 [8/187] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/incremental_mapper.cc.o
+#11 42.24 [9/187] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/option_manager.cc.o
+#11 50.85 [10/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/affine_transform.cc.o
+#11 57.16 [11/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/absolute_pose.cc.o
+#11 60.12 [12/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/alignment.cc.o
+#11 74.47 [13/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/coordinate_frame.cc.o
+#11 86.46 [14/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/bundle_adjustment.cc.o
+#11 89.48 [15/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/covariance.cc.o
+#11 109.2 [16/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/fundamental_matrix.cc.o
+#11 113.1 [17/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/essential_matrix.cc.o
+#11 113.7 [18/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/generalized_absolute_pose.cc.o
+#11 119.8 [19/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/generalized_absolute_pose_coeffs.cc.o
+#11 128.7 [20/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/generalized_relative_pose.cc.o
+#11 134.7 [21/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/homography_matrix.cc.o
+#11 147.5 [22/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/pose.cc.o
+#11 151.6 [23/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/generalized_pose.cc.o
+#11 152.7 [24/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/triangulation.cc.o
+#11 154.9 [25/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/utils.cc.o
+#11 158.1 [26/187] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/two_view_geometry.cc.o
+#11 162.1 [27/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_exe.dir/feature.cc.o
+#11 172.0 [28/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_exe.dir/sfm.cc.o
+#11 177.1 [29/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_exe.dir/model.cc.o
+#11 178.7 [30/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/feature.cc.o
+#11 183.8 [31/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/colmap.cc.o
+#11 188.1 [32/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/database.cc.o
+#11 190.3 [33/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/gui.cc.o
+#11 190.8 [34/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/sfm.cc.o
+#11 198.0 [35/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/image.cc.o
+#11 204.1 [36/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/mvs.cc.o
+#11 205.9 [37/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/model.cc.o
+#11 207.6 [38/187] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature_types.dir/types.cc.o
+#11 212.3 [39/187] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature.dir/matcher.cc.o
+#11 212.3 In file included from /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/feature/matcher.h:38,
+#11 212.3                  from /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/feature/matcher.cc:30:
+#11 212.3 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h: In instantiation of 'value_t& colmap::LRUCache<key_t, value_t>::GetMutable(const key_t&) [with key_t = unsigned int; value_t = std::shared_ptr<std::vector<colmap::FeatureKeypoint> >]':
+#11 212.3 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:150:10:   required from 'const value_t& colmap::LRUCache<key_t, value_t>::Get(const key_t&) [with key_t = unsigned int; value_t = std::shared_ptr<std::vector<colmap::FeatureKeypoint> >]'
+#11 212.3 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/feature/matcher.cc:106:31:   required from here
+#11 212.3 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: warning: moving a temporary object prevents copy elision [-Wpessimizing-move]
+#11 212.3   157 |     Set(key, std::move(getter_func_(key)));
+#11 212.3       |     ~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#11 212.3 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: note: remove 'std::move' call
+#11 212.3 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h: In instantiation of 'value_t& colmap::LRUCache<key_t, value_t>::GetMutable(const key_t&) [with key_t = unsigned int; value_t = std::shared_ptr<Eigen::Matrix<unsigned char, -1, -1, 1> >]':
+#11 212.3 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:150:10:   required from 'const value_t& colmap::LRUCache<key_t, value_t>::Get(const key_t&) [with key_t = unsigned int; value_t = std::shared_ptr<Eigen::Matrix<unsigned char, -1, -1, 1> >]'
+#11 212.3 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/feature/matcher.cc:112:33:   required from here
+#11 212.3 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: warning: moving a temporary object prevents copy elision [-Wpessimizing-move]
+#11 212.3 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: note: remove 'std::move' call
+#11 228.7 [40/187] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/vocab_tree.cc.o
+#11 231.5 [41/187] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature.dir/pairing.cc.o
+#11 232.8 [42/187] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature.dir/types.cc.o
+#11 234.6 [43/187] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature.dir/utils.cc.o
+#11 239.5 [44/187] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/essential_matrix.cc.o
+#11 241.4 [45/187] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/gps.cc.o
+#11 244.0 [46/187] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature.dir/sift.cc.o
+#11 245.7 [47/187] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/homography_matrix.cc.o
+#11 247.7 [48/187] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/sim3.cc.o
+#11 255.6 [49/187] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/triangulation.cc.o
+#11 256.8 [50/187] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/pose.cc.o
+#11 257.0 [51/187] Building CXX object src/colmap/image/CMakeFiles/colmap_image.dir/line.cc.o
+#11 261.0 [52/187] Building CXX object src/colmap/image/CMakeFiles/colmap_image.dir/warp.cc.o
+#11 264.6 [53/187] Building CXX object src/colmap/math/CMakeFiles/colmap_math.dir/graph_cut.cc.o
+#11 265.1 [54/187] Building CXX object src/colmap/math/CMakeFiles/colmap_math.dir/math.cc.o
+#11 267.0 [55/187] Building CXX object src/colmap/image/CMakeFiles/colmap_image.dir/undistortion.cc.o
+#11 267.6 [56/187] Building CXX object src/colmap/math/CMakeFiles/colmap_math.dir/random.cc.o
+#11 269.4 [57/187] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/consistency_graph.cc.o
+#11 272.7 [58/187] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/depth_map.cc.o
+#11 275.5 [59/187] Building CXX object src/colmap/math/CMakeFiles/colmap_math.dir/polynomial.cc.o
+#11 278.5 [60/187] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/fusion.cc.o
+#11 279.7 [61/187] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/image.cc.o
+#11 284.2 [62/187] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/meshing.cc.o
+#11 287.0 [63/187] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/model.cc.o
+#11 287.6 [64/187] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/normal_map.cc.o
+#11 290.9 [65/187] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/workspace.cc.o
+#11 290.9 In file included from /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/mvs/workspace.h:37,
+#11 290.9                  from /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/mvs/workspace.cc:30:
+#11 290.9 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h: In instantiation of 'value_t& colmap::LRUCache<key_t, value_t>::GetMutable(const key_t&) [with key_t = int; value_t = colmap::mvs::CachedWorkspace::CachedImage]':
+#11 290.9 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/mvs/workspace.cc:173:41:   required from here
+#11 290.9 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: warning: moving a temporary object prevents copy elision [-Wpessimizing-move]
+#11 290.9   157 |     Set(key, std::move(getter_func_(key)));
+#11 290.9       |     ~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#11 290.9 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: note: remove 'std::move' call
+#11 294.7 [66/187] Building CUDA object src/colmap/mvs/CMakeFiles/colmap_mvs_cuda.dir/gpu_mat_prng.cu.o
+#11 298.7 [67/187] Building CUDA object src/colmap/mvs/CMakeFiles/colmap_mvs_cuda.dir/gpu_mat_ref_image.cu.o
+#11 299.8 [68/187] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs_cuda.dir/patch_match.cc.o
+#11 300.6 [69/187] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/combination_sampler.cc.o
+#11 305.5 [70/187] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/least_absolute_deviations.cc.o
+#11 306.6 [71/187] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/progressive_sampler.cc.o
+#11 307.5 [72/187] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/random_sampler.cc.o
+#11 307.7 [73/187] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/sprt.cc.o
+#11 308.3 [74/187] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/support_measurement.cc.o
+#11 309.8 [75/187] Building CXX object src/colmap/retrieval/CMakeFiles/colmap_retrieval.dir/geometry.cc.o
+#11 313.0 [76/187] Building CXX object src/colmap/retrieval/CMakeFiles/colmap_retrieval.dir/vote_and_verify.cc.o
+#11 316.1 [77/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/camera.cc.o
+#11 321.2 [78/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/camera_rig.cc.o
+#11 325.5 [79/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/correspondence_graph.cc.o
+#11 331.4 [80/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/database.cc.o
+#11 335.3 [81/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/database_cache.cc.o
+#11 338.9 [82/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/image.cc.o
+#11 343.2 [83/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/projection.cc.o
+#11 350.6 [84/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/reconstruction.cc.o
+#11 357.2 [85/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/reconstruction_io.cc.o
+#11 361.5 [86/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/reconstruction_manager.cc.o
+#11 368.3 [87/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/scene_clustering.cc.o
+#11 378.3 [88/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/synthetic.cc.o
+#11 379.4 [89/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/track.cc.o
+#11 381.2 [90/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/two_view_geometry.cc.o
+#11 382.8 [91/187] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/visibility_pyramid.cc.o
+#11 387.7 [92/187] Building CXX object src/colmap/sensor/CMakeFiles/colmap_sensor.dir/bitmap.cc.o
+#11 388.2 [93/187] Building CXX object src/colmap/sensor/CMakeFiles/colmap_sensor.dir/database.cc.o
+#11 390.6 [94/187] Building CXX object src/colmap/sensor/CMakeFiles/colmap_sensor.dir/models.cc.o
+#11 395.5 [95/187] Building CXX object src/colmap/sensor/CMakeFiles/colmap_sensor.dir/specs.cc.o
+#11 404.1 [96/187] Building CXX object src/colmap/sfm/CMakeFiles/colmap_sfm.dir/incremental_mapper.cc.o
+#11 409.4 [97/187] Building CXX object src/colmap/sfm/CMakeFiles/colmap_sfm.dir/incremental_triangulator.cc.o
+#11 414.7 [98/187] Building CXX object src/colmap/sfm/CMakeFiles/colmap_sfm.dir/observation_manager.cc.o
+#11 415.3 [99/187] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/base_controller.cc.o
+#11 415.7 [100/187] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/logging.cc.o
+#11 417.3 [101/187] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/misc.cc.o
+#11 418.0 [102/187] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/opengl_utils.cc.o
+#11 420.9 [103/187] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/ply.cc.o
+#11 422.5 [104/187] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/string.cc.o
+#11 424.1 [105/187] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/threading.cc.o
+#11 424.8 [106/187] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/timer.cc.o
+#11 425.5 [107/187] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/version.cc.o
+#11 425.5 [108/187] Linking CXX static library src/colmap/util/libcolmap_util.a
+#11 425.6 [109/187] Linking CXX static library src/colmap/feature/libcolmap_feature_types.a
+#11 425.6 [110/187] Linking CXX static library src/colmap/math/libcolmap_math.a
+#11 425.6 [111/187] Linking CXX static library src/colmap/geometry/libcolmap_geometry.a
+#11 425.6 [112/187] Linking CXX static library src/colmap/optim/libcolmap_optim.a
+#11 426.3 [113/187] Building CXX object src/colmap/util/CMakeFiles/colmap_util_cuda.dir/cuda.cc.o
+#11 426.7 [114/187] Building CXX object src/colmap/util/CMakeFiles/colmap_util_cuda.dir/cudacc.cc.o
+#11 426.7 [115/187] Linking CXX static library src/colmap/util/libcolmap_util_cuda.a
+#11 427.3 [116/187] Building C object src/thirdparty/LSD/CMakeFiles/colmap_lsd.dir/lsd.c.o
+#11 427.3 [117/187] Linking C static library src/thirdparty/LSD/libcolmap_lsd.a
+#11 427.4 [118/187] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/CmdLineParser.cpp.o
+#11 427.7 [119/187] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/Factor.cpp.o
+#11 427.9 [120/187] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/Geometry.cpp.o
+#11 428.5 [121/187] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/MarchingCubes.cpp.o
+#11 429.2 [122/187] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/PlyFile.cpp.o
+

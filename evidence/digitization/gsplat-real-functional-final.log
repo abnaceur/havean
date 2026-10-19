@@ -1,0 +1,41 @@
+time="2026-10-13T11:15:16+04:00" level=warning msg="Found orphan containers ([haven-processing-gpu-1 haven-processing-gpu-volume-init-1 haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-286042f1cffc Creating 
+ Container haven-tests-run-286042f1cffc Created 
+
+Running 1 test using 1 worker
+
+{"label":"O","workspace":"9acf2520-a922-4b23-830e-0a55aa0b97a6","runId":"42f5ab99-d813-47fa-9de4-72449253d40f","state":"real_gpu_training_queued"}
+  ✘  1 [desktop] › tests/e2e/digitization-gsplat-real.spec.ts:3:1 › agent trains the calibrated reference room on the real GPU and opens its private scene (1.0m)
+
+
+  1) [desktop] › tests/e2e/digitization-gsplat-real.spec.ts:3:1 › agent trains the calibrated reference room on the real GPU and opens its private scene 
+
+    Error: Actual GPU job 42f5ab99-d813-47fa-9de4-72449253d40f ended failed
+
+      20 |   const response=await page.request.get(path+'/reconstruction-status');expect(response.ok()).toBe(true);
+      21 |   const data=(await response.json()).data,job=data.sceneTraining.job;
+    > 22 |   if(job?.state==='failed'||job?.state==='cancelled')throw Error('Actual GPU job '+job.runId+' ended '+job.state);
+         |                                                            ^
+      23 |   return job?.exportState;
+      24 |  },{timeout:400000,intervals:[3000,5000]}).toBe('succeeded');
+      25 |  await page.reload();
+        at expect.poll.timeout (/workspace/tests/e2e/digitization-gsplat-real.spec.ts:22:60)
+        at /workspace/tests/e2e/digitization-gsplat-real.spec.ts:19:2
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/gsplat-real/digitization-gsplat-real-a-3ac1c-and-opens-its-private-scene-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/gsplat-real/digitization-gsplat-real-a-3ac1c-and-opens-its-private-scene-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/gsplat-real/digitization-gsplat-real-a-3ac1c-and-opens-its-private-scene-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/gsplat-real/digitization-gsplat-real-a-3ac1c-and-opens-its-private-scene-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-gsplat-real.spec.ts:3:1 › agent trains the calibrated reference room on the real GPU and opens its private scene 
+

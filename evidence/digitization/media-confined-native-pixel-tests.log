@@ -1,0 +1,429 @@
+ Container haven-processing-tests-cpu-run-d5bc696b7f27 Creating 
+ Container haven-processing-tests-cpu-run-d5bc696b7f27 Created 
+.FF.FFFFF                                                                [100%]
+=================================== FAILURES ===================================
+_ test_actual_confined_rotated_h264_produces_upright_pixels_and_sanitized_thumbnail _
+
+tmp_path = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_confined_rotated_h0')
+
+    def test_actual_confined_rotated_h264_produces_upright_pixels_and_sanitized_thumbnail(tmp_path):
+        source(tmp_path, 'rotated.mp4')
+>       result = probe_media(tmp_path, 'rotated.mp4')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_media_probe.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+property_processing/media_probe.py:128: in probe_media
+    metadata = normalize_probe(json.loads(_native(root, name, 'probe', cancelled=cancelled)))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+directory = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_confined_rotated_h0')
+name = 'rotated.mp4', mode = 'probe'
+
+    def _native(directory: Path, name: str, mode: str, *, timeout=15, cancelled=None):
+        tool = 'ffprobe' if mode == 'probe' else 'ffmpeg'
+        environment = {'PATH': '/usr/bin:/bin', 'PYTHONPATH': str(Path(__file__).resolve().parent.parent),
+                       'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONUNBUFFERED': '1'}
+        child = subprocess.Popen([sys.executable, '-m', 'property_processing.media_exec', str(directory), tool, name, mode],
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True, env=environment)
+        output, diagnostics, deadline = bytearray(), 0, time.monotonic()+timeout
+        try:
+            with selectors.DefaultSelector() as selector:
+                selector.register(child.stdout, selectors.EVENT_READ, True)
+                selector.register(child.stderr, selectors.EVENT_READ, False)
+                while selector.get_map():
+                    if cancelled and cancelled():
+                        raise SourceError('MEDIA_CANCELLED')
+                    if time.monotonic() >= deadline:
+                        raise SourceError('MEDIA_TIME_BUDGET_EXCEEDED')
+                    for key, _ in selector.select(min(.1, max(.001, deadline-time.monotonic()))):
+                        chunk = os.read(key.fileobj.fileno(), 65536)
+                        if not chunk:
+                            selector.unregister(key.fileobj)
+                        elif key.data:
+                            output.extend(chunk)
+                            if len(output) > 1024*1024:
+                                raise SourceError('MEDIA_OUTPUT_BUDGET_EXCEEDED')
+                        else:
+                            diagnostics += len(chunk)
+                            if diagnostics > 65536:
+                                raise SourceError('MEDIA_DIAGNOSTIC_BUDGET_EXCEEDED')
+            child.wait(timeout=max(.001, deadline-time.monotonic()))
+            if child.returncode:
+>               raise SourceError('MEDIA_DECODE_FAILED')
+E               property_processing.sources.SourceError: MEDIA_DECODE_FAILED
+
+property_processing/media_probe.py:49: SourceError
+_______ test_actual_unsupported_codec_is_clear_and_produces_no_thumbnail _______
+
+tmp_path = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_unsupported_codec_0')
+
+    def test_actual_unsupported_codec_is_clear_and_produces_no_thumbnail(tmp_path):
+        source(tmp_path, 'unsupported.mp4')
+        with pytest.raises(SourceError, match='MEDIA_CODEC_UNSUPPORTED'):
+>           probe_media(tmp_path, 'unsupported.mp4')
+
+tests/test_media_probe.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+property_processing/media_probe.py:128: in probe_media
+    metadata = normalize_probe(json.loads(_native(root, name, 'probe', cancelled=cancelled)))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+directory = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_unsupported_codec_0')
+name = 'unsupported.mp4', mode = 'probe'
+
+    def _native(directory: Path, name: str, mode: str, *, timeout=15, cancelled=None):
+        tool = 'ffprobe' if mode == 'probe' else 'ffmpeg'
+        environment = {'PATH': '/usr/bin:/bin', 'PYTHONPATH': str(Path(__file__).resolve().parent.parent),
+                       'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONUNBUFFERED': '1'}
+        child = subprocess.Popen([sys.executable, '-m', 'property_processing.media_exec', str(directory), tool, name, mode],
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True, env=environment)
+        output, diagnostics, deadline = bytearray(), 0, time.monotonic()+timeout
+        try:
+            with selectors.DefaultSelector() as selector:
+                selector.register(child.stdout, selectors.EVENT_READ, True)
+                selector.register(child.stderr, selectors.EVENT_READ, False)
+                while selector.get_map():
+                    if cancelled and cancelled():
+                        raise SourceError('MEDIA_CANCELLED')
+                    if time.monotonic() >= deadline:
+                        raise SourceError('MEDIA_TIME_BUDGET_EXCEEDED')
+                    for key, _ in selector.select(min(.1, max(.001, deadline-time.monotonic()))):
+                        chunk = os.read(key.fileobj.fileno(), 65536)
+                        if not chunk:
+                            selector.unregister(key.fileobj)
+                        elif key.data:
+                            output.extend(chunk)
+                            if len(output) > 1024*1024:
+                                raise SourceError('MEDIA_OUTPUT_BUDGET_EXCEEDED')
+                        else:
+                            diagnostics += len(chunk)
+                            if diagnostics > 65536:
+                                raise SourceError('MEDIA_DIAGNOSTIC_BUDGET_EXCEEDED')
+            child.wait(timeout=max(.001, deadline-time.monotonic()))
+            if child.returncode:
+>               raise SourceError('MEDIA_DECODE_FAILED')
+E               property_processing.sources.SourceError: MEDIA_DECODE_FAILED
+
+property_processing/media_probe.py:49: SourceError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_unsupported_codec_0')
+
+    def test_actual_unsupported_codec_is_clear_and_produces_no_thumbnail(tmp_path):
+        source(tmp_path, 'unsupported.mp4')
+>       with pytest.raises(SourceError, match='MEDIA_CODEC_UNSUPPORTED'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'MEDIA_CODEC_UNSUPPORTED'
+E        Input: 'MEDIA_DECODE_FAILED'
+
+tests/test_media_probe.py:69: AssertionError
+__________ test_media_source_symlink_and_existing_output_are_rejected __________
+
+tmp_path = PosixPath('/tmp/pytest-of-processing/pytest-0/test_media_source_symlink_and_0')
+
+    def test_media_source_symlink_and_existing_output_are_rejected(tmp_path):
+        source(tmp_path, 'source.mp4')
+        (tmp_path/'alias.mp4').symlink_to(tmp_path/'source.mp4')
+        with pytest.raises(SourceError, match='MEDIA_SOURCE_PATH_INVALID'):
+            probe_media(tmp_path, 'alias.mp4')
+        (tmp_path/'thumbnail.png').write_bytes(b'owned existing output')
+        with pytest.raises(SourceError, match='MEDIA_OUTPUT_EXISTS'):
+>           probe_media(tmp_path, 'source.mp4')
+
+tests/test_media_probe.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+property_processing/media_probe.py:128: in probe_media
+    metadata = normalize_probe(json.loads(_native(root, name, 'probe', cancelled=cancelled)))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+directory = PosixPath('/tmp/pytest-of-processing/pytest-0/test_media_source_symlink_and_0')
+name = 'source.mp4', mode = 'probe'
+
+    def _native(directory: Path, name: str, mode: str, *, timeout=15, cancelled=None):
+        tool = 'ffprobe' if mode == 'probe' else 'ffmpeg'
+        environment = {'PATH': '/usr/bin:/bin', 'PYTHONPATH': str(Path(__file__).resolve().parent.parent),
+                       'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONUNBUFFERED': '1'}
+        child = subprocess.Popen([sys.executable, '-m', 'property_processing.media_exec', str(directory), tool, name, mode],
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True, env=environment)
+        output, diagnostics, deadline = bytearray(), 0, time.monotonic()+timeout
+        try:
+            with selectors.DefaultSelector() as selector:
+                selector.register(child.stdout, selectors.EVENT_READ, True)
+                selector.register(child.stderr, selectors.EVENT_READ, False)
+                while selector.get_map():
+                    if cancelled and cancelled():
+                        raise SourceError('MEDIA_CANCELLED')
+                    if time.monotonic() >= deadline:
+                        raise SourceError('MEDIA_TIME_BUDGET_EXCEEDED')
+                    for key, _ in selector.select(min(.1, max(.001, deadline-time.monotonic()))):
+                        chunk = os.read(key.fileobj.fileno(), 65536)
+                        if not chunk:
+                            selector.unregister(key.fileobj)
+                        elif key.data:
+                            output.extend(chunk)
+                            if len(output) > 1024*1024:
+                                raise SourceError('MEDIA_OUTPUT_BUDGET_EXCEEDED')
+                        else:
+                            diagnostics += len(chunk)
+                            if diagnostics > 65536:
+                                raise SourceError('MEDIA_DIAGNOSTIC_BUDGET_EXCEEDED')
+            child.wait(timeout=max(.001, deadline-time.monotonic()))
+            if child.returncode:
+>               raise SourceError('MEDIA_DECODE_FAILED')
+E               property_processing.sources.SourceError: MEDIA_DECODE_FAILED
+
+property_processing/media_probe.py:49: SourceError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = PosixPath('/tmp/pytest-of-processing/pytest-0/test_media_source_symlink_and_0')
+
+    def test_media_source_symlink_and_existing_output_are_rejected(tmp_path):
+        source(tmp_path, 'source.mp4')
+        (tmp_path/'alias.mp4').symlink_to(tmp_path/'source.mp4')
+        with pytest.raises(SourceError, match='MEDIA_SOURCE_PATH_INVALID'):
+            probe_media(tmp_path, 'alias.mp4')
+        (tmp_path/'thumbnail.png').write_bytes(b'owned existing output')
+>       with pytest.raises(SourceError, match='MEDIA_OUTPUT_EXISTS'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'MEDIA_OUTPUT_EXISTS'
+E        Input: 'MEDIA_DECODE_FAILED'
+
+tests/test_media_probe.py:96: AssertionError
+_ test_actual_supported_container_codecs_normalize_without_camera_metadata[source.mp4-h264] _
+
+tmp_path = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_supported_containe0')
+name = 'source.mp4', codec = 'h264'
+
+    @pytest.mark.parametrize('name,codec', [('source.mp4','h264'),('hevc.mov','hevc'),('vp8.webm','vp8'),('vp9.webm','vp9')])
+    def test_actual_supported_container_codecs_normalize_without_camera_metadata(tmp_path, name, codec):
+        source(tmp_path, name)
+>       result = probe_media(tmp_path, name)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_media_probe.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+property_processing/media_probe.py:128: in probe_media
+    metadata = normalize_probe(json.loads(_native(root, name, 'probe', cancelled=cancelled)))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+directory = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_supported_containe0')
+name = 'source.mp4', mode = 'probe'
+
+    def _native(directory: Path, name: str, mode: str, *, timeout=15, cancelled=None):
+        tool = 'ffprobe' if mode == 'probe' else 'ffmpeg'
+        environment = {'PATH': '/usr/bin:/bin', 'PYTHONPATH': str(Path(__file__).resolve().parent.parent),
+                       'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONUNBUFFERED': '1'}
+        child = subprocess.Popen([sys.executable, '-m', 'property_processing.media_exec', str(directory), tool, name, mode],
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True, env=environment)
+        output, diagnostics, deadline = bytearray(), 0, time.monotonic()+timeout
+        try:
+            with selectors.DefaultSelector() as selector:
+                selector.register(child.stdout, selectors.EVENT_READ, True)
+                selector.register(child.stderr, selectors.EVENT_READ, False)
+                while selector.get_map():
+                    if cancelled and cancelled():
+                        raise SourceError('MEDIA_CANCELLED')
+                    if time.monotonic() >= deadline:
+                        raise SourceError('MEDIA_TIME_BUDGET_EXCEEDED')
+                    for key, _ in selector.select(min(.1, max(.001, deadline-time.monotonic()))):
+                        chunk = os.read(key.fileobj.fileno(), 65536)
+                        if not chunk:
+                            selector.unregister(key.fileobj)
+                        elif key.data:
+                            output.extend(chunk)
+                            if len(output) > 1024*1024:
+                                raise SourceError('MEDIA_OUTPUT_BUDGET_EXCEEDED')
+                        else:
+                            diagnostics += len(chunk)
+                            if diagnostics > 65536:
+                                raise SourceError('MEDIA_DIAGNOSTIC_BUDGET_EXCEEDED')
+            child.wait(timeout=max(.001, deadline-time.monotonic()))
+            if child.returncode:
+>               raise SourceError('MEDIA_DECODE_FAILED')
+E               property_processing.sources.SourceError: MEDIA_DECODE_FAILED
+
+property_processing/media_probe.py:49: SourceError
+_ test_actual_supported_container_codecs_normalize_without_camera_metadata[hevc.mov-hevc] _
+
+tmp_path = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_supported_containe1')
+name = 'hevc.mov', codec = 'hevc'
+
+    @pytest.mark.parametrize('name,codec', [('source.mp4','h264'),('hevc.mov','hevc'),('vp8.webm','vp8'),('vp9.webm','vp9')])
+    def test_actual_supported_container_codecs_normalize_without_camera_metadata(tmp_path, name, codec):
+        source(tmp_path, name)
+>       result = probe_media(tmp_path, name)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_media_probe.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+property_processing/media_probe.py:128: in probe_media
+    metadata = normalize_probe(json.loads(_native(root, name, 'probe', cancelled=cancelled)))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+directory = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_supported_containe1')
+name = 'hevc.mov', mode = 'probe'
+
+    def _native(directory: Path, name: str, mode: str, *, timeout=15, cancelled=None):
+        tool = 'ffprobe' if mode == 'probe' else 'ffmpeg'
+        environment = {'PATH': '/usr/bin:/bin', 'PYTHONPATH': str(Path(__file__).resolve().parent.parent),
+                       'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONUNBUFFERED': '1'}
+        child = subprocess.Popen([sys.executable, '-m', 'property_processing.media_exec', str(directory), tool, name, mode],
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True, env=environment)
+        output, diagnostics, deadline = bytearray(), 0, time.monotonic()+timeout
+        try:
+            with selectors.DefaultSelector() as selector:
+                selector.register(child.stdout, selectors.EVENT_READ, True)
+                selector.register(child.stderr, selectors.EVENT_READ, False)
+                while selector.get_map():
+                    if cancelled and cancelled():
+                        raise SourceError('MEDIA_CANCELLED')
+                    if time.monotonic() >= deadline:
+                        raise SourceError('MEDIA_TIME_BUDGET_EXCEEDED')
+                    for key, _ in selector.select(min(.1, max(.001, deadline-time.monotonic()))):
+                        chunk = os.read(key.fileobj.fileno(), 65536)
+                        if not chunk:
+                            selector.unregister(key.fileobj)
+                        elif key.data:
+                            output.extend(chunk)
+                            if len(output) > 1024*1024:
+                                raise SourceError('MEDIA_OUTPUT_BUDGET_EXCEEDED')
+                        else:
+                            diagnostics += len(chunk)
+                            if diagnostics > 65536:
+                                raise SourceError('MEDIA_DIAGNOSTIC_BUDGET_EXCEEDED')
+            child.wait(timeout=max(.001, deadline-time.monotonic()))
+            if child.returncode:
+>               raise SourceError('MEDIA_DECODE_FAILED')
+E               property_processing.sources.SourceError: MEDIA_DECODE_FAILED
+
+property_processing/media_probe.py:49: SourceError
+_ test_actual_supported_container_codecs_normalize_without_camera_metadata[vp8.webm-vp8] _
+
+tmp_path = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_supported_containe2')
+name = 'vp8.webm', codec = 'vp8'
+
+    @pytest.mark.parametrize('name,codec', [('source.mp4','h264'),('hevc.mov','hevc'),('vp8.webm','vp8'),('vp9.webm','vp9')])
+    def test_actual_supported_container_codecs_normalize_without_camera_metadata(tmp_path, name, codec):
+        source(tmp_path, name)
+>       result = probe_media(tmp_path, name)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_media_probe.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+property_processing/media_probe.py:128: in probe_media
+    metadata = normalize_probe(json.loads(_native(root, name, 'probe', cancelled=cancelled)))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+directory = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_supported_containe2')
+name = 'vp8.webm', mode = 'probe'
+
+    def _native(directory: Path, name: str, mode: str, *, timeout=15, cancelled=None):
+        tool = 'ffprobe' if mode == 'probe' else 'ffmpeg'
+        environment = {'PATH': '/usr/bin:/bin', 'PYTHONPATH': str(Path(__file__).resolve().parent.parent),
+                       'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONUNBUFFERED': '1'}
+        child = subprocess.Popen([sys.executable, '-m', 'property_processing.media_exec', str(directory), tool, name, mode],
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True, env=environment)
+        output, diagnostics, deadline = bytearray(), 0, time.monotonic()+timeout
+        try:
+            with selectors.DefaultSelector() as selector:
+                selector.register(child.stdout, selectors.EVENT_READ, True)
+                selector.register(child.stderr, selectors.EVENT_READ, False)
+                while selector.get_map():
+                    if cancelled and cancelled():
+                        raise SourceError('MEDIA_CANCELLED')
+                    if time.monotonic() >= deadline:
+                        raise SourceError('MEDIA_TIME_BUDGET_EXCEEDED')
+                    for key, _ in selector.select(min(.1, max(.001, deadline-time.monotonic()))):
+                        chunk = os.read(key.fileobj.fileno(), 65536)
+                        if not chunk:
+                            selector.unregister(key.fileobj)
+                        elif key.data:
+                            output.extend(chunk)
+                            if len(output) > 1024*1024:
+                                raise SourceError('MEDIA_OUTPUT_BUDGET_EXCEEDED')
+                        else:
+                            diagnostics += len(chunk)
+                            if diagnostics > 65536:
+                                raise SourceError('MEDIA_DIAGNOSTIC_BUDGET_EXCEEDED')
+            child.wait(timeout=max(.001, deadline-time.monotonic()))
+            if child.returncode:
+>               raise SourceError('MEDIA_DECODE_FAILED')
+E               property_processing.sources.SourceError: MEDIA_DECODE_FAILED
+
+property_processing/media_probe.py:49: SourceError
+_ test_actual_supported_container_codecs_normalize_without_camera_metadata[vp9.webm-vp9] _
+
+tmp_path = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_supported_containe3')
+name = 'vp9.webm', codec = 'vp9'
+
+    @pytest.mark.parametrize('name,codec', [('source.mp4','h264'),('hevc.mov','hevc'),('vp8.webm','vp8'),('vp9.webm','vp9')])
+    def test_actual_supported_container_codecs_normalize_without_camera_metadata(tmp_path, name, codec):
+        source(tmp_path, name)
+>       result = probe_media(tmp_path, name)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_media_probe.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+property_processing/media_probe.py:128: in probe_media
+    metadata = normalize_probe(json.loads(_native(root, name, 'probe', cancelled=cancelled)))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+directory = PosixPath('/tmp/pytest-of-processing/pytest-0/test_actual_supported_containe3')
+name = 'vp9.webm', mode = 'probe'
+
+    def _native(directory: Path, name: str, mode: str, *, timeout=15, cancelled=None):
+        tool = 'ffprobe' if mode == 'probe' else 'ffmpeg'
+        environment = {'PATH': '/usr/bin:/bin', 'PYTHONPATH': str(Path(__file__).resolve().parent.parent),
+                       'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONUNBUFFERED': '1'}
+        child = subprocess.Popen([sys.executable, '-m', 'property_processing.media_exec', str(directory), tool, name, mode],
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, start_new_session=True, env=environment)
+        output, diagnostics, deadline = bytearray(), 0, time.monotonic()+timeout
+        try:
+            with selectors.DefaultSelector() as selector:
+                selector.register(child.stdout, selectors.EVENT_READ, True)
+                selector.register(child.stderr, selectors.EVENT_READ, False)
+                while selector.get_map():
+                    if cancelled and cancelled():
+                        raise SourceError('MEDIA_CANCELLED')
+                    if time.monotonic() >= deadline:
+                        raise SourceError('MEDIA_TIME_BUDGET_EXCEEDED')
+                    for key, _ in selector.select(min(.1, max(.001, deadline-time.monotonic()))):
+                        chunk = os.read(key.fileobj.fileno(), 65536)
+                        if not chunk:
+                            selector.unregister(key.fileobj)
+                        elif key.data:
+                            output.extend(chunk)
+                            if len(output) > 1024*1024:
+                                raise SourceError('MEDIA_OUTPUT_BUDGET_EXCEEDED')
+                        else:
+                            diagnostics += len(chunk)
+                            if diagnostics > 65536:
+                                raise SourceError('MEDIA_DIAGNOSTIC_BUDGET_EXCEEDED')
+            child.wait(timeout=max(.001, deadline-time.monotonic()))
+            if child.returncode:
+>               raise SourceError('MEDIA_DECODE_FAILED')
+E               property_processing.sources.SourceError: MEDIA_DECODE_FAILED
+
+property_processing/media_probe.py:49: SourceError
+=========================== short test summary info ============================
+FAILED tests/test_media_probe.py::test_actual_confined_rotated_h264_produces_upright_pixels_and_sanitized_thumbnail
+FAILED tests/test_media_probe.py::test_actual_unsupported_codec_is_clear_and_produces_no_thumbnail
+FAILED tests/test_media_probe.py::test_media_source_symlink_and_existing_output_are_rejected
+FAILED tests/test_media_probe.py::test_actual_supported_container_codecs_normalize_without_camera_metadata[source.mp4-h264]
+FAILED tests/test_media_probe.py::test_actual_supported_container_codecs_normalize_without_camera_metadata[hevc.mov-hevc]
+FAILED tests/test_media_probe.py::test_actual_supported_container_codecs_normalize_without_camera_metadata[vp8.webm-vp8]
+FAILED tests/test_media_probe.py::test_actual_supported_container_codecs_normalize_without_camera_metadata[vp9.webm-vp9]
+7 failed, 2 passed in 3.68s
+

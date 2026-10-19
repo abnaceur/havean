@@ -1,0 +1,39 @@
+sha256:3d89260697f7ec0a06e0849ff9f00dc534c32503675320549d500ad81cb28324
+ Container haven-ocr-protocol-231093 Creating 
+ Container haven-ocr-protocol-231093 Created 
+ Container haven-ocr-protocol-231093 Starting 
+ Container haven-ocr-protocol-231093 Started 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-image-ocr.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 17773[2mms[22m[39m
+   [33m[2m✓[22m[39m actual png document OCR persists upright source-linked review[33m 7846[2mms[22m[39m
+[31m   [31m×[31m actual jpeg document OCR persists upright source-linked review[39m[33m 9922[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-image-ocr.test.ts[2m > [22mactual jpeg document OCR persists upright source-linked review
+[31m[1mAssertionError[22m: expected [] to have a length of 1 but got +0[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+[36m [2m❯[22m tests/integration/digitization-image-ocr.test.ts:[2m52:31[22m[39m
+    [90m 50|[39m   const result=await collectInvestigationDocumentOcr(actor,workspace.i…
+    [90m 51|[39m   storedKeys.push(...await transaction(actor,async c=>(await c.query('…
+    [90m 52|[39m   expect(result.candidateIds).toHaveLength(1);
+    [90m   |[39m                               [31m^[39m
+    [90m 53|[39m   const review=await transaction(actor,c=>readFactReview(c,actor,works…
+    [90m 54|[39m   expect(review.pages).toHaveLength(1);expect(review.candidates).toHav…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 23:13:19
+[2m   Duration [22m 19.95s[2m (tests 90%, import 7%, transform 4%)[22m
+

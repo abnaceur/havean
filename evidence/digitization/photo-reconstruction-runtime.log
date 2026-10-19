@@ -1,0 +1,125 @@
+ Image haven-processing-camera:3.10-local-cpu-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 625B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.camera-development
+#2 transferring dockerfile: 472B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1
+#3 DONE 0.1s
+
+#4 [internal] load metadata for docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1
+#4 DONE 0.1s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 192B done
+#5 DONE 0.0s
+
+#6 [stage-1 1/4] FROM docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1@sha256:4c1e1daba3b7d5997bc14abc0b3f0e594e351170a65f50163c21c6e77a141cd1
+#6 resolve docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1@sha256:4c1e1daba3b7d5997bc14abc0b3f0e594e351170a65f50163c21c6e77a141cd1 0.1s done
+#6 DONE 0.1s
+
+#7 [internal] load build context
+#7 transferring context: 96.03kB 0.1s done
+#7 DONE 0.2s
+
+#8 [camera 1/1] FROM docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1@sha256:65fdb4bfbd3551802274c38f7fa407323e8478b8ba222969608fcf1fbadf0dd3
+#8 resolve docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1@sha256:65fdb4bfbd3551802274c38f7fa407323e8478b8ba222969608fcf1fbadf0dd3 0.1s done
+#8 DONE 0.1s
+
+#9 [stage-1 2/4] COPY --from=camera /usr/bin/colmap /usr/bin/colmap
+#9 CACHED
+
+#10 [stage-1 3/4] COPY --from=camera /opt/colmap /opt/colmap
+#10 CACHED
+
+#11 [stage-1 4/4] COPY services/property-processing/property_processing /opt/processing/property_processing
+#11 DONE 0.1s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 0.2s done
+#12 exporting manifest sha256:28f2255cd7e0795bb32d835a6cc5e0e2642838c06b27e857ac5c71fa888523a6 0.1s done
+#12 exporting config sha256:ad4107507d82291aae5ccebd530b11da285e972a3983dc18a227531ba4f355d6 0.1s done
+#12 exporting attestation manifest sha256:0d8db3ea7ec04ad45ea7e245afbef449b876605700d465f4db4c5211034c3337 0.1s done
+#12 exporting manifest list sha256:e3a533b8d51ade36bd3a8e414e6d190d90557d7db34c4b59d965d648669c0ce2
+#12 exporting manifest list sha256:e3a533b8d51ade36bd3a8e414e6d190d90557d7db34c4b59d965d648669c0ce2 0.1s done
+#12 naming to docker.io/library/haven-processing-camera:3.10-local-cpu-v1 done
+#12 unpacking to docker.io/library/haven-processing-camera:3.10-local-cpu-v1
+#12 unpacking to docker.io/library/haven-processing-camera:3.10-local-cpu-v1 0.4s done
+#12 DONE 1.1s
+
+#13 resolving provenance for metadata file
+#13 DONE 0.0s
+ Image haven-processing-camera:3.10-local-cpu-v1 Built 
+time="2026-10-13T13:44:25+04:00" level=warning msg="Found orphan containers ([haven-processing-gpu-1 haven-processing-gpu-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-processing-cpu-1 Recreate 
+ Container haven-processing-cpu-1 Recreated 
+ Container haven-processing-cpu-1 Starting 
+ Container haven-processing-cpu-1 Started 
+ Container haven-processing-cpu-1 Waiting 
+ Container haven-processing-cpu-1 Healthy 
+ Image haven-processing-camera:3.10-local-cpu-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 625B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.camera-development
+#2 transferring dockerfile: 472B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1
+#3 DONE 0.1s
+
+#4 [internal] load metadata for docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1
+#4 DONE 0.1s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 192B done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 29.36kB done
+#6 DONE 0.0s
+
+#7 [camera 1/1] FROM docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1@sha256:65fdb4bfbd3551802274c38f7fa407323e8478b8ba222969608fcf1fbadf0dd3
+#7 resolve docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1@sha256:65fdb4bfbd3551802274c38f7fa407323e8478b8ba222969608fcf1fbadf0dd3 0.1s done
+#7 DONE 0.1s
+
+#8 [stage-1 1/4] FROM docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1@sha256:4c1e1daba3b7d5997bc14abc0b3f0e594e351170a65f50163c21c6e77a141cd1
+#8 resolve docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1@sha256:4c1e1daba3b7d5997bc14abc0b3f0e594e351170a65f50163c21c6e77a141cd1 0.1s done
+#8 DONE 0.1s
+
+#9 [stage-1 2/4] COPY --from=camera /usr/bin/colmap /usr/bin/colmap
+#9 CACHED
+
+#10 [stage-1 3/4] COPY --from=camera /opt/colmap /opt/colmap
+#10 CACHED
+
+#11 [stage-1 4/4] COPY services/property-processing/property_processing /opt/processing/property_processing
+#11 DONE 0.1s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 0.2s done
+#12 exporting manifest sha256:2db336899114d45e9e5d2605eaff551ee2d27fd48183d742431e17e5da50178d 0.1s done
+#12 exporting config sha256:eac53f1842a1eca48e8f67d18233ff170e071eefb7bc3476f3c682e8f3db1bbe 0.1s done
+#12 exporting attestation manifest sha256:3c2e15acd7eaae62216f3879c74c168af973943514555651687c167e69e2a2ed 0.1s done
+#12 exporting manifest list sha256:cf0ecb16b0734058752fe48e93134f15e46e050828741e6021e1df5017065a84
+#12 exporting manifest list sha256:cf0ecb16b0734058752fe48e93134f15e46e050828741e6021e1df5017065a84 0.1s done
+#12 naming to docker.io/library/haven-processing-camera:3.10-local-cpu-v1 done
+#12 unpacking to docker.io/library/haven-processing-camera:3.10-local-cpu-v1 0.1s done
+#12 DONE 0.6s
+
+#13 resolving provenance for metadata file
+#13 DONE 0.0s
+ Image haven-processing-camera:3.10-local-cpu-v1 Built 
+time="2026-10-13T14:29:58+04:00" level=warning msg="Found orphan containers ([haven-processing-gpu-1 haven-processing-gpu-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-processing-cpu-1 Recreate 
+ Container haven-processing-cpu-1 Recreated 
+ Container haven-processing-cpu-1 Starting 
+ Container haven-processing-cpu-1 Started 
+ Container haven-processing-cpu-1 Waiting 
+ Container haven-processing-cpu-1 Healthy 

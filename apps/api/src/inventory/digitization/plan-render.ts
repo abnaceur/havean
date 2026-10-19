@@ -1,4 +1,5 @@
 import sharp from 'sharp';
+import {embeddedPlanFont,requireNativePlanFont,planFontNotice} from './plan-font.js';
 import {digitizationGeometryRevision,ringArea,triangulateDigitizationRoom,type DigitizationGeometryRevision} from '@haven/contracts';
 
 const escape=(value:string)=>Array.from(value).filter(char=>char.codePointAt(0)!>=32||['\t','\n','\r'].includes(char)).join('').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[char]!));
@@ -34,7 +35,7 @@ export function renderPlanSvg(input:DigitizationGeometryRevision,floorId:string)
   for(const opening of openings){line(offset,Number(opening.offset));offset=Math.max(offset,Number(opening.offset)+Number(opening.width));}
   line(offset,length);
  }
- output.push('</g>',`<g fill="#202c29" font-family="sans-serif" font-size="${number(fontSize)}" text-anchor="middle">`);
+ output.push('</g>',`<metadata id="font-license">${escape(planFontNotice())}</metadata>`,`<style>@font-face{font-family:'DejaVu Sans';src:url(data:font/ttf;base64,${embeddedPlanFont()}) format('truetype')}text{font-family:'DejaVu Sans';font-weight:400}</style>`,`<g fill="#202c29" font-family="DejaVu Sans" font-size="${number(fontSize)}" text-anchor="middle">`);
  for(const room of rooms){
   const triangles=triangulateDigitizationRoom(room.polygon,room.holes);
   let largest=-1,center=room.polygon[0];
@@ -52,5 +53,6 @@ export function renderPlanSvg(input:DigitizationGeometryRevision,floorId:string)
 }
 export async function renderPlanPng(geometry:DigitizationGeometryRevision,floorId:string,maxEdge=2048){
  if(!Number.isInteger(maxEdge)||maxEdge<128||maxEdge>2048)throw new Error('PLAN_RASTER_BUDGET_INVALID');
+ requireNativePlanFont();
  return sharp(Buffer.from(renderPlanSvg(geometry,floorId)),{limitInputPixels:30_000_000}).resize({width:maxEdge,height:maxEdge,fit:'inside',withoutEnlargement:true}).png().toBuffer();
 }

@@ -1,0 +1,92 @@
+{"project":"desktop","privatePageCommitted":true}
+{"project":"mobile","privatePageCommitted":true}
+{"project":"desktop-floors","privatePageCommitted":true}
+{"project":"mobile-floors","privatePageCommitted":true}
+{"project":"desktop-dimensions","privatePageCommitted":true}
+{"project":"mobile-dimensions","privatePageCommitted":true}
+{"project":"conflicts","privatePageCommitted":true}
+{"project":"reuse","privatePageCommitted":true}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-render-reuse.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 2574[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C10 unchanged document pixels reuse real private storage/current lineage; media invalidates synthetic scene approval and preserves OCR dependency identity[33m 2569[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-trace-checkpoints.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 645[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-E07 two distinct current reviewers preserve their own checkpoints and the winning canonical reference on a real concurrent 409[33m 642[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 16:06:49
+[2m   Duration [22m 6.78s[2m (tests 50%, import 39%, transform 12%)[22m
+
+ Container haven-integration-tests-run-69f0e6651632 Creating 
+ Container haven-integration-tests-run-69f0e6651632 Created 
+
+Running 14 tests using 1 worker
+
+  ✓   1 [desktop] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (10.0s)
+  ✓   2 [desktop] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (8.4s)
+  ✓   3 [desktop] › tests/e2e/digitization-plan.spec.ts:45:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay (7.3s)
+  ✓   4 [desktop] › tests/e2e/digitization-plan.spec.ts:61:1 › HE-E10 empty dimensions require explicit user entries; saved provenance and a real private GLB survive reload (9.2s)
+  ✓   5 [desktop] › tests/e2e/digitization-plan.spec.ts:79:1 › HE-E06 actual split/merge and selected floor/stair persistence keep vertical dimensions unknown (9.9s)
+  ✓   6 [desktop] › tests/e2e/digitization-plan.spec.ts:91:1 › HE-E07 undo/redo and private autosave survive reload for explicit trace recovery (9.1s)
+  ✓   7 [desktop] › tests/e2e/digitization-plan.spec.ts:98:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts (7.2s)
+  ✓   8 [mobile] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (8.1s)
+  ✓   9 [mobile] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (7.0s)
+  ✓  10 [mobile] › tests/e2e/digitization-plan.spec.ts:45:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay (5.4s)
+  ✘  11 [mobile] › tests/e2e/digitization-plan.spec.ts:61:1 › HE-E10 empty dimensions require explicit user entries; saved provenance and a real private GLB survive reload (1.5m)
+  ✓  12 [mobile] › tests/e2e/digitization-plan.spec.ts:79:1 › HE-E06 actual split/merge and selected floor/stair persistence keep vertical dimensions unknown (10.1s)
+  ✓  13 [mobile] › tests/e2e/digitization-plan.spec.ts:91:1 › HE-E07 undo/redo and private autosave survive reload for explicit trace recovery (8.0s)
+  ✓  14 [mobile] › tests/e2e/digitization-plan.spec.ts:98:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts (6.0s)
+
+
+  1) [mobile] › tests/e2e/digitization-plan.spec.ts:61:1 › HE-E10 empty dimensions require explicit user entries; saved provenance and a real private GLB survive reload 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.click: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'Close room boundary', exact: true })
+        - locator resolved to <button disabled type="button" class="button secondary">Close room boundary</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+          - waiting 100ms
+        168 × waiting for element to be visible, enabled and stable
+            - element is not enabled
+          - retrying click action
+            - waiting 500ms
+
+
+      64 |  await gesture(page,await screen(page,{x:128,y:128}),await screen(page,{x:512,y:128}),testInfo.project.name==='mobile');await page.getByLabel('Room label',{exact:true}).fill('Self-authored structural room');await page.getByRole('button',{name:'Draw room boundary',exact:true}).click();
+      65 |  for(const point of [{x:128,y:128},{x:512,y:128},{x:512,y:384},{x:128,y:384}]){const p=await screen(page,point);if(testInfo.project.name==='mobile')await page.touchscreen.tap(p.x,p.y);else await page.mouse.click(p.x,p.y);}
+    > 66 |  await page.getByRole('button',{name:'Close room boundary',exact:true}).click();await page.getByLabel('Wall 1',{exact:true}).check();await page.getByLabel('Opening start on wall (pixels)',{exact:true}).fill('32');await page.getByLabel('Opening width (pixels)',{exact:true}).fill('64');await page.getByLabel('I confirmed this opening position on the source page.',{exact:true}).check();await page.getByRole('button',{name:'Add opening',exact:true}).click();await page.getByRole('button',{name:'Save private trace',exact:true}).click();await expect(page.getByText('Private trace saved.',{exact:true})).toBeVisible();
+         |                                                                         ^
+      67 |  await page.getByLabel('Wall 1',{exact:true}).check();await page.getByLabel('Reference distance (metres)',{exact:true}).fill('12');await page.getByLabel('Reference source note',{exact:true}).fill('Self-authored synthetic reference; no property measurement.');await page.getByLabel('I independently checked the supplied reference length.',{exact:true}).check();await page.getByRole('button',{name:'Use reference as estimated scale',exact:true}).click();await expect(page.getByText('Estimated scale saved. Geometry review and heights remain pending.',{exact:true})).toBeVisible();
+      68 |  const read=async()=>{const response=await page.request.get(origin+route);expect(response.status()).toBe(200);return (await response.json()).data;},before=await read(),opening=before.geometry.openings[0];
+      69 |  const refused=await page.request.get(origin+route+'/preview.glb');expect(refused.status()).toBe(422);expect((await refused.json()).error.code).toBe('STRUCTURAL_HEIGHT_REQUIRED');
+        at /workspace/tests/e2e/digitization-plan.spec.ts:66:73
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E10-e-0432b--private-GLB-survive-reload-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-plan-HE-E10-e-0432b--private-GLB-survive-reload-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E10-e-0432b--private-GLB-survive-reload-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-E10-e-0432b--private-GLB-survive-reload-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile] › tests/e2e/digitization-plan.spec.ts:61:1 › HE-E10 empty dimensions require explicit user entries; saved provenance and a real private GLB survive reload 
+  13 passed (3.3m)
+

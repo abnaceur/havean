@@ -1,0 +1,32 @@
+ Image haven-processing-cpu:1.0.0-cpu-v3 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 625B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.cpu
+#2 transferring dockerfile: 3.72kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 ERROR: failed to do request: Head "https://registry-1.docker.io/v2/library/python/manifests/sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea": net/http: TLS handshake timeout
+------
+ > [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea:
+------
+Dockerfile.cpu:12
+
+--------------------
+
+  10 |     RUN python -c "import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))"
+
+  11 |     
+
+  12 | >>> FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS cpu
+
+  13 |     ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_DISABLE_PIP_VERSION_CHECK=1 PIP_DEFAULT_TIMEOUT=60 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+
+  14 |     WORKDIR /opt/processing
+
+--------------------
+
+failed to solve: python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea: failed to resolve source metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea: failed to do request: Head "https://registry-1.docker.io/v2/library/python/manifests/sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea": net/http: TLS handshake timeout
+

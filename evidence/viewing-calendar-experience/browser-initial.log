@@ -1,0 +1,93 @@
+
+Running 6 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/viewing-availability.spec.ts:10:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state (43.4s)
+  ✓  2 [desktop] › tests/e2e/viewing-bookings.spec.ts:10:1 › L04 consumer retries a lost reservation receipt; concurrent requests conflict and actual assigned agent confirms once (45.3s)
+  ✓  3 [desktop] › tests/e2e/viewing-calendar.spec.ts:10:1 › Q04 / L05 confirmed calendar reschedule preserves the original on conflict and retries a lost receipt; assigned actions cancel, complete and record no-show (50.9s)
+  ✘  4 [mobile] › tests/e2e/viewing-availability.spec.ts:10:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state (31.1s)
+  ✓  5 [mobile] › tests/e2e/viewing-bookings.spec.ts:10:1 › L04 consumer retries a lost reservation receipt; concurrent requests conflict and actual assigned agent confirms once (21.7s)
+  ✓  6 [mobile] › tests/e2e/viewing-calendar.spec.ts:10:1 › Q04 / L05 confirmed calendar reschedule preserves the original on conflict and retries a lost receipt; assigned actions cancel, complete and record no-show (30.8s)
+
+
+  1) [desktop] › tests/e2e/viewing-availability.spec.ts:10:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog').getByLabel('Available viewing time', { exact: true })
+    Expected substring: "11:15"
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('dialog').getByLabel('Available viewing time', { exact: true }) with timeout 15000ms
+      - waiting for getByRole('dialog').getByLabel('Available viewing time', { exact: true })
+
+
+      16 |  const slots=(await (await page.request.get('http://localhost:8088/api/v1/viewing-slots?listingId='+id+'&date='+date+'&days=1')).json()).data;expect(slots.slots.some((s:any)=>s.startAt===date+'T01:00:00.000Z')).toBe(false);expect(slots.slots.some((s:any)=>s.startAt===date+'T03:15:00.000Z')).toBe(true);expect(JSON.stringify(slots)).not.toContain(reason);
+      17 |  expect((await new AxeBuilder({page}).include('main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/viewing-calendar-experience/availability-${info.project.name}.png`,scale:'css'});
+    > 18 |  await login(page,'buyer','http://localhost:8088','/bj/buy/'+slug);await page.getByRole('button',{name:'Request a viewing',exact:true}).click();const dialog=page.getByRole('dialog');await expect(dialog).toContainText('Asia/Shanghai');await pickCalendarDate(dialog,'Viewing date',date);const day=dialog.getByRole('group',{name:'Viewing date',exact:true}).locator('[data-date="'+date+'"]');await day.focus();await day.press('ArrowRight');await expect(day).not.toBeFocused();await page.keyboard.press('ArrowLeft');await expect(day).toBeFocused();await day.press('Enter');await expect(dialog.getByLabel('Available viewing time',{exact:true})).toContainText('11:15');await viewingSlot(dialog,date+'T03:15:00.000Z').check();await expect(viewingSlot(dialog,date+'T03:15:00.000Z')).toHaveAttribute('aria-label',/GMT\+8/);expect((await new AxeBuilder({page}).include('dialog').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);if(info.project.name==='mobile')await page.setViewportSize({width:320,height:740});expect(await dialog.evaluate(el=>el.scrollWidth<=el.clientWidth)).toBe(true);await page.screenshot({path:`evidence/viewing-calendar-experience/booking-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ^
+      19 |  await login(page,'agent','http://localhost:8089','/ops/availability?property='+id);await page.getByRole('button',{name:'Cancel unavailable interval',exact:true}).click();await expect(page.locator('.review-card')).toContainText('cancelled');const restored=(await (await page.request.get('http://localhost:8088/api/v1/viewing-slots?listingId='+id+'&date='+date+'&days=1')).json()).data;expect(restored.slots.some((s:any)=>s.startAt===date+'T01:00:00.000Z')).toBe(true);await page.getByLabel('Availability status',{exact:true}).selectOption('paused');await page.getByRole('button',{name:'Save working hours',exact:true}).click();await expect(page.getByRole('heading',{name:'Unavailable interval',exact:true})).toHaveCount(0);
+      20 |  await login(page,'buyer','http://localhost:8088','/bj/buy/'+slug);await page.getByRole('button',{name:'Request a viewing',exact:true}).click();await expect(dialog.getByLabel('Available viewing time',{exact:true})).toHaveCount(0);await expect(dialog.getByRole('button',{name:'Request viewing',exact:true})).toBeDisabled();await expect(dialog.getByRole('status')).toContainText('The assigned agent has not published viewing availability.');
+      21 |  }finally{await staff(async c=>{await c.query("UPDATE listings SET status='archived',version=version+1 WHERE id=$1",[id]);await c.query("UPDATE agents SET verified_until=NULL,version=version+1 WHERE id=$1",[agent]);});}
+        at /workspace/tests/e2e/viewing-availability.spec.ts:18:640
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/viewing-calendar-experience/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/viewing-calendar-experience/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-desktop/error-context.md
+
+    Error Context: test-results/viewing-calendar-experience/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/viewing-calendar-experience/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/viewing-calendar-experience/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/viewing-availability.spec.ts:10:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('dialog').getByLabel('Available viewing time', { exact: true })
+    Expected substring: "11:15"
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('dialog').getByLabel('Available viewing time', { exact: true }) with timeout 15000ms
+      - waiting for getByRole('dialog').getByLabel('Available viewing time', { exact: true })
+
+
+      16 |  const slots=(await (await page.request.get('http://localhost:8088/api/v1/viewing-slots?listingId='+id+'&date='+date+'&days=1')).json()).data;expect(slots.slots.some((s:any)=>s.startAt===date+'T01:00:00.000Z')).toBe(false);expect(slots.slots.some((s:any)=>s.startAt===date+'T03:15:00.000Z')).toBe(true);expect(JSON.stringify(slots)).not.toContain(reason);
+      17 |  expect((await new AxeBuilder({page}).include('main').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`evidence/viewing-calendar-experience/availability-${info.project.name}.png`,scale:'css'});
+    > 18 |  await login(page,'buyer','http://localhost:8088','/bj/buy/'+slug);await page.getByRole('button',{name:'Request a viewing',exact:true}).click();const dialog=page.getByRole('dialog');await expect(dialog).toContainText('Asia/Shanghai');await pickCalendarDate(dialog,'Viewing date',date);const day=dialog.getByRole('group',{name:'Viewing date',exact:true}).locator('[data-date="'+date+'"]');await day.focus();await day.press('ArrowRight');await expect(day).not.toBeFocused();await page.keyboard.press('ArrowLeft');await expect(day).toBeFocused();await day.press('Enter');await expect(dialog.getByLabel('Available viewing time',{exact:true})).toContainText('11:15');await viewingSlot(dialog,date+'T03:15:00.000Z').check();await expect(viewingSlot(dialog,date+'T03:15:00.000Z')).toHaveAttribute('aria-label',/GMT\+8/);expect((await new AxeBuilder({page}).include('dialog').analyze()).violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);if(info.project.name==='mobile')await page.setViewportSize({width:320,height:740});expect(await dialog.evaluate(el=>el.scrollWidth<=el.clientWidth)).toBe(true);await page.screenshot({path:`evidence/viewing-calendar-experience/booking-${info.project.name}.png`,scale:'css'});
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ^
+      19 |  await login(page,'agent','http://localhost:8089','/ops/availability?property='+id);await page.getByRole('button',{name:'Cancel unavailable interval',exact:true}).click();await expect(page.locator('.review-card')).toContainText('cancelled');const restored=(await (await page.request.get('http://localhost:8088/api/v1/viewing-slots?listingId='+id+'&date='+date+'&days=1')).json()).data;expect(restored.slots.some((s:any)=>s.startAt===date+'T01:00:00.000Z')).toBe(true);await page.getByLabel('Availability status',{exact:true}).selectOption('paused');await page.getByRole('button',{name:'Save working hours',exact:true}).click();await expect(page.getByRole('heading',{name:'Unavailable interval',exact:true})).toHaveCount(0);
+      20 |  await login(page,'buyer','http://localhost:8088','/bj/buy/'+slug);await page.getByRole('button',{name:'Request a viewing',exact:true}).click();await expect(dialog.getByLabel('Available viewing time',{exact:true})).toHaveCount(0);await expect(dialog.getByRole('button',{name:'Request viewing',exact:true})).toBeDisabled();await expect(dialog.getByRole('status')).toContainText('The assigned agent has not published viewing availability.');
+      21 |  }finally{await staff(async c=>{await c.query("UPDATE listings SET status='archived',version=version+1 WHERE id=$1",[id]);await c.query("UPDATE agents SET verified_until=NULL,version=version+1 WHERE id=$1",[agent]);});}
+        at /workspace/tests/e2e/viewing-availability.spec.ts:18:640
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/viewing-calendar-experience/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/viewing-calendar-experience/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-mobile/error-context.md
+
+    Error Context: test-results/viewing-calendar-experience/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/viewing-calendar-experience/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/viewing-calendar-experience/viewing-availability-L03-a-40b46-imes-and-paused-empty-state-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/viewing-availability.spec.ts:10:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state 
+    [mobile] › tests/e2e/viewing-availability.spec.ts:10:1 › L03 agent authors working hours and private blocks; buyer sees valid property-zone times and paused empty state 
+  4 passed (3.8m)

@@ -1,0 +1,12 @@
+# Deliberately no default base or network dependency installation. Supply an
+# audited digest-pinned runtime with the exact wheels and precompiled CUDA module.
+ARG GSPLAT_RUNTIME_IMAGE
+FROM ${GSPLAT_RUNTIME_IMAGE}
+ARG GSPLAT_RUNTIME_IMAGE
+RUN python -c "import os,re,importlib.metadata as m,importlib.util; assert re.fullmatch(r'.+@sha256:[a-f0-9]{64}',os.environ['GSPLAT_RUNTIME_IMAGE']); assert m.version('torch')=='2.7.1+cu126'; assert m.version('gsplat')=='1.5.3'; assert m.version('Pillow')=='11.3.0'; assert importlib.util.find_spec('gsplat.csrc') is not None"
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PROCESSING_RUNNER_KIND=gpu PROCESSING_DEPLOYMENT=development PROCESSING_ENABLE_GSPLAT_INVESTIGATION=false
+WORKDIR /opt/processing
+COPY services/property-processing/property_processing ./property_processing
+COPY services/property-processing/gsplat-investigation-profile.json ./gsplat-investigation-profile.json
+USER 10001:10001
+CMD ["python", "-m", "property_processing.server"]

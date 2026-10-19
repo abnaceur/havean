@@ -1,0 +1,52 @@
+time="2026-10-14T10:22:52+04:00" level=warning msg="Found orphan containers ([haven-tests-run-608ef36c3d0d haven-processing-gpu-1 haven-processing-cpu-1 haven-processing-gpu-volume-init-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-8cef1d5b27ad Creating 
+ Container haven-tests-run-8cef1d5b27ad Created 
+
+Running 1 test using 1 worker
+
+Property capture inputs are uploaded and bound.
+  ✘  1 [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform (15.7m)
+
+
+  1) [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Private reconstructed property', exact: true }).locator('canvas[aria-label="Private reconstructed scene"]')
+    Expected: visible
+    Timeout: 60000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'Private reconstructed property', exact: true }).locator('canvas[aria-label="Private reconstructed scene"]') with timeout 60000ms
+      - waiting for getByRole('region', { name: 'Private reconstructed property', exact: true }).locator('canvas[aria-label="Private reconstructed scene"]')
+
+
+      104 |  const tiers=(await (await page.request.get(base+'/scene-tiers')).json()).data;expect(tiers.length).toBeGreaterThanOrEqual(2);expect(tiers.every((t:any)=>t.initialView?.basis==='recovered_capture_unverified')).toBe(true);
+      105 |  const scene=page.getByRole('region',{name:'Private reconstructed property',exact:true});
+    > 106 |  await expect(scene.locator('canvas[aria-label="Private reconstructed scene"]')).toBeVisible({timeout:60000});
+          |                                                                                  ^
+      107 |  await expect(scene.getByRole('button',{name:'Measure scene performance',exact:true})).toBeEnabled({timeout:60000});
+      108 |  await expect(scene.getByRole('region',{name:'Captured scene evidence'})).toContainText(process.env.RETRAIN_2BHK_DEMO==='true'?'6000 training steps':/6000 training steps/);
+      109 |  expect((await (await page.request.get(base+'/geometry')).json()).data).toBeNull();
+        at /workspace/tests/e2e/digitization-2bhk-reconstruction.spec.ts:106:82
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Slow test file: [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts (15.7m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 failed
+    [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+

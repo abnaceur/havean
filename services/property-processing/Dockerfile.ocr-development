@@ -1,0 +1,8 @@
+# Local opt-in composition of the exact versioned CPU and OCR investigation
+# builds. Their runtime checks verify native/model hashes before execution.
+FROM haven-processing-cpu:1.0.0-cpu-v4 AS media
+FROM haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2
+COPY --from=media /opt/media /opt/media
+COPY services/property-processing/property_processing /opt/processing/property_processing
+ENV PYTHONUNBUFFERED=1
+CMD ["python", "-m", "property_processing.server"]

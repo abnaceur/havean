@@ -1,0 +1,18 @@
+
+> haven-real-estate@0.1.0 typecheck /workspace
+> pnpm -r typecheck
+
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: src/generated/operations.ts(193,252): error TS2551: Property 'DigitizationController_sceneContent' does not exist on type '{ readonly DigitizationFactController_read: ZodObject<{ workspaceVersion: ZodNumber; inputRevision: ZodNumber; candidates: ZodArray<ZodObject<{ schemaVersion: ZodLiteral<1>; id: ZodUUID; ... 12 more ...; inputRevision: ZodNumber; }, $strict>>; history: ZodArray<...>; pages: ZodArray<...>; conflictingFields: ZodArray...'. Did you mean 'DigitizationController_sceneTiers'?
+packages/contracts typecheck: Failed
+/workspace/packages/contracts:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @haven/contracts@0.1.0 typecheck: `tsc --noEmit`
+Exit status 2
+ ELIFECYCLE  Command failed with exit code 2.

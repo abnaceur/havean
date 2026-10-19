@@ -1,0 +1,167 @@
+time="2026-10-10T06:45:07+04:00" level=warning msg="Found orphan containers ([haven-tests-run-7a68c78b01c4 haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-ca96c513d3c7 Creating 
+ Container haven-tests-run-ca96c513d3c7 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/haven-responsive.spec.ts:55:1 › Haven category details and authorized navigation destinations retain responsive content (1.2m)
+{"evidenceLabel":"P","referenceParity":"unverified","widths":[320,768,1440],"visited":["/bj/rent/p09-native-eecb1b3b-706e-48e9-94b8-05594214eee2","/bj/new-homes/garden-collection-2","/bj/commercial/workspace-91","/bj/communities/east-lake-gardens","/bj/agents/daniel-wang","/bj/renovation/studio-form-3","/account","/account/profile","/account/favorites","/account/history","/account/searches","/account/notifications","/account/privacy","/account/quotes","/account/viewings","/account/messages","/ops/analytics","/ops/provider-reviews","/ops/availability","/ops/assignments","/ops/invitations","/ops/credentials","/ops/credential-reviews","/ops/owner-requests","/ops/rankings","/ops/geography","/ops","/ops/agency","/ops/listings","/ops/leads","/ops/viewings","/ops/messages","/ops/developments","/ops/management","/ops/quotes","/ops/reviews","/ops/support","/ops/admin"]}
+  ✘  2 [mobile] › tests/e2e/haven-responsive.spec.ts:55:1 › Haven category details and authorized navigation destinations retain responsive content (2.7m)
+
+
+  1) [desktop] › tests/e2e/haven-responsive.spec.ts:55:1 › Haven category details and authorized navigation destinations retain responsive content 
+
+    Error: http://localhost:8088/account/messages 320 clipped controls/headings
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 10
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Previous conversations",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Next conversations",
+    +   },
+    + ]
+
+       9 |  const geometry=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,outliers:[...document.querySelectorAll('header a,header button,main h1,main h2,main input,main select,main .button')].filter(element=>{const rect=element.getBoundingClientRect();return rect.width&&rect.height&&(rect.right>innerWidth+1||rect.left< -1);}).map(element=>({text:element.textContent?.slice(0,80),className:element.className}))}));
+      10 |  expect.soft(geometry.scrollWidth,description+' document overflow').toBeLessThanOrEqual(geometry.width);
+    > 11 |  expect.soft(geometry.outliers,description+' clipped controls/headings').toEqual([]);
+         |                                                                          ^
+      12 | }
+      13 | test('Haven public pages adapt to phone, tablet, desktop and landscape viewports',async({page},info)=>{
+      14 |  test.setTimeout(360000);
+        at checkLayout (/workspace/tests/e2e/haven-responsive.spec.ts:11:74)
+        at /workspace/tests/e2e/haven-responsive.spec.ts:66:306
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('main h1')
+    Expected: visible
+    Error: strict mode violation: locator('main h1') resolved to 2 elements:
+        1) <h1>Analytics & audit</h1> aka getByRole('heading', { name: 'Analytics & audit' })
+        2) <h1>Consented event analytics</h1> aka getByRole('heading', { name: 'Consented event analytics' })
+
+    Call log:
+      - Expect "toBeVisible" locator('main h1') with timeout 15000ms
+      - waiting for locator('main h1')
+
+
+      64 |   await login(page,persona,origin,entry);await expect(page.locator(nav).first()).toBeVisible();const routes=await page.locator(nav).evaluateAll(elements=>elements.map(element=>(element as HTMLAnchorElement).href));
+      65 |   expect(routes.length).toBeGreaterThan(3);
+    > 66 |   for(const route of routes){expect((await page.goto(route))?.status()).toBe(200);await expect(page.locator('main h1')).toBeVisible();await expect(page.locator('main .loading')).toHaveCount(0);visited.push(new URL(route).pathname);for(const width of widths){await page.setViewportSize({width,height:900});await checkLayout(page,route+' '+width);}}
+         |                                                                                                                         ^
+      67 |  }
+      68 |  console.log(JSON.stringify({evidenceLabel:'P',referenceParity:'unverified',widths,visited}));
+      69 | });
+        at /workspace/tests/e2e/haven-responsive.spec.ts:66:121
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    evidence/haven-design/navigation-results/haven-responsive-Haven-cat-4ada2-s-retain-responsive-content-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: evidence/haven-design/navigation-results/haven-responsive-Haven-cat-4ada2-s-retain-responsive-content-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    evidence/haven-design/navigation-results/haven-responsive-Haven-cat-4ada2-s-retain-responsive-content-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace evidence/haven-design/navigation-results/haven-responsive-Haven-cat-4ada2-s-retain-responsive-content-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/haven-responsive.spec.ts:55:1 › Haven category details and authorized navigation destinations retain responsive content 
+
+    Error: http://localhost:8089/ops/geography 320 clipped controls/headings
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 50
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Edit",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Archive",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Edit",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Archive",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Edit",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Archive",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Edit",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Archive",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Edit",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Archive",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Edit",
+    +   },
+    +   Object {
+    +     "className": "button secondary small",
+    +     "text": "Archive",
+    +   },
+    + ]
+
+       9 |  const geometry=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,outliers:[...document.querySelectorAll('header a,header button,main h1,main h2,main input,main select,main .button')].filter(element=>{const rect=element.getBoundingClientRect();return rect.width&&rect.height&&(rect.right>innerWidth+1||rect.left< -1);}).map(element=>({text:element.textContent?.slice(0,80),className:element.className}))}));
+      10 |  expect.soft(geometry.scrollWidth,description+' document overflow').toBeLessThanOrEqual(geometry.width);
+    > 11 |  expect.soft(geometry.outliers,description+' clipped controls/headings').toEqual([]);
+         |                                                                          ^
+      12 | }
+      13 | test('Haven public pages adapt to phone, tablet, desktop and landscape viewports',async({page},info)=>{
+      14 |  test.setTimeout(360000);
+        at checkLayout (/workspace/tests/e2e/haven-responsive.spec.ts:11:74)
+        at /workspace/tests/e2e/haven-responsive.spec.ts:66:306
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    evidence/haven-design/navigation-results/haven-responsive-Haven-cat-4ada2-s-retain-responsive-content-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: evidence/haven-design/navigation-results/haven-responsive-Haven-cat-4ada2-s-retain-responsive-content-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    evidence/haven-design/navigation-results/haven-responsive-Haven-cat-4ada2-s-retain-responsive-content-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace evidence/haven-design/navigation-results/haven-responsive-Haven-cat-4ada2-s-retain-responsive-content-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/haven-responsive.spec.ts:55:1 › Haven category details and authorized navigation destinations retain responsive content 
+    [mobile] › tests/e2e/haven-responsive.spec.ts:55:1 › Haven category details and authorized navigation destinations retain responsive content 
+

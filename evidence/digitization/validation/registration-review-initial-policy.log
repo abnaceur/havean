@@ -1,0 +1,42 @@
+ Container haven-processing-tests-cpu-run-e871cce0317a Creating 
+ Container haven-processing-tests-cpu-run-e871cce0317a Created 
+Exported 27 authored Gaussian splats; not GPU training evidence.
+{"fixture":"authored_gaussians_not_gpu_training","realPrivateStorage":true,"splatCount":27}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-registration-review.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 1886[2mms[22m[39m
+[31m   [31m×[31m independent exact registration approval on desktop fences author/admin, foreign scope, replay, stale dependencies and public access[39m[33m 1059[2mms[22m[39m
+[31m   [31m×[31m independent exact registration approval on mobile fences author/admin, foreign scope, replay, stale dependencies and public access[39m[33m 824[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-lifecycle-events.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 583[2mms[22m[39m
+   [33m[2m✓[22m[39m current review/capture/privacy/publication notifications acknowledge once without running or publishing; unknown versions remain pending[33m 581[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-registration-review.test.ts[2m > [22mindependent exact registration approval on desktop fences author/admin, foreign scope, replay, stale dependencies and public access
+[41m[1m FAIL [22m[49m tests/integration/digitization-registration-review.test.ts[2m > [22mindependent exact registration approval on mobile fences author/admin, foreign scope, replay, stale dependencies and public access
+[31m[1mZodError[22m: [
+  {
+    "expected": "string",
+    "code": "invalid_type",
+    "path": [
+      "metresPerSceneUnit"
+    ],
+    "message": "Invalid input: expected string, received number"
+  }
+][39m
+[36m [2m❯[22m sceneRegistrationRecord apps/api/src/inventory/digitization/scene-registration.ts:[2m37:127[22m[39m
+
+[90m [2m❯[22m registrationReviewRequest apps/api/src/inventory/digitization/registration-review.ts:[2m39:364[22m[39m
+[90m [2m❯[22m apps/api/src/inventory/digitization/controller.ts:[2m22:336[22m[39m
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m tests/integration/digitization-registration-review.test.ts:[2m38:10[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 17:32:03
+[2m   Duration [22m 5.08s[2m (tests 51%, import 36%, transform 13%)[22m
+

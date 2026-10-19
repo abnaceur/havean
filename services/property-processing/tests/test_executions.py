@@ -100,6 +100,7 @@ def test_real_native_fact_profile_preserves_source_boxes_and_unknown_fields(tmp_
     assert receipt['state'] == 'succeeded'
     result = receipt['result']
     assert result['reviewRequired'] and not result['ocrAvailable'] and result['countryProfile'] is None
+    assert result['sourceSha256'] == body['artifacts'][0]['checksum'] and result['locale'] == locale
     assert len(result['candidates']) == 1
     candidate = result['candidates'][0]
     assert candidate['normalizedValue'] == expected
@@ -120,6 +121,7 @@ def test_real_native_profile_requests_ocr_without_inventing_a_draft(tmp_path):
     assert store.perform_one()
     result = store.get(body['executionId'], digest(body))['result']
     assert result['candidates'] == [] and result['requiresOcrPages'] == [1]
+    assert result['sourceSha256'] == body['artifacts'][0]['checksum'] and result['locale'] == 'ar'
     assert result['reviewRequired'] and not result['ocrAvailable']
 
 
@@ -276,7 +278,7 @@ def test_configured_real_runner_process_accepts_quickly_and_completes_async(tmp_
                 with urlopen(origin+'/health/ready', timeout=0.2) as ready_response:
                     capabilities = json.load(ready_response)["data"]["capabilities"]
                     assert capabilities["executionProtocolAvailable"]
-                    assert capabilities["executionProfileIds"] == ["generic-native-facts-ar-v1", "generic-native-facts-en-v1", "generic-native-facts-fr-v1", "pdfium-150dpi-v1", "upright-image-v1"]
+                    assert capabilities["executionProfileIds"] == ["generic-native-facts-ar-v1", "generic-native-facts-ar-v3", "generic-native-facts-en-v1", "generic-native-facts-en-v3", "generic-native-facts-fr-v1", "generic-native-facts-fr-v3", "pdfium-150dpi-v1", "private-panorama-candidate-v1", "upright-image-v1"]
                     assert not capabilities["ocrAvailable"]
                     break
             except OSError:
@@ -409,3 +411,39 @@ def test_cleanup_refuses_execution_symlinks_and_expires_unreceived_sources(tmp_p
     monkeypatch.setattr(time, 'time', lambda: later)
     assert store.cleanup_expired() == 0
     assert sentinel.read_text() == 'Keep this non-execution directory'
+
+
+def test_native_v3_extracts_any_layout_available_fields_without_ocr(tmp_path):
+    content = pdf('City: Dubai; Plot number: 00123; 2 bedrooms', width=500)
+    body = request(content)
+    body.update(stageType='fact_extract', profileId='generic-native-facts-en-v3')
+    provision(tmp_path, body, content)
+    store = ExecutionStore(tmp_path)
+    store.submit(body, digest(body))
+    assert store.perform_one()
+    receipt = store.get(body['executionId'], digest(body))
+    assert receipt['state'] == 'succeeded'
+    result = receipt['result']
+    assert result['extractionMethod'] == 'generic-native-glyphs-v3'
+    facts = {item['field']: item for item in result['candidates']}
+    assert facts['city']['normalizedValue'] == 'Dubai'
+    assert facts['plotId']['normalizedValue'] == '00123'
+    assert facts['bedrooms']['normalizedValue'] == 2
+    assert 'ownerName' not in facts and 'bathrooms' not in facts
+    for fact in facts.values():
+        assert fact['extractorVersion'] == 'generic-anchored-v3'
+        assert fact['evidence'][0]['assetId'] == body['artifacts'][0]['id']
+        assert fact['evidence'][0]['quotedText'] == fact['rawText']
+
+
+def test_cancel_before_submission_accepts_expired_exact_descriptor(tmp_path):
+    body = request(pdf('Expired queued capture'))
+    body['deadline'] = '2020-01-01T00:00:00.000Z'
+    store = ExecutionStore(tmp_path)
+    with pytest.raises(ExecutionError, match='EXECUTION_NOT_FOUND'):
+        store.cancel(body['executionId'], 'b'*64, body)
+    result = store.cancel(body['executionId'], digest(body), body)
+    assert result['state'] == 'cancelled' and result['processStopped'] is True
+    assert not store.submit(body, digest(body))
+    assert not store.perform_one()
+    assert ExecutionStore(tmp_path).get(body['executionId'], digest(body))['state'] == 'cancelled'

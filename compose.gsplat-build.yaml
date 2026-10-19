@@ -1,0 +1,11 @@
+name: haven-gsplat-build
+services:
+  gsplat-build:
+    image: haven-gsplat:1.5.3-torch2.7.1-cu126-sm75-investigation-v1
+    build:
+      context: ./services/property-processing
+      dockerfile: Dockerfile.gsplat-local
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]

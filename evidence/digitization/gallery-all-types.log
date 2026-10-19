@@ -1,0 +1,13 @@
+Scope: 9 of 10 workspace projects
+packages/config typecheck$ tsc --noEmit
+packages/contracts typecheck$ tsc --noEmit
+packages/database typecheck$ tsc --noEmit
+packages/test-support typecheck$ tsc --noEmit
+packages/test-support typecheck: Done
+packages/config typecheck: Done
+packages/database typecheck: Done
+packages/contracts typecheck: src/generated/operations.ts(392,234): error TS2551: Property 'RichMediaController_publicGallery' does not exist on type '{ readonly DigitizationArtifactController_dimensions: ZodNullable<ZodObject<{ workspaceVersion: ZodNumber; inputRevision: ZodNumber; artifactId: ZodUUID; clockwiseDegrees: ZodNumber; geometry: ZodObject<...>; view: ZodObject<...>; }, $strict>>; ... 372 more ...; readonly AdministrationController_dashboard: ZodUnion<...'. Did you mean 'RichMediaController_publicMedia'?
+packages/contracts typecheck: Failed
+/workspace/packages/contracts:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @haven/contracts@0.1.0 typecheck: `tsc --noEmit`
+Exit status 2

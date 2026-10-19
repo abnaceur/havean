@@ -120,3 +120,41 @@
 - [x] **Q09 Verify backup and restore** — done; dependencies: Q08, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
 - [x] **Q10 Verify migrations and rollback** — done; dependencies: Q09, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
 - [x] **Q11 Complete documentation and launch handoff** — done; dependencies: Q10, G05, D10, A06, R04, N05, C03, O05, B05, L06, M04, V03, T03, P15, S06
+
+## Requested Haven UI integration
+
+- [ ] **Haven design and responsive integration** — in_progress; local implementation: application and authentication styling implemented and validated; 12 application and 18 authentication desktop/mobile browser checks passed; reference parity: unverified. Evidence: [integration report](evidence/haven-design/INTEGRATION.md).
+
+Linked Haven reference returns HTTP 401. Authorized reference access or supplied captures are required for exact visual review; physical-device coverage remains unverified.
+
+## Requested property upload update
+
+- [x] **Manual property uploads and temporary engine pause** — done. Evidence: [validation report](evidence/property-media-update/README.md).
+
+## Requested full-screen media experience
+
+- [x] **Full-screen property media experience** — done. Evidence: [validation report](evidence/media-experience/README.md).
+
+## Requested guided property creation
+
+- [x] **Guided agent property creation and durable partial drafts** — done. Evidence: [validation report](evidence/property-wizard/README.md).
+
+## Requested application spacing
+
+- [x] **Consistent spacing across public, account and professional pages** — done. Evidence: [validation report](evidence/spacing-experience/README.md).
+
+## Requested per-step property validation
+
+- [x] **Validation at each property creation step** — done. Evidence: [validation report](evidence/property-step-validation/README.md).
+
+## Requested viewing calendar experience
+
+- [x] **Calendar controls throughout viewing availability and bookings** — done. Evidence: [validation report](evidence/viewing-calendar-experience/README.md).
+
+## Requested chat experience
+
+- [x] **Conversation inbox and chat experience** — done. Evidence: [validation report](evidence/chat-experience/README.md).
+
+## Requested digitalization pause
+
+- [x] **Pause all digitalization engine access and processing** — done. Evidence: [validation report](evidence/digitization-pause/README.md).

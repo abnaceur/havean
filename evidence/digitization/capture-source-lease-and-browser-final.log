@@ -1,0 +1,92 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-capture-source.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 309796[2mms[22m[39m
+   [33m[2m✓[22m[39m real multipart capture is scanned once, privately bound and decoded into source-linked review-pending frames[33m 6504[2mms[22m[39m
+   [33m[2m✓[22m[39m capture checksum mismatch leaves a durable private reservation and replay cannot falsely admit its copied source[33m 586[2mms[22m[39m
+   [33m[2m✓[22m[39m completed multipart originals above the registered profile remain quarantined without a copied media reservation[33m 394[2mms[22m[39m
+   [33m[2m✓[22m[39m tenant deletion counts and physically removes an admitted capture original before any input binding while preserving business identities[33m 986[2mms[22m[39m
+   [33m[2m✓[22m[39m an interrupted unbound copy is retained through its real five-minute lease, then verified removed; a tombstoned actor cannot admit it late[33m 301315[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 22:25:59
+[2m   Duration [22m 312.15s[2m (tests 99%)[22m
+
+ Container haven-integration-tests-run-3243042ac2b7 Creating 
+ Container haven-integration-tests-run-3243042ac2b7 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-capture-source.spec.ts:6:1 › real agency capture upload, scanning, binding and isolated CPU processing retain private pending frames (1.5m)
+  ✘  2 [mobile] › tests/e2e/digitization-capture-source.spec.ts:6:1 › real agency capture upload, scanning, binding and isolated CPU processing retain private pending frames (1.5m)
+
+
+  1) [desktop] › tests/e2e/digitization-capture-source.spec.ts:6:1 › real agency capture upload, scanning, binding and isolated CPU processing retain private pending frames 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Validate uploaded room clips' }).getByLabel('Completed capture clip', { exact: true })
+
+
+      10 |  const capture=page.getByRole('region',{name:'Room capture checklist'});await capture.getByRole('button',{name:'Start room capture',exact:true}).click();
+      11 |  const upload=page.getByRole('region',{name:'Record or upload room clip'});await upload.getByLabel('Choose room video',{exact:true}).setInputFiles({name:'synthetic-private-room.mp4',mimeType:'video/mp4',buffer:Buffer.from(frames.file.base64,'base64')});await upload.getByLabel('Clip rights and source',{exact:true}).fill('Self-authored CC0 fixture; no phone benchmark, real property or GPU approval.');await upload.getByRole('checkbox',{name:'I am authorized to capture and upload this property.'}).check();await upload.getByRole('button',{name:'Upload private clip',exact:true}).click();await expect(upload.getByRole('status').filter({hasText:'Clip uploaded privately and quarantined'})).toBeVisible();
+    > 12 |  const sources=page.getByRole('region',{name:'Validate uploaded room clips'}),uploads=(await (await page.request.get(origin+'/api/v1/ops/digitizations/'+engineId+'/capture-uploads')).json()).data;expect(uploads).toHaveLength(1);await sources.getByLabel('Completed capture clip',{exact:true}).selectOption(uploads[0].id);
+         |                                                                                                                                                                                                                                                                                                     ^
+      13 |  await sources.getByRole('button',{name:'Scan private clip',exact:true}).click();await expect(sources.getByRole('status')).toContainText('The exact private clip passed scanning.');const admitted=(await (await page.request.get(origin+'/api/v1/ops/digitizations/'+engineId+'/capture-uploads/'+uploads[0].id+'/source')).json()).data;expect(admitted).toMatchObject({state:'admitted',publiclyServed:false});expect(JSON.stringify(admitted)).not.toMatch(/quarantine\/|object_key|checksum|lease/);
+      14 |  await sources.getByRole('button',{name:'Add scanned clip to property sources',exact:true}).click();await expect(sources.getByRole('status')).toContainText('Private clip added.');
+      15 |  const processing=page.getByRole('region',{name:'Private source processing'});await processing.getByRole('button',{name:'Reload processing status',exact:true}).click();await processing.getByRole('button',{name:'Validate clip',exact:true}).click();await expect(processing.getByText(/Run 1 · revision 1 · awaiting_review/)).toBeVisible({timeout:process.env.HAVEN_RECOVERY_REHEARSAL==='true'?240000:45000});await processing.getByRole('button',{name:'Extract private frames',exact:true}).click();await expect(processing.getByText(/Run [0-9]+ · revision 1 · awaiting_review/)).toHaveCount(2,{timeout:process.env.HAVEN_RECOVERY_REHEARSAL==='true'?240000:45000});
+        at /workspace/tests/e2e/digitization-capture-source.spec.ts:12:293
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-capture-sourc-b3c09-tain-private-pending-frames-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-capture-sourc-b3c09-tain-private-pending-frames-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-capture-sourc-b3c09-tain-private-pending-frames-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-capture-sourc-b3c09-tain-private-pending-frames-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-capture-source.spec.ts:6:1 › real agency capture upload, scanning, binding and isolated CPU processing retain private pending frames 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Validate uploaded room clips' }).getByLabel('Completed capture clip', { exact: true })
+
+
+      10 |  const capture=page.getByRole('region',{name:'Room capture checklist'});await capture.getByRole('button',{name:'Start room capture',exact:true}).click();
+      11 |  const upload=page.getByRole('region',{name:'Record or upload room clip'});await upload.getByLabel('Choose room video',{exact:true}).setInputFiles({name:'synthetic-private-room.mp4',mimeType:'video/mp4',buffer:Buffer.from(frames.file.base64,'base64')});await upload.getByLabel('Clip rights and source',{exact:true}).fill('Self-authored CC0 fixture; no phone benchmark, real property or GPU approval.');await upload.getByRole('checkbox',{name:'I am authorized to capture and upload this property.'}).check();await upload.getByRole('button',{name:'Upload private clip',exact:true}).click();await expect(upload.getByRole('status').filter({hasText:'Clip uploaded privately and quarantined'})).toBeVisible();
+    > 12 |  const sources=page.getByRole('region',{name:'Validate uploaded room clips'}),uploads=(await (await page.request.get(origin+'/api/v1/ops/digitizations/'+engineId+'/capture-uploads')).json()).data;expect(uploads).toHaveLength(1);await sources.getByRole('combobox',{name:'Completed capture clip',exact:true}).selectOption(uploads[0].id);
+         |                                                                                                                                                                                                                                                                                                     ^
+      13 |  await sources.getByRole('button',{name:'Scan private clip',exact:true}).click();await expect(sources.getByRole('status')).toContainText('The exact private clip passed scanning.');const admitted=(await (await page.request.get(origin+'/api/v1/ops/digitizations/'+engineId+'/capture-uploads/'+uploads[0].id+'/source')).json()).data;expect(admitted).toMatchObject({state:'admitted',publiclyServed:false});expect(JSON.stringify(admitted)).not.toMatch(/quarantine\/|object_key|checksum|lease/);
+      14 |  await sources.getByRole('button',{name:'Add scanned clip to property sources',exact:true}).click();await expect(sources.getByRole('status')).toContainText('Private clip added.');
+      15 |  const processing=page.getByRole('region',{name:'Private source processing'});await processing.getByRole('button',{name:'Reload processing status',exact:true}).click();await processing.getByRole('button',{name:'Validate clip',exact:true}).click();await expect(processing.getByText(/Run 1 · revision 1 · awaiting_review/)).toBeVisible({timeout:process.env.HAVEN_RECOVERY_REHEARSAL==='true'?240000:45000});await processing.getByRole('button',{name:'Extract private frames',exact:true}).click();await expect(processing.getByText(/Run [0-9]+ · revision 1 · awaiting_review/)).toHaveCount(2,{timeout:process.env.HAVEN_RECOVERY_REHEARSAL==='true'?240000:45000});
+        at /workspace/tests/e2e/digitization-capture-source.spec.ts:12:293
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-capture-sourc-b3c09-tain-private-pending-frames-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-capture-sourc-b3c09-tain-private-pending-frames-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-capture-sourc-b3c09-tain-private-pending-frames-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-capture-sourc-b3c09-tain-private-pending-frames-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-capture-source.spec.ts:6:1 › real agency capture upload, scanning, binding and isolated CPU processing retain private pending frames 
+    [mobile] › tests/e2e/digitization-capture-source.spec.ts:6:1 › real agency capture upload, scanning, binding and isolated CPU processing retain private pending frames 
+

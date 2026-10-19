@@ -15,12 +15,35 @@ from datetime import datetime, timezone
 from contextlib import contextmanager
 from uuid import UUID
 from .source_sandbox import inspect_source
-from .sources import SourceError
+from .errors import SourceError
+from .ocr_release import production_ocr_ready
 
-PROFILES = {'pdfium-150dpi-v1': ('document_rasterize', 'application/pdf', 'pdf_raster', 20*1024*1024),
-            'upright-image-v1': ('document_rasterize', ('image/jpeg', 'image/png'), 'image', 10*1024*1024)}
+PROFILES = {'private-photo-frame-v1': ('frame_select', ('image/jpeg', 'image/png'), 'photo_frame', 10*1024*1024),
+            'pdfium-150dpi-v1': ('document_rasterize', 'application/pdf', 'pdf_raster', 20*1024*1024),
+            'upright-image-v1': ('document_rasterize', ('image/jpeg', 'image/png'), 'image', 10*1024*1024),
+            'private-panorama-candidate-v1': ('panorama_optimize', ('image/jpeg', 'image/png'), 'panorama', 20*1024*1024)}
 for locale in ('en', 'fr', 'ar'):
     PROFILES['generic-native-facts-'+locale+'-v1'] = ('fact_extract', 'application/pdf', 'native_facts_'+locale, 20*1024*1024)
+    PROFILES['generic-native-facts-'+locale+'-v3'] = ('fact_extract', 'application/pdf', 'native_facts_v3_'+locale, 20*1024*1024)
+if os.environ.get('PROCESSING_ENABLE_MEDIA_PROBE') == 'true':
+    PROFILES['ffmpeg715-minimal-media-v1'] = ('media_probe', ('video/mp4', 'video/quicktime', 'video/webm'), 'media_probe', 10*1024*1024)
+    PROFILES['private-media-frames-v1'] = ('frame_select', ('video/mp4', 'video/quicktime', 'video/webm'), 'media_frames', 10*1024*1024)
+if os.environ.get('PROCESSING_DEPLOYMENT') in ('test', 'development') and os.environ.get('PROCESSING_ENABLE_CAMERA_INVESTIGATION') == 'true':
+    PROFILES['private-colmap-cpu-investigation-v1'] = ('camera_solve', 'application/x-tar', 'camera_solve', 384*1024*1024)
+if os.environ.get('PROCESSING_DEPLOYMENT') in ('test', 'development') and os.environ.get('PROCESSING_ENABLE_OCR_INVESTIGATION') == 'true':
+    for locale in ('en','fr','ar'):
+        PROFILES['private-ocr-page-'+locale+'-investigation-v1']=('document_ocr','image/png','ocr_'+locale,16*1024*1024)
+        PROFILES['private-ocr-document-'+locale+'-investigation-v1']=('document_ocr','application/pdf','document_ocr_'+locale,20*1024*1024)
+        PROFILES['private-ocr-image-'+locale+'-investigation-v1']=('document_ocr',('image/jpeg','image/png'),'document_ocr_'+locale,10*1024*1024)
+if production_ocr_ready():
+    for locale in ('en', 'fr', 'ar'):
+        PROFILES['private-ocr-document-'+locale+'-v1'] = ('document_ocr', 'application/pdf', 'document_ocr_'+locale, 20*1024*1024)
+        PROFILES['private-ocr-image-'+locale+'-v1'] = ('document_ocr', ('image/jpeg', 'image/png'), 'document_ocr_'+locale, 10*1024*1024)
+# Dedicated runner role keeps the profile available for stop/purge tombstones even
+# when training execution is disabled. CPU runners never admit GPU jobs.
+if os.environ.get('PROCESSING_RUNNER_KIND') == 'gpu' and os.environ.get('PROCESSING_DEPLOYMENT') in ('test', 'development'):
+    from .gsplat_training import PROFILE_ID, QUALITY_PROFILE_ID
+    PROFILES = {profile: ('splat_train', 'application/x-tar', 'gsplat_train', 384*1024*1024) for profile in (PROFILE_ID,QUALITY_PROFILE_ID)}
 UUID_RE = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')
 SHA_RE = re.compile(r'^[a-f0-9]{64}$')
 
@@ -39,7 +62,7 @@ def digest(body):
     return hashlib.sha256(canonical(body)).hexdigest()
 
 
-def validate_request(body, now=None):
+def validate_request(body, now=None, *, cancellation_tombstone=False):
     expected = {'schemaVersion', 'executionId', 'organizationId', 'runId', 'stageId', 'stageType',
                 'profileId', 'inputRevision', 'inputFingerprint', 'fencingToken', 'artifacts', 'deadline', 'budget'}
     if not isinstance(body, dict) or set(body) != expected or type(body['schemaVersion']) is not int or body['schemaVersion'] != 1:
@@ -71,9 +94,11 @@ def validate_request(body, now=None):
     if asset['detectedMime'] not in mimes:
         raise ExecutionError('EXECUTION_PROFILE_INVALID')
     budget = body['budget']
-    if not isinstance(budget, dict) or set(budget) != {'maxSeconds', 'maxScratchBytes'} or type(budget['maxSeconds']) is not int or not 0 < budget['maxSeconds'] <= 15:
+    camera = profile[2] == 'camera_solve'
+    training = profile[2] == 'gsplat_train'
+    if not isinstance(budget, dict) or set(budget) != {'maxSeconds', 'maxScratchBytes'} or type(budget['maxSeconds']) is not int or not 0 < budget['maxSeconds'] <= (1200 if camera or training else 60 if profile[2]=='media_frames' else 15):
         raise ExecutionError('EXECUTION_BUDGET_INVALID')
-    if not isinstance(budget['maxScratchBytes'], str) or not re.fullmatch(r'[1-9]\d{0,12}', budget['maxScratchBytes']) or not 0 < int(budget['maxScratchBytes']) <= 64*1024*1024:
+    if not isinstance(budget['maxScratchBytes'], str) or not re.fullmatch(r'[1-9]\d{0,12}', budget['maxScratchBytes']) or not (512*1024*1024 if training else 96*1024*1024 if camera else 1) <= int(budget['maxScratchBytes']) <= (2048 if training or camera else 256 if profile[2]=='media_frames' else 64)*1024*1024:
         raise ExecutionError('EXECUTION_BUDGET_INVALID')
     try:
         deadline = datetime.fromisoformat(body['deadline'].replace('Z', '+00:00'))
@@ -83,7 +108,7 @@ def validate_request(body, now=None):
     except (ValueError, TypeError, AttributeError):
         raise ExecutionError('EXECUTION_DEADLINE_INVALID') from None
     now = time.time() if now is None else now
-    if expires <= now or expires > now + 86400 or expires < now + budget['maxSeconds']:
+    if not cancellation_tombstone and (expires <= now or expires > now + 86400 or expires < now + budget['maxSeconds']):
         raise ExecutionError('EXECUTION_DEADLINE_INVALID')
     return body
 
@@ -112,7 +137,7 @@ class ExecutionAuthority:
                 raise ValueError()
             if not isinstance(claims['requestDigest'], str) or not SHA_RE.fullmatch(claims['requestDigest']):
                 raise ValueError()
-            if not isinstance(claims['actions'], list) or not claims['actions'] or len(set(claims['actions'])) != len(claims['actions']) or not set(claims['actions']) <= {'submit', 'read', 'cancel', 'source', 'preview'} or action not in claims['actions']:
+            if not isinstance(claims['actions'], list) or not claims['actions'] or len(set(claims['actions'])) != len(claims['actions']) or not set(claims['actions']) <= {'submit', 'read', 'cancel', 'source', 'preview', 'purge'} or action not in claims['actions']:
                 raise ValueError()
             return claims['requestDigest']
         except (ValueError, TypeError, KeyError, UnicodeError, AttributeError):
@@ -124,6 +149,7 @@ class ExecutionStore:
         self.root = root.resolve(strict=True)
         self.lock = threading.RLock()
         self.active = set()
+        self.transfers = set()
         self.db_path = self.root / 'executions.sqlite3'
         if self.db_path.is_symlink():
             raise ValueError('Invalid private execution store')
@@ -154,6 +180,7 @@ class ExecutionStore:
         db = sqlite3.connect(self.db_path, timeout=5)
         db.row_factory = sqlite3.Row
         db.execute('PRAGMA synchronous=FULL')
+        db.execute('PRAGMA secure_delete=ON')
         try:
             with db:
                 yield db
@@ -191,7 +218,7 @@ class ExecutionStore:
                     db.execute("UPDATE executions SET state='failed_terminal',error='EXECUTION_DEADLINE_EXPIRED',updated=? WHERE id=? AND state='awaiting_source'", (now, row['id']))
             rows = db.execute("SELECT id,request FROM executions WHERE state IN('succeeded','failed_terminal','cancelled') AND scratch_cleaned_at IS NULL AND updated<? ORDER BY updated LIMIT 32", (now-86400,)).fetchall()
             for row in rows:
-                if row['id'] in self.active or not UUID_RE.fullmatch(row['id']):
+                if row['id'] in self.active or row['id'] in self.transfers or not UUID_RE.fullmatch(row['id']):
                     continue
                 deadline = datetime.fromisoformat(json.loads(row['request'])['deadline'].replace('Z', '+00:00')).timestamp()
                 if deadline > now-86400:
@@ -213,11 +240,25 @@ class ExecutionStore:
         if not row or row['request_hash'] != request_hash:
             raise ExecutionError('EXECUTION_NOT_FOUND', 404)
         with self.lock:
-            stopped = execution_id not in self.active
+            stopped = execution_id not in self.active and execution_id not in self.transfers
         return {'executionId': execution_id, 'state': row['state'], 'processStopped': stopped,
                 'result': json.loads(row['result']) if row['result'] else None, 'errorCode': row['error']}
 
     def receive_source(self, execution_id, request_hash, asset_id, length, mime, stream):
+        with self.lock, self.connect() as db:
+            row = db.execute('SELECT state FROM executions WHERE id=? AND request_hash=?', (execution_id, request_hash)).fetchone()
+            if not row:
+                raise ExecutionError('EXECUTION_NOT_FOUND', 404)
+            if row['state'] != 'awaiting_source' or execution_id in self.transfers:
+                raise ExecutionError('EXECUTION_SOURCE_STATE_CONFLICT', 409)
+            self.transfers.add(execution_id)
+        try:
+            return self._receive_source(execution_id, request_hash, asset_id, length, mime, stream)
+        finally:
+            with self.lock:
+                self.transfers.discard(execution_id)
+
+    def _receive_source(self, execution_id, request_hash, asset_id, length, mime, stream):
         with self.connect() as db:
             row = db.execute('SELECT * FROM executions WHERE id=? AND request_hash=?', (execution_id, request_hash)).fetchone()
         if not row:
@@ -279,9 +320,15 @@ class ExecutionStore:
             outputs = result.get('pages', []) if isinstance(result, dict) else []
             if isinstance(result, dict) and isinstance(result.get('image'), dict):
                 outputs = [result['image']]
+            if isinstance(result, dict) and isinstance(result.get('thumbnail'), dict):
+                outputs = [{**result['thumbnail'], 'previewFilename': result['thumbnail'].get('filename', '')}]
+            if isinstance(result, dict) and isinstance(result.get('tiers'), list):
+                outputs = [{**tier, 'previewFilename': tier.get('filename', '')} for tier in result['tiers']]
+            if isinstance(result, dict) and isinstance(result.get('frames'), list):
+                outputs = result['frames']
             selected = next((page for page in outputs if isinstance(page, dict) and page.get('sha256') == checksum), None) if isinstance(outputs, list) else None
             filename = selected.get('previewFilename', '') if selected else ''
-            if not re.fullmatch(r'page-\d{3}-'+checksum+r'\.png', filename):
+            if not re.fullmatch(r'(?:page-\d{3}|panorama-(?:1024|2048|4096))-'+checksum+r'\.png', filename):
                 raise ExecutionError('EXECUTION_PREVIEW_NOT_FOUND', 404)
             directory = self.root / execution_id
             try:
@@ -299,10 +346,17 @@ class ExecutionStore:
                 raise ExecutionError('EXECUTION_PREVIEW_INVALID', 503) from None
             return body
 
-    def cancel(self, execution_id, request_hash):
+    def cancel(self, execution_id, request_hash, request=None):
         with self.lock, self.connect() as db:
             row = db.execute('SELECT * FROM executions WHERE id=?', (execution_id,)).fetchone()
-            if not row or row['request_hash'] != request_hash:
+            if not row:
+                if not isinstance(request, dict) or request.get('executionId') != execution_id or digest(request) != request_hash:
+                    raise ExecutionError('EXECUTION_NOT_FOUND', 404)
+                validate_request(request, cancellation_tombstone=True)
+                now = time.time()
+                db.execute('INSERT INTO executions(id,request_hash,request,state,result,error,created,updated) VALUES(?,?,?,?,?,?,?,?)', (execution_id, request_hash, canonical(request).decode(), 'cancelled', None, None, now, now))
+                row = db.execute('SELECT * FROM executions WHERE id=?', (execution_id,)).fetchone()
+            if row['request_hash'] != request_hash:
                 raise ExecutionError('EXECUTION_NOT_FOUND', 404)
             if row['state'] in ('awaiting_source', 'pending', 'running'):
                 db.execute("UPDATE executions SET state='cancelled', result=NULL, error=NULL, updated=? WHERE id=?", (time.time(), execution_id))
@@ -316,8 +370,85 @@ class ExecutionStore:
         if not directory.is_dir() or directory.is_symlink():
             return
         for preview in directory.iterdir():
-            if re.fullmatch(r'page-\d{3}-[a-f0-9]{64}\.png', preview.name):
+            if preview.name == 'thumbnail.png' or re.fullmatch(r'camera-training-[a-f0-9]{64}\.tar', preview.name) or re.fullmatch(r'frame-\d{3}\.png', preview.name) or re.fullmatch(r'(?:page-\d{3}|panorama-(?:1024|2048|4096))-[a-f0-9]{64}\.png', preview.name):
                 preview.unlink(missing_ok=True)
+
+    def training_output(self, execution_id, request_hash, checksum):
+        from .training_execution import output_path, read_bounded
+        from .gsplat_training import PROFILE_ID, QUALITY_PROFILE_ID
+        with self.lock:
+            receipt = self.get(execution_id, request_hash)
+            result = receipt.get('result') or {}
+            if receipt['state'] != 'succeeded' or not receipt['processStopped'] or result.get('processingProfile') not in (PROFILE_ID,QUALITY_PROFILE_ID) or not SHA_RE.fullmatch(checksum):
+                raise ExecutionError('EXECUTION_OUTPUT_NOT_FOUND', 404)
+            outputs = [item for item in result.get('outputs', []) if item.get('sha256') == checksum]
+            if not outputs:
+                raise ExecutionError('EXECUTION_OUTPUT_NOT_FOUND', 404)
+            root = self.root / execution_id / 'training'
+            if root.is_symlink() or not root.is_dir():
+                raise ExecutionError('EXECUTION_OUTPUT_INVALID', 503)
+            try:
+                output = outputs[0]
+                body = read_bounded(output_path(root, output), 32*1024*1024)
+                if str(len(body)) != output['byteSize'] or hashlib.sha256(body).hexdigest() != checksum:
+                    raise ValueError()
+                return body, output['mime']
+            except (OSError, ValueError, SourceError):
+                raise ExecutionError('EXECUTION_OUTPUT_INVALID', 503) from None
+
+    def training_archive(self, execution_id, request_hash, checksum):
+        with self.lock:
+            receipt = self.get(execution_id, request_hash)
+            archive = (receipt.get('result') or {}).get('trainingArchive')
+            if receipt['state'] != 'succeeded' or not archive or archive.get('sha256') != checksum or not SHA_RE.fullmatch(checksum):
+                raise ExecutionError('EXECUTION_OUTPUT_NOT_FOUND', 404)
+            path = self.root / execution_id / ('camera-training-' + checksum + '.tar')
+            try:
+                with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW), 'rb') as content:
+                    size = os.fstat(content.fileno()).st_size
+                    if not stat.S_ISREG(os.fstat(content.fileno()).st_mode) or not 0 < size <= 384*1024*1024 or str(size) != archive['byteSize']:
+                        raise ExecutionError('EXECUTION_OUTPUT_INVALID', 503)
+                    body = content.read(size+1)
+                if len(body) != size or hashlib.sha256(body).hexdigest() != checksum:
+                    raise ExecutionError('EXECUTION_OUTPUT_INVALID', 503)
+                return body
+            except OSError:
+                raise ExecutionError('EXECUTION_OUTPUT_INVALID', 503) from None
+
+    def purge(self, execution_id, request_hash, request=None):
+        """Explicit scoped deletion after termination, retaining a replay tombstone.
+
+        Never accepts a filesystem path. The result may contain private OCR data,
+        so remove it together with the original and all derived scratch files.
+        """
+        if not shutil.rmtree.avoids_symlink_attacks:
+            raise ExecutionError('EXECUTION_CLEANUP_UNAVAILABLE', 503)
+        with self.lock, self.connect() as db:
+            row = db.execute('SELECT * FROM executions WHERE id=? AND request_hash=?', (execution_id, request_hash)).fetchone()
+            if not UUID_RE.fullmatch(execution_id):
+                raise ExecutionError('EXECUTION_NOT_FOUND', 404)
+            if not row:
+                if request is None or request.get('executionId') != execution_id or digest(request) != request_hash:
+                    raise ExecutionError('EXECUTION_NOT_FOUND', 404)
+                validate_request(request, cancellation_tombstone=True)
+                if db.execute('SELECT 1 FROM executions WHERE id=?', (execution_id,)).fetchone():
+                    raise ExecutionError('EXECUTION_ID_CONFLICT', 409)
+                now = time.time()
+                db.execute('INSERT INTO executions(id,request_hash,request,state,result,error,created,updated) VALUES(?,?,?,?,?,?,?,?)', (execution_id, request_hash, canonical(request).decode(), 'cancelled', None, None, now, now))
+                row = db.execute('SELECT * FROM executions WHERE id=?', (execution_id,)).fetchone()
+            if row['state'] in ('awaiting_source', 'pending', 'running'):
+                db.execute("UPDATE executions SET state='cancelled',result=NULL,error=NULL,updated=? WHERE id=?", (time.time(), execution_id))
+            # Cancellation must survive the retryable active-process response.
+            db.commit()
+            if execution_id in self.active or execution_id in self.transfers or row['state'] not in ('succeeded', 'failed_terminal', 'failed_retryable', 'cancelled'):
+                raise ExecutionError('EXECUTION_PURGE_NOT_STOPPED', 409)
+            directory = self.root / execution_id
+            if directory.is_symlink() or directory.exists() and (not directory.is_dir() or directory.resolve(strict=True).parent != self.root):
+                raise ExecutionError('EXECUTION_CLEANUP_INVALID', 503)
+            if directory.exists():
+                shutil.rmtree(directory)
+            db.execute("UPDATE executions SET state='cancelled',result=NULL,error=NULL,scratch_cleaned_at=?,updated=? WHERE id=?", (time.time(), time.time(), execution_id))
+        return {**self.get(execution_id, request_hash), 'scratchPurged': True}
 
     def perform_one(self):
         with self.lock, self.connect() as db:
@@ -346,9 +477,28 @@ class ExecutionStore:
                         raise SourceError('SOURCE_OBJECT_MISMATCH')
                 if int(request['budget']['maxScratchBytes']) < size + 32*1024*1024:
                     raise SourceError('SOURCE_SCRATCH_BUDGET_EXCEEDED')
-                result = inspect_source(directory, asset['id'], PROFILES[request['profileId']][2], timeout=request['budget']['maxSeconds'],
-                                        cancelled=lambda: self.get(row['id'], row['request_hash'])['state'] == 'cancelled')
-                if request["profileId"] == "upright-image-v1" and result.get("image", {}).get("detectedMime") != asset["detectedMime"]:
+                cancelled = lambda: self.get(row['id'], row['request_hash'])['state'] == 'cancelled'
+                if PROFILES[request['profileId']][2] == 'gsplat_train':
+                    from .training_execution import execute_training
+                    result = execute_training(directory, asset['id'], asset['checksum'], timeout=request['budget']['maxSeconds'], max_scratch_bytes=int(request['budget']['maxScratchBytes']), cancelled=cancelled,profile_id=request['profileId'])
+                elif request['profileId'] == 'private-colmap-cpu-investigation-v1':
+                    from .camera_execution import execute_camera
+                    result = execute_camera(directory, asset['id'], timeout=request['budget']['maxSeconds'], max_scratch_bytes=int(request['budget']['maxScratchBytes']), cancelled=cancelled)
+                elif request['profileId'] == 'ffmpeg715-minimal-media-v1':
+                    from .media_probe import probe_media
+                    result = probe_media(directory, asset['id'], timeout=request['budget']['maxSeconds'], cancelled=cancelled)
+                elif request['profileId'] == 'private-media-frames-v1':
+                    from .media_frames import extract_frames
+                    result = extract_frames(directory, asset['id'], timeout=request['budget']['maxSeconds'], cancelled=cancelled)
+                elif PROFILES[request['profileId']][2].startswith('document_ocr_'):
+                    from .document_ocr import inspect_document_ocr
+                    result=inspect_document_ocr(directory,asset['id'],PROFILES[request['profileId']][2][-2:],asset['checksum'],timeout=request['budget']['maxSeconds'],cancelled=cancelled,source_mime=asset['detectedMime'],production='-investigation-' not in request['profileId'])
+                elif PROFILES[request['profileId']][2].startswith('ocr_'):
+                    from .ocr_sandbox import inspect_ocr
+                    result=inspect_ocr(directory,asset['id'],PROFILES[request['profileId']][2][-2:],asset['checksum'],timeout=request['budget']['maxSeconds'],cancelled=cancelled)
+                else:
+                    result = inspect_source(directory, asset['id'], PROFILES[request['profileId']][2], timeout=request['budget']['maxSeconds'], cancelled=cancelled)
+                if request["profileId"] in ("upright-image-v1", "private-photo-frame-v1") and result.get("image", {}).get("detectedMime") != asset["detectedMime"]:
                     raise SourceError("SOURCE_MIME_MISMATCH")
             except SourceError as failure:
                 error = str(failure)

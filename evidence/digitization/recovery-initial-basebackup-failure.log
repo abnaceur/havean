@@ -1,0 +1,63 @@
+file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:14
+async function commandToFile(args,file){const process=spawn('docker',args,{stdio:['ignore','pipe','pipe']}),error=[];process.stderr.on('data',b=>error.push(b));const exit=new Promise((resolve,reject)=>{process.once('error',reject);process.once('exit',code=>resolve(code));});await pipeline(process.stdout,fs.createWriteStream(file,{flags:'wx',mode:0o600}));if(await exit!==0)throw Error('BACKUP_CAPTURE_COMMAND_FAILED');}
+                                                                                                                                                                                                                                                                                                                                                                                             ^
+
+Error: BACKUP_CAPTURE_COMMAND_FAILED
+    at commandToFile (file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:14:382)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:18:61
+
+Node.js v20.20.0
+node:internal/errors:984
+  const err = new Error(message);
+              ^
+
+Error: Command failed: /home/abn/.nvm/versions/node/v20.20.0/bin/node scripts/recovery/snapshot.mjs
+file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:14
+async function commandToFile(args,file){const process=spawn('docker',args,{stdio:['ignore','pipe','pipe']}),error=[];process.stderr.on('data',b=>error.push(b));const exit=new Promise((resolve,reject)=>{process.once('error',reject);process.once('exit',code=>resolve(code));});await pipeline(process.stdout,fs.createWriteStream(file,{flags:'wx',mode:0o600}));if(await exit!==0)throw Error('BACKUP_CAPTURE_COMMAND_FAILED');}
+                                                                                                                                                                                                                                                                                                                                                                                             ^
+
+Error: BACKUP_CAPTURE_COMMAND_FAILED
+    at commandToFile (file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:14:382)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:18:61
+
+Node.js v20.20.0
+
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execFileSync (node:child_process:927:15)
+    at nodeCommand (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:20:46)
+    at file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:55:64 {
+  status: 1,
+  signal: null,
+  output: [
+    null,
+    '',
+    'file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:14\n' +
+      "async function commandToFile(args,file){const process=spawn('docker',args,{stdio:['ignore','pipe','pipe']}),error=[];process.stderr.on('data',b=>error.push(b));const exit=new Promise((resolve,reject)=>{process.once('error',reject);process.once('exit',code=>resolve(code));});await pipeline(process.stdout,fs.createWriteStream(file,{flags:'wx',mode:0o600}));if(await exit!==0)throw Error('BACKUP_CAPTURE_COMMAND_FAILED');}\n" +
+      '                                                                                                                                                                                                                                                                                                                                                                                             ^\n' +
+      '\n' +
+      'Error: BACKUP_CAPTURE_COMMAND_FAILED\n' +
+      '    at commandToFile (file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:14:382)\n' +
+      '    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n' +
+      '    at async file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:18:61\n' +
+      '\n' +
+      'Node.js v20.20.0\n'
+  ],
+  pid: 3147111,
+  stdout: '',
+  stderr: 'file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:14\n' +
+    "async function commandToFile(args,file){const process=spawn('docker',args,{stdio:['ignore','pipe','pipe']}),error=[];process.stderr.on('data',b=>error.push(b));const exit=new Promise((resolve,reject)=>{process.once('error',reject);process.once('exit',code=>resolve(code));});await pipeline(process.stdout,fs.createWriteStream(file,{flags:'wx',mode:0o600}));if(await exit!==0)throw Error('BACKUP_CAPTURE_COMMAND_FAILED');}\n" +
+    '                                                                                                                                                                                                                                                                                                                                                                                             ^\n' +
+    '\n' +
+    'Error: BACKUP_CAPTURE_COMMAND_FAILED\n' +
+    '    at commandToFile (file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:14:382)\n' +
+    '    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n' +
+    '    at async file:///home/abn/project/real-estate-solution/scripts/recovery/snapshot.mjs:18:61\n' +
+    '\n' +
+    'Node.js v20.20.0\n'
+}
+
+Node.js v20.20.0

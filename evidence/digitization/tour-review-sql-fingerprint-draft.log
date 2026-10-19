@@ -1,0 +1,13 @@
+time="2026-10-09T23:01:52+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-migrate-run-201566ab948a Creating 
+ Container haven-migrate-run-201566ab948a Created 
+file:///workspace/infra/generated/integration/validate-tour-review-migration.mjs:4
+try{await client.connect();await client.query('BEGIN');await client.query(fs.readFileSync('packages/database/migrations/191-digitization-assigned-tour-review.sql','utf8'));const result=await client.query("SELECT count(*)::int n FROM processing_stages s JOIN property_input_revisions r ON r.digitization_id=s.digitization_id AND r.revision=s.input_revision CROSS JOIN LATERAL jsonb_array_elements(r.source_set) source WHERE s.profile_id='private-panorama-candidate-v1' AND s.input_fingerprint=digitization_panorama_fingerprint(r.digitization_id,r.organization_id,r.revision,source)");if(!result.rows[0].n)throw Error('Actual native panorama fingerprint parity failed');await client.query('ROLLBACK');console.log('Tour review SQL draft validates; transaction rolled back.');}finally{await client.end();}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ^
+
+Error: Actual native panorama fingerprint parity failed
+    at file:///workspace/infra/generated/integration/validate-tour-review-migration.mjs:4:611
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+
+Node.js v24.21.0
+

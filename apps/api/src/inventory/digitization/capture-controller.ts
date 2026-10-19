@@ -3,8 +3,9 @@ import type {FastifyRequest} from 'fastify';
 import type {Actor} from '@haven/database';
 import type pg from 'pg';
 import {z} from 'zod';
-import {digitizationCaptureCreate,digitizationCapturePart,digitizationCaptureVersion,digitizationCaptureComplete,digitizationCaptureSessionCreate,digitizationCaptureSessionSave} from '@haven/contracts';
+import {digitizationCaptureSourceRequest,digitizationCaptureCreate,digitizationCapturePart,digitizationCaptureVersion,digitizationCaptureComplete,digitizationCaptureSessionCreate,digitizationCaptureSessionSave} from '@haven/contracts';
 import {createCaptureSession,readCaptureSession,saveCaptureSession} from './capture-session.js';
+import {checkedCapturedSource,reserveCapturedSource,readCapturedSource,admitCapturedSource} from './capture-source.js';
 import {finalizeCapture} from './capture-finalization.js';
 import {Identity,data,fail,idempotent,transaction} from '../../platform/core.js';
 import {digitizationListingAccess} from '../property-access.js';
@@ -14,6 +15,8 @@ async function engine(c:pg.PoolClient,a:Actor,target:string,listing:boolean){z.u
 @Controller('api/v1')
 export class DigitizationCaptureController{
  constructor(@Inject(Identity) private readonly identity:Identity){}
+ @Get('ops/digitizations/:id/capture-uploads/:uploadId/source') async source(@Req() req:FastifyRequest,@Param('id') id:string,@Param('uploadId') uploadId:string){const a=await this.identity.actor(req,['agent','agency_manager']);z.uuid().parse(id);z.uuid().parse(uploadId);return data(await readCapturedSource(a,id,uploadId));}
+ @Post('ops/digitizations/:id/capture-uploads/:uploadId/source') @HttpCode(202) async admitSource(@Req() req:FastifyRequest,@Param('id') id:string,@Param('uploadId') uploadId:string,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager']),x=digitizationCaptureSourceRequest.parse(body);z.uuid().parse(id);z.uuid().parse(uploadId);let started=false;const receipt=await transaction(a,async c=>{await checkedCapturedSource(c,a,id,uploadId,x);return idempotent(c,a,req,x,async()=>{started=true;return reserveCapturedSource(c,a,id,uploadId,x);});});return data(await admitCapturedSource(a,id,uploadId,x,{assetId:receipt.assetId,leaseId:started?receipt.leaseId:null}));}
  @Get('ops/digitizations/:id/capture-uploads') async uploads(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['agent','agency_manager']);z.uuid().parse(id);return transaction(a,async c=>{await requireDigitizationAgency(c,a);await checkedWorkspace(c,id);return data((await c.query(`SELECT ${captureColumns} FROM digitization_capture_uploads WHERE digitization_id=$1 AND created_by=$2 AND state IN('uploading','complete') ORDER BY created_at DESC,id DESC LIMIT 100`,[id,a.id])).rows.map(row=>captureRecord(row)));});}
  @Get('ops/digitizations/:id/capture-session') async session(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req,['agent','agency_manager']);z.uuid().parse(id);return transaction(a,async c=>data(await readCaptureSession(c,a,id)));}
  @Post('ops/digitizations/:id/capture-session') async startSession(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){const a=await this.identity.actor(req,['agent','agency_manager']),x=digitizationCaptureSessionCreate.parse(body);z.uuid().parse(id);return transaction(a,async c=>{await requireDigitizationAgency(c,a);await checkedWorkspace(c,id);return idempotent(c,a,req,x,async()=>data(await createCaptureSession(c,a,id,x.workspaceVersion)));});}

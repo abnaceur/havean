@@ -1,0 +1,129 @@
+name: ${PROCESSING_RECOVERY_PROJECT:-haven-processing-recovery-tests}
+services:
+  db:
+    profiles: [database]
+    image: postgres:17.11-alpine3.23@sha256:9ea644da56f1a82283b173fa38a316636fe7c538991a8ae41998cd3765434991
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: synthetic-isolated-recovery-only
+    volumes:
+      - database:/var/lib/postgresql/data
+      - wal:/var/lib/postgresql/wal-archive
+    command: [postgres, -c, wal_level=replica, -c, archive_mode=on, -c, "archive_command=test -f /var/lib/postgresql/wal-archive/%f || cp %p /var/lib/postgresql/wal-archive/%f"]
+    networks: [database-isolated]
+    mem_limit: 2g
+    cpus: 2
+  api:
+    profiles: [database]
+    image: node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+    network_mode: none
+  worker:
+    profiles: [database]
+    image: node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+    network_mode: none
+  identity:
+    profiles: [database]
+    image: quay.io/keycloak/keycloak:26.8.0@sha256:b0f60d489d51c5d113390bdf5461d4c06e6051be026c05549f2e1e10ec352bcc
+    network_mode: none
+  storage:
+    profiles: [database]
+    image: chrislusf/seaweedfs:4.48@sha256:4e61d15fd35994cb1e43e1e553dff106794841fd9a99ade2fc8c8bfce4d7872d
+    volumes: [objects:/data]
+    networks: [database-isolated]
+  volume-init:
+    image: node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN, FOWNER, DAC_OVERRIDE]
+    security_opt: [no-new-privileges:true]
+    volumes: [executions:/jobs]
+    command: [node, -e, "require('fs').chownSync('/jobs',10001,10001);require('fs').chmodSync('/jobs',0o700)"]
+  processing-cpu:
+    image: haven-processing-cpu:1.0.0-cpu-v4
+    build:
+      context: ../..
+      dockerfile: services/property-processing/Dockerfile.cpu
+      target: cpu
+    init: true
+    read_only: true
+    user: '10001:10001'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment: &runtime
+      PROCESSING_DEPLOYMENT: test
+      PROCESSING_ADAPTER: unavailable
+      PROCESSING_ENABLE_SIMULATOR: 'false'
+      PROCESSING_ENABLE_MEDIA_PROBE: 'true'
+      PROCESSING_EXECUTION_ROOT: /jobs
+      PROCESSING_SIGNING_KEY_FILE: /run/runner-test-key
+    volumes:
+      - executions:/jobs
+      - ${PROCESSING_RECOVERY_FIXTURE:?Declare fixture directory}/runner-test-key:/run/runner-test-key:ro
+    depends_on:
+      volume-init: {condition: service_completed_successfully}
+    command: [python, -m, property_processing.server]
+    mem_limit: 512m
+    cpus: 1
+    pids_limit: 64
+    tmpfs: ['/tmp:size=67108864,mode=1777']
+    networks: [isolated]
+  restored-cpu:
+    image: haven-processing-cpu:1.0.0-cpu-v4
+    profiles: [restored]
+    init: true
+    read_only: true
+    user: '10001:10001'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment: *runtime
+    volumes:
+      - recovered-executions:/jobs
+      - ${PROCESSING_RECOVERY_FIXTURE:?Declare fixture directory}/runner-test-key:/run/runner-test-key:ro
+    command: [python, -m, property_processing.server]
+    mem_limit: 512m
+    cpus: 1
+    pids_limit: 64
+    tmpfs: ['/tmp:size=67108864,mode=1777']
+    networks: [isolated]
+  client:
+    image: haven-processing-cpu:1.0.0-cpu-v4
+    profiles: [client]
+    init: true
+    read_only: true
+    user: '10001:10001'
+    group_add: ['1000']
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    volumes:
+      - ./tests/recovery_journey.py:/fixture-test.py:ro
+      - ${PROCESSING_RECOVERY_FIXTURE:?Declare fixture directory}:/fixture
+    command: [python, /fixture-test.py, prepare]
+    mem_limit: 256m
+    cpus: 1
+    pids_limit: 32
+    tmpfs: ['/tmp:size=16777216,mode=1777']
+    networks: [isolated]
+    environment:
+      PYTHONPATH: /opt/processing
+      RECOVERY_SOURCE_HOST: ${PROCESSING_RECOVERY_PROJECT:-haven-processing-recovery-tests}-processing-cpu-1
+      RECOVERY_RESTORED_HOST: ${PROCESSING_RECOVERY_PROJECT:-haven-processing-recovery-tests}-restored-cpu-1
+networks:
+  database-isolated:
+    internal: true
+    ipam:
+      config:
+        - subnet: ${PROCESSING_RECOVERY_DB_SUBNET:-10.247.200.16/28}
+  isolated:
+    internal: true
+    ipam:
+      config:
+        - subnet: ${PROCESSING_RECOVERY_SUBNET:-10.247.200.0/28}
+volumes:
+  database:
+  wal:
+  objects:
+  executions:
+  recovered-executions:
+    external: true
+    name: ${PROCESSING_RESTORED_VOLUME:-haven-recovery-unused-test-volume}

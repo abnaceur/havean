@@ -1,0 +1,45 @@
+time="2026-10-13T05:37:10+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-b8b2c93fe59f Creating 
+ Container haven-tests-run-b8b2c93fe59f Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-furnished-assets.spec.ts:8:1 › render matching room panoramas from the authored furnished property (59.6s)
+
+
+  1) [desktop] › tests/e2e/digitization-furnished-assets.spec.ts:8:1 › render matching room panoramas from the authored furnished property 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: undefined
+
+    Call Log:
+    - Timeout 60000ms exceeded while waiting on the predicate
+
+      26 |  window.renderPhoto=()=>{const c=new THREE.PerspectiveCamera(65,2,.04,100);c.position.set(5.1,1.6,-6.1);c.lookAt(2.3,1,-9.7);renderer.render(scene,c);return renderer.domElement.toDataURL('image/png');};window.ready=true;
+      27 |  </script></body></html>`}));
+    > 28 |  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://localhost:8088/__furnished-render');await expect.poll(()=>page.evaluate(()=>(window as any).ready),{timeout:60000}).toBe(true);
+         |                                                                                                                                                                                                                      ^
+      29 |  const cameras=[['living',2.8,3.8],['kitchen',1.65,7.1],['bathroom',4.4,7.1],['bedroom-one',7,3.6],['bedroom-two',7,8.375]] as const;
+      30 |  for(const [room,x,y] of cameras){const data=await page.evaluate(([x,y])=>(window as any).renderRoom(x,y),[x,y]);fs.writeFileSync(`assets/digitization-furnished/${room}-panorama.png`,Buffer.from(data.split(',')[1],'base64'));}
+      31 |  const photo=await page.evaluate(()=>(window as any).renderPhoto());fs.writeFileSync('assets/digitization-furnished/interior.png',Buffer.from(photo.split(',')[1],'base64'));expect(errors).toEqual([]);fs.writeFileSync('assets/digitization-furnished/cameras.json',JSON.stringify(cameras,null,2)+'\n');console.log(JSON.stringify({objects:items.length,panoramas:cameras.length,glbBytes:glb.length}));
+        at /workspace/tests/e2e/digitization-furnished-assets.spec.ts:28:214
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-furnished-ass-33f15-authored-furnished-property-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-furnished-ass-33f15-authored-furnished-property-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-furnished-ass-33f15-authored-furnished-property-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-furnished-ass-33f15-authored-furnished-property-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-furnished-assets.spec.ts:8:1 › render matching room panoramas from the authored furnished property 
+

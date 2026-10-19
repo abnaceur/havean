@@ -15,7 +15,26 @@ services:
       - ../../docs/adr/processing-dependencies.json:/manifest.json:ro
       - ./.wheels:/wheels
     command: [python, /download_wheels.py, --manifest, /manifest.json, --directory, /wheels]
+  media-source-download:
+    image: python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+    profiles: [bootstrap]
+    init: true
+    network_mode: bridge
+    read_only: true
+    user: '${PROCESSING_BUILD_UID:-1000}:${PROCESSING_BUILD_GID:-1000}'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+    pids_limit: 16
+    volumes:
+      - ./download_media_source.py:/download_media_source.py:ro
+      - ./media-build.json:/profile.json:ro
+      - ./.media-sources:/sources
+    command: [python, /download_media_source.py, --profile, /profile.json, --directory, /sources]
   cpu:
+    image: haven-processing-tests-cpu:1.0.0-cpu-v1
+    volumes:
+      - ./tests/ocr-sandbox-model.txt:/opt/ocr-models/model-sentinel.txt:ro
     build:
       context: ../..
       dockerfile: services/property-processing/Dockerfile.cpu
@@ -29,7 +48,4 @@ services:
     cpus: 1
     pids_limit: 64
     tmpfs: ['/tmp:size=67108864,mode=1777']
-    networks: [isolated]
-networks:
-  isolated:
-    internal: true
+    network_mode: none

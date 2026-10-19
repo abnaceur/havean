@@ -1,0 +1,107 @@
+ Container haven-processing-tests-cpu-run-9c315686aae3 Creating 
+ Container haven-processing-tests-cpu-run-9c315686aae3 Created 
+Exported 27 authored Gaussian splats; not GPU training evidence.
+{"fixture":"authored_gaussians_not_gpu_training","realPrivateStorage":true,"splatCount":27}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-registration-review.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 3715[2mms[22m[39m
+   [33m[2m✓[22m[39m independent exact registration approval on desktop fences author/admin, foreign scope, replay, stale dependencies and public access[33m 2019[2mms[22m[39m
+   [33m[2m✓[22m[39m independent exact registration approval on mobile fences author/admin, foreign scope, replay, stale dependencies and public access[33m 1694[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-lifecycle-events.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 565[2mms[22m[39m
+   [33m[2m✓[22m[39m current review/capture/privacy/publication notifications acknowledge once without running or publishing; unknown versions remain pending[33m 562[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 17:37:18
+[2m   Duration [22m 7.11s[2m (tests 62%, import 27%, transform 10%)[22m
+
+ Container haven-integration-tests-run-0e881ba7d449 Creating 
+ Container haven-integration-tests-run-0e881ba7d449 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-registration-review.spec.ts:5:1 › independent selected-camera review enables scoped private viewpoints and refuses obsolete approval (23.9s)
+  ✘  2 [mobile] › tests/e2e/digitization-registration-review.spec.ts:5:1 › independent selected-camera review enables scoped private viewpoints and refuses obsolete approval (15.3s)
+
+
+  1) [desktop] › tests/e2e/digitization-registration-review.spec.ts:5:1 › independent selected-camera review enables scoped private viewpoints and refuses obsolete approval 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+    Call Log:
+    - Timeout 15000ms exceeded while waiting on the predicate
+
+      20 |  const context=await browser.newContext(),staff=await context.newPage();try{
+      21 |   await login(staff,'moderator',origin,'/ops');await staff.goto(origin+'/ops/reviews');const article=staff.locator(`[data-registration-review-id="${shared.id}"]`);await expect(article).toBeVisible();
+    > 22 |   const image=article.getByRole('img',{name:'Shared registration floor plan',exact:true});await expect.poll(()=>image.evaluate((image:HTMLImageElement)=>image.naturalWidth)).toBeGreaterThan(0);
+         |                                                                                                                                                                               ^
+      23 |   await article.getByRole('button',{name:'Open scene preview',exact:true}).click();await expect(article.getByRole('status')).toContainText('Scene loaded:',{timeout:30000});
+      24 |   await expect(article.getByRole('button',{name:'Approve selected camera viewpoints',exact:true})).toBeDisabled();
+      25 |   await article.getByRole('checkbox',{name:/^Approve camera Observed/}).check();
+        at /workspace/tests/e2e/digitization-registration-review.spec.ts:22:175
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-registration--663b8-d-refuses-obsolete-approval-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-registration--663b8-d-refuses-obsolete-approval-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-registration--663b8-d-refuses-obsolete-approval-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-registration--663b8-d-refuses-obsolete-approval-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-registration--663b8-d-refuses-obsolete-approval-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-registration-review.spec.ts:5:1 › independent selected-camera review enables scoped private viewpoints and refuses obsolete approval 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('heading', { name: 'Sign in to your account' })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('heading', { name: 'Sign in to your account' }) with timeout 15000ms
+      - waiting for getByRole('heading', { name: 'Sign in to your account' })
+
+
+       at ../support/browser.ts:5
+
+      3 | import {completeOtp} from './totp';
+      4 | const env=Object.fromEntries(fs.readFileSync(process.env.HAVEN_ENV_FILE||'.env','utf8').trim().split('\n').map(l=>{const i=l.indexOf('=');return[l.slice(0,i),l.slice(i+1)];}));
+    > 5 | export async function login(page:Page,persona:string,origin=(process.env.PUBLIC_WEB_URL||'http://localhost:8088'),returnTo='/account'){await page.request.post(origin+'/api/v1/auth/logout',{headers:{Origin:origin}});await page.goto(origin+'/api/v1/auth/login?prompt=login&returnTo='+encodeURIComponent(returnTo));await expect(page.getByRole('heading',{name:'Sign in to your account'})).toBeVisible();if(await page.getByRole('button',{name:'Restart login'}).isVisible())await page.getByRole('button',{name:'Restart login'}).click();await page.getByRole('textbox',{name:'Username or email'}).fill(persona);await page.getByLabel('Password',{exact:true}).fill(env.DEV_PASSWORD);await page.getByRole('button',{name:'Sign In',exact:true}).click();await completeOtp(page,persona);await expect(page).toHaveURL(origin+returnTo);}
+        |                                                                                                                                                                                                                                                                                                                                                                                                  ^
+      6 | export async function apiRequest(page:Page,path:string,body:any,method='POST'){return page.request.fetch((process.env.PUBLIC_OPS_URL||'http://localhost:8089')+'/api/v1'+path,{method,headers:{Origin:(process.env.PUBLIC_OPS_URL||'http://localhost:8089'),'idempotency-key':crypto.randomUUID()},data:body});}
+      7 |
+        at login (/workspace/tests/support/browser.ts:5:386)
+        at /workspace/tests/e2e/digitization-registration-review.spec.ts:8:2
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-registration--663b8-d-refuses-obsolete-approval-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-registration--663b8-d-refuses-obsolete-approval-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-registration--663b8-d-refuses-obsolete-approval-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-registration--663b8-d-refuses-obsolete-approval-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-registration-review.spec.ts:5:1 › independent selected-camera review enables scoped private viewpoints and refuses obsolete approval 
+    [mobile] › tests/e2e/digitization-registration-review.spec.ts:5:1 › independent selected-camera review enables scoped private viewpoints and refuses obsolete approval 
+

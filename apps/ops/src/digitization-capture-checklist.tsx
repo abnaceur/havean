@@ -2,6 +2,8 @@
 import {useEffect,useState} from 'react';
 import {sdk} from '@haven/contracts';
 import {ErrorBox,Spinner} from '@haven/ui';
+import {DigitizationCaptureSources} from './digitization-capture-sources';
+import {DigitizationClipUpload} from './digitization-clip-upload';
 type Session=NonNullable<Awaited<ReturnType<typeof sdk.DigitizationCaptureController_session>>['data']>;
 type Upload=Awaited<ReturnType<typeof sdk.DigitizationCaptureController_uploads>>['data'][number];
 export function DigitizationCaptureChecklist({workspaceId}:{workspaceId:string}){
@@ -15,6 +17,7 @@ export function DigitizationCaptureChecklist({workspaceId}:{workspaceId:string})
  const open=session&&['draft','recording'].includes(session.state),editable=open&&!session.stale;
  return <section className="workspace-panel" aria-label="Room capture checklist"><h2>Room capture checklist</h2><p>Save rooms, the current room and your clip uploads to continue later. Uploaded clips remain private and require validation before processing.</p>{error&&<ErrorBox message={error}/>} {notice&&<p role="status">{notice}</p>}{busy&&<Spinner/>}
  {!open?<button className="button" disabled={busy} onClick={()=>void action(async()=>{const workspace=await sdk.DigitizationController_workspace({params:{id:workspaceId}});setSession((await sdk.DigitizationCaptureController_startSession({params:{id:workspaceId},body:{workspaceVersion:workspace.data.version}})).data);})}>Start room capture</button>:<>
+ {editable&&<DigitizationClipUpload workspaceId={workspaceId} onUploaded={load}/>}
  {session.stale&&<p role="status">Inputs changed. Discard this checklist before starting another capture.</p>}
  <fieldset disabled={busy||!editable}><legend>Capture rooms</legend><label>New capture room <input value={name} maxLength={80} onChange={e=>setName(e.target.value)}/></label><button className="button" disabled={!name.trim()||session.rooms.length>=200} onClick={()=>{const id=crypto.randomUUID();setSession({...session,rooms:[...session.rooms,{id,name:name.trim(),completed:false}],activeRoomId:session.activeRoomId??id});setName('');}}>Add capture room</button>
  <label>Current capture room <select value={session.activeRoomId??''} onChange={e=>setSession({...session,activeRoomId:e.target.value||null})}><option value="">Choose room</option>{session.rooms.map(room=><option key={room.id} value={room.id}>{room.name}</option>)}</select></label>
@@ -23,5 +26,6 @@ export function DigitizationCaptureChecklist({workspaceId}:{workspaceId:string})
  <p>{session.clips.length} linked clip uploads.{partCount!==null&&` Current room: ${partCount} uploaded parts recovered.`}</p><button className="button" onClick={()=>void action(()=>save())}>Save capture checklist</button><button className="button" onClick={()=>void action(()=>save('complete'))}>Finish capture checklist</button></fieldset>
  <button className="button" disabled={busy} onClick={()=>void action(async()=>{await load();const saved=(await sdk.DigitizationCaptureController_session({params:{id:workspaceId}})).data;if(!saved)throw Error('Capture session unavailable.');const {version,inputRevision,rooms,clips,activeRoomId}=saved;setSession((await sdk.DigitizationCaptureController_saveSession({params:{id:workspaceId,sessionId:saved.id},body:{version,inputRevision,rooms,clips,activeRoomId,state:'cancelled'}})).data);setNotice('Checklist discarded. Uploads retain their separate status.');})}>Discard capture checklist</button><button className="button" disabled={busy} onClick={()=>void action(load)}>Reload saved checklist</button>
  </>}
+ <DigitizationCaptureSources workspaceId={workspaceId} uploads={uploads}/>
  </section>;
 }

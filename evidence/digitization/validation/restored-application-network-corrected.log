@@ -1,0 +1,12 @@
+{"label":"P","status":"fixture-objects-copied-and-verified","objects":1073,"bytes":16963686,"digest":"32e054e8764905a8f0904a34f9ee989f484215e4f9d7cf4082004000e0ca67e8","sourceMutated":false,"physicalPropertyEvidence":false}
+{"status":"failed","code":"RESTORED_DIGITIZATION_RECONCILIATION_FAILED"}
+{"label":"P","status":"application-configuration-created","project":"haven-recovery-feafd4c4-app","bind":"127.0.0.2","databaseContainer":"haven-recovery-06e7f63d-db","applicationVerified":false}
+file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:57
+  for(;;){const rows=JSON.parse(docker(['inspect',...compose(['ps','-q']).trim().split('\n').filter(Boolean)]));const active=rows.filter(row=>['api','worker','web','ops','identity','scanner','storage'].includes(row.Config.Labels['com.docker.compose.service']));if(active.length===7&&active.every(row=>row.State.Running&&(!row.State.Health||row.State.Health.Status==='healthy')))break;if(Date.now()>until)throw Error('RESTORED_APPLICATION_NOT_READY');await new Promise(resolve=>setTimeout(resolve,1000));}
+                                                                                                                                                                                                                                                                                                                                                                                                                          ^
+
+Error: RESTORED_APPLICATION_NOT_READY
+    at verifyRestoredApplication (file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:57:411)
+    at async file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:102:98
+
+Node.js v20.20.0

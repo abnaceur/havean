@@ -1,0 +1,65 @@
+FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS media-build
+COPY services/property-processing/locks/media-build-apt.json /tmp/media-build-apt.json
+RUN python -c "import json,subprocess; p=json.load(open('/tmp/media-build-apt.json'))['packages']; subprocess.run(['apt-get','update'],check=True); subprocess.run(['apt-get','install','-y','--no-install-recommends',*[name+'='+version for name,version in p.items()]],check=True)" && rm -rf /var/lib/apt/lists/*
+WORKDIR /build
+COPY services/property-processing/media-build.json /build/profile.json
+RUN --mount=type=bind,source=services/property-processing/.media-sources,target=/sources,readonly python -c "import hashlib,json,pathlib,tarfile; p=json.load(open('/build/profile.json')); f=pathlib.Path('/sources/ffmpeg-7.1.5.tar.xz'); assert hashlib.sha256(f.read_bytes()).hexdigest()==p['sourceSha256']; tarfile.open(f).extractall('/build',filter='data')"
+WORKDIR /build/ffmpeg-7.1.5
+RUN python -c "import json,subprocess; p=json.load(open('/build/profile.json')); subprocess.run(['./configure','--prefix=/opt/media',*p['flags']],check=True)" && make -j2 && make install
+RUN python -c "import subprocess; assert all(b'INTERP' not in subprocess.check_output(['readelf','-l','/opt/media/bin/'+name]) for name in ('ffmpeg','ffprobe'))"
+RUN python -c "import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))"
+
+
+FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS install
+COPY services/property-processing/ocr-investigation-build.json /tmp/ocr-investigation-build.json
+COPY services/property-processing/ocr-investigation.lock /tmp/ocr-investigation.lock
+COPY services/property-processing/verify_ocr_investigation.py /tmp/verify-worker-downloads.py
+RUN --mount=type=bind,source=services/property-processing/.ocr-wheels,target=/wheels,readonly python /tmp/verify-worker-downloads.py && python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/ocr-investigation.lock && python -m pip check && mkdir /native-debs && dpkg-deb -x /wheels/libgomp1_14.2.0-19_amd64.deb /native-debs && dpkg-deb -x /wheels/libglib2.0-0t64_2.84.4-3~deb13u5_amd64.deb /native-debs
+COPY services/property-processing/.ocr-wheels/models /opt/ocr-models
+COPY services/property-processing/clean_ocr_investigation.py /tmp/worker-cleanup.py
+RUN python /tmp/worker-cleanup.py
+FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS worker-investigation
+COPY --from=install /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=install /native-debs /
+COPY --from=install /opt/ocr-models /opt/ocr-models
+COPY docs/adr/licenses /usr/share/doc/haven-processing/source-notices
+COPY docs/adr/processing-dependencies.json /opt/processing/dependencies.json
+COPY services/property-processing/property_processing /opt/processing/property_processing
+COPY services/property-processing/tests/ocr_worker_smoke.py /opt/processing/ocr_worker_smoke.py
+ENV PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True HF_HUB_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 LD_LIBRARY_PATH=/opt/ocr-models/native
+WORKDIR /opt/processing
+USER 10001:10001
+CMD ["python", "-m", "property_processing.preflight"]
+
+
+# A separate candidate; the original investigation target remains available.
+FROM install AS no-gui-install
+COPY services/property-processing/exclude_ocr_gui.py /tmp/exclude-ocr-gui.py
+RUN python /tmp/exclude-ocr-gui.py
+
+FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS worker-no-gui-investigation
+COPY --from=no-gui-install /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=no-gui-install /native-debs /
+COPY --from=no-gui-install /opt/ocr-models /opt/ocr-models
+COPY --from=no-gui-install /tmp/ocr-gui-exclusions.json /opt/processing/ocr-native-exclusions.json
+COPY docs/adr/licenses /usr/share/doc/haven-processing/source-notices
+COPY docs/adr/processing-dependencies.json /opt/processing/dependencies.json
+COPY services/property-processing/property_processing /opt/processing/property_processing
+COPY services/property-processing/tests/ocr_worker_smoke.py /opt/processing/ocr_worker_smoke.py
+ENV PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK=True HF_HUB_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 LD_LIBRARY_PATH=/opt/ocr-models/native
+WORKDIR /opt/processing
+USER 10001:10001
+CMD ["python", "-m", "property_processing.preflight"]
+
+# Separately admitted release of the exact offline/native/model bytes above.
+# Its source and notice bundle is part of the distributable image.
+FROM worker-no-gui-investigation AS ocr-release
+COPY --from=media-build /opt/media /opt/media
+COPY services/property-processing/media-build.json /opt/media/build-profile.json
+COPY services/property-processing/ocr-production-release.json /opt/processing/ocr-release.json
+COPY services/property-processing/.ocr-sources /usr/share/doc/haven-processing/ocr-sources
+COPY assets/digitization-fonts/LICENSE.txt assets/digitization-fonts/manifest.json /usr/share/doc/haven-processing/source-notices/assets/digitization-fonts/
+COPY docs/digitization/OCR-PRODUCTION-REVIEW.md /usr/share/doc/haven-processing/OCR-PRODUCTION-REVIEW.md
+COPY services/property-processing/verify_ocr_release.py /opt/processing/verify_ocr_release.py
+RUN python /opt/processing/verify_ocr_release.py
+CMD ["python", "-m", "property_processing.server"]

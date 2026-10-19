@@ -1,0 +1,37 @@
+{"label":"P","status":"fixture-objects-copied-and-verified","objects":1073,"bytes":16963686,"digest":"32e054e8764905a8f0904a34f9ee989f484215e4f9d7cf4082004000e0ca67e8","sourceMutated":false,"physicalPropertyEvidence":false}
+{"status":"failed","code":"RESTORED_DIGITIZATION_RECONCILIATION_FAILED"}
+{"label":"P","status":"application-configuration-created","project":"haven-recovery-4e4f36b8-app","bind":"127.0.0.2","databaseContainer":"haven-recovery-c4a15c4d-db","applicationVerified":false}
+node:internal/errors:984
+  const err = new Error(message);
+              ^
+
+Error: Command failed: docker compose -f /tmp/haven-recovery-4e4f36b8-KxJETi/application/application.json --profile tests up -d --no-deps cache storage identity search mail scanner processing-cpu
+ Network haven-recovery-4e4f36b8-app_processing Creating 
+ Network haven-recovery-4e4f36b8-app_processing Error Error response from daemon: all predefined address pools have been fully subnetted
+failed to create network haven-recovery-4e4f36b8-app_processing: Error response from daemon: all predefined address pools have been fully subnetted
+
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execFileSync (node:child_process:927:15)
+    at docker (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:16:41)
+    at compose (file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:50:22)
+    at verifyRestoredApplication (file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:54:3)
+    at file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:102:104 {
+  status: 1,
+  signal: null,
+  output: [
+    null,
+    '',
+    ' Network haven-recovery-4e4f36b8-app_processing Creating \n' +
+      ' Network haven-recovery-4e4f36b8-app_processing Error Error response from daemon: all predefined address pools have been fully subnetted\n' +
+      'failed to create network haven-recovery-4e4f36b8-app_processing: Error response from daemon: all predefined address pools have been fully subnetted\n'
+  ],
+  pid: 1029801,
+  stdout: '',
+  stderr: ' Network haven-recovery-4e4f36b8-app_processing Creating \n' +
+    ' Network haven-recovery-4e4f36b8-app_processing Error Error response from daemon: all predefined address pools have been fully subnetted\n' +
+    'failed to create network haven-recovery-4e4f36b8-app_processing: Error response from daemon: all predefined address pools have been fully subnetted\n'
+}
+
+Node.js v20.20.0

@@ -1,0 +1,567 @@
+ Image haven-recovery-api:1.0.0-locked-registration-review Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 565B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile:
+#2 transferring dockerfile: 1.47kB done
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context:
+#4 transferring context: 2B done
+#4 DONE 0.1s
+
+#5 [internal] load build context
+#5 ...
+
+#6 [ 1/25] FROM docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336
+#6 resolve docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336 0.1s done
+#6 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 504.32MB 5.0s
+#5 transferring context: 649.36MB 6.6s done
+#5 DONE 6.8s
+
+#7 [ 2/25] WORKDIR /workspace
+#7 CACHED
+
+#8 [ 3/25] COPY source/ /workspace/
+#8 DONE 1.0s
+
+#9 [ 4/25] COPY apps/worker/src/digitization/coordinator.ts /workspace/apps/worker/src/digitization/coordinator.ts
+#9 DONE 0.1s
+
+#10 [ 5/25] COPY apps/worker/src/main.ts /workspace/apps/worker/src/main.ts
+#10 DONE 0.1s
+
+#11 [ 6/25] RUN rm -rf /workspace/apps/api/node_modules
+#11 DONE 0.3s
+
+#12 [ 7/25] COPY dependencies-0/ /workspace/apps/api/node_modules/
+#12 DONE 0.1s
+
+#13 [ 8/25] RUN rm -rf /workspace/apps/ops/node_modules
+#13 DONE 0.3s
+
+#14 [ 9/25] COPY dependencies-1/ /workspace/apps/ops/node_modules/
+#14 DONE 0.1s
+
+#15 [10/25] RUN rm -rf /workspace/packages/config/node_modules
+#15 DONE 0.3s
+
+#16 [11/25] COPY dependencies-2/ /workspace/packages/config/node_modules/
+#16 DONE 0.1s
+
+#17 [12/25] RUN rm -rf /workspace/packages/contracts/node_modules
+#17 DONE 0.3s
+
+#18 [13/25] COPY dependencies-3/ /workspace/packages/contracts/node_modules/
+#18 DONE 0.1s
+
+#19 [14/25] RUN rm -rf /workspace/packages/test-support/node_modules
+#19 DONE 0.3s
+
+#20 [15/25] COPY dependencies-4/ /workspace/packages/test-support/node_modules/
+#20 DONE 0.2s
+
+#21 [16/25] RUN rm -rf /workspace/packages/ui/node_modules
+#21 DONE 0.3s
+
+#22 [17/25] COPY dependencies-5/ /workspace/packages/ui/node_modules/
+#22 DONE 0.2s
+
+#23 [18/25] RUN rm -rf /workspace/apps/web/node_modules
+#23 DONE 0.3s
+
+#24 [19/25] COPY dependencies-6/ /workspace/apps/web/node_modules/
+#24 DONE 0.2s
+
+#25 [20/25] RUN rm -rf /workspace/apps/worker/node_modules
+#25 DONE 0.3s
+
+#26 [21/25] COPY dependencies-7/ /workspace/apps/worker/node_modules/
+#26 DONE 0.2s
+
+#27 [22/25] RUN rm -rf /workspace/node_modules
+#27 DONE 2.3s
+
+#28 [23/25] COPY dependencies-8/ /workspace/node_modules/
+#28 DONE 4.7s
+
+#29 [24/25] RUN rm -rf /workspace/packages/database/node_modules
+#29 DONE 0.7s
+
+#30 [25/25] COPY dependencies-9/ /workspace/packages/database/node_modules/
+#30 DONE 0.1s
+
+#31 exporting to image
+#31 exporting layers
+#31 exporting layers 27.6s done
+#31 exporting manifest sha256:c62227f32f9cacc6e78750a7114bfd71a6fe7c83bed44c8e50db7e8bc0e92679 0.1s done
+#31 exporting config sha256:9075ee1b4574ea0ae3b763a4e68bef3415c0a029d1f98b91335b610c6678f6ef 0.1s done
+#31 exporting attestation manifest sha256:9d402d9123d5bfdb0c09466ed3d4dbc3e4c30da93be014e6c2e040d186e47190 0.1s done
+#31 exporting manifest list sha256:4f3b0698d770a5bcd61d1a0d868a2c9a751e27802d63784bb9bad446f3d94406
+#31 exporting manifest list sha256:4f3b0698d770a5bcd61d1a0d868a2c9a751e27802d63784bb9bad446f3d94406 0.1s done
+#31 naming to docker.io/library/haven-recovery-api:1.0.0-locked-registration-review done
+#31 unpacking to docker.io/library/haven-recovery-api:1.0.0-locked-registration-review
+#31 unpacking to docker.io/library/haven-recovery-api:1.0.0-locked-registration-review 8.7s done
+#31 DONE 36.7s
+
+#32 resolving provenance for metadata file
+#32 DONE 0.0s
+ Image haven-recovery-api:1.0.0-locked-registration-review Built 
+ Image haven-recovery-worker:1.0.0-locked-registration-review Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 577B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.47kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [ 1/25] FROM docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336
+#5 resolve docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336 0.0s done
+#5 DONE 0.1s
+
+#6 [internal] load build context
+#6 transferring context: 7.08MB 1.3s done
+#6 DONE 1.4s
+
+#7 [11/25] COPY dependencies-2/ /workspace/packages/config/node_modules/
+#7 CACHED
+
+#8 [23/25] COPY dependencies-8/ /workspace/node_modules/
+#8 CACHED
+
+#9 [20/25] RUN rm -rf /workspace/apps/worker/node_modules
+#9 CACHED
+
+#10 [ 5/25] COPY apps/worker/src/main.ts /workspace/apps/worker/src/main.ts
+#10 CACHED
+
+#11 [10/25] RUN rm -rf /workspace/packages/config/node_modules
+#11 CACHED
+
+#12 [17/25] COPY dependencies-5/ /workspace/packages/ui/node_modules/
+#12 CACHED
+
+#13 [24/25] RUN rm -rf /workspace/packages/database/node_modules
+#13 CACHED
+
+#14 [12/25] RUN rm -rf /workspace/packages/contracts/node_modules
+#14 CACHED
+
+#15 [ 8/25] RUN rm -rf /workspace/apps/ops/node_modules
+#15 CACHED
+
+#16 [ 7/25] COPY dependencies-0/ /workspace/apps/api/node_modules/
+#16 CACHED
+
+#17 [ 9/25] COPY dependencies-1/ /workspace/apps/ops/node_modules/
+#17 CACHED
+
+#18 [15/25] COPY dependencies-4/ /workspace/packages/test-support/node_modules/
+#18 CACHED
+
+#19 [ 2/25] WORKDIR /workspace
+#19 CACHED
+
+#20 [ 3/25] COPY source/ /workspace/
+#20 CACHED
+
+#21 [22/25] RUN rm -rf /workspace/node_modules
+#21 CACHED
+
+#22 [16/25] RUN rm -rf /workspace/packages/ui/node_modules
+#22 CACHED
+
+#23 [19/25] COPY dependencies-6/ /workspace/apps/web/node_modules/
+#23 CACHED
+
+#24 [21/25] COPY dependencies-7/ /workspace/apps/worker/node_modules/
+#24 CACHED
+
+#25 [ 4/25] COPY apps/worker/src/digitization/coordinator.ts /workspace/apps/worker/src/digitization/coordinator.ts
+#25 CACHED
+
+#26 [18/25] RUN rm -rf /workspace/apps/web/node_modules
+#26 CACHED
+
+#27 [14/25] RUN rm -rf /workspace/packages/test-support/node_modules
+#27 CACHED
+
+#28 [13/25] COPY dependencies-3/ /workspace/packages/contracts/node_modules/
+#28 CACHED
+
+#29 [ 6/25] RUN rm -rf /workspace/apps/api/node_modules
+#29 CACHED
+
+#30 [25/25] COPY dependencies-9/ /workspace/packages/database/node_modules/
+#30 CACHED
+
+#31 exporting to image
+#31 exporting layers done
+#31 exporting manifest sha256:c55d9caa43ef39b299e1ed0e1a214f5ef9dc1b94cb60725d58ff6acdc1c46738 0.1s done
+#31 exporting config sha256:253c1fae66e6f3eb095afa00f3cdfdb493336e18d4377f188f270eb3917a9fdd 0.1s done
+#31 exporting attestation manifest sha256:fb34f41b1a33abc66fffa8d63fad87a12851a9a06c75fca3cb460a7dedd95865 0.1s done
+#31 exporting manifest list sha256:2c16247c079e768c6e8f559a6b5af58597c0ecaed58304b8b4aed5394c8cc80e
+#31 exporting manifest list sha256:2c16247c079e768c6e8f559a6b5af58597c0ecaed58304b8b4aed5394c8cc80e 0.1s done
+#31 naming to docker.io/library/haven-recovery-worker:1.0.0-locked-registration-review done
+#31 unpacking to docker.io/library/haven-recovery-worker:1.0.0-locked-registration-review 0.0s done
+#31 DONE 0.4s
+
+#32 resolving provenance for metadata file
+#32 DONE 0.0s
+ Image haven-recovery-worker:1.0.0-locked-registration-review Built 
+ Image haven-recovery-web:1.0.0-locked-registration-review Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 565B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.47kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [ 1/25] FROM docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336
+#5 resolve docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336 0.1s done
+#5 DONE 0.1s
+
+#6 [internal] load build context
+#6 transferring context: 7.08MB 1.3s done
+#6 DONE 1.4s
+
+#7 [14/25] RUN rm -rf /workspace/packages/test-support/node_modules
+#7 CACHED
+
+#8 [12/25] RUN rm -rf /workspace/packages/contracts/node_modules
+#8 CACHED
+
+#9 [ 3/25] COPY source/ /workspace/
+#9 CACHED
+
+#10 [15/25] COPY dependencies-4/ /workspace/packages/test-support/node_modules/
+#10 CACHED
+
+#11 [21/25] COPY dependencies-7/ /workspace/apps/worker/node_modules/
+#11 CACHED
+
+#12 [ 8/25] RUN rm -rf /workspace/apps/ops/node_modules
+#12 CACHED
+
+#13 [22/25] RUN rm -rf /workspace/node_modules
+#13 CACHED
+
+#14 [19/25] COPY dependencies-6/ /workspace/apps/web/node_modules/
+#14 CACHED
+
+#15 [20/25] RUN rm -rf /workspace/apps/worker/node_modules
+#15 CACHED
+
+#16 [13/25] COPY dependencies-3/ /workspace/packages/contracts/node_modules/
+#16 CACHED
+
+#17 [16/25] RUN rm -rf /workspace/packages/ui/node_modules
+#17 CACHED
+
+#18 [ 7/25] COPY dependencies-0/ /workspace/apps/api/node_modules/
+#18 CACHED
+
+#19 [ 9/25] COPY dependencies-1/ /workspace/apps/ops/node_modules/
+#19 CACHED
+
+#20 [23/25] COPY dependencies-8/ /workspace/node_modules/
+#20 CACHED
+
+#21 [ 2/25] WORKDIR /workspace
+#21 CACHED
+
+#22 [10/25] RUN rm -rf /workspace/packages/config/node_modules
+#22 CACHED
+
+#23 [ 5/25] COPY apps/worker/src/main.ts /workspace/apps/worker/src/main.ts
+#23 CACHED
+
+#24 [11/25] COPY dependencies-2/ /workspace/packages/config/node_modules/
+#24 CACHED
+
+#25 [ 4/25] COPY apps/worker/src/digitization/coordinator.ts /workspace/apps/worker/src/digitization/coordinator.ts
+#25 CACHED
+
+#26 [ 6/25] RUN rm -rf /workspace/apps/api/node_modules
+#26 CACHED
+
+#27 [24/25] RUN rm -rf /workspace/packages/database/node_modules
+#27 CACHED
+
+#28 [17/25] COPY dependencies-5/ /workspace/packages/ui/node_modules/
+#28 CACHED
+
+#29 [18/25] RUN rm -rf /workspace/apps/web/node_modules
+#29 CACHED
+
+#30 [25/25] COPY dependencies-9/ /workspace/packages/database/node_modules/
+#30 CACHED
+
+#31 exporting to image
+#31 exporting layers 0.0s done
+#31 exporting manifest sha256:2bd59b23b62fe693e4d6b9007a7a31508ac8416e8787908cb8222eeb57d1e4c1 0.1s done
+#31 exporting config sha256:5998a65135135c6ee2aea74041ee77b44fcfe991a58f3e828f2f34005b2525bf 0.1s done
+#31 exporting attestation manifest sha256:154c6e008d1dba887637fb7ce86609ae905e490b4737ba21348f0ba9b729ebde 0.1s done
+#31 exporting manifest list sha256:5b60d3662e61106b3ffe32cefef699e8b38a0fbdd9016332211a5de0a9c05b1a
+#31 exporting manifest list sha256:5b60d3662e61106b3ffe32cefef699e8b38a0fbdd9016332211a5de0a9c05b1a 0.1s done
+#31 naming to docker.io/library/haven-recovery-web:1.0.0-locked-registration-review done
+#31 unpacking to docker.io/library/haven-recovery-web:1.0.0-locked-registration-review 0.0s done
+#31 DONE 0.4s
+
+#32 resolving provenance for metadata file
+#32 DONE 0.0s
+ Image haven-recovery-web:1.0.0-locked-registration-review Built 
+ Image haven-recovery-ops:1.0.0-locked-registration-review Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 565B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.47kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 ...
+
+#6 [ 1/25] FROM docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336
+#6 resolve docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336 0.0s done
+#6 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 7.08MB 1.2s done
+#5 DONE 1.3s
+
+#7 [14/25] RUN rm -rf /workspace/packages/test-support/node_modules
+#7 CACHED
+
+#8 [20/25] RUN rm -rf /workspace/apps/worker/node_modules
+#8 CACHED
+
+#9 [ 9/25] COPY dependencies-1/ /workspace/apps/ops/node_modules/
+#9 CACHED
+
+#10 [12/25] RUN rm -rf /workspace/packages/contracts/node_modules
+#10 CACHED
+
+#11 [17/25] COPY dependencies-5/ /workspace/packages/ui/node_modules/
+#11 CACHED
+
+#12 [18/25] RUN rm -rf /workspace/apps/web/node_modules
+#12 CACHED
+
+#13 [ 7/25] COPY dependencies-0/ /workspace/apps/api/node_modules/
+#13 CACHED
+
+#14 [23/25] COPY dependencies-8/ /workspace/node_modules/
+#14 CACHED
+
+#15 [22/25] RUN rm -rf /workspace/node_modules
+#15 CACHED
+
+#16 [ 8/25] RUN rm -rf /workspace/apps/ops/node_modules
+#16 CACHED
+
+#17 [ 4/25] COPY apps/worker/src/digitization/coordinator.ts /workspace/apps/worker/src/digitization/coordinator.ts
+#17 CACHED
+
+#18 [11/25] COPY dependencies-2/ /workspace/packages/config/node_modules/
+#18 CACHED
+
+#19 [21/25] COPY dependencies-7/ /workspace/apps/worker/node_modules/
+#19 CACHED
+
+#20 [ 3/25] COPY source/ /workspace/
+#20 CACHED
+
+#21 [16/25] RUN rm -rf /workspace/packages/ui/node_modules
+#21 CACHED
+
+#22 [15/25] COPY dependencies-4/ /workspace/packages/test-support/node_modules/
+#22 CACHED
+
+#23 [10/25] RUN rm -rf /workspace/packages/config/node_modules
+#23 CACHED
+
+#24 [ 2/25] WORKDIR /workspace
+#24 CACHED
+
+#25 [ 6/25] RUN rm -rf /workspace/apps/api/node_modules
+#25 CACHED
+
+#26 [13/25] COPY dependencies-3/ /workspace/packages/contracts/node_modules/
+#26 CACHED
+
+#27 [24/25] RUN rm -rf /workspace/packages/database/node_modules
+#27 CACHED
+
+#28 [ 5/25] COPY apps/worker/src/main.ts /workspace/apps/worker/src/main.ts
+#28 CACHED
+
+#29 [19/25] COPY dependencies-6/ /workspace/apps/web/node_modules/
+#29 CACHED
+
+#30 [25/25] COPY dependencies-9/ /workspace/packages/database/node_modules/
+#30 CACHED
+
+#31 exporting to image
+#31 exporting layers 0.0s done
+#31 exporting manifest sha256:c4a824acdc112650ddc010e0fec10f37585a314fce89b2b776b21c8441fee0f3 0.1s done
+#31 exporting config sha256:27c504c6cb0c6c54b608461cc808f0e1ebcc796575c3d2c99b1bbe4f4bfd4b60 0.0s done
+#31 exporting attestation manifest sha256:06af69a4f1cd4cf83f235e0cf8df1f6fd280325fb34551882ee600d1b76fb10f 0.1s done
+#31 exporting manifest list sha256:e60b72cbb33dc61f638cc483c4b8d15e468555c36fc4855ce0ba10453867e427
+#31 exporting manifest list sha256:e60b72cbb33dc61f638cc483c4b8d15e468555c36fc4855ce0ba10453867e427 0.1s done
+#31 naming to docker.io/library/haven-recovery-ops:1.0.0-locked-registration-review done
+#31 unpacking to docker.io/library/haven-recovery-ops:1.0.0-locked-registration-review 0.0s done
+#31 DONE 0.4s
+
+#32 resolving provenance for metadata file
+#32 DONE 0.0s
+ Image haven-recovery-ops:1.0.0-locked-registration-review Built 
+ Image haven-recovery-browser:1.0.0-locked-registration-review Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 589B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.browser
+#2 transferring dockerfile: 1.48kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/haven-recovery-browser-base:1.0.0-20779a72c32f
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 ...
+
+#6 [ 1/25] FROM docker.io/library/haven-recovery-browser-base:1.0.0-20779a72c32f@sha256:20779a72c32f5b1fd63b71480503dceae895af67ef8fa776e821c4b2b253f3a1
+#6 resolve docker.io/library/haven-recovery-browser-base:1.0.0-20779a72c32f@sha256:20779a72c32f5b1fd63b71480503dceae895af67ef8fa776e821c4b2b253f3a1 0.1s done
+#6 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 7.08MB 1.4s done
+#5 DONE 1.6s
+
+#7 [ 2/25] WORKDIR /workspace
+#7 CACHED
+
+#8 [ 3/25] COPY source/ /workspace/
+#8 DONE 0.8s
+
+#9 [ 4/25] COPY apps/worker/src/digitization/coordinator.ts /workspace/apps/worker/src/digitization/coordinator.ts
+#9 DONE 0.2s
+
+#10 [ 5/25] COPY apps/worker/src/main.ts /workspace/apps/worker/src/main.ts
+#10 DONE 0.1s
+
+#11 [ 6/25] RUN rm -rf /workspace/apps/api/node_modules
+#11 DONE 0.3s
+
+#12 [ 7/25] COPY dependencies-0/ /workspace/apps/api/node_modules/
+#12 DONE 0.1s
+
+#13 [ 8/25] RUN rm -rf /workspace/apps/ops/node_modules
+#13 DONE 0.3s
+
+#14 [ 9/25] COPY dependencies-1/ /workspace/apps/ops/node_modules/
+#14 DONE 0.1s
+
+#15 [10/25] RUN rm -rf /workspace/packages/config/node_modules
+#15 DONE 0.3s
+
+#16 [11/25] COPY dependencies-2/ /workspace/packages/config/node_modules/
+#16 DONE 0.1s
+
+#17 [12/25] RUN rm -rf /workspace/packages/contracts/node_modules
+#17 DONE 0.3s
+
+#18 [13/25] COPY dependencies-3/ /workspace/packages/contracts/node_modules/
+#18 DONE 0.1s
+
+#19 [14/25] RUN rm -rf /workspace/packages/test-support/node_modules
+#19 DONE 0.3s
+
+#20 [15/25] COPY dependencies-4/ /workspace/packages/test-support/node_modules/
+#20 DONE 0.2s
+
+#21 [16/25] RUN rm -rf /workspace/packages/ui/node_modules
+#21 DONE 0.3s
+
+#22 [17/25] COPY dependencies-5/ /workspace/packages/ui/node_modules/
+#22 DONE 0.1s
+
+#23 [18/25] RUN rm -rf /workspace/apps/web/node_modules
+#23 DONE 0.3s
+
+#24 [19/25] COPY dependencies-6/ /workspace/apps/web/node_modules/
+#24 DONE 0.2s
+
+#25 [20/25] RUN rm -rf /workspace/apps/worker/node_modules
+#25 DONE 0.3s
+
+#26 [21/25] COPY dependencies-7/ /workspace/apps/worker/node_modules/
+#26 DONE 0.1s
+
+#27 [22/25] RUN rm -rf /workspace/node_modules
+#27 DONE 1.7s
+
+#28 [23/25] COPY dependencies-8/ /workspace/node_modules/
+#28 DONE 4.1s
+
+#29 [24/25] RUN rm -rf /workspace/packages/database/node_modules
+#29 DONE 0.5s
+
+#30 [25/25] COPY dependencies-9/ /workspace/packages/database/node_modules/
+#30 DONE 0.1s
+
+#31 exporting to image
+#31 exporting layers
+#31 exporting layers 27.2s done
+#31 exporting manifest sha256:0c5a14a7d1c6f7ac68dc2c2d5c2d1c34823e5cd480f41ba0532c16d0cb3793eb 0.1s done
+#31 exporting config sha256:2a530152176e7adc2e66f767666f9511eedeb43a792d8a1ec19faea9290ace62 0.1s done
+#31 exporting attestation manifest sha256:0c4b6dee4f406ceb205aad3df3f178fee4cd6e9fd87e91580b3a9007a2699578 0.1s done
+#31 exporting manifest list sha256:ade34ce4a5f21e6f846852aa77c4f867a4f75d918c9b0c1e1e43f550c334cb2b
+#31 exporting manifest list sha256:ade34ce4a5f21e6f846852aa77c4f867a4f75d918c9b0c1e1e43f550c334cb2b 0.1s done
+#31 naming to docker.io/library/haven-recovery-browser:1.0.0-locked-registration-review done
+#31 unpacking to docker.io/library/haven-recovery-browser:1.0.0-locked-registration-review
+#31 unpacking to docker.io/library/haven-recovery-browser:1.0.0-locked-registration-review 9.0s done
+#31 DONE 36.6s
+
+#32 resolving provenance for metadata file
+#32 DONE 0.0s
+ Image haven-recovery-browser:1.0.0-locked-registration-review Built 
+{"label":"P","status":"locked-local-fixture-images-built","lockSha256":"1bfa8ae038760d2b68d06f5693658af4d218123335e03e2276c5b3d5c0fb994e","dependencyVolumes":10,"installedLockSha256":"1bfa8ae038760d2b68d06f5693658af4d218123335e03e2276c5b3d5c0fb994e","registryDownload":false,"productionImageAcceptance":false}

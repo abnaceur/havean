@@ -1,0 +1,35 @@
+time="2026-10-09T23:47:48+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-ocr-confined-investigation-run-4125f5194998 Creating 
+ Container haven-ocr-confined-investigation-run-4125f5194998 Created 
+/usr/local/lib/python3.12/site-packages/paddle/utils/cpp_extension/extension_utils.py:718: UserWarning: No ccache found. Please be aware that recompiling all source files may be required. You can download and install ccache from: https://github.com/ccache/ccache/blob/master/doc/INSTALL.md
+  warnings.warn(warning_message)
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/pathlib.py", line 1311, in mkdir
+    os.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/.paddlex/temp'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.12/site-packages/paddleocr/__init__.py", line 15, in <module>
+    from paddlex.inference.utils.benchmark import benchmark
+  File "/usr/local/lib/python3.12/site-packages/paddlex/__init__.py", line 49, in <module>
+    from .inference import create_pipeline, create_predictor
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/__init__.py", line 16, in <module>
+    from .models import create_predictor
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/models/__init__.py", line 22, in <module>
+    from ..utils.official_models import official_models
+  File "/usr/local/lib/python3.12/site-packages/paddlex/inference/utils/official_models.py", line 32, in <module>
+    from ...utils.cache import CACHE_DIR
+  File "/usr/local/lib/python3.12/site-packages/paddlex/utils/cache.py", line 146, in <module>
+    temp_file_manager = TempFileManager()
+                        ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/paddlex/utils/cache.py", line 111, in __init__
+    Path(TEMP_DIR).mkdir(parents=True, exist_ok=True)
+  File "/usr/local/lib/python3.12/pathlib.py", line 1315, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/local/lib/python3.12/pathlib.py", line 1311, in mkdir
+    os.mkdir(self, mode)
+OSError: [Errno 30] Read-only file system: '/.paddlex'
+

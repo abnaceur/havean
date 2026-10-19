@@ -1,0 +1,108 @@
+ Image haven-processing-cpu Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 612B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.cpu
+#2 transferring dockerfile: 3.72kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 192B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 DONE 0.0s
+
+#6 [media-build  1/10] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#6 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.1s done
+#6 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 4.67kB done
+#5 DONE 0.0s
+
+#7 [media-build  2/10] COPY services/property-processing/locks/media-build-apt.json /tmp/media-build-apt.json
+#7 CACHED
+
+#8 [cpu  2/14] WORKDIR /opt/processing
+#8 CACHED
+
+#9 [cpu  4/14] COPY services/property-processing/media-build.json /opt/media/build-profile.json
+#9 CACHED
+
+#10 [cpu  8/14] COPY docs/adr/licenses/media-libgcc-14.2.0 /usr/share/doc/haven-processing/media-libgcc-14.2.0
+#10 CACHED
+
+#11 [cpu 11/14] COPY docs/adr/processing-dependencies.json ./dependencies.json
+#11 CACHED
+
+#12 [cpu  6/14] COPY docs/adr/licenses/media-glibc-2.41 /usr/share/doc/haven-processing/media-glibc-2.41
+#12 CACHED
+
+#13 [media-build  3/10] RUN python -c "import json,subprocess; p=json.load(open('/tmp/media-build-apt.json'))['packages']; subprocess.run(['apt-get','update'],check=True); subprocess.run(['apt-get','install','-y','--no-install-recommends',*[name+'='+version for name,version in p.items()]],check=True)" && rm -rf /var/lib/apt/lists/*
+#13 CACHED
+
+#14 [media-build  4/10] WORKDIR /build
+#14 CACHED
+
+#15 [media-build  6/10] RUN --mount=type=bind,source=services/property-processing/.media-sources,target=/sources,readonly python -c "import hashlib,json,pathlib,tarfile; p=json.load(open('/build/profile.json')); f=pathlib.Path('/sources/ffmpeg-7.1.5.tar.xz'); assert hashlib.sha256(f.read_bytes()).hexdigest()==p['sourceSha256']; tarfile.open(f).extractall('/build',filter='data')"
+#15 CACHED
+
+#16 [media-build  5/10] COPY services/property-processing/media-build.json /build/profile.json
+#16 CACHED
+
+#17 [media-build  9/10] RUN python -c "import subprocess; assert all(b'INTERP' not in subprocess.check_output(['readelf','-l','/opt/media/bin/'+name]) for name in ('ffmpeg','ffprobe'))"
+#17 CACHED
+
+#18 [media-build  8/10] RUN python -c "import json,subprocess; p=json.load(open('/build/profile.json')); subprocess.run(['./configure','--prefix=/opt/media',*p['flags']],check=True)" && make -j2 && make install
+#18 CACHED
+
+#19 [cpu  5/14] COPY docs/adr/licenses/ffmpeg-7.1.5 /usr/share/doc/haven-processing/ffmpeg-7.1.5
+#19 CACHED
+
+#20 [cpu 10/14] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
+#20 CACHED
+
+#21 [cpu 13/14] COPY services/property-processing/property_processing ./property_processing
+#21 CACHED
+
+#22 [cpu  3/14] COPY --from=media-build /opt/media /opt/media
+#22 CACHED
+
+#23 [cpu  7/14] COPY docs/adr/licenses/media-zlib-1.3.1 /usr/share/doc/haven-processing/media-zlib-1.3.1
+#23 CACHED
+
+#24 [cpu  9/14] COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
+#24 CACHED
+
+#25 [cpu 12/14] COPY docs/adr/licenses/pypdfium2-5.14.0 /usr/share/doc/haven-processing/pypdfium2-5.14.0
+#25 CACHED
+
+#26 [media-build  7/10] WORKDIR /build/ffmpeg-7.1.5
+#26 CACHED
+
+#27 [media-build 10/10] RUN python -c "import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))"
+#27 CACHED
+
+#28 [cpu 14/14] RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+#28 CACHED
+
+#29 exporting to image
+#29 exporting layers done
+#29 exporting manifest sha256:c4c350e9390c6566958a2b147c71b92699550b4e1e150650aee5996fd95f9860 0.1s done
+#29 exporting config sha256:9b6c5244b83f0ed54da048f20d604594a03d37aa3ede34818b6acc1d25c069a6
+#29 exporting config sha256:9b6c5244b83f0ed54da048f20d604594a03d37aa3ede34818b6acc1d25c069a6 0.1s done
+#29 exporting attestation manifest sha256:0d082f3e562dc2ad91d395320402032c1d40152170eac0823ebc2bcfc98ea89c
+#29 exporting attestation manifest sha256:0d082f3e562dc2ad91d395320402032c1d40152170eac0823ebc2bcfc98ea89c 0.1s done
+#29 exporting manifest list sha256:316e4c4bcede64a57db4734de98d62493f14ec9469e60662b7b6a7799191a778 0.1s done
+#29 naming to docker.io/library/haven-processing-cpu:latest done
+#29 unpacking to docker.io/library/haven-processing-cpu:latest 0.0s done
+#29 DONE 0.4s
+
+#30 resolving provenance for metadata file
+#30 DONE 0.0s
+ Image haven-processing-cpu Built 

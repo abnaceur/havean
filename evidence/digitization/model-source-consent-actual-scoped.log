@@ -1,0 +1,48 @@
+ Container haven-processing-tests-cpu-run-40341e3cda45 Creating 
+ Container haven-processing-tests-cpu-run-40341e3cda45 Created 
+Exported 27 authored Gaussian splats; not GPU training evidence.
+{"fixture":"authored_gaussians_not_gpu_training","realPrivateStorage":true,"splatCount":27}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-model-source-consent.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 155[2mms[22m[39m
+[31m   [31m×[31m owner structural source consent separates private review, publication, historical revocation and another mandate[39m[32m 108[2mms[22m[39m
+[31m   [31m×[31m owner splat source consent separates private review, publication, historical revocation and another mandate[39m[32m 45[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-model-source-consent.test.ts[2m > [22mowner structural source consent separates private review, publication, historical revocation and another mandate
+[41m[1m FAIL [22m[49m tests/integration/digitization-model-source-consent.test.ts[2m > [22mowner splat source consent separates private review, publication, historical revocation and another mandate
+[31m[1mZodError[22m: [
+  {
+    "origin": "string",
+    "code": "invalid_format",
+    "format": "datetime",
+    "pattern": "/^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$/",
+    "path": [
+      "grants",
+      0,
+      "expiresAt"
+    ],
+    "message": "Invalid ISO datetime"
+  }
+][39m
+[36m [2m❯[22m readModelSourcePermissionScope apps/api/src/inventory/digitization/model-source-permissions.ts:[2m6:48[22m[39m
+    [90m  4|[39m  * never returns another owner's document, original object key or sour…
+    [90m  5|[39m export async function readModelSourcePermissionScope(c:pg.PoolClient,e…
+    [90m  6|[39m  return digitizationModelSourcePermissionScope.parse((await c.query('S…
+    [90m   |[39m                                                [31m^[39m
+    [90m  7|[39m }
+    [90m  8|[39m
+[90m [2m❯[22m apps/api/src/inventory/digitization/controller.ts:[2m54:227[22m[39m
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m tests/integration/digitization-model-source-consent.test.ts:[2m28:15[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m   Start at [22m 21:25:54
+[2m   Duration [22m 1.96s[2m (import 53%, transform 38%, tests 8%)[22m
+

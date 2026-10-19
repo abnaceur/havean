@@ -1,0 +1,42 @@
+time="2026-10-12T22:23:59+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-b5d05117f337 Creating 
+ Container haven-tests-run-b5d05117f337 Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-agent-visuals.spec.ts:7:1 › agent authors plan and tour and publishes both on the same reviewed property (24.0s)
+
+
+  1) [desktop] › tests/e2e/digitization-agent-visuals.spec.ts:7:1 › agent authors plan and tour and publishes both on the same reviewed property 
+
+    TimeoutError: locator.selectOption: Timeout 20000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Private source processing' }).getByLabel('Source purpose', { exact: true })
+
+
+       9 |  await login(page,'agent',origin,'/ops');await page.goto(`${origin}/ops/digitization?workspace=${f.engineId}`);
+      10 |  const sources=page.getByRole('region',{name:'Private source processing'});
+    > 11 |  if(!f.sourcesUploaded){for(const [purpose,file] of [['plan','floor-plan.png'],['panorama','living-panorama.png']]){await sources.getByLabel('Source purpose',{exact:true}).selectOption(purpose);await sources.getByLabel('Choose property source',{exact:true}).setInputFiles('assets/digitization-demo/'+file);await sources.getByLabel('Source rights and origin',{exact:true}).fill('Project-authored synthetic geometry and full spherical panorama, functional fixture.');await sources.getByRole('checkbox',{name:'I am authorized to upload and process this property source.'}).check();await sources.getByRole('button',{name:'Upload private source',exact:true}).click();await expect(sources.getByRole('status')).toContainText('Source saved privately.');}f.sourcesUploaded=true;save();}
+         |                                                                                                                                                                             ^
+      12 |  if(!f.processed){for(const name of ['Prepare source pages','Prepare panorama']){await sources.getByRole('button',{name,exact:true}).click();await expect.poll(async()=>{const data=(await (await page.request.get(`${origin}/api/v1/ops/digitizations/${f.engineId}/runs`)).json()).data;return data.length>0&&data.every((r:any)=>r.state==='awaiting_review');},{timeout:120000}).toBe(true);}f.processed=true;save();}
+      13 |  const editor=page.getByRole('region',{name:'Private plan editor'});
+      14 |  if(!f.geometry){await editor.getByRole('button',{name:'Reload saved trace',exact:true}).click();const canvas=editor.getByRole('img',{name:'Plan drawing canvas'});await expect(canvas).toBeVisible();await canvas.scrollIntoViewIfNeeded();
+        at /workspace/tests/e2e/digitization-agent-visuals.spec.ts:11:173
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-agent-visuals-49d3e--the-same-reviewed-property-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-agent-visuals-49d3e--the-same-reviewed-property-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-agent-visuals-49d3e--the-same-reviewed-property-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-agent-visuals-49d3e--the-same-reviewed-property-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-agent-visuals.spec.ts:7:1 › agent authors plan and tour and publishes both on the same reviewed property 
+

@@ -1,0 +1,77 @@
+time="2026-10-09T20:08:24+04:00" level=warning msg="Found orphan containers ([haven-tests-run-6990adf1571e]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-8ad0e9a4593f Creating 
+ Container haven-tests-run-8ad0e9a4593f Created 
+
+Running 6 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/map-enhancements.spec.ts:5:1 › price pin previews and selected panel retain map filters and support keyboard/mobile (39.0s)
+  ✓  2 [desktop] › tests/e2e/map-search.spec.ts:9:1 › D05 real MapLibre clusters, selected cards and URL bounds synchronize with the same public list criteria (10.6s)
+  ✓  3 [desktop] › tests/e2e/map-search.spec.ts:20:1 › D05 a genuine tile failure and unavailable WebGL retain the matching property list and attribution (5.0s)
+  ✘  4 [mobile] › tests/e2e/map-enhancements.spec.ts:5:1 › price pin previews and selected panel retain map filters and support keyboard/mobile (18.0s)
+  ✓  5 [mobile] › tests/e2e/map-search.spec.ts:9:1 › D05 real MapLibre clusters, selected cards and URL bounds synchronize with the same public list criteria (16.3s)
+  ✓  6 [mobile] › tests/e2e/map-search.spec.ts:20:1 › D05 a genuine tile failure and unavailable WebGL retain the matching property list and attribution (6.8s)
+
+
+  1) [desktop] › tests/e2e/map-enhancements.spec.ts:5:1 › price pin previews and selected panel retain map filters and support keyboard/mobile 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('.map-price-pin').last()
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('.map-price-pin').last() with timeout 15000ms
+      - waiting for locator('.map-price-pin').last()
+
+
+      23 |  // Zooming separates clusters without changing the applied URL filters.
+      24 |  for(let i=0;i<6&&await page.locator('.map-price-pin').count()===0;i++){await page.getByRole('button',{name:'Zoom in',exact:true}).click();await page.waitForTimeout(350);}
+    > 25 |  const pin=page.locator('.map-price-pin').last();await expect(pin).toBeVisible();await pin.focus();
+         |                                                                    ^
+      26 |  const preview=page.getByRole('region',{name:'Property preview',exact:true});await expect(preview).toBeVisible();
+      27 |  await pin.press('Escape');await expect(preview).toHaveCount(0);
+      28 |  await pin.blur();await pin.focus();await expect(preview).toBeVisible();
+        at /workspace/tests/e2e/map-enhancements.spec.ts:25:68
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    infra/generated/map-browser-results-final/map-enhancements-price-pin-d778a-and-support-keyboard-mobile-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: infra/generated/map-browser-results-final/map-enhancements-price-pin-d778a-and-support-keyboard-mobile-desktop/error-context.md
+
+  2) [mobile] › tests/e2e/map-enhancements.spec.ts:5:1 › price pin previews and selected panel retain map filters and support keyboard/mobile 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('.map-canvas')
+    Expected: "true"
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" locator('.map-canvas') with timeout 15000ms
+      - waiting for locator('.map-canvas')
+
+
+       5 | test('price pin previews and selected panel retain map filters and support keyboard/mobile',async({page},info)=>{
+       6 |  await page.goto('/bj/map?transaction=sale&segment=residential&sort=newest');
+    >  7 |  await expect(page.locator('.map-canvas')).toHaveAttribute('data-map-ready','true');
+         |                                            ^
+       8 |  // Narrow to a single real listing to exercise an unclustered native price pin.
+       9 |  const response=await page.request.get('/api/v1/listings/map?city=bj&transaction=sale&segment=residential');
+      10 |  expect(response.ok()).toBe(true);
+        at /workspace/tests/e2e/map-enhancements.spec.ts:7:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    infra/generated/map-browser-results-final/map-enhancements-price-pin-d778a-and-support-keyboard-mobile-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: infra/generated/map-browser-results-final/map-enhancements-price-pin-d778a-and-support-keyboard-mobile-mobile/error-context.md
+
+  2 failed
+    [desktop] › tests/e2e/map-enhancements.spec.ts:5:1 › price pin previews and selected panel retain map filters and support keyboard/mobile 
+    [mobile] › tests/e2e/map-enhancements.spec.ts:5:1 › price pin previews and selected panel retain map filters and support keyboard/mobile 
+  4 passed (1.7m)
+

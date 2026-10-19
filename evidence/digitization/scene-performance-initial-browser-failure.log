@@ -1,0 +1,47 @@
+ Container haven-processing-tests-cpu-run-859519c5cb40 Creating 
+ Container haven-processing-tests-cpu-run-859519c5cb40 Created 
+Exported 27 authored Gaussian splats; not GPU training evidence.
+{"fixture":"authored_gaussians_not_gpu_training","realPrivateStorage":true,"splatCount":27}
+ Container haven-integration-tests-run-9b27740c4628 Creating 
+ Container haven-integration-tests-run-9b27740c4628 Created 
+
+Running 2 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/digitization-scene-preview.spec.ts:4:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit (11.8s)
+  ✘  2 [mobile] › tests/e2e/digitization-scene-preview.spec.ts:4:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit (6.9s)
+
+
+  1) [mobile] › tests/e2e/digitization-scene-preview.spec.ts:4:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "Chrome"
+    Received string:    "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Mobile/15E148 Safari/604.1"
+
+      13 |  await panel.getByRole('button',{name:'Measure scene performance',exact:true}).click();
+      14 |  const measured=panel.getByRole('region',{name:'Measured scene performance'});await expect(measured).toBeVisible({timeout:15000});
+    > 15 |  const report=JSON.parse(await measured.getByLabel('Scene performance report').innerText());expect(report.splatCount).toBe(fixture.splatCount);expect(report.downloadBytes).toBe(Number(fixture.byteSize));expect(report.sample.frames).toBeGreaterThan(1);expect(report.sample.framesPerSecond).toBeGreaterThan(0);expect(report.memory.gpuBytes).toBeNull();expect(report.browser).toContain('Chrome');
+         |                                                                                                                                                                                                                                                                                                                                                                                      ^
+      16 |  const {writeFileSync}=await import('node:fs');writeFileSync(`evidence/digitization/scene-performance-${info.project.name}.json`,JSON.stringify({...report,execution:'Playwright Chromium on local Docker host; mobile is emulation',fixture:'self-authored 27-splat binary; no reconstruction acceptance'},null,2)+'\n');
+      17 |  const response=await page.request.get(`${origin}/api/v1/ops/digitizations/${fixture.engineId}/scene-tiers`);expect(response.status()).toBe(200);expect(JSON.stringify(await response.json())).not.toMatch(/object_key|quarantine|ownerName|sourceType|checksum/);
+      18 |  await panel.getByRole('button',{name:'Close scene preview',exact:true}).click();await expect(canvas).toHaveCount(0);expect(await page.evaluate(()=>(window as any).__deletedSplatBuffers)).toBeGreaterThan(0);
+        at /workspace/tests/e2e/digitization-scene-preview.spec.ts:15:374
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-scene-preview-272e6-poses-WebGL-buffers-on-exit-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile] › tests/e2e/digitization-scene-preview.spec.ts:4:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit 
+  1 passed (20.6s)
+

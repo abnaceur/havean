@@ -1,0 +1,103 @@
+ Image haven-gsplat:1.5.3-torch2.7.1-cu126-sm75-investigation-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 671B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.gsplat-local
+#2 transferring dockerfile: 3.03kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/haven-popsift:0.9-cuda12.6.3-investigation-v1
+#3 DONE 0.1s
+
+#4 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#4 ...
+
+#5 [auth] library/python:pull token for registry-1.docker.io
+#5 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#4 DONE 1.3s
+
+#6 [internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 DONE 0.0s
+
+#8 [compile 1/9] FROM docker.io/library/haven-popsift:0.9-cuda12.6.3-investigation-v1@sha256:0472d0aaaed12ec6c98b29e4bbbe01c241cf1bd44f2d64efaeff465c6974195e
+#8 resolve docker.io/library/haven-popsift:0.9-cuda12.6.3-investigation-v1@sha256:0472d0aaaed12ec6c98b29e4bbbe01c241cf1bd44f2d64efaeff465c6974195e 0.1s done
+#8 DONE 0.1s
+
+#9 [stage-1 1/9] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#9 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.1s done
+#9 DONE 0.1s
+
+#7 [internal] load build context
+#7 transferring context: 12.05kB done
+#7 DONE 0.0s
+
+#10 [compile 5/9] RUN python -m pip install --no-cache-dir --report /runtime-evidence/python.json Pillow==11.3.0 numpy==2.2.6 ninja==1.11.1.4 jaxtyping==0.3.2 rich==14.1.0 setuptools==80.9.0 wheel==0.45.1
+#10 CACHED
+
+#11 [compile 6/9] COPY .gsplat-build/gsplat.tar.gz .gsplat-build/glm.tar.gz /source-archives/
+#11 CACHED
+
+#12 [compile 7/9] RUN echo '8fb7dd5f85ec70a74f3842b831dfc30f742d1148e6ce64074e8933e6782cd0e2  /source-archives/gsplat.tar.gz' | sha256sum -c - && echo 'fa761b941987933884b0d21d5b86930789061f026ba163d47cebbc5b00be277b  /source-archives/glm.tar.gz' | sha256sum -c - && mkdir /gsplat-source /glm-source && tar -xzf /source-archives/gsplat.tar.gz -C /gsplat-source --strip-components=1 && tar -xzf /source-archives/glm.tar.gz -C /glm-source --strip-components=1 && cp -a /glm-source/. /gsplat-source/gsplat/cuda/csrc/third_party/glm/
+#12 CACHED
+
+#13 [stage-1 2/9] COPY --from=compile /opt/venv/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+#13 CACHED
+
+#14 [compile 3/9] RUN python3 -m venv /opt/venv
+#14 CACHED
+
+#15 [compile 9/9] RUN --mount=type=cache,id=haven-gsplat153-sm75-build,target=/gsplat-source/build MAX_JOBS=4 python -m pip install --no-build-isolation --no-deps --no-cache-dir /gsplat-source && python -m pip freeze > /runtime-evidence/requirements.txt && dpkg-query -W > /runtime-evidence/build-packages.txt
+#15 CACHED
+
+#16 [compile 8/9] RUN apt-get update && apt-get install -y --no-install-recommends python3-dev && rm -rf /var/lib/apt/lists/*
+#16 CACHED
+
+#17 [compile 2/9] RUN apt-get update && apt-get install -y --no-install-recommends python3-venv && rm -rf /var/lib/apt/lists/*
+#17 CACHED
+
+#18 [compile 4/9] RUN mkdir /runtime-evidence && python -m pip install --no-cache-dir --report /runtime-evidence/torch.json torch==2.7.1 --index-url https://download.pytorch.org/whl/cu126
+#18 CACHED
+
+#19 [stage-1 5/9] COPY --from=compile /glm-source/copying.txt /usr/share/doc/glm/copying.txt
+#19 CACHED
+
+#20 [stage-1 3/9] COPY --from=compile /runtime-evidence /opt/gsplat-runtime
+#20 CACHED
+
+#21 [stage-1 4/9] COPY --from=compile /gsplat-source/LICENSE /usr/share/doc/gsplat/LICENSE
+#21 CACHED
+
+#22 [stage-1 6/9] WORKDIR /opt/processing
+#22 CACHED
+
+#23 [stage-1 7/9] COPY property_processing ./property_processing
+#23 DONE 0.8s
+
+#24 [stage-1 8/9] COPY gsplat-investigation-profile.json ./gsplat-investigation-profile.json
+#24 DONE 0.1s
+
+#25 [stage-1 9/9] RUN python -c "import importlib.metadata as m,importlib.util; assert m.version('torch')=='2.7.1+cu126'; assert m.version('gsplat')=='1.5.3'; assert m.version('Pillow')=='11.3.0'; assert importlib.util.find_spec('gsplat.csrc') is not None"
+#25 DONE 3.1s
+
+#26 exporting to image
+#26 exporting layers
+#26 exporting layers 0.5s done
+#26 exporting manifest sha256:82b37f1fcfce3cf7f71267c1021bb9d4f6cfaf009679912d9223bb3d498f4282 0.1s done
+#26 exporting config sha256:7e7a0684a542e837e96182d710e6582d2b23937a2a2fab0b0d5d59f1abe813f1 0.1s done
+#26 exporting attestation manifest sha256:5423b0003ce3be53b221db9aaf2590b8bc8ea373ea7b790b22007041d763962f 0.1s done
+#26 exporting manifest list sha256:71b542f0d932154aaf862723d81306096ad9752dacc2083e4959a796a3317461
+#26 exporting manifest list sha256:71b542f0d932154aaf862723d81306096ad9752dacc2083e4959a796a3317461 0.1s done
+#26 naming to docker.io/library/haven-gsplat:1.5.3-torch2.7.1-cu126-sm75-investigation-v1 done
+#26 unpacking to docker.io/library/haven-gsplat:1.5.3-torch2.7.1-cu126-sm75-investigation-v1 0.1s done
+#26 DONE 1.0s
+
+#27 resolving provenance for metadata file
+#27 DONE 0.0s
+ Image haven-gsplat:1.5.3-torch2.7.1-cu126-sm75-investigation-v1 Built 

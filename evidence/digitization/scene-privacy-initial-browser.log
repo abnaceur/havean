@@ -1,0 +1,91 @@
+ Container haven-processing-tests-cpu-run-f505d55ed2c9 Creating 
+ Container haven-processing-tests-cpu-run-f505d55ed2c9 Created 
+Exported 27 authored Gaussian splats; not GPU training evidence.
+{"fixture":"authored_gaussians_not_gpu_training","realPrivateStorage":true,"splatCount":27}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-scene-privacy.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 714[2mms[22m[39m
+   [33m[2m✓[22m[39m actual private exported tier records immutable pending privacy history with stale, scope, bytes and workflow refusal[33m 712[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m   Start at [22m 10:12:34
+[2m   Duration [22m 2.10s[2m (import 42%, tests 36%, transform 22%)[22m
+
+ Container haven-integration-tests-run-8623a0ee4d30 Creating 
+ Container haven-integration-tests-run-8623a0ee4d30 Created 
+
+Running 4 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/digitization-scene-preview.spec.ts:5:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit (8.9s)
+  ✘  2 [desktop] › tests/e2e/digitization-scene-preview.spec.ts:27:1 › private scene inspection persists pending history and keeps absent room coverage unknown (6.3s)
+  ✓  3 [mobile] › tests/e2e/digitization-scene-preview.spec.ts:5:1 › actual authored export loads through scoped API, resets and disposes WebGL buffers on exit (7.1s)
+  ✘  4 [mobile] › tests/e2e/digitization-scene-preview.spec.ts:27:1 › private scene inspection persists pending history and keeps absent room coverage unknown (4.9s)
+
+
+  1) [desktop] › tests/e2e/digitization-scene-preview.spec.ts:27:1 › private scene inspection persists pending history and keeps absent room coverage unknown 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 403
+
+      39 |  expect(context.declarations[0]).toMatchObject({privacyReviewRequired:true,reviewStatus:'pending',publiclyServed:false,coverage:[]});
+      40 |  expect(JSON.stringify(context)).not.toMatch(/artifact_checksum|object_key|organization_id|created_by/);
+    > 41 |  const blocked=await page.request.post(`${origin}/api/v1/ops/digitizations/${fixture.engineId}/scene-privacy`,{data:{workspaceVersion:context.workspaceVersion,inputRevision:context.inputRevision,artifactId:fixture.artifactId,geometryRevisionId:null,coverage:[],inspection:'ready_for_independent_review',note:'Cannot grant author approval',reviewStatus:'approved'},headers:{'Idempotency-Key':crypto.randomUUID()}});expect(blocked.status()).toBe(400);
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                        ^
+      42 |  const accessibility=await new AxeBuilder({page}).include('section[aria-label="Scene privacy and room coverage"]').analyze();expect(accessibility.violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);
+      43 | });
+      44 |
+        at /workspace/tests/e2e/digitization-scene-preview.spec.ts:41:440
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-scene-preview-fbca8-bsent-room-coverage-unknown-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-scene-preview-fbca8-bsent-room-coverage-unknown-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-scene-preview-fbca8-bsent-room-coverage-unknown-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-scene-preview-fbca8-bsent-room-coverage-unknown-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-scene-preview.spec.ts:27:1 › private scene inspection persists pending history and keeps absent room coverage unknown 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 403
+
+      39 |  expect(context.declarations[0]).toMatchObject({privacyReviewRequired:true,reviewStatus:'pending',publiclyServed:false,coverage:[]});
+      40 |  expect(JSON.stringify(context)).not.toMatch(/artifact_checksum|object_key|organization_id|created_by/);
+    > 41 |  const blocked=await page.request.post(`${origin}/api/v1/ops/digitizations/${fixture.engineId}/scene-privacy`,{data:{workspaceVersion:context.workspaceVersion,inputRevision:context.inputRevision,artifactId:fixture.artifactId,geometryRevisionId:null,coverage:[],inspection:'ready_for_independent_review',note:'Cannot grant author approval',reviewStatus:'approved'},headers:{'Idempotency-Key':crypto.randomUUID()}});expect(blocked.status()).toBe(400);
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                        ^
+      42 |  const accessibility=await new AxeBuilder({page}).include('section[aria-label="Scene privacy and room coverage"]').analyze();expect(accessibility.violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);
+      43 | });
+      44 |
+        at /workspace/tests/e2e/digitization-scene-preview.spec.ts:41:440
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-scene-preview-fbca8-bsent-room-coverage-unknown-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-scene-preview-fbca8-bsent-room-coverage-unknown-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-scene-preview-fbca8-bsent-room-coverage-unknown-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-scene-preview-fbca8-bsent-room-coverage-unknown-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-scene-preview.spec.ts:27:1 › private scene inspection persists pending history and keeps absent room coverage unknown 
+    [mobile] › tests/e2e/digitization-scene-preview.spec.ts:27:1 › private scene inspection persists pending history and keeps absent room coverage unknown 
+  2 passed (29.0s)
+

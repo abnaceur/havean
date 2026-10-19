@@ -1,0 +1,62 @@
+time="2026-10-10T08:41:39+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-7f020fb59827 Creating 
+ Container haven-tests-run-7f020fb59827 Created 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/payment-allocations.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 66312[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 partial allocation leaves exact outstanding and credit, matching receipt creates one root, and settlement retains overpayment[33m 12386[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 concurrent allocations respect payment 100.10 and charge 200.20 caps[33m 7425[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 concurrent allocations respect payment 200.20 and charge 100.10 caps[33m 7902[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 cross-lease, currency, stale versions, confirmation and over-allocation deny without changing balances[33m 8747[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 PostgreSQL independently serializes direct allocations and prevents immutable amount edits[33m 10816[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 actual finance-only staff can allocate, manager-only and guessed foreign staff cannot, and revoked grants deny receipts[33m 7905[2mms[22m[39m
+   [33m[2m✓[22m[39m P08 allocation and existing linked reversal share lock order and retained undo versions[33m 11067[2mms[22m[39m
+ [32m✓[39m tests/integration/financial-reversals.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 70314[2mms[22m[39m
+   [33m[2m✓[22m[39m P09 payment reversal preserves original, restores balance and retains one attributed undo across receipt and fresh retries[33m 15132[2mms[22m[39m
+   [33m[2m✓[22m[39m P09 charge reversal preserves original and restores payment credit without reversing a reversal[33m 13202[2mms[22m[39m
+   [33m[2m✓[22m[39m P09 simultaneous payment reversals and an allocation settle once under the shared finance lock[33m 15992[2mms[22m[39m
+   [33m[2m✓[22m[39m P09 stale versions, confirmation, foreign actual finance and revoked grants deny reversal or receipt without evidence[33m 11893[2mms[22m[39m
+   [33m[2m✓[22m[39m P09 SQL requires exact linked evidence and commit-time allocation undo atomically[33m 14034[2mms[22m[39m
+ [32m✓[39m tests/integration/tenant-leases.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 49256[2mms[22m[39m
+   [33m[2m✓[22m[39m P11 linked tenant sees exact reconciled own balance without private staff references, actor/org fields or draft payments[33m 12491[2mms[22m[39m
+   [33m[2m✓[22m[39m P11 foreign users, owners and guessed finance personas cannot read another linked lease or its document[33m 1488[2mms[22m[39m
+   [33m[2m✓[22m[39m P11 documents are private while draft, then exact approved bound PDF is readable only on its linked lease and revoked asset versions deny[33m 4505[2mms[22m[39m
+   [33m[2m✓[22m[39m P11 reversals reconcile own recorded balance and retained history without exposing correction reasons[33m 29050[2mms[22m[39m
+   [33m[2m✓[22m[39m P11 bounded history pages keep full totals, tenant-link changes deny immediately and revoked professional grant does not erase tenant contract access[33m 1639[2mms[22m[39m
+ [32m✓[39m tests/integration/payment-evidence.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 20821[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 native draft stays out of balances and tenant reads; posting exact evidence retains history and audit once[33m 5905[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 edits only current drafts, retains original amount snapshots and denies posted amount changes at API and database[33m 7640[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 negative/float/scientific money, foreign currency and stale authority deny creation with no payment roots[33m 421[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 posting requires current saved versions and confirmation, concurrent attempts create one post, and revoked grants deny receipts[33m 4317[2mms[22m[39m
+   [33m[2m✓[22m[39m P07 drafts cannot be allocated or reversed before posting and actual manager-only authority cannot record payments[33m 2442[2mms[22m[39m
+ [32m✓[39m tests/integration/deposits.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 16990[2mms[22m[39m
+   [33m[2m✓[22m[39m P10 received, partial release and explicit bidirectional adjustments reconcile liability without changing rent totals[33m 9001[2mms[22m[39m
+   [33m[2m✓[22m[39m P10 excess, stale authority, invalid decimals, wrong currency and unconfirmed movements deny without liability changes; SQL rejects bypass[33m 2748[2mms[22m[39m
+   [33m[2m✓[22m[39m P10 concurrent releases use one liability version and receipt replay remains scoped after revocation[33m 2094[2mms[22m[39m
+   [33m[2m✓[22m[39m P10 actual foreign finance and manager-only identities cannot read or mutate another deposit ledger[33m 462[2mms[22m[39m
+   [33m[2m✓[22m[39m P10 historical adjustments preserve prior decrease convention and unknown provenance, while subsequent native release is exact[33m 2632[2mms[22m[39m
+ [31m❯[39m tests/integration/management-grants.test.ts [2m([22m[2m5 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 364[2mms[22m[39m
+[31m   [31m×[31m P01 owner grant admits manager to the same canonical unit, retries persist one root and privacy history[39m[32m 126[2mms[22m[39m
+   [32m✓[39m P01 foreign and forged administrator membership cannot enumerate or guess a granted property[32m 60[2mms[22m[39m
+   [32m✓[39m P01 expiry, owner source revocation and management revocation immediately deny portfolio access while preserving owner history[32m 81[2mms[22m[39m
+   [32m✓[39m P01 native grant requires current source and unit versions, consent and future expiry[32m 17[2mms[22m[39m
+   [32m✓[39m P01 revocation removes lease reads for manager and finance-only sessions; real membership loss denies grant admission[32m 69[2mms[22m[39m
+ [32m✓[39m tests/integration/readiness.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/management-grants.test.ts[2m > [22mP01 owner grant admits manager to the same canonical unit, retries persist one root and privacy history
+[31m[1mAssertionError[22m: expected [ …(20) ] to include 'f2360ad6-91d3-426b-a490-7cad1a69eadc'[39m
+[36m [2m❯[22m tests/integration/management-grants.test.ts:[2m14:475[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (7)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m33 passed[39m[22m[90m (34)[39m
+[2m   Start at [22m 04:41:40
+[2m   Duration [22m 234.25s[2m (tests 96%, import 4%)[22m
+
+

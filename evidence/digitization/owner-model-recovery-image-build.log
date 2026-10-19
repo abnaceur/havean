@@ -1,0 +1,344 @@
+ Image haven-recovery-worker:1.0.0-locked-registration-review Building 
+ Image haven-recovery-web:1.0.0-locked-registration-review Building 
+ Image haven-recovery-ops:1.0.0-locked-registration-review Building 
+ Image haven-recovery-browser:1.0.0-locked-registration-review Building 
+ Image haven-recovery-api:1.0.0-locked-registration-review Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.51kB done
+#1 DONE 0.0s
+
+#2 [api internal] load build definition from Dockerfile
+#2 transferring dockerfile:
+#2 transferring dockerfile: 1.47kB done
+#2 DONE 0.2s
+
+#3 [browser internal] load build definition from Dockerfile.browser
+#3 transferring dockerfile: 1.48kB done
+#3 DONE 0.1s
+
+#4 [browser internal] load metadata for docker.io/library/haven-recovery-browser-base:1.0.0-20779a72c32f
+#4 DONE 0.1s
+
+#5 [ops internal] load metadata for docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b
+#5 DONE 0.1s
+
+#6 [api internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.1s
+
+#7 [api internal] load build context
+#7 ...
+
+#8 [browser  1/25] FROM docker.io/library/haven-recovery-browser-base:1.0.0-20779a72c32f@sha256:20779a72c32f5b1fd63b71480503dceae895af67ef8fa776e821c4b2b253f3a1
+#8 resolve docker.io/library/haven-recovery-browser-base:1.0.0-20779a72c32f@sha256:20779a72c32f5b1fd63b71480503dceae895af67ef8fa776e821c4b2b253f3a1 0.1s done
+#8 DONE 0.1s
+
+#9 [api  1/25] FROM docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336
+#9 resolve docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336 0.1s done
+#9 DONE 0.1s
+
+#7 [api internal] load build context
+#7 transferring context: 338.72MB 4.9s
+#7 transferring context: 649.26MB 8.9s done
+#7 DONE 9.1s
+
+#10 [worker  2/25] WORKDIR /workspace
+#10 CACHED
+
+#11 [worker  3/25] COPY source/ /workspace/
+#11 ...
+
+#12 [browser  2/25] WORKDIR /workspace
+#12 CACHED
+
+#13 [browser  3/25] COPY source/ /workspace/
+#13 DONE 0.8s
+
+#11 [worker  3/25] COPY source/ /workspace/
+#11 DONE 1.1s
+
+#14 [api  4/25] COPY apps/worker/src/digitization/coordinator.ts /workspace/apps/worker/src/digitization/coordinator.ts
+#14 DONE 0.2s
+
+#15 [browser  4/25] COPY apps/worker/src/digitization/coordinator.ts /workspace/apps/worker/src/digitization/coordinator.ts
+#15 DONE 0.2s
+
+#16 [ops  5/25] COPY apps/worker/src/main.ts /workspace/apps/worker/src/main.ts
+#16 DONE 0.3s
+
+#17 [browser  5/25] COPY apps/worker/src/main.ts /workspace/apps/worker/src/main.ts
+#17 DONE 0.3s
+
+#18 [api  6/25] RUN rm -rf /workspace/apps/worker/node_modules
+#18 DONE 0.4s
+
+#19 [browser  6/25] RUN rm -rf /workspace/apps/worker/node_modules
+#19 DONE 0.5s
+
+#20 [worker  7/25] COPY dependencies-0/ /workspace/apps/worker/node_modules/
+#20 DONE 0.3s
+
+#21 [browser  7/25] COPY dependencies-0/ /workspace/apps/worker/node_modules/
+#21 DONE 0.3s
+
+#22 [worker  8/25] RUN rm -rf /workspace/node_modules
+#22 ...
+
+#23 [browser  8/25] RUN rm -rf /workspace/node_modules
+#23 DONE 3.0s
+
+#22 [worker  8/25] RUN rm -rf /workspace/node_modules
+#22 DONE 3.1s
+
+#24 [ops  9/25] COPY dependencies-1/ /workspace/node_modules/
+#24 ...
+
+#25 [browser  9/25] COPY dependencies-1/ /workspace/node_modules/
+#25 DONE 6.4s
+
+#24 [worker  9/25] COPY dependencies-1/ /workspace/node_modules/
+#24 DONE 6.4s
+
+#26 [api 10/25] RUN rm -rf /workspace/packages/database/node_modules
+#26 ...
+
+#27 [browser 10/25] RUN rm -rf /workspace/packages/database/node_modules
+#27 DONE 1.0s
+
+#26 [worker 10/25] RUN rm -rf /workspace/packages/database/node_modules
+#26 DONE 1.1s
+
+#28 [browser 11/25] COPY dependencies-2/ /workspace/packages/database/node_modules/
+#28 DONE 0.2s
+
+#29 [api 11/25] COPY dependencies-2/ /workspace/packages/database/node_modules/
+#29 DONE 0.2s
+
+#30 [api 12/25] RUN rm -rf /workspace/apps/api/node_modules
+#30 ...
+
+#31 [browser 12/25] RUN rm -rf /workspace/apps/api/node_modules
+#31 DONE 0.4s
+
+#30 [ops 12/25] RUN rm -rf /workspace/apps/api/node_modules
+#30 DONE 0.4s
+
+#32 [browser 13/25] COPY dependencies-3/ /workspace/apps/api/node_modules/
+#32 DONE 0.2s
+
+#33 [web 13/25] COPY dependencies-3/ /workspace/apps/api/node_modules/
+#33 DONE 0.3s
+
+#34 [api 14/25] RUN rm -rf /workspace/apps/ops/node_modules
+#34 ...
+
+#35 [browser 14/25] RUN rm -rf /workspace/apps/ops/node_modules
+#35 DONE 0.4s
+
+#34 [worker 14/25] RUN rm -rf /workspace/apps/ops/node_modules
+#34 DONE 0.4s
+
+#36 [worker 15/25] COPY dependencies-4/ /workspace/apps/ops/node_modules/
+#36 ...
+
+#37 [browser 15/25] COPY dependencies-4/ /workspace/apps/ops/node_modules/
+#37 DONE 0.2s
+
+#36 [api 15/25] COPY dependencies-4/ /workspace/apps/ops/node_modules/
+#36 DONE 0.2s
+
+#38 [api 16/25] RUN rm -rf /workspace/packages/config/node_modules
+#38 ...
+
+#39 [browser 16/25] RUN rm -rf /workspace/packages/config/node_modules
+#39 DONE 0.4s
+
+#38 [ops 16/25] RUN rm -rf /workspace/packages/config/node_modules
+#38 DONE 0.4s
+
+#40 [browser 17/25] COPY dependencies-5/ /workspace/packages/config/node_modules/
+#40 DONE 0.2s
+
+#41 [web 17/25] COPY dependencies-5/ /workspace/packages/config/node_modules/
+#41 DONE 0.2s
+
+#42 [ops 18/25] RUN rm -rf /workspace/packages/contracts/node_modules
+#42 ...
+
+#43 [browser 18/25] RUN rm -rf /workspace/packages/contracts/node_modules
+#43 DONE 0.4s
+
+#42 [web 18/25] RUN rm -rf /workspace/packages/contracts/node_modules
+#42 DONE 0.4s
+
+#44 [browser 19/25] COPY dependencies-6/ /workspace/packages/contracts/node_modules/
+#44 DONE 0.2s
+
+#45 [web 19/25] COPY dependencies-6/ /workspace/packages/contracts/node_modules/
+#45 DONE 0.2s
+
+#46 [worker 20/25] RUN rm -rf /workspace/packages/test-support/node_modules
+#46 ...
+
+#47 [browser 20/25] RUN rm -rf /workspace/packages/test-support/node_modules
+#47 DONE 0.4s
+
+#46 [api 20/25] RUN rm -rf /workspace/packages/test-support/node_modules
+#46 DONE 0.4s
+
+#48 [browser 21/25] COPY dependencies-7/ /workspace/packages/test-support/node_modules/
+#48 DONE 0.2s
+
+#49 [api 21/25] COPY dependencies-7/ /workspace/packages/test-support/node_modules/
+#49 DONE 0.2s
+
+#50 [ops 22/25] RUN rm -rf /workspace/packages/ui/node_modules
+#50 ...
+
+#51 [browser 22/25] RUN rm -rf /workspace/packages/ui/node_modules
+#51 DONE 0.4s
+
+#50 [web 22/25] RUN rm -rf /workspace/packages/ui/node_modules
+#50 DONE 0.4s
+
+#52 [worker 23/25] COPY dependencies-8/ /workspace/packages/ui/node_modules/
+#52 ...
+
+#53 [browser 23/25] COPY dependencies-8/ /workspace/packages/ui/node_modules/
+#53 DONE 0.3s
+
+#52 [api 23/25] COPY dependencies-8/ /workspace/packages/ui/node_modules/
+#52 DONE 0.2s
+
+#54 [api 24/25] RUN rm -rf /workspace/apps/web/node_modules
+#54 ...
+
+#55 [browser 24/25] RUN rm -rf /workspace/apps/web/node_modules
+#55 DONE 0.4s
+
+#54 [web 24/25] RUN rm -rf /workspace/apps/web/node_modules
+#54 DONE 0.4s
+
+#56 [worker 25/25] COPY dependencies-9/ /workspace/apps/web/node_modules/
+#56 ...
+
+#57 [browser 25/25] COPY dependencies-9/ /workspace/apps/web/node_modules/
+#57 DONE 0.2s
+
+#56 [worker 25/25] COPY dependencies-9/ /workspace/apps/web/node_modules/
+#56 DONE 0.2s
+
+#58 [ops] exporting to image
+#58 exporting layers
+#58 ...
+
+#59 [api] exporting to image
+#59 ...
+
+#60 [worker] exporting to image
+#60 ...
+
+#61 [web] exporting to image
+#61 ...
+
+#62 [browser] exporting to image
+#62 ...
+
+#59 [api] exporting to image
+#59 exporting layers 32.2s done
+#59 exporting manifest sha256:3c191c299e22cc92393d85adaf49d53a64661e74d429288b2fa2ba5e15a5e7c9
+#59 exporting manifest sha256:3c191c299e22cc92393d85adaf49d53a64661e74d429288b2fa2ba5e15a5e7c9 0.2s done
+#59 exporting config sha256:e7a6de1bd63be8a4b3652ffb29b7c2421edc35da7643d86a58a2490c667b9ae0
+#59 exporting config sha256:e7a6de1bd63be8a4b3652ffb29b7c2421edc35da7643d86a58a2490c667b9ae0 0.3s done
+#59 exporting attestation manifest sha256:eccd292c9df5d763b1c922cc31eca9da99cb5c71123fe8b963a6979dba7728fd
+#59 exporting attestation manifest sha256:eccd292c9df5d763b1c922cc31eca9da99cb5c71123fe8b963a6979dba7728fd 0.5s done
+#59 exporting manifest list sha256:b3cfba62e80ef5b21c9c474d6422a74a1268182a4e254ae0be6270c30f9a40ff
+#59 exporting manifest list sha256:b3cfba62e80ef5b21c9c474d6422a74a1268182a4e254ae0be6270c30f9a40ff 0.2s done
+#59 naming to docker.io/library/haven-recovery-api:1.0.0-locked-registration-review
+#59 naming to docker.io/library/haven-recovery-api:1.0.0-locked-registration-review 0.1s done
+#59 unpacking to docker.io/library/haven-recovery-api:1.0.0-locked-registration-review
+#59 ...
+
+#62 [browser] exporting to image
+#62 exporting layers 32.4s done
+#62 exporting manifest sha256:d6ef25f2049a371ec23a864b8f7e218537b4c167f01a19c6b6a72641bbb2a5fd 0.2s done
+#62 exporting config sha256:b780dbcf8d485782a1107426acfbc1c3d1554e589ed149dee533f9a4dbdadda0 0.2s done
+#62 exporting attestation manifest sha256:34f39321898853a09e72bf4a658d48a6548064f1224860e776ef76c310954231 0.5s done
+#62 exporting manifest list sha256:60947c5b9fd990e07843346c7fe380f8fd24113ab0009120611cd64512dacac8 0.2s done
+#62 naming to docker.io/library/haven-recovery-browser:1.0.0-locked-registration-review 0.0s done
+#62 unpacking to docker.io/library/haven-recovery-browser:1.0.0-locked-registration-review
+#62 ...
+
+#58 [ops] exporting to image
+#58 exporting layers 32.2s done
+#58 exporting manifest sha256:bd69a91e1abbc3f905053a78a76698e30f03d79ff15d7347ee10d46899d60afd 0.3s done
+#58 exporting config sha256:aa7e610cb85a560a7bc1897b7c85f0e8be563c26b2949b7947f26b258203dbee 0.3s done
+#58 exporting attestation manifest sha256:9ac4ea4c44dd3ce2cd5c70c88082274ffcccc243b33e429e5f8eb68417f124a0 0.5s done
+#58 exporting manifest list sha256:a7d878880db4432ee69033d062f3609aab97a58edd1ef228b67d793faab45120 0.2s done
+#58 naming to docker.io/library/haven-recovery-ops:1.0.0-locked-registration-review 0.0s done
+#58 unpacking to docker.io/library/haven-recovery-ops:1.0.0-locked-registration-review
+#58 ...
+
+#61 [web] exporting to image
+#61 exporting layers 32.2s done
+#61 exporting manifest sha256:4aa4b2267fdc0424d3464b62aabe8b31ad5ab31ee590146569366591f8124f62 0.2s done
+#61 exporting config sha256:8b3a6506384c438241a8eeec4d9833980ceb3d8c81b239519bd61396987354ff 0.3s done
+#61 exporting attestation manifest sha256:5b65ba6cef1e99e6a005fba4ff583c0ba440859e908303c99fe96e71a0ce03b9 0.5s done
+#61 exporting manifest list sha256:d8cfc9478d8d549712067ccdcb393886c7dae8a90a149f72c6ab174ead6d5b58 0.2s done
+#61 naming to docker.io/library/haven-recovery-web:1.0.0-locked-registration-review 0.1s done
+#61 unpacking to docker.io/library/haven-recovery-web:1.0.0-locked-registration-review
+#61 ...
+
+#60 [worker] exporting to image
+#60 exporting layers 32.2s done
+#60 exporting manifest sha256:e35ba43be5cc7225a6ddfe27d027c25aa0a0b891d8e0da3fabfb21ca2dd7d043 0.2s done
+#60 exporting config sha256:f3eb0ba3d8c19004d73a966f8fae873fbfd60c8fa8a679f7cbc96f0eff6af7e4 0.3s done
+#60 exporting attestation manifest sha256:db5b16b583b02fd9b890eb385b17cae0903a408c8c8f76ee2936fc0cb95c4519 0.5s done
+#60 exporting manifest list sha256:8f9a118769286331518e2b6cb7cff8569eea8452f097c232f462540d425438d4 0.2s done
+#60 naming to docker.io/library/haven-recovery-worker:1.0.0-locked-registration-review 0.1s done
+#60 unpacking to docker.io/library/haven-recovery-worker:1.0.0-locked-registration-review
+#60 ...
+
+#59 [api] exporting to image
+#59 unpacking to docker.io/library/haven-recovery-api:1.0.0-locked-registration-review 14.2s done
+#59 DONE 48.0s
+
+#61 [web] exporting to image
+#61 unpacking to docker.io/library/haven-recovery-web:1.0.0-locked-registration-review 14.2s done
+#61 DONE 48.0s
+
+#60 [worker] exporting to image
+#60 unpacking to docker.io/library/haven-recovery-worker:1.0.0-locked-registration-review 14.2s done
+#60 DONE 48.0s
+
+#58 [ops] exporting to image
+#58 unpacking to docker.io/library/haven-recovery-ops:1.0.0-locked-registration-review 14.2s done
+#58 DONE 48.0s
+
+#62 [browser] exporting to image
+#62 unpacking to docker.io/library/haven-recovery-browser:1.0.0-locked-registration-review 14.2s done
+#62 DONE 48.1s
+
+#63 [api] resolving provenance for metadata file
+#63 ...
+
+#64 [web] resolving provenance for metadata file
+#64 DONE 0.6s
+
+#65 [ops] resolving provenance for metadata file
+#65 DONE 0.1s
+
+#63 [api] resolving provenance for metadata file
+#63 DONE 0.6s
+
+#66 [browser] resolving provenance for metadata file
+#66 DONE 0.4s
+
+#67 [worker] resolving provenance for metadata file
+#67 DONE 0.0s
+ Image haven-recovery-worker:1.0.0-locked-registration-review Built 
+ Image haven-recovery-api:1.0.0-locked-registration-review Built 
+ Image haven-recovery-browser:1.0.0-locked-registration-review Built 
+ Image haven-recovery-ops:1.0.0-locked-registration-review Built 
+ Image haven-recovery-web:1.0.0-locked-registration-review Built 
+{"label":"P","status":"locked-local-fixture-images-built","lockSha256":"1bfa8ae038760d2b68d06f5693658af4d218123335e03e2276c5b3d5c0fb994e","dependencyVolumes":10,"installedLockSha256":"1bfa8ae038760d2b68d06f5693658af4d218123335e03e2276c5b3d5c0fb994e","registryDownload":false,"productionImageAcceptance":false}

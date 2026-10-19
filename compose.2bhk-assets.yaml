@@ -1,0 +1,9 @@
+name: haven-2bhk-assets
+services:
+  encode:
+    image: mwader/static-ffmpeg:7.1.1
+    network_mode: none
+    entrypoint: /ffmpeg
+    volumes:
+      - ./assets/digitization-2bhk:/assets
+    command: ['-y', '-framerate', '1', '-i', '/assets/frame%03d.png', '-vf', 'fps=12', '-c:v', 'libx264', '-crf', '12', '-bf', '0', '-g', '12', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '/assets/two-bedroom-walkthrough.mp4']

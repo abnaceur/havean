@@ -1,0 +1,35 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/unit/digitization-fixtures.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 12[2mms[22m[39m
+[31m   [31m×[31m requires actual confined generators and explicit third-party rights[39m[32m 10[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/unit/digitization-fixtures.test.ts[2m > [22mrequires actual confined generators and explicit third-party rights
+[31m[1mAssertionError[22m: expected { count: 8 } to deeply equal { count: 7 }[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  {[22m
+[32m-   "count": 7,[39m
+[31m+   "count": 8,[39m
+[2m  }[22m
+
+[36m [2m❯[22m tests/unit/digitization-fixtures.test.ts:[2m14:41[22m[39m
+    [90m 12|[39m }
+    [90m 13|[39m it('requires actual confined generators and explicit third-party right…
+    [90m 14|[39m  expect(validateDigitizationFixtures()).toEqual({count:7});
+    [90m   |[39m                                         [31m^[39m
+    [90m 15|[39m  expect(()=>validateDigitizationFixtures(fixture(m=>{delete m.fixtures…
+    [90m 16|[39m  expect(()=>validateDigitizationFixtures(fixture(m=>{m.fixtures[0].gen…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m   Start at [22m 01:35:04
+[2m   Duration [22m 176ms[2m (transform 49%, import 22%, tests 21%, worker 8%)[22m
+

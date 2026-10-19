@@ -1,0 +1,61 @@
+# Optional local investigation only; do not include until GPU validation resumes.
+# Images must be audited and pinned by digest. No default GPU registration/enablement.
+services:
+  api:
+    environment:
+      PROCESSING_DEPLOYMENT: development
+      PROCESSING_ENABLE_GSPLAT_INVESTIGATION: '${PROCESSING_ENABLE_GSPLAT_INVESTIGATION:-false}'
+      DIGITIZATION_GPU_RUNNER_ORIGIN: http://processing-gpu:8020
+      DIGITIZATION_GPU_SIGNING_KEY_FILE: /run/digitization-gpu.key
+    volumes:
+      - ./infra/generated/digitization-gpu.key:/run/digitization-gpu.key:ro
+  processing-gpu-volume-init:
+    image: node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+    profiles: [gsplat-investigation]
+    network_mode: none
+    user: '0:0'
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN, FOWNER, DAC_OVERRIDE]
+    security_opt: [no-new-privileges:true]
+    volumes: [processing-gpu-executions:/jobs]
+    command: [node, -e, "require('fs').chownSync('/jobs',10001,10001);require('fs').chmodSync('/jobs',0o700)"]
+  processing-gpu:
+    image: '${DIGITIZATION_GPU_IMAGE:?Supply an audited gsplat runner image pinned by sha256 digest}'
+    profiles: [gsplat-investigation]
+    init: true
+    restart: unless-stopped
+    user: '10001:10001'
+    group_add: ['1000']
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      PROCESSING_RUNNER_KIND: gpu
+      PROCESSING_DEPLOYMENT: development
+      PROCESSING_ADAPTER: unavailable
+      PROCESSING_ENABLE_SIMULATOR: 'false'
+      PROCESSING_ENABLE_GSPLAT_INVESTIGATION: '${PROCESSING_ENABLE_GSPLAT_INVESTIGATION:-false}'
+      PROCESSING_EXECUTION_ROOT: /jobs
+      PROCESSING_SIGNING_KEY_FILE: /run/digitization-gpu.key
+    volumes:
+      - processing-gpu-executions:/jobs
+      - ./infra/generated/digitization-gpu.key:/run/digitization-gpu.key:ro
+    depends_on:
+      processing-gpu-volume-init: {condition: service_completed_successfully}
+    networks: [processing]
+    deploy:
+      resources:
+        reservations:
+          devices: [{driver: nvidia, count: 1, capabilities: [gpu]}]
+    mem_limit: 8g
+    cpus: 2
+    pids_limit: 128
+    tmpfs: ['/tmp:size=536870912,mode=1777']
+    healthcheck:
+      test: [CMD, python, -c, 'import urllib.request; urllib.request.urlopen("http://127.0.0.1:8020/health/ready",timeout=2).close()']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  processing-gpu-executions:

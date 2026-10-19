@@ -1,0 +1,36 @@
+ Image haven-local-identity:26.8.0-java21 Building 
+ Image haven-integration-migrate Building 
+ Image haven-integration-ops Building 
+ Image haven-local-database:17.11-postgis3.6.4 Building 
+ Image haven-integration-install Building 
+ Image haven-integration-worker Building 
+ Image haven-local-scanner:1.5.4-pcre2-10.49 Building 
+ Image haven-integration-web Building 
+ Image haven-integration-api Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 4.44kB done
+#1 DONE 0.0s
+
+#2 [web internal] load build definition from Dockerfile.dev
+#2 transferring dockerfile: 1.33kB done
+#2 DONE 0.0s
+
+#3 [ops internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+#3 ERROR: failed to do request: Head "https://registry-1.docker.io/v2/library/node/manifests/sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6": net/http: TLS handshake timeout
+------
+ > [web internal] load metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6:
+------
+Dockerfile.dev:1
+
+--------------------
+
+   1 | >>> FROM node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 AS dependencies
+
+   2 |     RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg=7:5.1.9-0+deb12u1 && rm -rf /var/lib/apt/lists/*
+
+   3 |     RUN npm install --global pnpm@10.32.1
+
+--------------------
+
+target worker: failed to solve: node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6: failed to resolve source metadata for docker.io/library/node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6: failed to do request: Head "https://registry-1.docker.io/v2/library/node/manifests/sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6": net/http: TLS handshake timeout
+

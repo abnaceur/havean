@@ -1,0 +1,35 @@
+# Local investigation only. Production OCR/model capability remains disabled.
+services:
+  ocr-confined-investigation:
+    profiles: [ocr-investigation]
+    image: haven-ocr-probe:3.3.3-cpu-investigation
+    init: true
+    network_mode: none
+    read_only: true
+    user: '10001:10001'
+    group_add: ['1000']
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 4g
+    cpus: 1
+    pids_limit: 64
+    tmpfs: ['/tmp:size=67108864,mode=1777']
+    working_dir: /opt/processing
+    environment:
+      PYTHONDONTWRITEBYTECODE: '1'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK: 'True'
+      HF_HUB_OFFLINE: '1'
+      LD_LIBRARY_PATH: /opt/ocr-models/native
+    volumes:
+      - ./docs/adr/processing-dependencies.json:/opt/processing/dependencies.json:ro
+      - ./services/property-processing/property_processing:/opt/processing/property_processing:ro
+      - ./services/property-processing/tests/ocr_worker_smoke.py:/opt/processing/ocr_worker_smoke.py:ro
+      - ./services/property-processing/.ocr-wheels/models:/opt/ocr-models:ro
+      - ./services/property-processing/.ocr-wheels/models/native/libiomp5.so:/usr/local/lib/python3.12/site-packages/paddle/libs/libiomp5.so:ro
+      - ./services/property-processing/.ocr-wheels/models/native/libmklml_intel.so:/usr/local/lib/python3.12/site-packages/paddle/libs/libmklml_intel.so:ro
+      - ./services/property-processing/.ocr-wheels/models/native/libblas.so.3:/usr/local/lib/python3.12/site-packages/paddle/libs/libblas.so.3:ro
+      - ./services/property-processing/.ocr-wheels/models/native/liblapack.so.3:/usr/local/lib/python3.12/site-packages/paddle/libs/liblapack.so.3:ro
+      - ./infra/generated/ocr-confined:/job
+    command: [python, -m, property_processing.ocr_cpu, --directory, /job, --name, ar.png, --locale, ar, --sha256, '92ae9f8e742b6421adea72b0026bdd0881ae56fcdc6ff3db2d5a9721c40dc297']

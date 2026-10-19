@@ -1,0 +1,116 @@
+ Container haven-processing-tests-cpu-run-01bfc4a6d262 Creating 
+ Container haven-processing-tests-cpu-run-01bfc4a6d262 Created 
+Exported 27 authored Gaussian splats; not GPU training evidence.
+{"fixture":"authored_gaussians_not_gpu_training","realPrivateStorage":true,"splatCount":27}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-model-source-consent.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 3823[2mms[22m[39m
+   [33m[2m✓[22m[39m owner structural source consent separates private review, publication, historical revocation and another mandate[33m 1525[2mms[22m[39m
+   [33m[2m✓[22m[39m owner splat source consent separates private review, publication, historical revocation and another mandate[33m 1519[2mms[22m[39m
+   [33m[2m✓[22m[39m owner revocation winning the source lock prevents a concurrent independent model approval[33m 774[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 21:27:45
+[2m   Duration [22m 5.81s[2m (tests 67%, import 19%, transform 14%)[22m
+
+ Container haven-integration-tests-run-76e7ce7f6829 Creating 
+ Container haven-integration-tests-run-76e7ce7f6829 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-model-source-consent.spec.ts:5:1 › owner grants separate model review/publication consent and revokes public access through server sessions (13.5s)
+  ✘  2 [mobile] › tests/e2e/digitization-model-source-consent.spec.ts:5:1 › owner grants separate model review/publication consent and revokes public access through server sessions (10.1s)
+
+
+  1) [desktop] › tests/e2e/digitization-model-source-consent.spec.ts:5:1 › owner grants separate model review/publication consent and revokes public access through server sessions 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 201
+    Received: 403
+
+       8 |  const authorContext=await browser.newContext(),reviewContext=await browser.newContext(),publicContext=await browser.newContext({viewport:info.project.use.viewport});
+       9 |  const author=await authorContext.newPage(),staff=await reviewContext.newPage(),consumer=await publicContext.newPage();
+    > 10 |  const post=async(client:typeof page,origin:string,path:string,data:unknown)=>{const response=await client.request.post(origin+'/api/v1'+path,{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data});expect(response.status()).toBe(201);return (await response.json()).data;};
+         |                                                                                                                                                                                                                                               ^
+      11 |  try{
+      12 |   await login(page,'owner',web,'/account/properties');await login(author,'agent',ops,'/ops');await login(staff,'moderator',ops,'/ops');
+      13 |   await page.goto(`${web}/account/properties?modelSource=${f.engineId}`);
+        at post (/workspace/tests/e2e/digitization-model-source-consent.spec.ts:10:239)
+        at /workspace/tests/e2e/digitization-model-source-consent.spec.ts:24:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-source--b6f88-ess-through-server-sessions-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-source--b6f88-ess-through-server-sessions-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-source--b6f88-ess-through-server-sessions-desktop/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-source--b6f88-ess-through-server-sessions-desktop/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-model-source--b6f88-ess-through-server-sessions-desktop/error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-model-source--b6f88-ess-through-server-sessions-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-model-source--b6f88-ess-through-server-sessions-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-model-source-consent.spec.ts:5:1 › owner grants separate model review/publication consent and revokes public access through server sessions 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 201
+    Received: 403
+
+       8 |  const authorContext=await browser.newContext(),reviewContext=await browser.newContext(),publicContext=await browser.newContext({viewport:info.project.use.viewport});
+       9 |  const author=await authorContext.newPage(),staff=await reviewContext.newPage(),consumer=await publicContext.newPage();
+    > 10 |  const post=async(client:typeof page,origin:string,path:string,data:unknown)=>{const response=await client.request.post(origin+'/api/v1'+path,{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data});expect(response.status()).toBe(201);return (await response.json()).data;};
+         |                                                                                                                                                                                                                                               ^
+      11 |  try{
+      12 |   await login(page,'owner',web,'/account/properties');await login(author,'agent',ops,'/ops');await login(staff,'moderator',ops,'/ops');
+      13 |   await page.goto(`${web}/account/properties?modelSource=${f.engineId}`);
+        at post (/workspace/tests/e2e/digitization-model-source-consent.spec.ts:10:239)
+        at /workspace/tests/e2e/digitization-model-source-consent.spec.ts:24:18
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-source--b6f88-ess-through-server-sessions-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-source--b6f88-ess-through-server-sessions-mobile/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-source--b6f88-ess-through-server-sessions-mobile/test-failed-3.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-source--b6f88-ess-through-server-sessions-mobile/test-failed-4.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-model-source--b6f88-ess-through-server-sessions-mobile/error-context.md
+
+    attachment #6: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-model-source--b6f88-ess-through-server-sessions-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-model-source--b6f88-ess-through-server-sessions-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-model-source-consent.spec.ts:5:1 › owner grants separate model review/publication consent and revokes public access through server sessions 
+    [mobile] › tests/e2e/digitization-model-source-consent.spec.ts:5:1 › owner grants separate model review/publication consent and revokes public access through server sessions 
+

@@ -1,0 +1,33 @@
+'use client';
+import {useCallback,useEffect,useState} from 'react';
+import {sdk} from '@haven/contracts';
+import {StructuralPlanViewer,ErrorBox} from '@haven/ui';
+import {ConstructionEdit} from './digitization-construction-edit';
+import {DigitizationDimensions} from './digitization-dimensions';
+import {DigitizationFurnishings} from './digitization-furnishings';
+import {DigitizationScenePreview} from './digitization-scene-preview';
+import {DigitizationCaptureChecklist} from './digitization-capture-checklist';
+import {DigitizationFramePrivacy} from './digitization-frame-privacy';
+import {SubmitModelReview} from './digitization-model-review';
+type Draft=Awaited<ReturnType<typeof sdk.DigitizationArtifactController_geometry>>['data'];
+type Report=Awaited<ReturnType<typeof sdk.DigitizationArtifactController_construction>>['data'];
+export function DigitizationConstruction({workspaceId}:{workspaceId:string}){
+ const [draft,setDraft]=useState<Draft>(null),[report,setReport]=useState<Report|null>(null),[error,setError]=useState(''),[loading,setLoading]=useState(true),[tab,setTab]=useState('model'),[floor,setFloor]=useState(''),[room,setRoom]=useState('');
+ const root='/ops/digitization?workspace='+encodeURIComponent(workspaceId);
+ const reload=useCallback(async()=>{setLoading(true);try{const [geometry,readiness]=await Promise.all([sdk.DigitizationArtifactController_geometry({params:{id:workspaceId}}),sdk.DigitizationArtifactController_construction({params:{id:workspaceId}})]);setDraft(geometry.data);setReport(readiness.data);setFloor(old=>geometry.data?.geometry.floors.some(f=>f.id===old)?old:geometry.data?.geometry.floors[0]?.id??'');setError('');}catch(e){setDraft(null);setReport(null);setError(e instanceof Error?e.message:'Construction workspace unavailable.');}finally{setLoading(false);}},[workspaceId]);
+ useEffect(()=>{void reload();},[reload]);
+ const lost=()=>{setDraft(null);setReport(null);setError('Source access changed. Reload the workspace.');};
+ const saved=(value:NonNullable<Draft>)=>{setDraft(value);setRoom('');void reload();};
+ return <section className="workspace-panel construction-studio" aria-label="3D construction studio"><a className="text-link" href={root}>Back to property workspace</a><h2>Optional manual architectural plan</h2><p>Use the property's plan for the architectural model and overlapping room captures for the captured scene. Both keep their source revision and require separate review.</p>
+ <nav aria-label="Construction steps" className="construction-steps">{[['model','1 · Inspect model'],['layout','2 · Walls & openings'],['objects','3 · Furniture & fixtures'],['capture','4 · Captured scene'],['review','5 · Review']].map(([id,label])=><button type="button" className={'button '+(tab===id?'':'secondary')} key={id} aria-pressed={tab===id} onClick={()=>setTab(id)}>{label}</button>)}</nav>
+ {error&&<ErrorBox message={error}/>}<button className="button secondary" onClick={()=>void reload()}>Reload construction</button>
+ {report&&<p role="status">{report.counts.floors} floors · {report.counts.rooms} rooms · {report.counts.walls} walls · {report.counts.openings} openings · {report.counts.furnishings} supplied objects · {report.previewReady?'Architectural preview ready':'Construction inputs needed'}</p>}
+ {tab!=='capture'&&loading&&<p>Loading current construction…</p>}
+ {tab!=='capture'&&!loading&&!draft&&<p>No source-linked plan is available. <a href={root+'#digitization-sources'}>Upload a property floor plan</a>, then <a href={root+'#digitization-plan'}>trace its rooms and walls and supply a scale reference</a>.</p>}
+ {tab==='model'&&draft&&report&&<><h3>Architectural model</h3><p>Walls, openings and objects follow the saved plan. This model does not contain surfaces recovered from photographs.</p>{!report.previewReady?<ul aria-label="Construction blockers">{report.issues.filter(i=>i.severity==='blocking').map((i,index)=><li key={index}>{i.message}{i.entityId?' ('+i.entityId+')':''}</li>)}</ul>:<StructuralPlanViewer key={draft.geometry.id} autoOpen url={`/api/v1/ops/digitizations/${workspaceId}/geometry/preview.glb`} geometry={draft.geometry} floorId={floor} roomId={room} onSelect={(f,r)=>{setFloor(f);setRoom(r);}} onScopeLost={lost}/>}<details><summary>Compare with the saved 2D plan</summary><img alt="Saved property floor plan" style={{maxWidth:'100%'}} src={`/api/v1/ops/digitizations/${workspaceId}/geometry/preview.png?floorId=${encodeURIComponent(floor)}`}/></details><p><a href={root+'#digitization-plan'}>Edit source tracing and scale</a></p></>}
+ {tab==='layout'&&draft&&<>{draft.geometry.unit==='m'?<><ConstructionEdit key={draft.geometry.id} workspaceId={workspaceId} draft={draft} onSaved={saved}/><label>Dimensions floor<select aria-label="Dimensions floor" value={floor} onChange={e=>setFloor(e.target.value)}>{draft.geometry.floors.map(f=><option key={f.id} value={f.id}>{f.name}</option>)}</select></label><DigitizationDimensions key={draft.geometry.id+floor} workspaceId={workspaceId} draft={draft} floorId={floor} onSaved={saved} onScopeLost={lost}/></>:<p><a href={root+'#digitization-plan'}>Supply a checked scale reference before editing metre dimensions.</a></p>}</>}
+ {tab==='objects'&&draft&&<>{draft.geometry.unit==='m'?<DigitizationFurnishings key={draft.geometry.id} workspaceId={workspaceId} draft={draft} onSaved={saved} onScopeLost={lost}/>:<p>Scale the plan and supply room heights before placing objects.</p>}</>}
+ {tab==='capture'&&<><h3>Captured scene</h3><p>COLMAP recovers camera positions and gsplat reconstructs the visible appearance. A partial capture remains partial; this does not automatically create an editable floor plan or individual furniture objects.</p><DigitizationScenePreview workspaceId={workspaceId} autoOpen/><details><summary>Prepare or improve the property captures</summary><p>Capture every room from overlapping positions and include doorways connecting adjacent rooms. Review the selected frames before processing. Missing rooms need additional capture.</p><DigitizationCaptureChecklist workspaceId={workspaceId}/><DigitizationFramePrivacy workspaceId={workspaceId}/></details></>}
+ {tab==='review'&&report&&<><h3>Construction review</h3><ul>{report.issues.map((i,index)=><li key={index}>{i.severity==='blocking'?'Input needed: ':'Review: '}{i.message}{i.entityId?' ('+i.entityId+')':''}</li>)}</ul>{draft&&report.previewReady&&<SubmitModelReview workspaceId={workspaceId} candidate={{modelType:'structural',geometryRevisionId:draft.geometry.id}}/>}<p><a href={root+'#digitization-publish'}>View independent review and publication status</a></p></>}
+ </section>;
+}

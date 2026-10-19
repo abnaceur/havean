@@ -1,0 +1,1382 @@
+ Image haven-processing-ocr:3.3.3-offline-cpu-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 664B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.ocr-investigation
+#2 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.ocr-investigation
+#2 transferring dockerfile: 5.98kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 192B done
+#4 DONE 0.0s
+
+#5 [media-build  1/10] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#5 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#5 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 11.32MB 0.1s done
+#6 DONE 0.1s
+
+#7 [worker-no-gui-investigation  2/10] COPY --from=no-gui-install /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+#7 CACHED
+
+#8 [no-gui-install 1/2] COPY services/property-processing/exclude_ocr_gui.py /tmp/exclude-ocr-gui.py
+#8 CACHED
+
+#9 [install 4/8] COPY services/property-processing/verify_ocr_investigation.py /tmp/verify-worker-downloads.py
+#9 CACHED
+
+#10 [worker-no-gui-investigation  7/10] COPY docs/adr/processing-dependencies.json /opt/processing/dependencies.json
+#10 CACHED
+
+#11 [worker-no-gui-investigation  3/10] COPY --from=no-gui-install /native-debs /
+#11 CACHED
+
+#12 [install 2/8] COPY services/property-processing/ocr-investigation-build.json /tmp/ocr-investigation-build.json
+#12 CACHED
+
+#13 [install 7/8] COPY services/property-processing/clean_ocr_investigation.py /tmp/worker-cleanup.py
+#13 CACHED
+
+#14 [worker-no-gui-investigation  5/10] COPY --from=no-gui-install /tmp/ocr-gui-exclusions.json /opt/processing/ocr-native-exclusions.json
+#14 CACHED
+
+#15 [worker-no-gui-investigation  4/10] COPY --from=no-gui-install /opt/ocr-models /opt/ocr-models
+#15 CACHED
+
+#16 [install 3/8] COPY services/property-processing/ocr-investigation.lock /tmp/ocr-investigation.lock
+#16 CACHED
+
+#17 [install 8/8] RUN python /tmp/worker-cleanup.py
+#17 CACHED
+
+#18 [worker-no-gui-investigation  9/10] COPY services/property-processing/tests/ocr_worker_smoke.py /opt/processing/ocr_worker_smoke.py
+#18 CACHED
+
+#19 [worker-no-gui-investigation  6/10] COPY docs/adr/licenses /usr/share/doc/haven-processing/source-notices
+#19 CACHED
+
+#20 [install 6/8] COPY services/property-processing/.ocr-wheels/models /opt/ocr-models
+#20 CACHED
+
+#21 [no-gui-install 2/2] RUN python /tmp/exclude-ocr-gui.py
+#21 CACHED
+
+#22 [install 5/8] RUN --mount=type=bind,source=services/property-processing/.ocr-wheels,target=/wheels,readonly python /tmp/verify-worker-downloads.py && python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/ocr-investigation.lock && python -m pip check && mkdir /native-debs && dpkg-deb -x /wheels/libgomp1_14.2.0-19_amd64.deb /native-debs && dpkg-deb -x /wheels/libglib2.0-0t64_2.84.4-3~deb13u5_amd64.deb /native-debs
+#22 CACHED
+
+#23 [worker-no-gui-investigation  8/10] COPY services/property-processing/property_processing /opt/processing/property_processing
+#23 CACHED
+
+#24 [worker-no-gui-investigation 10/10] WORKDIR /opt/processing
+#24 CACHED
+
+#25 [media-build  2/10] COPY services/property-processing/locks/media-build-apt.json /tmp/media-build-apt.json
+#25 DONE 0.1s
+
+#26 [media-build  3/10] RUN python -c "import json,subprocess; p=json.load(open('/tmp/media-build-apt.json'))['packages']; subprocess.run(['apt-get','update'],check=True); subprocess.run(['apt-get','install','-y','--no-install-recommends',*[name+'='+version for name,version in p.items()]],check=True)" && rm -rf /var/lib/apt/lists/*
+#26 10.74 Get:1 http://deb.debian.org/debian trixie InRelease [140 kB]
+#26 11.14 Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+#26 11.63 Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+#26 11.77 Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9678 kB]
+#26 13.96 Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [4412 B]
+#26 14.08 Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [266 kB]
+#26 14.74 Fetched 10.2 MB in 14s (703 kB/s)
+#26 14.74 Reading package lists...
+#26 15.27 Reading package lists...
+#26 15.80 Building dependency tree...
+#26 15.92 Reading state information...
+#26 16.08 Suggested packages:
+#26 16.08   binutils-doc gprofng-gui binutils-gold cpp-doc gcc-14-locales cpp-14-doc
+#26 16.08   gcc-multilib manpages-dev autoconf automake libtool flex bison gdb gcc-doc
+#26 16.08   gcc-14-multilib gcc-14-doc gdb-x86-64-linux-gnu libc-devtools glibc-doc
+#26 16.08   make-doc
+#26 16.08 Recommended packages:
+#26 16.08   manpages manpages-dev
+#26 16.20 The following NEW packages will be installed:
+#26 16.20   binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
+#26 16.20   cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc gcc-14
+#26 16.20   gcc-14-x86-64-linux-gnu gcc-x86-64-linux-gnu libasan8 libatomic1 libbinutils
+#26 16.20   libc-dev-bin libc6-dev libcc1-0 libcrypt-dev libctf-nobfd0 libctf0
+#26 16.20   libgcc-14-dev libgomp1 libgprofng0 libhwasan0 libisl23 libitm1 libjansson4
+#26 16.20   liblsan0 libmpc3 libmpfr6 libquadmath0 libsframe1 libtsan2 libubsan1
+#26 16.20   linux-libc-dev make rpcsvc-proto zlib1g-dev
+#26 16.20 The following packages will be upgraded:
+#26 16.20   libc-bin libc6
+#26 26.71 2 upgraded, 38 newly installed, 0 to remove and 14 not upgraded.
+#26 26.71 Need to get 62.0 MB of archives.
+#26 26.71 After this operation, 220 MB of additional disk space will be used.
+#26 26.71 Get:1 http://deb.debian.org/debian trixie/main amd64 libc6 amd64 2.41-12+deb13u4 [2847 kB]
+#26 27.94 Get:2 http://deb.debian.org/debian trixie/main amd64 libc-bin amd64 2.41-12+deb13u4 [638 kB]
+#26 28.08 Get:3 http://deb.debian.org/debian trixie/main amd64 libsframe1 amd64 2.44-3 [78.4 kB]
+#26 28.08 Get:4 http://deb.debian.org/debian trixie/main amd64 binutils-common amd64 2.44-3 [2509 kB]
+#26 28.58 Get:5 http://deb.debian.org/debian trixie/main amd64 libbinutils amd64 2.44-3 [534 kB]
+#26 28.67 Get:6 http://deb.debian.org/debian trixie/main amd64 libgprofng0 amd64 2.44-3 [808 kB]
+#26 28.77 Get:7 http://deb.debian.org/debian trixie/main amd64 libctf-nobfd0 amd64 2.44-3 [156 kB]
+#26 28.79 Get:8 http://deb.debian.org/debian trixie/main amd64 libctf0 amd64 2.44-3 [88.6 kB]
+#26 28.80 Get:9 http://deb.debian.org/debian trixie/main amd64 libjansson4 amd64 2.14-2+b3 [39.8 kB]
+#26 28.81 Get:10 http://deb.debian.org/debian trixie/main amd64 binutils-x86-64-linux-gnu amd64 2.44-3 [1014 kB]
+#26 29.04 Get:11 http://deb.debian.org/debian trixie/main amd64 binutils amd64 2.44-3 [265 kB]
+#26 29.20 Get:12 http://deb.debian.org/debian trixie/main amd64 libisl23 amd64 0.27-1 [659 kB]
+#26 29.30 Get:13 http://deb.debian.org/debian trixie/main amd64 libmpfr6 amd64 4.2.2-1 [729 kB]
+#26 29.51 Get:14 http://deb.debian.org/debian trixie/main amd64 libmpc3 amd64 1.3.1-1+b3 [52.2 kB]
+#26 29.51 Get:15 http://deb.debian.org/debian trixie/main amd64 cpp-14-x86-64-linux-gnu amd64 14.2.0-19 [11.0 MB]
+#26 31.29 Get:16 http://deb.debian.org/debian trixie/main amd64 cpp-14 amd64 14.2.0-19 [1280 B]
+#26 31.29 Get:17 http://deb.debian.org/debian trixie/main amd64 cpp-x86-64-linux-gnu amd64 4:14.2.0-1 [4840 B]
+#26 31.29 Get:18 http://deb.debian.org/debian trixie/main amd64 cpp amd64 4:14.2.0-1 [1568 B]
+#26 31.29 Get:19 http://deb.debian.org/debian trixie/main amd64 libcc1-0 amd64 14.2.0-19 [42.8 kB]
+#26 31.29 Get:20 http://deb.debian.org/debian trixie/main amd64 libgomp1 amd64 14.2.0-19 [137 kB]
+#26 31.30 Get:21 http://deb.debian.org/debian trixie/main amd64 libitm1 amd64 14.2.0-19 [26.0 kB]
+#26 31.31 Get:22 http://deb.debian.org/debian trixie/main amd64 libatomic1 amd64 14.2.0-19 [9308 B]
+#26 31.31 Get:23 http://deb.debian.org/debian trixie/main amd64 libasan8 amd64 14.2.0-19 [2725 kB]
+#26 31.82 Get:24 http://deb.debian.org/debian trixie/main amd64 liblsan0 amd64 14.2.0-19 [1204 kB]
+#26 31.99 Get:25 http://deb.debian.org/debian trixie/main amd64 libtsan2 amd64 14.2.0-19 [2460 kB]
+#26 32.40 Get:26 http://deb.debian.org/debian trixie/main amd64 libubsan1 amd64 14.2.0-19 [1074 kB]
+#26 32.60 Get:27 http://deb.debian.org/debian trixie/main amd64 libhwasan0 amd64 14.2.0-19 [1488 kB]
+#26 32.82 Get:28 http://deb.debian.org/debian trixie/main amd64 libquadmath0 amd64 14.2.0-19 [145 kB]
+#26 32.85 Get:29 http://deb.debian.org/debian trixie/main amd64 libgcc-14-dev amd64 14.2.0-19 [2672 kB]
+#26 33.20 Get:30 http://deb.debian.org/debian trixie/main amd64 gcc-14-x86-64-linux-gnu amd64 14.2.0-19 [21.4 MB]
+#26 36.88 Get:31 http://deb.debian.org/debian trixie/main amd64 gcc-14 amd64 14.2.0-19 [540 kB]
+#26 36.96 Get:32 http://deb.debian.org/debian trixie/main amd64 gcc-x86-64-linux-gnu amd64 4:14.2.0-1 [1436 B]
+#26 36.96 Get:33 http://deb.debian.org/debian trixie/main amd64 gcc amd64 4:14.2.0-1 [5136 B]
+#26 36.96 Get:34 http://deb.debian.org/debian trixie/main amd64 libc-dev-bin amd64 2.41-12+deb13u4 [60.0 kB]
+#26 36.96 Get:35 http://deb.debian.org/debian-security trixie-security/main amd64 linux-libc-dev all 6.12.111-1 [2988 kB]
+#26 37.37 Get:36 http://deb.debian.org/debian trixie/main amd64 libcrypt-dev amd64 1:4.4.38-1 [119 kB]
+#26 37.44 Get:37 http://deb.debian.org/debian trixie/main amd64 rpcsvc-proto amd64 1.4.3-1 [63.3 kB]
+#26 37.46 Get:38 http://deb.debian.org/debian trixie/main amd64 libc6-dev amd64 2.41-12+deb13u4 [1995 kB]
+#26 37.72 Get:39 http://deb.debian.org/debian trixie/main amd64 make amd64 4.4.1-2 [463 kB]
+#26 37.77 Get:40 http://deb.debian.org/debian trixie/main amd64 zlib1g-dev amd64 1:1.3.dfsg+really1.3.1-1+b1 [920 kB]
+#26 38.11 debconf: unable to initialize frontend: Dialog
+#26 38.11 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#26 38.11 debconf: falling back to frontend: Readline
+#26 38.11 debconf: unable to initialize frontend: Readline
+#26 38.11 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8, <STDIN> line 40.)
+#26 38.11 debconf: falling back to frontend: Teletype
+#26 38.11 debconf: unable to initialize frontend: Teletype
+#26 38.11 debconf: (This frontend requires a controlling tty.)
+#26 38.11 debconf: falling back to frontend: Noninteractive
+#26 39.46 Preconfiguring packages ...
+#26 39.56 Fetched 62.0 MB in 22s (2861 kB/s)
+#26 39.68 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5652 files and directories currently installed.)
+#26 39.68 Preparing to unpack .../libc6_2.41-12+deb13u4_amd64.deb ...
+#26 39.85 debconf: unable to initialize frontend: Dialog
+#26 39.85 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#26 39.85 debconf: falling back to frontend: Readline
+#26 39.85 debconf: unable to initialize frontend: Readline
+#26 39.85 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8.)
+#26 39.85 debconf: falling back to frontend: Teletype
+#26 39.85 debconf: unable to initialize frontend: Teletype
+#26 39.85 debconf: (This frontend requires a controlling tty.)
+#26 39.85 debconf: falling back to frontend: Noninteractive
+#26 39.91 Unpacking libc6:amd64 (2.41-12+deb13u4) over (2.41-12+deb13u3) ...
+#26 42.74 Setting up libc6:amd64 (2.41-12+deb13u4) ...
+#26 42.86 debconf: unable to initialize frontend: Dialog
+#26 42.86 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#26 42.86 debconf: falling back to frontend: Readline
+#26 42.86 debconf: unable to initialize frontend: Readline
+#26 42.86 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8.)
+#26 42.86 debconf: falling back to frontend: Teletype
+#26 42.86 debconf: unable to initialize frontend: Teletype
+#26 42.86 debconf: (This frontend requires a controlling tty.)
+#26 42.86 debconf: falling back to frontend: Noninteractive
+#26 43.01 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5652 files and directories currently installed.)
+#26 43.01 Preparing to unpack .../libc-bin_2.41-12+deb13u4_amd64.deb ...
+#26 43.07 Unpacking libc-bin (2.41-12+deb13u4) over (2.41-12+deb13u3) ...
+#26 43.51 Setting up libc-bin (2.41-12+deb13u4) ...
+#26 43.80 Selecting previously unselected package libsframe1:amd64.
+#26 43.80 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5652 files and directories currently installed.)
+#26 43.81 Preparing to unpack .../00-libsframe1_2.44-3_amd64.deb ...
+#26 43.85 Unpacking libsframe1:amd64 (2.44-3) ...
+#26 43.97 Selecting previously unselected package binutils-common:amd64.
+#26 43.97 Preparing to unpack .../01-binutils-common_2.44-3_amd64.deb ...
+#26 43.99 Unpacking binutils-common:amd64 (2.44-3) ...
+#26 44.21 Selecting previously unselected package libbinutils:amd64.
+#26 44.21 Preparing to unpack .../02-libbinutils_2.44-3_amd64.deb ...
+#26 44.23 Unpacking libbinutils:amd64 (2.44-3) ...
+#26 44.40 Selecting previously unselected package libgprofng0:amd64.
+#26 44.40 Preparing to unpack .../03-libgprofng0_2.44-3_amd64.deb ...
+#26 44.42 Unpacking libgprofng0:amd64 (2.44-3) ...
+#26 44.59 Selecting previously unselected package libctf-nobfd0:amd64.
+#26 44.59 Preparing to unpack .../04-libctf-nobfd0_2.44-3_amd64.deb ...
+#26 44.61 Unpacking libctf-nobfd0:amd64 (2.44-3) ...
+#26 44.74 Selecting previously unselected package libctf0:amd64.
+#26 44.74 Preparing to unpack .../05-libctf0_2.44-3_amd64.deb ...
+#26 44.76 Unpacking libctf0:amd64 (2.44-3) ...
+#26 44.89 Selecting previously unselected package libjansson4:amd64.
+#26 44.89 Preparing to unpack .../06-libjansson4_2.14-2+b3_amd64.deb ...
+#26 44.91 Unpacking libjansson4:amd64 (2.14-2+b3) ...
+#26 44.99 Selecting previously unselected package binutils-x86-64-linux-gnu.
+#26 44.99 Preparing to unpack .../07-binutils-x86-64-linux-gnu_2.44-3_amd64.deb ...
+#26 45.01 Unpacking binutils-x86-64-linux-gnu (2.44-3) ...
+#26 45.18 Selecting previously unselected package binutils.
+#26 45.19 Preparing to unpack .../08-binutils_2.44-3_amd64.deb ...
+#26 45.20 Unpacking binutils (2.44-3) ...
+#26 45.35 Selecting previously unselected package libisl23:amd64.
+#26 45.35 Preparing to unpack .../09-libisl23_0.27-1_amd64.deb ...
+#26 45.37 Unpacking libisl23:amd64 (0.27-1) ...
+#26 45.54 Selecting previously unselected package libmpfr6:amd64.
+#26 45.54 Preparing to unpack .../10-libmpfr6_4.2.2-1_amd64.deb ...
+#26 45.56 Unpacking libmpfr6:amd64 (4.2.2-1) ...
+#26 45.70 Selecting previously unselected package libmpc3:amd64.
+#26 45.71 Preparing to unpack .../11-libmpc3_1.3.1-1+b3_amd64.deb ...
+#26 45.72 Unpacking libmpc3:amd64 (1.3.1-1+b3) ...
+#26 45.83 Selecting previously unselected package cpp-14-x86-64-linux-gnu.
+#26 45.83 Preparing to unpack .../12-cpp-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+#26 45.85 Unpacking cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+#26 46.34 Selecting previously unselected package cpp-14.
+#26 46.34 Preparing to unpack .../13-cpp-14_14.2.0-19_amd64.deb ...
+#26 46.36 Unpacking cpp-14 (14.2.0-19) ...
+#26 46.45 Selecting previously unselected package cpp-x86-64-linux-gnu.
+#26 46.45 Preparing to unpack .../14-cpp-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+#26 46.47 Unpacking cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+#26 46.59 Selecting previously unselected package cpp.
+#26 46.59 Preparing to unpack .../15-cpp_4%3a14.2.0-1_amd64.deb ...
+#26 46.62 Unpacking cpp (4:14.2.0-1) ...
+#26 46.73 Selecting previously unselected package libcc1-0:amd64.
+#26 46.73 Preparing to unpack .../16-libcc1-0_14.2.0-19_amd64.deb ...
+#26 46.75 Unpacking libcc1-0:amd64 (14.2.0-19) ...
+#26 46.86 Selecting previously unselected package libgomp1:amd64.
+#26 46.86 Preparing to unpack .../17-libgomp1_14.2.0-19_amd64.deb ...
+#26 46.88 Unpacking libgomp1:amd64 (14.2.0-19) ...
+#26 47.00 Selecting previously unselected package libitm1:amd64.
+#26 47.00 Preparing to unpack .../18-libitm1_14.2.0-19_amd64.deb ...
+#26 47.02 Unpacking libitm1:amd64 (14.2.0-19) ...
+#26 47.16 Selecting previously unselected package libatomic1:amd64.
+#26 47.16 Preparing to unpack .../19-libatomic1_14.2.0-19_amd64.deb ...
+#26 47.18 Unpacking libatomic1:amd64 (14.2.0-19) ...
+#26 47.33 Selecting previously unselected package libasan8:amd64.
+#26 47.33 Preparing to unpack .../20-libasan8_14.2.0-19_amd64.deb ...
+#26 47.35 Unpacking libasan8:amd64 (14.2.0-19) ...
+#26 47.60 Selecting previously unselected package liblsan0:amd64.
+#26 47.60 Preparing to unpack .../21-liblsan0_14.2.0-19_amd64.deb ...
+#26 47.62 Unpacking liblsan0:amd64 (14.2.0-19) ...
+#26 47.81 Selecting previously unselected package libtsan2:amd64.
+#26 47.81 Preparing to unpack .../22-libtsan2_14.2.0-19_amd64.deb ...
+#26 47.83 Unpacking libtsan2:amd64 (14.2.0-19) ...
+#26 48.07 Selecting previously unselected package libubsan1:amd64.
+#26 48.07 Preparing to unpack .../23-libubsan1_14.2.0-19_amd64.deb ...
+#26 48.09 Unpacking libubsan1:amd64 (14.2.0-19) ...
+#26 48.26 Selecting previously unselected package libhwasan0:amd64.
+#26 48.26 Preparing to unpack .../24-libhwasan0_14.2.0-19_amd64.deb ...
+#26 48.29 Unpacking libhwasan0:amd64 (14.2.0-19) ...
+#26 48.48 Selecting previously unselected package libquadmath0:amd64.
+#26 48.48 Preparing to unpack .../25-libquadmath0_14.2.0-19_amd64.deb ...
+#26 48.50 Unpacking libquadmath0:amd64 (14.2.0-19) ...
+#26 48.60 Selecting previously unselected package libgcc-14-dev:amd64.
+#26 48.60 Preparing to unpack .../26-libgcc-14-dev_14.2.0-19_amd64.deb ...
+#26 48.62 Unpacking libgcc-14-dev:amd64 (14.2.0-19) ...
+#26 48.83 Selecting previously unselected package gcc-14-x86-64-linux-gnu.
+#26 48.83 Preparing to unpack .../27-gcc-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+#26 48.85 Unpacking gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+#26 49.38 Selecting previously unselected package gcc-14.
+#26 49.38 Preparing to unpack .../28-gcc-14_14.2.0-19_amd64.deb ...
+#26 49.40 Unpacking gcc-14 (14.2.0-19) ...
+#26 49.50 Selecting previously unselected package gcc-x86-64-linux-gnu.
+#26 49.50 Preparing to unpack .../29-gcc-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+#26 49.52 Unpacking gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+#26 49.62 Selecting previously unselected package gcc.
+#26 49.62 Preparing to unpack .../30-gcc_4%3a14.2.0-1_amd64.deb ...
+#26 49.64 Unpacking gcc (4:14.2.0-1) ...
+#26 49.73 Selecting previously unselected package libc-dev-bin.
+#26 49.73 Preparing to unpack .../31-libc-dev-bin_2.41-12+deb13u4_amd64.deb ...
+#26 49.74 Unpacking libc-dev-bin (2.41-12+deb13u4) ...
+#26 49.83 Selecting previously unselected package linux-libc-dev.
+#26 49.83 Preparing to unpack .../32-linux-libc-dev_6.12.111-1_all.deb ...
+#26 49.85 Unpacking linux-libc-dev (6.12.111-1) ...
+#26 50.16 Selecting previously unselected package libcrypt-dev:amd64.
+#26 50.16 Preparing to unpack .../33-libcrypt-dev_1%3a4.4.38-1_amd64.deb ...
+#26 50.18 Unpacking libcrypt-dev:amd64 (1:4.4.38-1) ...
+#26 50.29 Selecting previously unselected package rpcsvc-proto.
+#26 50.29 Preparing to unpack .../34-rpcsvc-proto_1.4.3-1_amd64.deb ...
+#26 50.31 Unpacking rpcsvc-proto (1.4.3-1) ...
+#26 50.41 Selecting previously unselected package libc6-dev:amd64.
+#26 50.41 Preparing to unpack .../35-libc6-dev_2.41-12+deb13u4_amd64.deb ...
+#26 50.43 Unpacking libc6-dev:amd64 (2.41-12+deb13u4) ...
+#26 50.61 Selecting previously unselected package make.
+#26 50.61 Preparing to unpack .../36-make_4.4.1-2_amd64.deb ...
+#26 50.63 Unpacking make (4.4.1-2) ...
+#26 50.75 Selecting previously unselected package zlib1g-dev:amd64.
+#26 50.75 Preparing to unpack .../37-zlib1g-dev_1%3a1.3.dfsg+really1.3.1-1+b1_amd64.deb ...
+#26 50.77 Unpacking zlib1g-dev:amd64 (1:1.3.dfsg+really1.3.1-1+b1) ...
+#26 50.90 Setting up binutils-common:amd64 (2.44-3) ...
+#26 50.96 Setting up linux-libc-dev (6.12.111-1) ...
+#26 51.01 Setting up libctf-nobfd0:amd64 (2.44-3) ...
+#26 51.06 Setting up libgomp1:amd64 (14.2.0-19) ...
+#26 51.12 Setting up libsframe1:amd64 (2.44-3) ...
+#26 51.17 Setting up libjansson4:amd64 (2.14-2+b3) ...
+#26 51.22 Setting up rpcsvc-proto (1.4.3-1) ...
+#26 51.28 Setting up make (4.4.1-2) ...
+#26 51.35 Setting up libmpfr6:amd64 (4.2.2-1) ...
+#26 51.40 Setting up libquadmath0:amd64 (14.2.0-19) ...
+#26 51.45 Setting up libmpc3:amd64 (1.3.1-1+b3) ...
+#26 51.50 Setting up libatomic1:amd64 (14.2.0-19) ...
+#26 51.56 Setting up libubsan1:amd64 (14.2.0-19) ...
+#26 51.61 Setting up libhwasan0:amd64 (14.2.0-19) ...
+#26 51.66 Setting up libcrypt-dev:amd64 (1:4.4.38-1) ...
+#26 51.72 Setting up libasan8:amd64 (14.2.0-19) ...
+#26 51.77 Setting up libtsan2:amd64 (14.2.0-19) ...
+#26 51.82 Setting up libbinutils:amd64 (2.44-3) ...
+#26 51.88 Setting up libisl23:amd64 (0.27-1) ...
+#26 51.93 Setting up libc-dev-bin (2.41-12+deb13u4) ...
+#26 51.98 Setting up libcc1-0:amd64 (14.2.0-19) ...
+#26 52.04 Setting up liblsan0:amd64 (14.2.0-19) ...
+#26 52.10 Setting up libitm1:amd64 (14.2.0-19) ...
+#26 52.16 Setting up libctf0:amd64 (2.44-3) ...
+#26 52.21 Setting up libgprofng0:amd64 (2.44-3) ...
+#26 52.28 Setting up cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+#26 52.35 Setting up cpp-14 (14.2.0-19) ...
+#26 52.40 Setting up libc6-dev:amd64 (2.41-12+deb13u4) ...
+#26 52.46 Setting up libgcc-14-dev:amd64 (14.2.0-19) ...
+#26 52.52 Setting up binutils-x86-64-linux-gnu (2.44-3) ...
+#26 52.57 Setting up cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+#26 52.62 Setting up binutils (2.44-3) ...
+#26 52.70 Setting up zlib1g-dev:amd64 (1:1.3.dfsg+really1.3.1-1+b1) ...
+#26 52.75 Setting up cpp (4:14.2.0-1) ...
+#26 52.83 Setting up gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+#26 52.88 Setting up gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+#26 52.94 Setting up gcc-14 (14.2.0-19) ...
+#26 52.99 Setting up gcc (4:14.2.0-1) ...
+#26 53.07 Processing triggers for libc-bin (2.41-12+deb13u4) ...
+#26 DONE 53.3s
+
+#27 [media-build  4/10] WORKDIR /build
+#27 DONE 0.1s
+
+#28 [media-build  5/10] COPY services/property-processing/media-build.json /build/profile.json
+#28 DONE 0.1s
+
+#29 [media-build  6/10] RUN --mount=type=bind,source=services/property-processing/.media-sources,target=/sources,readonly python -c "import hashlib,json,pathlib,tarfile; p=json.load(open('/build/profile.json')); f=pathlib.Path('/sources/ffmpeg-7.1.5.tar.xz'); assert hashlib.sha256(f.read_bytes()).hexdigest()==p['sourceSha256']; tarfile.open(f).extractall('/build',filter='data')"
+#29 DONE 2.6s
+
+#30 [media-build  7/10] WORKDIR /build/ffmpeg-7.1.5
+#30 DONE 0.1s
+
+#31 [media-build  8/10] RUN python -c "import json,subprocess; p=json.load(open('/build/profile.json')); subprocess.run(['./configure','--prefix=/opt/media',*p['flags']],check=True)" && make -j2 && make install
+#31 6.724 install prefix            /opt/media
+#31 6.724 source path               .
+#31 6.724 C compiler                gcc
+#31 6.724 C library                 glibc
+#31 6.724 ARCH                      x86 (generic)
+#31 6.724 big-endian                no
+#31 6.724 runtime cpu detection     yes
+#31 6.724 standalone assembly       no
+#31 6.724 x86 assembler             nasm
+#31 6.724 MMX enabled               yes
+#31 6.724 MMXEXT enabled            yes
+#31 6.724 3DNow! enabled            yes
+#31 6.724 3DNow! extended enabled   yes
+#31 6.724 SSE enabled               yes
+#31 6.724 SSSE3 enabled             yes
+#31 6.724 AESNI enabled             yes
+#31 6.724 AVX enabled               yes
+#31 6.724 AVX2 enabled              yes
+#31 6.724 AVX-512 enabled           yes
+#31 6.724 AVX-512ICL enabled        yes
+#31 6.724 XOP enabled               yes
+#31 6.724 FMA3 enabled              yes
+#31 6.724 FMA4 enabled              yes
+#31 6.724 i686 features enabled     yes
+#31 6.724 CMOV is fast              yes
+#31 6.724 EBX available             yes
+#31 6.724 EBP available             yes
+#31 6.724 debug symbols             no
+#31 6.724 strip symbols             yes
+#31 6.724 optimize for size         no
+#31 6.724 optimizations             yes
+#31 6.724 static                    yes
+#31 6.724 shared                    no
+#31 6.724 postprocessing support    no
+#31 6.724 network support           no
+#31 6.724 threading support         pthreads
+#31 6.724 safe bitstream reader     yes
+#31 6.724 texi2html enabled         no
+#31 6.724 perl enabled              yes
+#31 6.724 pod2man enabled           no
+#31 6.724 makeinfo enabled          no
+#31 6.724 makeinfo supports HTML    no
+#31 6.724 xmllint enabled           no
+#31 6.724 
+#31 6.724 External libraries:
+#31 6.726 iconv                   zlib
+#31 6.726 
+#31 6.726 External libraries providing hardware acceleration:
+#31 6.728 
+#31 6.728 Libraries:
+#31 6.729 avcodec                 avformat                swresample
+#31 6.729 avfilter                avutil                  swscale
+#31 6.729 
+#31 6.729 Programs:
+#31 6.731 ffmpeg                  ffprobe
+#31 6.731 
+#31 6.731 Enabled decoders:
+#31 6.736 h264                    mjpeg                   vp8
+#31 6.736 hevc                    png                     vp9
+#31 6.736 
+#31 6.736 Enabled encoders:
+#31 6.739 png
+#31 6.739 
+#31 6.739 Enabled hwaccels:
+#31 6.741 
+#31 6.741 Enabled parsers:
+#31 6.744 h264                    mjpeg                   vp8
+#31 6.744 hevc                    png                     vp9
+#31 6.744 
+#31 6.744 Enabled demuxers:
+#31 6.747 image2                  matroska                mov
+#31 6.747 
+#31 6.747 Enabled muxers:
+#31 6.750 image2
+#31 6.750 
+#31 6.750 Enabled protocols:
+#31 6.752 file                    pipe
+#31 6.752 
+#31 6.752 Enabled filters:
+#31 6.757 aformat                 hflip                   showinfo
+#31 6.757 anull                   null                    transpose
+#31 6.757 atrim                   rotate                  trim
+#31 6.757 crop                    scale                   vflip
+#31 6.757 format                  select
+#31 6.758 
+#31 6.758 Enabled bsfs:
+#31 6.760 vp9_superframe_split
+#31 6.760 
+#31 6.760 Enabled indevs:
+#31 6.762 
+#31 6.762 Enabled outdevs:
+#31 6.765 
+#31 6.765 License: LGPL version 2.1 or later
+#31 6.765 
+#31 6.765 WARNING: pkg-config not found, library detection may fail.
+#31 6.941 GEN	libavfilter/libavfilter.version
+#31 6.941 GEN	libavformat/libavformat.version
+#31 6.944 GEN	libavcodec/libavcodec.version
+#31 6.945 GEN	libswresample/libswresample.version
+#31 6.947 GEN	libswscale/libswscale.version
+#31 6.949 GEN	libavutil/libavutil.version
+#31 7.025 CC	libavfilter/af_aformat.o
+#31 7.025 CC	libavfilter/af_anull.o
+#31 7.059 CC	libavfilter/allfilters.o
+#31 7.067 CC	libavfilter/audio.o
+#31 7.095 CC	libavfilter/avfilter.o
+#31 7.119 CC	libavfilter/avfiltergraph.o
+#31 7.443 CC	libavfilter/buffersink.o
+#31 7.568 CC	libavfilter/buffersrc.o
+#31 7.601 CC	libavfilter/ccfifo.o
+#31 7.665 CC	libavfilter/colorspace.o
+#31 7.688 CC	libavfilter/drawutils.o
+#31 7.739 CC	libavfilter/f_select.o
+#31 7.847 CC	libavfilter/formats.o
+#31 8.043 CC	libavfilter/framepool.o
+#31 8.142 CC	libavfilter/framequeue.o
+#31 8.200 CC	libavfilter/framesync.o
+#31 8.258 CC	libavfilter/graphdump.o
+#31 8.336 CC	libavfilter/graphparser.o
+#31 8.341 CC	libavfilter/pthread.o
+#31 8.382 CC	libavfilter/scale_eval.o
+#31 8.439 CC	libavfilter/scene_sad.o
+#31 8.486 CC	libavfilter/trim.o
+#31 8.573 CC	libavfilter/version.o
+#31 8.601 CC	libavfilter/vf_crop.o
+#31 8.604 CC	libavfilter/vf_format.o
+#31 8.665 CC	libavfilter/vf_hflip.o
+#31 8.699 CC	libavfilter/vf_null.o
+#31 8.727 CC	libavfilter/vf_rotate.o
+#31 8.760 CC	libavfilter/vf_scale.o
+#31 8.964 CC	libavfilter/vf_showinfo.o
+#31 9.018 CC	libavfilter/vf_transpose.o
+#31 9.239 CC	libavfilter/vf_vflip.o
+#31 9.296 CC	libavfilter/video.o
+#31 9.322 CC	libavfilter/x86/scene_sad_init.o
+#31 9.341 CC	libavfilter/x86/vf_hflip_init.o
+#31 9.353 CC	libavfilter/x86/vf_transpose_init.o
+#31 9.357 GEN	libavfilter/libavfilter.pc
+#31 9.362 CC	libavformat/allformats.o
+#31 9.368 CC	libavformat/avformat.o
+#31 9.404 CC	libavformat/avio.o
+#31 9.614 CC	libavformat/aviobuf.o
+#31 9.674 CC	libavformat/demux.o
+#31 9.725 libavformat/demux.c: In function ‘read_frame_internal’:
+#31 9.725 libavformat/demux.c:1389:9: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#31 9.725  1389 |         int new_extradata = !!av_packet_side_data_get(pkt->side_data, pkt->side_data_elems,
+#31 9.725       |         ^~~
+#31 10.10 CC	libavformat/demux_utils.o
+#31 10.20 CC	libavformat/dovi_isom.o
+#31 10.26 CC	libavformat/dump.o
+#31 10.59 CC	libavformat/dv.o
+#31 10.63 CC	libavformat/file.o
+#31 10.72 CC	libavformat/flac_picture.o
+#31 10.75 CC	libavformat/format.o
+#31 10.81 CC	libavformat/iamf.o
+#31 10.87 CC	libavformat/iamf_parse.o
+#31 10.87 CC	libavformat/iamf_reader.o
+#31 11.00 CC	libavformat/id3v1.o
+#31 11.06 CC	libavformat/id3v2.o
+#31 11.26 CC	libavformat/img2.o
+#31 11.30 CC	libavformat/img2dec.o
+#31 11.35 libavformat/img2dec.c: In function ‘ff_img_read_packet’:
+#31 11.35 libavformat/img2dec.c:501:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#31 11.35   501 |     int total_size = 0;
+#31 11.35       |     ^~~
+#31 11.36 libavformat/img2dec.c: At top level:
+#31 11.36 libavformat/img2dec.c:1212:12: warning: ‘vbn_probe’ defined but not used [-Wunused-function]
+#31 11.36  1212 | static int vbn_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1192:12: warning: ‘gem_probe’ defined but not used [-Wunused-function]
+#31 11.36  1192 | static int gem_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1175:12: warning: ‘qoi_probe’ defined but not used [-Wunused-function]
+#31 11.36  1175 | static int qoi_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1164:12: warning: ‘photocd_probe’ defined but not used [-Wunused-function]
+#31 11.36  1164 | static int photocd_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1151:12: warning: ‘gif_probe’ defined but not used [-Wunused-function]
+#31 11.36  1151 | static int gif_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1121:12: warning: ‘xwd_probe’ defined but not used [-Wunused-function]
+#31 11.36  1121 | static int xwd_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1112:12: warning: ‘xpm_probe’ defined but not used [-Wunused-function]
+#31 11.36  1112 | static int xpm_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1102:12: warning: ‘xbm_probe’ defined but not used [-Wunused-function]
+#31 11.36  1102 | static int xbm_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1095:12: warning: ‘hdr_probe’ defined but not used [-Wunused-function]
+#31 11.36  1095 | static int hdr_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1090:12: warning: ‘pam_probe’ defined but not used [-Wunused-function]
+#31 11.36  1090 | static int pam_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1085:12: warning: ‘ppm_probe’ defined but not used [-Wunused-function]
+#31 11.36  1085 | static int ppm_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1077:12: warning: ‘pgx_probe’ defined but not used [-Wunused-function]
+#31 11.36  1077 | static int pgx_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1071:12: warning: ‘pgmyuv_probe’ defined but not used [-Wunused-function]
+#31 11.36  1071 | static int pgmyuv_probe(const AVProbeData *p) // custom FFmpeg format recognized by file extension
+#31 11.36       |            ^~~~~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1065:12: warning: ‘pgm_probe’ defined but not used [-Wunused-function]
+#31 11.36  1065 | static int pgm_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1054:12: warning: ‘phm_probe’ defined but not used [-Wunused-function]
+#31 11.36  1054 | static int phm_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1048:12: warning: ‘pfm_probe’ defined but not used [-Wunused-function]
+#31 11.36  1048 | static int pfm_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1043:12: warning: ‘pbm_probe’ defined but not used [-Wunused-function]
+#31 11.36  1043 | static int pbm_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1015:12: warning: ‘webp_probe’ defined but not used [-Wunused-function]
+#31 11.36  1015 | static int webp_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~~
+#31 11.36 libavformat/img2dec.c:1005:12: warning: ‘tiff_probe’ defined but not used [-Wunused-function]
+#31 11.36  1005 | static int tiff_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~~
+#31 11.36 libavformat/img2dec.c:980:12: warning: ‘svg_probe’ defined but not used [-Wunused-function]
+#31 11.36   980 | static int svg_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:971:12: warning: ‘sunrast_probe’ defined but not used [-Wunused-function]
+#31 11.36   971 | static int sunrast_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~~~~~
+#31 11.36 libavformat/img2dec.c:959:12: warning: ‘sgi_probe’ defined but not used [-Wunused-function]
+#31 11.36   959 | static int sgi_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:931:12: warning: ‘psd_probe’ defined but not used [-Wunused-function]
+#31 11.36   931 | static int psd_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:922:12: warning: ‘png_probe’ defined but not used [-Wunused-function]
+#31 11.36   922 | static int png_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:913:12: warning: ‘pictor_probe’ defined but not used [-Wunused-function]
+#31 11.36   913 | static int pictor_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~~~~
+#31 11.36 libavformat/img2dec.c:897:12: warning: ‘qdraw_probe’ defined but not used [-Wunused-function]
+#31 11.36   897 | static int qdraw_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~~~
+#31 11.36 libavformat/img2dec.c:876:12: warning: ‘pcx_probe’ defined but not used [-Wunused-function]
+#31 11.36   876 | static int pcx_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~
+#31 11.36 libavformat/img2dec.c:858:12: warning: ‘jpegxl_probe’ defined but not used [-Wunused-function]
+#31 11.36   858 | static int jpegxl_probe(const AVProbeData *p)
+#31 11.36       |            ^~~~~~~~~~~~
+#31 11.37 libavformat/img2dec.c:849:12: warning: ‘jpegls_probe’ defined but not used [-Wunused-function]
+#31 11.37   849 | static int jpegls_probe(const AVProbeData *p)
+#31 11.37       |            ^~~~~~~~~~~~
+#31 11.37 libavformat/img2dec.c:768:12: warning: ‘jpeg_probe’ defined but not used [-Wunused-function]
+#31 11.37   768 | static int jpeg_probe(const AVProbeData *p)
+#31 11.37       |            ^~~~~~~~~~
+#31 11.37 libavformat/img2dec.c:758:12: warning: ‘j2k_probe’ defined but not used [-Wunused-function]
+#31 11.37   758 | static int j2k_probe(const AVProbeData *p)
+#31 11.37       |            ^~~~~~~~~
+#31 11.37 libavformat/img2dec.c:749:12: warning: ‘exr_probe’ defined but not used [-Wunused-function]
+#31 11.37   749 | static int exr_probe(const AVProbeData *p)
+#31 11.37       |            ^~~~~~~~~
+#31 11.37 libavformat/img2dec.c:731:12: warning: ‘dpx_probe’ defined but not used [-Wunused-function]
+#31 11.37   731 | static int dpx_probe(const AVProbeData *p)
+#31 11.37       |            ^~~~~~~~~
+#31 11.37 libavformat/img2dec.c:720:12: warning: ‘dds_probe’ defined but not used [-Wunused-function]
+#31 11.37   720 | static int dds_probe(const AVProbeData *p)
+#31 11.37       |            ^~~~~~~~~
+#31 11.37 libavformat/img2dec.c:709:12: warning: ‘cri_probe’ defined but not used [-Wunused-function]
+#31 11.37   709 | static int cri_probe(const AVProbeData *p)
+#31 11.37       |            ^~~~~~~~~
+#31 11.37 libavformat/img2dec.c:691:12: warning: ‘bmp_probe’ defined but not used [-Wunused-function]
+#31 11.37   691 | static int bmp_probe(const AVProbeData *p)
+#31 11.37       |            ^~~~~~~~~
+#31 11.37 CC	libavformat/img2enc.o
+#31 11.41 libavformat/img2enc.c:119:12: warning: ‘write_packet_pipe’ defined but not used [-Wunused-function]
+#31 11.41   119 | static int write_packet_pipe(AVFormatContext *s, AVPacket *pkt)
+#31 11.41       |            ^~~~~~~~~~~~~~~~~
+#31 11.44 libavformat/img2enc.c: In function ‘write_packet’:
+#31 11.44 libavformat/img2enc.c:183:55: warning: ‘.tmp’ directive output may be truncated writing 4 bytes into a region of size between 1 and 1024 [-Wformat-truncation=]
+#31 11.44   183 |         snprintf(img->tmp[i], sizeof(img->tmp[i]), "%s.tmp", filename);
+#31 11.44       |                                                       ^~~~
+#31 11.44 libavformat/img2enc.c:183:9: note: ‘snprintf’ output between 5 and 1028 bytes into a destination of size 1024
+#31 11.44   183 |         snprintf(img->tmp[i], sizeof(img->tmp[i]), "%s.tmp", filename);
+#31 11.44       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#31 11.47 CC	libavformat/isom.o
+#31 11.50 CC	libavformat/isom_tags.o
+#31 11.53 CC	libavformat/matroska.o
+#31 11.56 CC	libavformat/matroskadec.o
+#31 11.56 CC	libavformat/metadata.o
+#31 11.61 CC	libavformat/mov.o
+#31 11.95 libavformat/mov.c: In function ‘mov_read_trak’:
+#31 11.95 libavformat/mov.c:5174:11: warning: statement will never be executed [-Wswitch-unreachable]
+#31 11.95  5174 |         st->codecpar->width = 0; /* let decoder init width/height */
+#31 11.95       |         ~~^~~~~~~~~~
+#31 12.53 CC	libavformat/mov_chan.o
+#31 12.67 CC	libavformat/mov_esds.o
+#31 12.71 CC	libavformat/mux.o
+#31 13.10 CC	libavformat/mux_utils.o
+#31 13.15 CC	libavformat/oggparsevorbis.o
+#31 13.30 CC	libavformat/options.o
+#31 13.42 CC	libavformat/os_support.o
+#31 13.45 CC	libavformat/protocols.o
+#31 13.49 CC	libavformat/qtpalette.o
+#31 13.54 CC	libavformat/replaygain.o
+#31 13.60 CC	libavformat/riff.o
+#31 13.64 CC	libavformat/riffdec.o
+#31 13.75 CC	libavformat/rmsipr.o
+#31 13.77 CC	libavformat/sdp.o
+#31 13.82 CC	libavformat/seek.o
+#31 14.08 CC	libavformat/url.o
+#31 14.19 CC	libavformat/utils.o
+#31 14.36 CC	libavformat/version.o
+#31 14.40 CC	libavformat/vorbiscomment.o
+#31 14.45 libavformat/vorbiscomment.c: In function ‘ff_vorbiscomment_write’:
+#31 14.45 libavformat/vorbiscomment.c:103:63: warning: ‘%03d’ directive output may be truncated writing between 3 and 10 bytes into a region of size 4 [-Wformat-truncation=]
+#31 14.45   103 |             snprintf(chapter_number, sizeof(chapter_number), "%03d", i);
+#31 14.45       |                                                               ^~~~
+#31 14.45 libavformat/vorbiscomment.c:103:62: note: directive argument in the range [0, 2147483647]
+#31 14.45   103 |             snprintf(chapter_number, sizeof(chapter_number), "%03d", i);
+#31 14.45       |                                                              ^~~~~~
+#31 14.45 libavformat/vorbiscomment.c:103:13: note: ‘snprintf’ output between 4 and 11 bytes into a destination of size 4
+#31 14.45   103 |             snprintf(chapter_number, sizeof(chapter_number), "%03d", i);
+#31 14.45       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#31 14.45 libavformat/vorbiscomment.c:104:69: warning: ‘%02d’ directive output may be truncated writing between 2 and 3 bytes into a region of size between 1 and 7 [-Wformat-truncation=]
+#31 14.45   104 |             snprintf(chapter_time, sizeof(chapter_time), "%02d:%02d:%02d.%03d", h, m, s, ms);
+#31 14.45       |                                                                     ^~~~
+#31 14.45 libavformat/vorbiscomment.c:104:58: note: directive argument in the range [-59, 59]
+#31 14.45   104 |             snprintf(chapter_time, sizeof(chapter_time), "%02d:%02d:%02d.%03d", h, m, s, ms);
+#31 14.45       |                                                          ^~~~~~~~~~~~~~~~~~~~~
+#31 14.45 libavformat/vorbiscomment.c:104:58: note: directive argument in the range [-999, 999]
+#31 14.45 libavformat/vorbiscomment.c:104:13: note: ‘snprintf’ output between 13 and 21 bytes into a destination of size 13
+#31 14.45   104 |             snprintf(chapter_time, sizeof(chapter_time), "%02d:%02d:%02d.%03d", h, m, s, ms);
+#31 14.45       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#31 14.47 GEN	libavformat/libavformat.pc
+#31 14.47 CC	libavcodec/ac3_parser.o
+#31 14.52 CC	libavcodec/adts_parser.o
+#31 14.54 CC	libavcodec/allcodecs.o
+#31 14.60 CC	libavcodec/aom_film_grain.o
+#31 14.72 CC	libavcodec/atsc_a53.o
+#31 14.78 CC	libavcodec/avcodec.o
+#31 14.98 CC	libavcodec/avdct.o
+#31 15.02 CC	libavcodec/avfft.o
+#31 15.07 CC	libavcodec/bitstream.o
+#31 15.15 CC	libavcodec/bitstream_filters.o
+#31 15.19 CC	libavcodec/blockdsp.o
+#31 15.22 CC	libavcodec/bsf.o
+#31 15.34 CC	libavcodec/bsf/vp9_superframe_split.o
+#31 15.42 CC	libavcodec/bswapdsp.o
+#31 15.47 CC	libavcodec/cabac.o
+#31 15.49 CC	libavcodec/codec_desc.o
+#31 15.54 CC	libavcodec/codec_par.o
+#31 15.63 CC	libavcodec/container_fifo.o
+#31 15.68 CC	libavcodec/d3d11va.o
+#31 15.70 CC	libavcodec/decode.o
+#31 16.12 CC	libavcodec/dirac.o
+#31 16.15 CC	libavcodec/dovi_rpu.o
+#31 16.16 CC	libavcodec/dovi_rpudec.o
+#31 16.20 CC	libavcodec/dv_profile.o
+#31 16.25 CC	libavcodec/dynamic_hdr_vivid.o
+#31 16.38 CC	libavcodec/encode.o
+#31 16.57 CC	libavcodec/error_resilience.o
+#31 16.77 CC	libavcodec/exif.o
+#31 16.84 CC	libavcodec/faandct.o
+#31 16.92 CC	libavcodec/faanidct.o
+#31 17.03 CC	libavcodec/fdctdsp.o
+#31 17.07 CC	libavcodec/frame_thread_encoder.o
+#31 17.16 CC	libavcodec/get_buffer.o
+#31 17.24 CC	libavcodec/golomb.o
+#31 17.25 CC	libavcodec/h2645_parse.o
+#31 17.44 CC	libavcodec/h2645_sei.o
+#31 17.51 CC	libavcodec/h2645_vui.o
+#31 17.59 CC	libavcodec/h2645data.o
+#31 17.60 CC	libavcodec/h264_cabac.o
+#31 17.73 CC	libavcodec/h264_cavlc.o
+#31 18.89 CC	libavcodec/h264_direct.o
+#31 18.97 CC	libavcodec/h264_loopfilter.o
+#31 19.33 CC	libavcodec/h264_mb.o
+#31 20.35 CC	libavcodec/h264_parse.o
+#31 20.66 CC	libavcodec/h264_parser.o
+#31 20.70 libavcodec/h264_parser.c: In function ‘scan_mmco_reset’:
+#31 20.70 libavcodec/h264_parser.c:229:13: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#31 20.70   229 |             MMCOOpcode opcode = get_ue_golomb_31(gb);
+#31 20.70       |             ^~~~~~~~~~
+#31 20.92 CC	libavcodec/h264_picture.o
+#31 21.01 CC	libavcodec/h264_ps.o
+#31 21.54 CC	libavcodec/h264_refs.o
+#31 21.64 CC	libavcodec/h264_sei.o
+#31 21.82 CC	libavcodec/h264_slice.o
+#31 22.01 CC	libavcodec/h264chroma.o
+#31 22.42 CC	libavcodec/h264data.o
+#31 22.47 CC	libavcodec/h264dec.o
+#31 22.79 CC	libavcodec/h264dsp.o
+#31 22.81 CC	libavcodec/h264idct.o
+#31 23.71 CC	libavcodec/h264pred.o
+#31 25.41 CC	libavcodec/h264qpel.o
+#31 27.44 CC	libavcodec/h274.o
+#31 27.73 CC	libavcodec/hevc/cabac.o
+#31 28.30 CC	libavcodec/hevc/data.o
+#31 28.31 CC	libavcodec/hevc/dsp.o
+#31 33.33 CC	libavcodec/hevc/filter.o
+#31 34.11 CC	libavcodec/hevc/hevcdec.o
+#31 34.81 CC	libavcodec/hevc/mvs.o
+#31 35.18 CC	libavcodec/hevc/parse.o
+#31 35.26 CC	libavcodec/hevc/parser.o
+#31 35.30 libavcodec/hevc/hevcdec.c: In function ‘pred_weight_table’:
+#31 35.30 libavcodec/hevc/hevcdec.c:199:32: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+#31 35.30   199 |         luma_weight_l0_flag[i] = get_bits1(gb);
+#31 35.30       |         ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+#31 35.30 libavcodec/hevc/hevcdec.c:177:13: note: at offset 16 into destination object ‘luma_weight_l0_flag’ of size 16
+#31 35.30   177 |     uint8_t luma_weight_l0_flag[16];
+#31 35.30       |             ^~~~~~~~~~~~~~~~~~~
+#31 35.30 libavcodec/hevc/hevcdec.c:207:38: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+#31 35.30   207 |             chroma_weight_l0_flag[i] = get_bits1(gb);
+#31 35.30       |             ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+#31 35.30 libavcodec/hevc/hevcdec.c:178:13: note: at offset 16 into destination object ‘chroma_weight_l0_flag’ of size 16
+#31 35.30   178 |     uint8_t chroma_weight_l0_flag[16];
+#31 35.30       |             ^~~~~~~~~~~~~~~~~~~~~
+#31 35.30 libavcodec/hevc/hevcdec.c:243:36: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+#31 35.30   243 |             luma_weight_l1_flag[i] = get_bits1(gb);
+#31 35.30       |             ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+#31 35.30 libavcodec/hevc/hevcdec.c:179:13: note: at offset 16 into destination object ‘luma_weight_l1_flag’ of size 16
+#31 35.30   179 |     uint8_t luma_weight_l1_flag[16];
+#31 35.30       |             ^~~~~~~~~~~~~~~~~~~
+#31 35.30 libavcodec/hevc/hevcdec.c:251:42: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+#31 35.30   251 |                 chroma_weight_l1_flag[i] = get_bits1(gb);
+#31 35.30       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+#31 35.30 libavcodec/hevc/hevcdec.c:180:13: note: at offset 16 into destination object ‘chroma_weight_l1_flag’ of size 16
+#31 35.30   180 |     uint8_t chroma_weight_l1_flag[16];
+#31 35.30       |             ^~~~~~~~~~~~~~~~~~~~~
+#31 35.39 CC	libavcodec/hevc/pred.o
+#31 35.92 CC	libavcodec/hevc/ps.o
+#31 37.53 CC	libavcodec/hevc/refs.o
+#31 37.58 libavcodec/hevc/refs.c: In function ‘alloc_frame’:
+#31 37.58 libavcodec/hevc/refs.c:138:9: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#31 37.58   138 |         size_t rpl_bytes;
+#31 37.58       |         ^~~~~~
+#31 37.80 CC	libavcodec/hevc/sei.o
+#31 38.04 CC	libavcodec/hpeldsp.o
+#31 38.45 CC	libavcodec/idctdsp.o
+#31 38.57 CC	libavcodec/imgconvert.o
+#31 38.62 CC	libavcodec/jfdctfst.o
+#31 38.66 CC	libavcodec/jfdctint.o
+#31 38.78 CC	libavcodec/jni.o
+#31 38.80 CC	libavcodec/jpegtables.o
+#31 38.81 CC	libavcodec/jrevdct.o
+#31 38.83 libavcodec/jrevdct.c:215:28: warning: argument 1 of type ‘int16_t[64]’ {aka ‘short int[64]’} with mismatched bound [-Warray-parameter=]
+#31 38.83   215 | void ff_j_rev_dct(DCTBLOCK data)
+#31 38.83       |                   ~~~~~~~~~^~~~
+#31 38.83 In file included from libavcodec/jrevdct.c:70:
+#31 38.83 libavcodec/dct.h:30:28: note: previously declared as ‘int16_t *’ {aka ‘short int *’}
+#31 38.83    30 | void ff_j_rev_dct(int16_t *data);
+#31 38.83       |                   ~~~~~~~~~^~~~
+#31 38.83 libavcodec/jrevdct.c:953:29: warning: argument 1 of type ‘int16_t[64]’ {aka ‘short int[64]’} with mismatched bound [-Warray-parameter=]
+#31 38.83   953 | void ff_j_rev_dct4(DCTBLOCK data)
+#31 38.83       |                    ~~~~~~~~~^~~~
+#31 38.83 libavcodec/dct.h:31:29: note: previously declared as ‘int16_t *’ {aka ‘short int *’}
+#31 38.83    31 | void ff_j_rev_dct4(int16_t *data);
+#31 38.83       |                    ~~~~~~~~~^~~~
+#31 38.83 libavcodec/jrevdct.c:1140:29: warning: argument 1 of type ‘int16_t[64]’ {aka ‘short int[64]’} with mismatched bound [-Warray-parameter=]
+#31 38.83  1140 | void ff_j_rev_dct2(DCTBLOCK data){
+#31 38.83       |                    ~~~~~~~~~^~~~
+#31 38.83 libavcodec/dct.h:32:29: note: previously declared as ‘int16_t *’ {aka ‘short int *’}
+#31 38.83    32 | void ff_j_rev_dct2(int16_t *data);
+#31 38.83       |                    ~~~~~~~~~^~~~
+#31 38.83 libavcodec/jrevdct.c:1155:29: warning: argument 1 of type ‘int16_t[64]’ {aka ‘short int[64]’} with mismatched bound [-Warray-parameter=]
+#31 38.83  1155 | void ff_j_rev_dct1(DCTBLOCK data){
+#31 38.83       |                    ~~~~~~~~~^~~~
+#31 38.83 libavcodec/dct.h:33:29: note: previously declared as ‘int16_t *’ {aka ‘short int *’}
+#31 38.83    33 | void ff_j_rev_dct1(int16_t *data);
+#31 38.83       |                    ~~~~~~~~~^~~~
+#31 38.96 CC	libavcodec/lossless_videoencdsp.o
+#31 39.03 CC	libavcodec/mathtables.o
+#31 39.06 CC	libavcodec/me_cmp.o
+#31 39.71 CC	libavcodec/mediacodec.o
+#31 39.77 CC	libavcodec/mjpeg_parser.o
+#31 39.83 CC	libavcodec/mjpegdec.o
+#31 40.96 CC	libavcodec/mjpegdec_common.o
+#31 41.02 CC	libavcodec/mpeg12framerate.o
+#31 41.09 CC	libavcodec/mpeg4audio.o
+#31 41.19 CC	libavcodec/mpeg4audio_sample_rates.o
+#31 41.20 CC	libavcodec/options.o
+#31 41.29 CC	libavcodec/packet.o
+#31 41.49 CC	libavcodec/parser.o
+#31 41.49 CC	libavcodec/parsers.o
+#31 41.53 CC	libavcodec/png.o
+#31 41.55 CC	libavcodec/png_parser.o
+#31 41.59 CC	libavcodec/pngdec.o
+#31 41.60 CC	libavcodec/pngdsp.o
+#31 41.63 CC	libavcodec/pngenc.o
+#31 41.97 CC	libavcodec/profiles.o
+#31 42.00 CC	libavcodec/pthread.o
+#31 42.06 CC	libavcodec/pthread_frame.o
+#31 42.23 CC	libavcodec/pthread_slice.o
+#31 42.27 CC	libavcodec/qsv_api.o
+#31 42.29 CC	libavcodec/raw.o
+#31 42.29 CC	libavcodec/refstruct.o
+#31 42.33 CC	libavcodec/simple_idct.o
+#31 42.35 CC	libavcodec/startcode.o
+#31 42.39 CC	libavcodec/threadprogress.o
+#31 42.43 CC	libavcodec/tiff_common.o
+#31 42.60 CC	libavcodec/utils.o
+#31 42.88 CC	libavcodec/version.o
+#31 42.90 CC	libavcodec/videodsp.o
+#31 42.92 CC	libavcodec/vlc.o
+#31 43.00 CC	libavcodec/vorbis_parser.o
+#31 43.11 CC	libavcodec/vp8.o
+#31 43.21 In function ‘add_level’,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘vlc_multi_gen’ at libavcodec/vlc.c:508:5,
+#31 43.21     inlined from ‘ff_vlc_init_multi_from_lengths’ at libavcodec/vlc.c:564:11:
+#31 43.21 libavcodec/vlc.c:443:36: warning: array subscript 3 is above array bounds of ‘uint16_t[3]’ {aka ‘short unsigned int[3]’} [-Warray-bounds=]
+#31 43.21   443 |             if (is16bit) info.val16[curlevel] = sym;
+#31 43.21       |                          ~~~~~~~~~~^~~~~~~~~~
+#31 43.21 In file included from libavcodec/vlc.c:39:
+#31 43.21 libavcodec/vlc.h: In function ‘ff_vlc_init_multi_from_lengths’:
+#31 43.21 libavcodec/vlc.h:45:18: note: while referencing ‘val16’
+#31 43.21    45 |         uint16_t val16[VLC_MULTI_MAX_SYMBOLS / 2];
+#31 43.21       |                  ^~~~~
+#31 43.21 In function ‘add_level’,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘vlc_multi_gen’ at libavcodec/vlc.c:508:5,
+#31 43.21     inlined from ‘ff_vlc_init_multi_from_lengths’ at libavcodec/vlc.c:564:11:
+#31 43.21 libavcodec/vlc.c:443:36: warning: array subscript 4 is above array bounds of ‘uint16_t[3]’ {aka ‘short unsigned int[3]’} [-Warray-bounds=]
+#31 43.21   443 |             if (is16bit) info.val16[curlevel] = sym;
+#31 43.21       |                          ~~~~~~~~~~^~~~~~~~~~
+#31 43.21 libavcodec/vlc.h: In function ‘ff_vlc_init_multi_from_lengths’:
+#31 43.21 libavcodec/vlc.h:45:18: note: while referencing ‘val16’
+#31 43.21    45 |         uint16_t val16[VLC_MULTI_MAX_SYMBOLS / 2];
+#31 43.21       |                  ^~~~~
+#31 43.21 In function ‘add_level’,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#31 43.21     inlined from ‘vlc_multi_gen’ at libavcodec/vlc.c:508:5,
+#31 43.21     inlined from ‘ff_vlc_init_multi_from_lengths’ at libavcodec/vlc.c:564:11:
+#31 43.21 libavcodec/vlc.c:443:36: warning: array subscript 5 is above array bounds of ‘uint16_t[3]’ {aka ‘short unsigned int[3]’} [-Warray-bounds=]
+#31 43.21   443 |             if (is16bit) info.val16[curlevel] = sym;
+#31 43.21       |                          ~~~~~~~~~~^~~~~~~~~~
+#31 43.21 libavcodec/vlc.h: In function ‘ff_vlc_init_multi_from_lengths’:
+#31 43.21 libavcodec/vlc.h:45:18: note: while referencing ‘val16’
+#31 43.21    45 |         uint16_t val16[VLC_MULTI_MAX_SYMBOLS / 2];
+#31 43.21       |                  ^~~~~
+#31 43.35 CC	libavcodec/vp8_parser.o
+#31 43.40 CC	libavcodec/vp8data.o
+#31 43.41 CC	libavcodec/vp8dsp.o
+#31 44.61 CC	libavcodec/vp9.o
+#31 46.14 CC	libavcodec/vp9_parser.o
+#31 46.20 CC	libavcodec/vp9block.o
+#31 46.61 CC	libavcodec/vp9data.o
+#31 46.67 CC	libavcodec/vp9dsp.o
+#31 46.69 CC	libavcodec/vp9dsp_10bpp.o
+#31 49.11 CC	libavcodec/vp9dsp_12bpp.o
+#31 51.04 CC	libavcodec/vp9dsp_8bpp.o
+#31 51.94 CC	libavcodec/vp9lpf.o
+#31 52.18 CC	libavcodec/vp9mvs.o
+#31 52.71 CC	libavcodec/vp9prob.o
+#31 53.16 CC	libavcodec/vp9recon.o
+#31 54.92 CC	libavcodec/vpx_rac.o
+#31 54.97 CC	libavcodec/x86/blockdsp_init.o
+#31 54.98 CC	libavcodec/x86/bswapdsp_init.o
+#31 55.00 CC	libavcodec/x86/constants.o
+#31 55.01 CC	libavcodec/x86/fdct.o
+#31 55.03 CC	libavcodec/x86/fdctdsp_init.o
+#31 55.07 CC	libavcodec/x86/h264_intrapred_init.o
+#31 55.10 CC	libavcodec/x86/h264_qpel.o
+#31 55.12 CC	libavcodec/x86/h264chroma_init.o
+#31 55.13 CC	libavcodec/x86/h264dsp_init.o
+#31 55.15 CC	libavcodec/x86/h26x/h2656dsp.o
+#31 55.17 CC	libavcodec/x86/hevcdsp_init.o
+#31 55.24 CC	libavcodec/x86/hpeldsp_init.o
+#31 55.30 CC	libavcodec/x86/idctdsp_init.o
+#31 55.34 CC	libavcodec/x86/lossless_videoencdsp_init.o
+#31 55.37 CC	libavcodec/x86/me_cmp_init.o
+#31 55.44 CC	libavcodec/x86/pngdsp_init.o
+#31 55.45 CC	libavcodec/x86/videodsp_init.o
+#31 55.48 CC	libavcodec/x86/vp8dsp_init.o
+#31 55.50 CC	libavcodec/x86/vp9dsp_init.o
+#31 55.51 CC	libavcodec/x86/vp9dsp_init_10bpp.o
+#31 55.53 CC	libavcodec/x86/vp9dsp_init_12bpp.o
+#31 55.55 CC	libavcodec/x86/vp9dsp_init_16bpp.o
+#31 55.56 CC	libavcodec/xiph.o
+#31 55.60 CC	libavcodec/zlib_wrapper.o
+#31 55.63 CC	libavcodec/ac3_channel_layout_tab.o
+#31 55.64 CC	libavcodec/mpegaudiotabs.o
+#31 55.65 CC	libavcodec/to_upper4.o
+#31 55.69 GEN	libavcodec/libavcodec.pc
+#31 55.70 CC	libswresample/audioconvert.o
+#31 56.10 CC	libswresample/dither.o
+#31 56.27 CC	libswresample/options.o
+#31 56.31 CC	libswresample/rematrix.o
+#31 56.70 CC	libswresample/resample.o
+#31 56.92 CC	libswresample/resample_dsp.o
+#31 57.12 CC	libswresample/swresample.o
+#31 57.49 CC	libswresample/swresample_frame.o
+#31 57.54 CC	libswresample/version.o
+#31 57.57 CC	libswresample/x86/audio_convert_init.o
+#31 57.61 CC	libswresample/x86/rematrix_init.o
+#31 57.64 CC	libswresample/x86/resample_init.o
+#31 57.67 GEN	libswresample/libswresample.pc
+#31 57.67 CC	libswscale/alphablend.o
+#31 57.89 CC	libswscale/gamma.o
+#31 57.94 CC	libswscale/half2float.o
+#31 57.97 CC	libswscale/hscale.o
+#31 58.09 CC	libswscale/hscale_fast_bilinear.o
+#31 58.15 CC	libswscale/input.o
+#31 59.43 CC	libswscale/options.o
+#31 59.47 CC	libswscale/output.o
+#31 60.90 CC	libswscale/rgb2rgb.o
+#31 61.36 CC	libswscale/slice.o
+#31 61.55 CC	libswscale/swscale.o
+#31 62.06 CC	libswscale/swscale_unscaled.o
+#31 64.34 CC	libswscale/utils.o
+#31 64.40 libswscale/utils.c: In function ‘sws_init_single_context’:
+#31 64.40 libswscale/utils.c:1422:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#31 64.40  1422 |     int64_t lumXInc      = (((int64_t)srcW << 16) + (dstW >> 1)) / dstW;
+#31 64.40       |     ^~~~~~~
+#31 64.41 libswscale/utils.c:1594:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#31 64.41  1594 |     int64_t chrXInc = (((int64_t)c->chrSrcW << 16) + (c->chrDstW >> 1)) / c->chrDstW;
+#31 64.41       |     ^~~~~~~
+#31 64.41 libswscale/utils.c:1916:9: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#31 64.41  1916 |         int usecascade = (ret == RETCODE_USE_CASCADE);
+#31 64.41       |         ^~~
+#31 65.05 CC	libswscale/version.o
+#31 65.08 CC	libswscale/vscale.o
+#31 65.08 CC	libswscale/x86/hscale_fast_bilinear_simd.o
+#31 65.16 CC	libswscale/x86/rgb2rgb.o
+#31 65.21 CC	libswscale/x86/swscale.o
+#31 65.43 CC	libswscale/x86/yuv2rgb.o
+#31 65.47 CC	libswscale/yuv2rgb.o
+#31 65.51 GEN	libswscale/libswscale.pc
+#31 65.52 CC	libavutil/adler32.o
+#31 65.56 CC	libavutil/aes.o
+#31 65.69 CC	libavutil/aes_ctr.o
+#31 65.73 CC	libavutil/ambient_viewing_environment.o
+#31 65.76 CC	libavutil/audio_fifo.o
+#31 65.82 CC	libavutil/avsscanf.o
+#31 66.33 CC	libavutil/avstring.o
+#31 66.47 CC	libavutil/base64.o
+#31 66.54 CC	libavutil/blowfish.o
+#31 66.64 CC	libavutil/bprint.o
+#31 66.79 CC	libavutil/buffer.o
+#31 66.88 CC	libavutil/camellia.o
+#31 67.00 CC	libavutil/cast5.o
+#31 67.17 CC	libavutil/channel_layout.o
+#31 67.45 CC	libavutil/cpu.o
+#31 67.51 CC	libavutil/crc.o
+#31 67.59 CC	libavutil/csp.o
+#31 67.66 CC	libavutil/des.o
+#31 67.69 CC	libavutil/detection_bbox.o
+#31 67.72 CC	libavutil/dict.o
+#31 67.76 CC	libavutil/display.o
+#31 67.80 CC	libavutil/dovi_meta.o
+#31 67.81 CC	libavutil/downmix_info.o
+#31 67.82 CC	libavutil/encryption_info.o
+#31 67.84 CC	libavutil/error.o
+#31 67.87 CC	libavutil/eval.o
+#31 67.89 libavutil/eval.c: In function ‘make_eval_expr’:
+#31 67.89 libavutil/eval.c:546:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#31 67.89   546 |     AVExpr *e = av_mallocz(sizeof(AVExpr));
+#31 67.89       |     ^~~~~~
+#31 67.93 CC	libavutil/executor.o
+#31 67.98 CC	libavutil/fifo.o
+#31 68.07 CC	libavutil/file.o
+#31 68.11 CC	libavutil/file_open.o
+#31 68.15 CC	libavutil/film_grain_params.o
+#31 68.21 CC	libavutil/fixed_dsp.o
+#31 68.22 CC	libavutil/float_dsp.o
+#31 68.28 CC	libavutil/frame.o
+#31 68.28 CC	libavutil/hash.o
+#31 68.35 CC	libavutil/hdr_dynamic_metadata.o
+#31 68.58 CC	libavutil/hdr_dynamic_vivid_metadata.o
+#31 68.61 CC	libavutil/hmac.o
+#31 68.66 CC	libavutil/hwcontext.o
+#31 68.72 CC	libavutil/hwcontext_stub.o
+#31 68.74 CC	libavutil/iamf.o
+#31 68.79 CC	libavutil/imgutils.o
+#31 68.83 CC	libavutil/integer.o
+#31 68.93 CC	libavutil/intmath.o
+#31 68.96 CC	libavutil/lfg.o
+#31 69.01 CC	libavutil/lls.o
+#31 69.07 CC	libavutil/log.o
+#31 69.09 CC	libavutil/log2_tab.o
+#31 69.10 CC	libavutil/lzo.o
+#31 69.19 CC	libavutil/mastering_display_metadata.o
+#31 69.19 CC	libavutil/mathematics.o
+#31 69.23 CC	libavutil/md5.o
+#31 69.28 CC	libavutil/mem.o
+#31 69.33 CC	libavutil/murmur3.o
+#31 69.39 CC	libavutil/opt.o
+#31 69.42 CC	libavutil/parseutils.o
+#31 69.61 CC	libavutil/pixdesc.o
+#31 69.90 CC	libavutil/pixelutils.o
+#31 69.91 CC	libavutil/random_seed.o
+#31 69.98 CC	libavutil/rational.o
+#31 70.06 CC	libavutil/rc4.o
+#31 70.09 CC	libavutil/reverse.o
+#31 70.10 CC	libavutil/ripemd.o
+#31 70.21 CC	libavutil/samplefmt.o
+#31 70.29 CC	libavutil/sha.o
+#31 70.57 CC	libavutil/sha512.o
+#31 70.63 CC	libavutil/slicethread.o
+#31 70.71 CC	libavutil/spherical.o
+#31 70.74 CC	libavutil/stereo3d.o
+#31 70.78 CC	libavutil/tea.o
+#31 70.84 CC	libavutil/threadmessage.o
+#31 70.87 CC	libavutil/time.o
+#31 70.89 CC	libavutil/timecode.o
+#31 70.89 CC	libavutil/timestamp.o
+#31 70.94 CC	libavutil/tree.o
+#31 71.01 CC	libavutil/twofish.o
+#31 71.01 CC	libavutil/tx.o
+#31 71.22 CC	libavutil/tx_double.o
+#31 71.48 CC	libavutil/tx_float.o
+#31 73.33 CC	libavutil/tx_int32.o
+#31 73.54 CC	libavutil/utils.o
+#31 73.59 CC	libavutil/uuid.o
+#31 73.63 CC	libavutil/version.o
+#31 73.66 CC	libavutil/video_enc_params.o
+#31 73.70 CC	libavutil/video_hint.o
+#31 73.74 CC	libavutil/x86/cpu.o
+#31 73.81 CC	libavutil/x86/fixed_dsp_init.o
+#31 73.84 CC	libavutil/x86/float_dsp_init.o
+#31 73.86 CC	libavutil/x86/imgutils_init.o
+#31 73.87 CC	libavutil/x86/lls_init.o
+#31 73.89 CC	libavutil/xga_font_data.o
+#31 73.91 CC	libavutil/xtea.o
+#31 74.05 GEN	libavutil/libavutil.pc
+#31 74.05 CC	fftools/ffmpeg_dec.o
+#31 74.43 CC	fftools/ffmpeg_demux.o
+#31 74.97 CC	fftools/ffmpeg_enc.o
+#31 75.22 CC	fftools/ffmpeg_filter.o
+#31 75.76 CC	fftools/ffmpeg_hw.o
+#31 75.85 CC	fftools/ffmpeg_mux.o
+#31 75.89 CC	fftools/ffmpeg_mux_init.o
+#31 76.07 CC	fftools/ffmpeg_opt.o
+#31 76.42 CC	fftools/ffmpeg_sched.o
+#31 76.82 CC	fftools/objpool.o
+#31 76.87 CC	fftools/sync_queue.o
+#31 77.02 CC	fftools/thread_queue.o
+#31 77.06 CC	fftools/cmdutils.o
+#31 77.08 CC	fftools/opt_common.o
+#31 77.44 CC	fftools/ffmpeg.o
+#31 77.47 CC	fftools/ffprobe.o
+#31 77.71 AR	libavfilter/libavfilter.a
+#31 77.73 AR	libavformat/libavformat.a
+#31 77.74 AR	libavcodec/libavcodec.a
+#31 77.80 AR	libswresample/libswresample.a
+#31 77.81 AR	libswscale/libswscale.a
+#31 77.82 AR	libavutil/libavutil.a
+#31 77.85 LD	ffmpeg_g
+#31 77.98 STRIP	ffmpeg
+#31 79.07 LD	ffprobe_g
+#31 79.19 STRIP	ffprobe
+#31 79.29 INSTALL	install-progs-yes
+#31 79.29 INSTALL	ffmpeg
+#31 79.29 INSTALL	ffprobe
+#31 79.29 INSTALL	presets/libvpx-1080p.ffpreset
+#31 79.29 INSTALL	presets/libvpx-1080p50_60.ffpreset
+#31 79.29 INSTALL	presets/libvpx-360p.ffpreset
+#31 79.29 INSTALL	presets/libvpx-720p.ffpreset
+#31 79.29 INSTALL	presets/libvpx-720p50_60.ffpreset
+#31 79.29 INSTALL	doc/ffprobe.xsd
+#31 79.30 INSTALL	doc/examples/avio_http_serve_files.c
+#31 79.30 INSTALL	doc/examples/avio_list_dir.c
+#31 79.30 INSTALL	doc/examples/avio_read_callback.c
+#31 79.30 INSTALL	doc/examples/decode_audio.c
+#31 79.30 INSTALL	doc/examples/decode_filter_audio.c
+#31 79.30 INSTALL	doc/examples/decode_filter_video.c
+#31 79.30 INSTALL	doc/examples/decode_video.c
+#31 79.30 INSTALL	doc/examples/demux_decode.c
+#31 79.30 INSTALL	doc/examples/encode_audio.c
+#31 79.30 INSTALL	doc/examples/encode_video.c
+#31 79.30 INSTALL	doc/examples/extract_mvs.c
+#31 79.30 INSTALL	doc/examples/filter_audio.c
+#31 79.30 INSTALL	doc/examples/hw_decode.c
+#31 79.30 INSTALL	doc/examples/mux.c
+#31 79.30 INSTALL	doc/examples/qsv_decode.c
+#31 79.30 INSTALL	doc/examples/qsv_transcode.c
+#31 79.30 INSTALL	doc/examples/remux.c
+#31 79.30 INSTALL	doc/examples/resample_audio.c
+#31 79.30 INSTALL	doc/examples/scale_video.c
+#31 79.30 INSTALL	doc/examples/show_metadata.c
+#31 79.30 INSTALL	doc/examples/transcode.c
+#31 79.30 INSTALL	doc/examples/transcode_aac.c
+#31 79.30 INSTALL	doc/examples/vaapi_encode.c
+#31 79.30 INSTALL	doc/examples/vaapi_transcode.c
+#31 79.30 INSTALL	doc/examples/README
+#31 79.30 INSTALL	doc/examples/Makefile
+#31 79.30 INSTALL	doc/examples/avio_http_serve_files.c
+#31 79.30 INSTALL	doc/examples/avio_list_dir.c
+#31 79.30 INSTALL	doc/examples/avio_read_callback.c
+#31 79.30 INSTALL	doc/examples/decode_audio.c
+#31 79.30 INSTALL	doc/examples/decode_filter_audio.c
+#31 79.30 INSTALL	doc/examples/decode_filter_video.c
+#31 79.30 INSTALL	doc/examples/decode_video.c
+#31 79.30 INSTALL	doc/examples/demux_decode.c
+#31 79.30 INSTALL	doc/examples/encode_audio.c
+#31 79.30 INSTALL	doc/examples/encode_video.c
+#31 79.30 INSTALL	doc/examples/extract_mvs.c
+#31 79.30 INSTALL	doc/examples/filter_audio.c
+#31 79.30 INSTALL	doc/examples/hw_decode.c
+#31 79.30 INSTALL	doc/examples/mux.c
+#31 79.30 INSTALL	doc/examples/qsv_decode.c
+#31 79.30 INSTALL	doc/examples/qsv_transcode.c
+#31 79.30 INSTALL	doc/examples/remux.c
+#31 79.30 INSTALL	doc/examples/resample_audio.c
+#31 79.30 INSTALL	doc/examples/scale_video.c
+#31 79.30 INSTALL	doc/examples/show_metadata.c
+#31 79.30 INSTALL	doc/examples/transcode.c
+#31 79.30 INSTALL	doc/examples/transcode_aac.c
+#31 79.30 INSTALL	doc/examples/vaapi_encode.c
+#31 79.30 INSTALL	doc/examples/vaapi_transcode.c
+#31 79.30 INSTALL	doc/examples/README
+#31 79.30 INSTALL	doc/examples/Makefile
+#31 79.30 INSTALL	libavfilter/libavfilter.a
+#31 79.31 INSTALL	libavformat/libavformat.a
+#31 79.32 INSTALL	libavcodec/libavcodec.a
+#31 79.35 INSTALL	libswresample/libswresample.a
+#31 79.36 INSTALL	libswscale/libswscale.a
+#31 79.36 INSTALL	libavutil/libavutil.a
+#31 79.38 INSTALL	libavfilter/avfilter.h
+#31 79.38 INSTALL	libavfilter/buffersink.h
+#31 79.38 INSTALL	libavfilter/buffersrc.h
+#31 79.38 INSTALL	libavfilter/version.h
+#31 79.38 INSTALL	libavfilter/version_major.h
+#31 79.39 INSTALL	libavfilter/libavfilter.pc
+#31 79.39 INSTALL	libavformat/avformat.h
+#31 79.39 INSTALL	libavformat/avio.h
+#31 79.39 INSTALL	libavformat/version.h
+#31 79.39 INSTALL	libavformat/version_major.h
+#31 79.39 INSTALL	libavformat/libavformat.pc
+#31 79.39 INSTALL	libavcodec/ac3_parser.h
+#31 79.39 INSTALL	libavcodec/adts_parser.h
+#31 79.39 INSTALL	libavcodec/avcodec.h
+#31 79.39 INSTALL	libavcodec/avdct.h
+#31 79.39 INSTALL	libavcodec/avfft.h
+#31 79.39 INSTALL	libavcodec/bsf.h
+#31 79.39 INSTALL	libavcodec/codec.h
+#31 79.39 INSTALL	libavcodec/codec_desc.h
+#31 79.39 INSTALL	libavcodec/codec_id.h
+#31 79.39 INSTALL	libavcodec/codec_par.h
+#31 79.39 INSTALL	libavcodec/d3d11va.h
+#31 79.39 INSTALL	libavcodec/defs.h
+#31 79.39 INSTALL	libavcodec/dirac.h
+#31 79.39 INSTALL	libavcodec/dv_profile.h
+#31 79.39 INSTALL	libavcodec/dxva2.h
+#31 79.39 INSTALL	libavcodec/jni.h
+#31 79.39 INSTALL	libavcodec/mediacodec.h
+#31 79.39 INSTALL	libavcodec/packet.h
+#31 79.39 INSTALL	libavcodec/qsv.h
+#31 79.39 INSTALL	libavcodec/vdpau.h
+#31 79.39 INSTALL	libavcodec/version.h
+#31 79.39 INSTALL	libavcodec/version_major.h
+#31 79.39 INSTALL	libavcodec/videotoolbox.h
+#31 79.39 INSTALL	libavcodec/vorbis_parser.h
+#31 79.40 INSTALL	libavcodec/libavcodec.pc
+#31 79.40 INSTALL	libswresample/swresample.h
+#31 79.40 INSTALL	libswresample/version.h
+#31 79.40 INSTALL	libswresample/version_major.h
+#31 79.40 INSTALL	libswresample/libswresample.pc
+#31 79.41 INSTALL	libswscale/swscale.h
+#31 79.41 INSTALL	libswscale/version.h
+#31 79.41 INSTALL	libswscale/version_major.h
+#31 79.41 INSTALL	libswscale/libswscale.pc
+#31 79.41 INSTALL	libavutil/adler32.h
+#31 79.41 INSTALL	libavutil/aes.h
+#31 79.41 INSTALL	libavutil/aes_ctr.h
+#31 79.41 INSTALL	libavutil/ambient_viewing_environment.h
+#31 79.41 INSTALL	libavutil/attributes.h
+#31 79.41 INSTALL	libavutil/audio_fifo.h
+#31 79.41 INSTALL	libavutil/avassert.h
+#31 79.41 INSTALL	libavutil/avstring.h
+#31 79.41 INSTALL	libavutil/avutil.h
+#31 79.41 INSTALL	libavutil/base64.h
+#31 79.41 INSTALL	libavutil/blowfish.h
+#31 79.41 INSTALL	libavutil/bprint.h
+#31 79.41 INSTALL	libavutil/bswap.h
+#31 79.41 INSTALL	libavutil/buffer.h
+#31 79.41 INSTALL	libavutil/cast5.h
+#31 79.41 INSTALL	libavutil/camellia.h
+#31 79.41 INSTALL	libavutil/channel_layout.h
+#31 79.41 INSTALL	libavutil/common.h
+#31 79.41 INSTALL	libavutil/cpu.h
+#31 79.41 INSTALL	libavutil/crc.h
+#31 79.41 INSTALL	libavutil/csp.h
+#31 79.41 INSTALL	libavutil/des.h
+#31 79.41 INSTALL	libavutil/detection_bbox.h
+#31 79.41 INSTALL	libavutil/dict.h
+#31 79.41 INSTALL	libavutil/display.h
+#31 79.41 INSTALL	libavutil/dovi_meta.h
+#31 79.41 INSTALL	libavutil/downmix_info.h
+#31 79.41 INSTALL	libavutil/encryption_info.h
+#31 79.41 INSTALL	libavutil/error.h
+#31 79.41 INSTALL	libavutil/eval.h
+#31 79.41 INSTALL	libavutil/executor.h
+#31 79.41 INSTALL	libavutil/fifo.h
+#31 79.41 INSTALL	libavutil/file.h
+#31 79.41 INSTALL	libavutil/frame.h
+#31 79.41 INSTALL	libavutil/hash.h
+#31 79.41 INSTALL	libavutil/hdr_dynamic_metadata.h
+#31 79.41 INSTALL	libavutil/hdr_dynamic_vivid_metadata.h
+#31 79.41 INSTALL	libavutil/hmac.h
+#31 79.41 INSTALL	libavutil/hwcontext.h
+#31 79.41 INSTALL	libavutil/hwcontext_cuda.h
+#31 79.41 INSTALL	libavutil/hwcontext_d3d11va.h
+#31 79.41 INSTALL	libavutil/hwcontext_d3d12va.h
+#31 79.41 INSTALL	libavutil/hwcontext_drm.h
+#31 79.41 INSTALL	libavutil/hwcontext_dxva2.h
+#31 79.41 INSTALL	libavutil/hwcontext_qsv.h
+#31 79.41 INSTALL	libavutil/hwcontext_mediacodec.h
+#31 79.41 INSTALL	libavutil/hwcontext_opencl.h
+#31 79.41 INSTALL	libavutil/hwcontext_vaapi.h
+#31 79.41 INSTALL	libavutil/hwcontext_videotoolbox.h
+#31 79.41 INSTALL	libavutil/hwcontext_vdpau.h
+#31 79.41 INSTALL	libavutil/hwcontext_vulkan.h
+#31 79.41 INSTALL	libavutil/iamf.h
+#31 79.41 INSTALL	libavutil/imgutils.h
+#31 79.41 INSTALL	libavutil/intfloat.h
+#31 79.41 INSTALL	libavutil/intreadwrite.h
+#31 79.41 INSTALL	libavutil/lfg.h
+#31 79.41 INSTALL	libavutil/log.h
+#31 79.41 INSTALL	libavutil/lzo.h
+#31 79.41 INSTALL	libavutil/macros.h
+#31 79.41 INSTALL	libavutil/mathematics.h
+#31 79.41 INSTALL	libavutil/mastering_display_metadata.h
+#31 79.41 INSTALL	libavutil/md5.h
+#31 79.41 INSTALL	libavutil/mem.h
+#31 79.41 INSTALL	libavutil/motion_vector.h
+#31 79.41 INSTALL	libavutil/murmur3.h
+#31 79.41 INSTALL	libavutil/opt.h
+#31 79.41 INSTALL	libavutil/parseutils.h
+#31 79.41 INSTALL	libavutil/pixdesc.h
+#31 79.41 INSTALL	libavutil/pixelutils.h
+#31 79.41 INSTALL	libavutil/pixfmt.h
+#31 79.41 INSTALL	libavutil/random_seed.h
+#31 79.41 INSTALL	libavutil/rc4.h
+#31 79.41 INSTALL	libavutil/rational.h
+#31 79.41 INSTALL	libavutil/replaygain.h
+#31 79.41 INSTALL	libavutil/ripemd.h
+#31 79.41 INSTALL	libavutil/samplefmt.h
+#31 79.41 INSTALL	libavutil/sha.h
+#31 79.41 INSTALL	libavutil/sha512.h
+#31 79.41 INSTALL	libavutil/spherical.h
+#31 79.41 INSTALL	libavutil/stereo3d.h
+#31 79.41 INSTALL	libavutil/threadmessage.h
+#31 79.41 INSTALL	libavutil/time.h
+#31 79.41 INSTALL	libavutil/timecode.h
+#31 79.41 INSTALL	libavutil/timestamp.h
+#31 79.41 INSTALL	libavutil/tree.h
+#31 79.41 INSTALL	libavutil/twofish.h
+#31 79.41 INSTALL	libavutil/uuid.h
+#31 79.41 INSTALL	libavutil/version.h
+#31 79.41 INSTALL	libavutil/video_enc_params.h
+#31 79.41 INSTALL	libavutil/xtea.h
+#31 79.41 INSTALL	libavutil/tea.h
+#31 79.41 INSTALL	libavutil/tx.h
+#31 79.41 INSTALL	libavutil/film_grain_params.h
+#31 79.41 INSTALL	libavutil/video_hint.h
+#31 79.41 INSTALL	libavutil/avconfig.h
+#31 79.41 INSTALL	libavutil/ffversion.h
+#31 79.42 INSTALL	libavutil/libavutil.pc
+#31 DONE 79.5s
+
+#32 [media-build  9/10] RUN python -c "import subprocess; assert all(b'INTERP' not in subprocess.check_output(['readelf','-l','/opt/media/bin/'+name]) for name in ('ffmpeg','ffprobe'))"
+#32 DONE 0.2s
+
+#33 [media-build 10/10] RUN python -c "import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))"
+#33 DONE 0.2s
+
+#34 [ocr-release 1/8] COPY --from=media-build /opt/media /opt/media
+#34 DONE 0.1s
+
+#35 [ocr-release 2/8] COPY services/property-processing/media-build.json /opt/media/build-profile.json
+#35 DONE 0.1s
+
+#36 [ocr-release 3/8] COPY services/property-processing/ocr-production-release.json /opt/processing/ocr-release.json
+#36 DONE 0.1s
+
+#37 [ocr-release 4/8] COPY services/property-processing/.ocr-sources /usr/share/doc/haven-processing/ocr-sources
+#37 DONE 0.4s
+
+#38 [ocr-release 5/8] COPY assets/digitization-fonts/LICENSE.txt assets/digitization-fonts/manifest.json /usr/share/doc/haven-processing/source-notices/assets/digitization-fonts/
+#38 DONE 0.1s
+
+#39 [ocr-release 6/8] COPY docs/digitization/OCR-PRODUCTION-REVIEW.md /usr/share/doc/haven-processing/OCR-PRODUCTION-REVIEW.md
+#39 DONE 0.1s
+
+#40 [ocr-release 7/8] COPY services/property-processing/verify_ocr_release.py /opt/processing/verify_ocr_release.py
+#40 DONE 0.1s
+
+#41 [ocr-release 8/8] RUN python /opt/processing/verify_ocr_release.py
+#41 3.746 {"status": "verified", "releaseSha256": "7e1ba50d2a8bfe230d9b645e9e683fec3ecef2cb4ea8f35317c38048fea46b34", "runtimeFiles": 270, "sourceArchives": 48, "notices": 322, "runtimeDownloads": false}
+#41 DONE 3.8s
+
+#42 exporting to oci image format
+#42 exporting layers
+#42 exporting layers 9.0s done
+#42 exporting manifest sha256:638153eab278cb484f82fa24a87e68affb6241d5788158540130aebcf2997906 0.1s done
+#42 exporting config sha256:f0bfc97c77a2b3a3c6c8052dfc38861c32e857934cba1495f946a15a8fe8535b 0.1s done
+#42 sending tarball
+#42 ...
+
+#43 importing to docker
+#43 DONE 0.0s
+
+#42 exporting to oci image format
+#42 sending tarball 14.0s done
+#42 DONE 23.2s
+
+#44 resolving provenance for metadata file
+#44 DONE 0.0s
+ Image haven-processing-ocr:3.3.3-offline-cpu-v1 Built 

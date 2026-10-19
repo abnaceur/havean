@@ -1,0 +1,101 @@
+ Image haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 741B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.ocr-investigation
+#2 transferring dockerfile: 3.27kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 ...
+
+#4 [auth] library/python:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 2.4s
+
+#5 [internal] load .dockerignore
+#5 transferring context:
+#5 transferring context: 192B done
+#5 DONE 0.2s
+
+#6 [install 1/8] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#6 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#6 DONE 0.1s
+
+#7 [internal] load build context
+#7 transferring context: 80.30kB 0.1s done
+#7 DONE 0.1s
+
+#8 [install 7/8] COPY services/property-processing/clean_ocr_investigation.py /tmp/worker-cleanup.py
+#8 CACHED
+
+#9 [install 3/8] COPY services/property-processing/ocr-investigation.lock /tmp/ocr-investigation.lock
+#9 CACHED
+
+#10 [install 5/8] RUN --mount=type=bind,source=services/property-processing/.ocr-wheels,target=/wheels,readonly python /tmp/verify-worker-downloads.py && python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/ocr-investigation.lock && python -m pip check && mkdir /native-debs && dpkg-deb -x /wheels/libgomp1_14.2.0-19_amd64.deb /native-debs && dpkg-deb -x /wheels/libglib2.0-0t64_2.84.4-3~deb13u5_amd64.deb /native-debs
+#10 CACHED
+
+#11 [install 4/8] COPY services/property-processing/verify_ocr_investigation.py /tmp/verify-worker-downloads.py
+#11 CACHED
+
+#12 [install 6/8] COPY services/property-processing/.ocr-wheels/models /opt/ocr-models
+#12 CACHED
+
+#13 [install 2/8] COPY services/property-processing/ocr-investigation-build.json /tmp/ocr-investigation-build.json
+#13 CACHED
+
+#14 [install 8/8] RUN python /tmp/worker-cleanup.py
+#14 CACHED
+
+#15 [no-gui-install 1/2] COPY services/property-processing/exclude_ocr_gui.py /tmp/exclude-ocr-gui.py
+#15 DONE 0.1s
+
+#16 [no-gui-install 2/2] RUN python /tmp/exclude-ocr-gui.py
+#16 DONE 0.4s
+
+#17 [worker-no-gui-investigation  4/10] COPY --from=no-gui-install /opt/ocr-models /opt/ocr-models
+#17 CACHED
+
+#18 [worker-no-gui-investigation  8/10] COPY services/property-processing/property_processing /opt/processing/property_processing
+#18 CACHED
+
+#19 [worker-no-gui-investigation  5/10] COPY --from=no-gui-install /tmp/ocr-gui-exclusions.json /opt/processing/ocr-native-exclusions.json
+#19 CACHED
+
+#20 [worker-no-gui-investigation  6/10] COPY docs/adr/licenses /usr/share/doc/haven-processing/source-notices
+#20 CACHED
+
+#21 [worker-no-gui-investigation  7/10] COPY docs/adr/processing-dependencies.json /opt/processing/dependencies.json
+#21 CACHED
+
+#22 [worker-no-gui-investigation  9/10] COPY services/property-processing/tests/ocr_worker_smoke.py /opt/processing/ocr_worker_smoke.py
+#22 CACHED
+
+#23 [worker-no-gui-investigation  2/10] COPY --from=no-gui-install /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+#23 CACHED
+
+#24 [worker-no-gui-investigation  3/10] COPY --from=no-gui-install /native-debs /
+#24 CACHED
+
+#25 [worker-no-gui-investigation 10/10] WORKDIR /opt/processing
+#25 CACHED
+
+#26 exporting to image
+#26 exporting layers
+#26 exporting layers 50.3s done
+#26 exporting manifest sha256:570f4ecafc14307e2321efc49c2a77e23a053d153d9d192a88513eb9d2ecadfb 0.0s done
+#26 exporting config sha256:fa372e4f216384a105c1d70e468f14a031a360b9dff338f6811a9f2695775a34 0.1s done
+#26 exporting attestation manifest sha256:5cdccaf392f8feeb1f081ccc685111e3f6c3e172e70859b69d83fc036f0c955b 0.1s done
+#26 exporting manifest list sha256:3d89260697f7ec0a06e0849ff9f00dc534c32503675320549d500ad81cb28324
+#26 exporting manifest list sha256:3d89260697f7ec0a06e0849ff9f00dc534c32503675320549d500ad81cb28324 0.1s done
+#26 naming to docker.io/library/haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2 done
+#26 unpacking to docker.io/library/haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2
+#26 unpacking to docker.io/library/haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2 9.4s done
+#26 DONE 60.1s
+
+#27 resolving provenance for metadata file
+#27 DONE 0.0s
+ Image haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2 Built 

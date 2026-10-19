@@ -1,6 +1,23 @@
+FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS media-build
+COPY services/property-processing/locks/media-build-apt.json /tmp/media-build-apt.json
+RUN python -c "import json,subprocess; p=json.load(open('/tmp/media-build-apt.json'))['packages']; subprocess.run(['apt-get','update'],check=True); subprocess.run(['apt-get','install','-y','--no-install-recommends',*[name+'='+version for name,version in p.items()]],check=True)" && rm -rf /var/lib/apt/lists/*
+WORKDIR /build
+COPY services/property-processing/media-build.json /build/profile.json
+RUN --mount=type=bind,source=services/property-processing/.media-sources,target=/sources,readonly python -c "import hashlib,json,pathlib,tarfile; p=json.load(open('/build/profile.json')); f=pathlib.Path('/sources/ffmpeg-7.1.5.tar.xz'); assert hashlib.sha256(f.read_bytes()).hexdigest()==p['sourceSha256']; tarfile.open(f).extractall('/build',filter='data')"
+WORKDIR /build/ffmpeg-7.1.5
+RUN python -c "import json,subprocess; p=json.load(open('/build/profile.json')); subprocess.run(['./configure','--prefix=/opt/media',*p['flags']],check=True)" && make -j2 && make install
+RUN python -c "import subprocess; assert all(b'INTERP' not in subprocess.check_output(['readelf','-l','/opt/media/bin/'+name]) for name in ('ffmpeg','ffprobe'))"
+RUN python -c "import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))"
+
 FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS cpu
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_DISABLE_PIP_VERSION_CHECK=1 PIP_DEFAULT_TIMEOUT=60 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 WORKDIR /opt/processing
+COPY --from=media-build /opt/media /opt/media
+COPY services/property-processing/media-build.json /opt/media/build-profile.json
+COPY docs/adr/licenses/ffmpeg-7.1.5 /usr/share/doc/haven-processing/ffmpeg-7.1.5
+COPY docs/adr/licenses/media-glibc-2.41 /usr/share/doc/haven-processing/media-glibc-2.41
+COPY docs/adr/licenses/media-zlib-1.3.1 /usr/share/doc/haven-processing/media-zlib-1.3.1
+COPY docs/adr/licenses/media-libgcc-14.2.0 /usr/share/doc/haven-processing/media-libgcc-14.2.0
 COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
 RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
 COPY docs/adr/processing-dependencies.json ./dependencies.json
@@ -15,5 +32,7 @@ USER root
 COPY services/property-processing/locks/test.lock /tmp/test.lock
 RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/test.lock && python -m pip check
 COPY services/property-processing/tests ./tests
+COPY services/property-processing/audit_ocr_runtime.py ./audit_ocr_runtime.py
+COPY services/property-processing/exclude_ocr_gui.py ./exclude_ocr_gui.py
 USER 10001:10001
 CMD ["python", "-m", "pytest", "-p", "no:cacheprovider", "-q", "tests"]

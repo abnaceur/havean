@@ -1,0 +1,46 @@
+ Container haven-processing-tests-cpu-run-16be4452ba1f Creating 
+ Container haven-processing-tests-cpu-run-16be4452ba1f Created 
+..........F..F                                                           [100%]
+=================================== FAILURES ===================================
+_ ReconstructionPairs.test_groups_stay_separate_but_cross_clip_hypotheses_exist _
+
+self = <test_reconstruction_pairs.ReconstructionPairs testMethod=test_groups_stay_separate_but_cross_clip_hypotheses_exist>
+
+    def test_groups_stay_separate_but_cross_clip_hypotheses_exist(self):
+        frames=self.frames();groups=camera_groups(frames)
+        self.assertEqual(len(groups),2)
+        pairs=matching_pairs(frames)
+        self.assertTrue(any(int(a[:-4])<20<=int(b[:-4]) for a,b in pairs))
+        self.assertEqual(len(pairs),len(set(pairs)))
+>       self.assertTrue(set(pairs)<=set(matching_pairs(frames,True)))
+E       AssertionError: False is not true
+
+tests/test_reconstruction_pairs.py:11: AssertionError
+_________ ColmapInputs.test_tampered_hash_and_supplied_dimensions_fail _________
+ValueError: Resolution changes require a separate camera group
+
+During handling of the above exception, another exception occurred:
+
+self = <test_colmap_inputs.ColmapInputs testMethod=test_tampered_hash_and_supplied_dimensions_fail>
+
+    def test_tampered_hash_and_supplied_dimensions_fail(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = self.fixture(root)
+            manifest['frames'][0]['sha256'] = '0'*64
+            (root / 'manifest.json').write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError, 'hash mismatch'):
+                validate_inputs(root)
+            manifest['frames'][0]['sha256'] = hashlib.sha256(png()).hexdigest()
+            manifest['frames'][0]['width'] = 9
+            (root / 'manifest.json').write_text(json.dumps(manifest))
+>           with self.assertRaisesRegex(ValueError, 'dimensions'):
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: "dimensions" does not match "Resolution changes require a separate camera group"
+
+tests/test_colmap_inputs.py:50: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_reconstruction_pairs.py::ReconstructionPairs::test_groups_stay_separate_but_cross_clip_hypotheses_exist
+FAILED tests/test_colmap_inputs.py::ColmapInputs::test_tampered_hash_and_supplied_dimensions_fail
+2 failed, 12 passed in 0.25s
+

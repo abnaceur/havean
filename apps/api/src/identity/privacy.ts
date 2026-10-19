@@ -8,10 +8,12 @@ export const accountRetention={version:1 as const,exportRecordLimit:2000,classes
  {category:'Personal profile, inquiries, messages and requests',handling:'Reviewed for removal or anonymization, subject to open obligations and authorized retention.'},
  {category:'Posted charges, payments, allocations, deposits and reversals',handling:'Preserved for bookkeeping and required history. No automatic financial deletion.'},
  {category:'Audit history and deletion request',handling:'Preserved to document actions and retention decisions.'},
+ {category:'Private digitization sources and processing files',handling:'Access is revoked when deletion is requested. Durable cleanup confirms processing termination and removes online engine files. Originals referenced by another business module remain flagged for its retention review; financial and audit history are preserved. Backups follow the separate recovery retention policy.'},
  {category:'Identity-provider account',handling:'Managed by the sign-in service; Haven access is revoked immediately.'}
 ]};
 // Explicit personal-data projections. Organization access never broadens a personal export.
 const datasets:Record<string,string>={
+ propertyDrafts:'SELECT id,listing_id,data,step,status,version,created_at,updated_at FROM property_authoring_drafts WHERE user_id=$1 ORDER BY id',
  ownedProviderProfiles:'SELECT profile FROM personal_provider_export() ORDER BY profile->>\'id\'',
  chatUploads:'SELECT asset_id,conversation_id,filename,mime,version,created_at FROM conversation_uploads WHERE creator_id=$1 ORDER BY asset_id',
  sentMessageAttachments:'SELECT ma.message_id,ma.asset_id,ma.asset_version,ma.position FROM message_attachments ma JOIN messages m ON m.id=ma.message_id JOIN conversations c ON c.id=m.conversation_id WHERE m.sender_id=$1 AND c.user_id=$1 ORDER BY ma.message_id,ma.position',

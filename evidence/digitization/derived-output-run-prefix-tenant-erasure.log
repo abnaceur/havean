@@ -1,0 +1,70 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-tenant-deletion.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 5438[2mms[22m[39m
+[31m   [31m×[31m tenant erasure fences active CPU work and removes originals and derivatives while retaining credential, account and organization history[39m[33m 3993[2mms[22m[39m
+[31m   [31m×[31m a tenant tombstone retains an original still bound to another live tenant and never inherits that tenant access[39m[33m 828[2mms[22m[39m
+[31m   [31m×[31m a concurrent foreign-tenant binding cannot commit after erasure acquires the source lock[39m[33m 615[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-tenant-deletion.test.ts[2m > [22mtenant erasure fences active CPU work and removes originals and derivatives while retaining credential, account and organization history
+[31m[1mAssertionError[22m: expected [ { …(3) }, { …(3) } ] to have a length of 1 but got 2[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 2[39m
+
+[36m [2m❯[22m tests/integration/digitization-tenant-deletion.test.ts:[2m67:403[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-tenant-deletion.test.ts[2m > [22ma tenant tombstone retains an original still bound to another live tenant and never inherits that tenant access
+[31m[1mHttpException[22m: CPU processing is unavailable.[39m
+[36m [2m❯[22m fail apps/api/src/platform/core.ts:[2m10:87[22m[39m
+
+[90m [2m❯[22m configuredCpuRunner apps/api/src/inventory/digitization/execution-start.ts:[2m13:23[22m[39m
+[90m [2m❯[22m reclaimDeletedAccountProcessing apps/api/src/inventory/digitization/deletion-cleanup.ts:[2m13:31[22m[39m
+[90m [2m❯[22m tests/integration/digitization-tenant-deletion.test.ts:[2m97:10[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-tenant-deletion.test.ts[2m > [22ma concurrent foreign-tenant binding cannot commit after erasure acquires the source lock
+[31m[1mAssertionError[22m: promise resolved "{ AcceptRanges: 'bytes', …(6) }" instead of rejecting[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Error {[39m
+[32m-   "message": "rejected promise",[39m
+[31m+ {[39m
+[31m+   "$metadata": {[39m
+[31m+     "attempts": 1,[39m
+[31m+     "cfId": undefined,[39m
+[31m+     "extendedRequestId": undefined,[39m
+[31m+     "httpStatusCode": 200,[39m
+[31m+     "requestId": "18DD54552B6D140FC78DA067",[39m
+[31m+     "totalRetryDelay": 0,[39m
+[31m+   },[39m
+[31m+   "AcceptRanges": "bytes",[39m
+[31m+   "ContentLength": 527,[39m
+[31m+   "ContentType": "application/octet-stream",[39m
+[31m+   "ETag": "\"91f47bc3f6e334f837f5e6a0ddddfa8e\"",[39m
+[31m+   "LastModified": 2026-10-11T01:09:10.000Z,[39m
+[31m+   "Metadata": {},[39m
+[2m  }[22m
+
+[36m [2m❯[22m tests/integration/digitization-tenant-deletion.test.ts:[2m117:298[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[90m (3)[39m
+[2m   Start at [22m 01:09:04
+[2m   Duration [22m 7.09s[2m (tests 78%, import 13%, transform 9%)[22m
+

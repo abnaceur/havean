@@ -71,7 +71,7 @@ export const digitizationExecutionRequest=z.strictObject({
  schemaVersion:z.literal(1),executionId:z.uuid(),organizationId:z.uuid(),runId:z.uuid(),stageId:z.uuid(),
  stageType:digitizationStageType,profileId:z.string().regex(/^[a-z0-9][a-z0-9_.-]{1,100}$/),
  inputRevision:version,inputFingerprint:checksum,fencingToken:z.string().regex(/^[1-9]\d{0,18}$/),
- artifacts:z.array(z.strictObject({id:z.uuid(),checksum,byteSize:z.string().regex(/^[1-9]\d{0,12}$/),detectedMime:z.enum(['application/pdf','image/jpeg','image/png'])})).min(1).max(100),
+ artifacts:z.array(z.strictObject({id:z.uuid(),checksum,byteSize:z.string().regex(/^[1-9]\d{0,12}$/),detectedMime:z.enum(['application/pdf','image/jpeg','image/png','video/mp4','video/quicktime','video/webm','application/x-tar'])})).min(1).max(100),
  deadline:z.iso.datetime(),budget:z.strictObject({maxSeconds:z.number().int().positive().max(86400),maxScratchBytes:z.string().regex(/^[1-9]\d{0,12}$/)})
 }).refine(request=>new Set(request.artifacts.map(asset=>asset.id)).size===request.artifacts.length,'Duplicate input artifact');
 export type DigitizationExecutionRequest=z.infer<typeof digitizationExecutionRequest>;

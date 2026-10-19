@@ -1,0 +1,127 @@
+ Image haven-popsift:0.9-cuda12.6.3-investigation-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 714B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.popsift
+#2 transferring dockerfile: 1.69kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09
+#3 ...
+
+#4 [auth] nvidia/cuda:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09
+#3 DONE 2.4s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 2B done
+#5 DONE 0.0s
+
+#6 [resolve 1/3] FROM docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09
+#6 resolve docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09 0.0s done
+#6 DONE 0.0s
+
+#7 [resolve 2/3] RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates python3 cmake ninja-build gcc-13 g++-13 git libboost-filesystem-dev libboost-graph-dev libboost-program-options-dev libboost-system-dev libeigen3-dev libfreeimage-dev libflann-dev liblz4-dev libmetis-dev libgoogle-glog-dev libsqlite3-dev libglew-dev libceres-dev cuda-nvcc-12-6 cuda-cudart-dev-12-6 libcurand-dev-12-6 && mkdir /profile && dpkg-query -W -f='${Package}\t${Version}\n' > /profile/packages.tsv && apt-cache dumpavail > /profile/available-packages.txt
+#7 CACHED
+
+#8 [resolve 3/3] RUN /usr/local/cuda/bin/nvcc --version > /profile/nvcc-version.txt
+#8 CACHED
+
+#9 [internal] load build context
+#9 transferring context: 108.72kB done
+#9 DONE 0.0s
+
+#10 [popsift 1/3] COPY popsift-source.tar.gz /tmp/popsift-source.tar.gz
+#10 DONE 0.1s
+
+#11 [popsift 2/3] RUN echo 'dffccd79e079f679eed2b11595dc6f2698c44b4f592580a0555d092e64e589c2  /tmp/popsift-source.tar.gz' | sha256sum -c - && mkdir /source && python3 -c "import tarfile; tarfile.open('/tmp/popsift-source.tar.gz').extractall('/source',filter='data')"
+#11 0.264 /tmp/popsift-source.tar.gz: OK
+#11 DONE 0.4s
+
+#12 [popsift 3/3] RUN cmake -S /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 -B /build-popsift -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCUDA_HOST_COMPILER=/usr/bin/g++-13 -DPopSift_CUDA_CC_LIST='75;86;89' -DPopSift_BUILD_EXAMPLES=OFF -DPopSift_BUILD_DOCS=OFF && cmake --build /build-popsift --parallel 2 && cmake --install /build-popsift
+#12 0.340 -- The CXX compiler identification is GNU 13.3.0
+#12 0.360 -- Detecting CXX compiler ABI info
+#12 0.433 -- Detecting CXX compiler ABI info - done
+#12 0.447 -- Check for working CXX compiler: /usr/bin/g++-13 - skipped
+#12 0.448 -- Detecting CXX compile features
+#12 0.448 -- Detecting CXX compile features - done
+#12 0.450 -- Building in Release configuration
+#12 0.453 -- BUILD_SHARED_LIBS ON
+#12 0.455 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+#12 0.538 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+#12 0.540 -- Found Threads: TRUE  
+#12 0.540 CMake Warning (dev) at CMakeLists.txt:76 (find_package):
+#12 0.540   Policy CMP0146 is not set: The FindCUDA module is removed.  Run "cmake
+#12 0.540   --help-policy CMP0146" for policy details.  Use the cmake_policy command to
+#12 0.540   set the policy and suppress this warning.
+#12 0.540 
+#12 0.540 This warning is for project developers.  Use -Wno-dev to suppress it.
+#12 0.540 
+#12 0.574 -- Found CUDA: /usr/local/cuda (found suitable version "12.6", minimum required is "7.0") 
+#12 0.575 -- CUDA Version is 12.6
+#12 0.576 -- Setting gencode flags: -gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_89,code=sm_89;-gencode;arch=compute_89,code=compute_89
+#12 0.628 
+#12 0.628 
+#12 0.628 ******************************************
+#12 0.628 Building configuration:
+#12 0.628 
+#12 0.628 -- PopSift version: 1.0.0
+#12 0.628 -- Build type: Release
+#12 0.628 -- Build Shared libs: ON
+#12 0.628 -- Build examples: OFF
+#12 0.628 -- Build documentation: OFF
+#12 0.628 -- Generate position independent code: ON
+#12 0.628 -- Use CUDA NVTX for profiling: OFF
+#12 0.628 -- Synchronize and check CUDA error after every kernel: OFF
+#12 0.628 -- Grid filtering: ON
+#12 0.628 -- Additional warning for CUDA nvcc: OFF
+#12 0.628 -- Compiling for CUDA CCs: 75;86;89
+#12 0.628 -- Install path: /usr/local
+#12 0.628 -- Testing step: OFF
+#12 0.628 
+#12 0.628 ******************************************
+#12 0.628 
+#12 0.628 
+#12 0.628 -- Configuring done (0.3s)
+#12 0.629 CMake Error: The following variables are used in this project, but they are set to NOTFOUND.
+#12 0.629 Please set them or make sure they are set and tested correctly in the CMake files:
+#12 0.629 CUDA_cublas_LIBRARY (ADVANCED)
+#12 0.629     linked by target "popsift" in directory /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src
+#12 0.629 
+#12 0.649 -- Generating done (0.0s)
+#12 0.653 CMake Generate step failed.  Build files cannot be regenerated correctly.
+#12 ERROR: process "/bin/sh -c cmake -S /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 -B /build-popsift -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCUDA_HOST_COMPILER=/usr/bin/g++-13 -DPopSift_CUDA_CC_LIST='75;86;89' -DPopSift_BUILD_EXAMPLES=OFF -DPopSift_BUILD_DOCS=OFF && cmake --build /build-popsift --parallel 2 && cmake --install /build-popsift" did not complete successfully: exit code: 1
+------
+ > [popsift 3/3] RUN cmake -S /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 -B /build-popsift -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCUDA_HOST_COMPILER=/usr/bin/g++-13 -DPopSift_CUDA_CC_LIST='75;86;89' -DPopSift_BUILD_EXAMPLES=OFF -DPopSift_BUILD_DOCS=OFF && cmake --build /build-popsift --parallel 2 && cmake --install /build-popsift:
+0.628 
+0.628 
+0.628 -- Configuring done (0.3s)
+0.629 CMake Error: The following variables are used in this project, but they are set to NOTFOUND.
+0.629 Please set them or make sure they are set and tested correctly in the CMake files:
+0.629 CUDA_cublas_LIBRARY (ADVANCED)
+0.629     linked by target "popsift" in directory /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src
+0.629 
+0.649 -- Generating done (0.0s)
+0.653 CMake Generate step failed.  Build files cannot be regenerated correctly.
+------
+Dockerfile.popsift:11
+
+--------------------
+
+   9 |     COPY popsift-source.tar.gz /tmp/popsift-source.tar.gz
+
+  10 |     RUN echo 'dffccd79e079f679eed2b11595dc6f2698c44b4f592580a0555d092e64e589c2  /tmp/popsift-source.tar.gz' | sha256sum -c - && mkdir /source && python3 -c "import tarfile; tarfile.open('/tmp/popsift-source.tar.gz').extractall('/source',filter='data')"
+
+  11 | >>> RUN cmake -S /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 -B /build-popsift -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCUDA_HOST_COMPILER=/usr/bin/g++-13 -DPopSift_CUDA_CC_LIST='75;86;89' -DPopSift_BUILD_EXAMPLES=OFF -DPopSift_BUILD_DOCS=OFF && cmake --build /build-popsift --parallel 2 && cmake --install /build-popsift
+
+  12 |     USER 10001:10001
+
+  13 |     CMD ["/usr/local/cuda/bin/nvcc","--version"]
+
+--------------------
+
+failed to solve: process "/bin/sh -c cmake -S /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 -B /build-popsift -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCUDA_HOST_COMPILER=/usr/bin/g++-13 -DPopSift_CUDA_CC_LIST='75;86;89' -DPopSift_BUILD_EXAMPLES=OFF -DPopSift_BUILD_DOCS=OFF && cmake --build /build-popsift --parallel 2 && cmake --install /build-popsift" did not complete successfully: exit code: 1
+

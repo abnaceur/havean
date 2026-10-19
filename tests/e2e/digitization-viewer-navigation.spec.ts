@@ -1,0 +1,30 @@
+import {test,expect} from '@playwright/test';
+import {existsSync,readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+const require=createRequire(new URL('../../apps/api/package.json',import.meta.url)),sharp=require('sharp');
+test('published plan navigation opens the reviewed panorama and visibly rendered structural model',async({page},info)=>{
+ test.skip(process.env.CHECK_AGENT_WORKFLOW_EXAMPLE!=='true','Uses the retained locally published workflow example.');
+ test.setTimeout(120000);page.setDefaultTimeout(20000);
+ const fixture=JSON.parse(readFileSync('infra/generated/digitization-agent-actions.json','utf8')),errors:string[]=[];
+ const upgraded=existsSync('infra/generated/digitization-coherent-demo.json')&&JSON.parse(readFileSync('infra/generated/digitization-coherent-demo.json','utf8')).tourPublished;
+ const furnished=existsSync('infra/generated/digitization-furnished-demo.json')&&JSON.parse(readFileSync('infra/generated/digitization-furnished-demo.json','utf8')).tourPublished;
+ const planTitle=upgraded?'Two-bedroom demo apartment plan':'Self-authored functional plan',entryTitle=furnished?'Living / dining — rendered demo':upgraded?'Living / dining — generated demo':'Synthetic living panorama';
+ page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(/same key|unique.*key/i.test(m.text()))errors.push(m.text());});
+ await page.goto(fixture.publicUrl);
+ const gallery=page.getByRole('region',{name:'Property gallery',exact:true}),tabs=gallery.getByRole('group',{name:'Property media',exact:true});
+ await expect(tabs.getByRole('button',{name:'360° tour',exact:true})).toBeVisible();await expect(tabs.getByRole('button',{name:'3D plan',exact:true})).toBeVisible();
+ await tabs.getByRole('button',{name:'Floor plans (1)',exact:true}).click();await gallery.getByRole('button',{name:'Open '+planTitle,exact:true}).click();
+ const legacy=page.getByRole('dialog',{name:'Interactive property tour',exact:true}),modes=legacy.getByRole('group',{name:'Tour viewing mode',exact:true});
+ await expect(modes.getByRole('button',{name:'Tour',exact:true})).toBeEnabled();await expect(modes.getByRole('button',{name:'3D model',exact:true})).toBeEnabled();await modes.getByRole('button',{name:'Tour',exact:true}).click();
+ const tour=page.getByRole('dialog',{name:'Reviewed property captures',exact:true});await expect(tour.getByRole('img',{name:'360 degree view: '+entryTitle,exact:true})).toHaveAttribute('data-panorama-ready','true');await expect(page.getByRole('dialog')).toHaveCount(1);
+ if(upgraded){if(furnished){for(let i=0;i<9;i++)await tour.getByRole('button',{name:'Turn right',exact:true}).click();}await tour.getByRole('button',{name:'Go to Bathroom',exact:true}).click();await expect(tour.getByRole('img',{name:'360 degree view: Bathroom'+(furnished?' — rendered demo':' — generated demo'),exact:true})).toHaveAttribute('data-panorama-ready','true');}
+ await tour.getByRole('button',{name:'Zoom in',exact:true}).click();
+ await tour.getByRole('navigation',{name:'Property views'}).getByRole('button',{name:'3D plan',exact:true}).click();
+ const model=page.getByRole('dialog',{name:'Reviewed property model',exact:true});await expect(model.getByRole('status')).toContainText('Structural model loaded',{timeout:30000});await expect(page.getByRole('dialog')).toHaveCount(1);
+ const canvas=model.locator('canvas'),pixels=await canvas.screenshot({path:`evidence/digitization/navigation-model-${info.project.name}.png`});const stats=await sharp(pixels).stats();expect(Math.max(...stats.channels.slice(0,3).map((channel:{stdev:number})=>channel.stdev))).toBeGreaterThan(5);
+ await canvas.focus();await page.keyboard.press('+');const zoomed=await canvas.screenshot();expect(zoomed.equals(pixels)).toBe(false);await model.getByRole('button',{name:'Reset 3D view',exact:true}).click();
+ await model.getByRole('navigation',{name:'Property views'}).getByRole('button',{name:'Floor plan',exact:true}).click();await expect(legacy).toBeVisible();await modes.getByRole('button',{name:'3D model',exact:true}).click();await expect(model.getByRole('status')).toContainText('Structural model loaded');
+ await model.getByRole('navigation',{name:'Property views'}).getByRole('button',{name:'Photos',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);await expect(gallery.getByRole('button',{name:'Open property gallery',exact:true})).toBeVisible();
+ await tabs.getByRole('button',{name:'360° tour',exact:true}).click();await expect(tour.getByRole('img',{name:'360 degree view: '+entryTitle,exact:true})).toHaveAttribute('data-panorama-ready','true');await page.keyboard.press('Escape');
+ expect(errors).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});

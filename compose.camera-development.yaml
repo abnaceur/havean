@@ -1,0 +1,16 @@
+# Requires compose.yaml, compose.digitization.yaml and compose.ocr-development.yaml.
+# CPU-only local investigation; no public port, GPU claim or production admission.
+services:
+  api:
+    environment:
+      PROCESSING_ENABLE_CAMERA_INVESTIGATION: 'true'
+  processing-cpu:
+    image: haven-processing-camera:3.10-local-cpu-v1
+    build:
+      context: .
+      dockerfile: services/property-processing/Dockerfile.camera-development
+    environment:
+      PROCESSING_ENABLE_CAMERA_INVESTIGATION: 'true'
+    mem_limit: 8g
+    cpus: 4
+    pids_limit: 128

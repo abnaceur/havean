@@ -1,0 +1,42 @@
+time="2026-10-13T21:05:35+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-processing-gpu-volume-init-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-2439ab69026e Creating 
+ Container haven-tests-run-2439ab69026e Created 
+
+Running 1 test using 1 worker
+
+Property capture inputs are uploaded and bound.
+  ✘  1 [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform (25.1m)
+
+
+  1) [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+
+    TimeoutError: page.waitForResponse: Timeout 240000ms exceeded while waiting for event "response"
+
+      75 |   const privacy=page.getByRole('region',{name:'Training frame privacy',exact:true});
+      76 |   await privacy.getByRole('checkbox',{name:'I inspected the selected frames and supplied their exclusions and masks',exact:true}).check();
+    > 77 |   const cameraQueued=page.waitForResponse(r=>r.url()===base+'/camera-processing'&&r.request().method()==='POST',{timeout:240000});
+         |                           ^
+      78 |   await privacy.getByRole('button',{name:'Reconstruct cameras from masked frames',exact:true}).click();
+      79 |   const cameraResponse=await cameraQueued;expect(cameraResponse.ok(),await cameraResponse.text()).toBe(true);
+      80 |   }
+        at /workspace/tests/e2e/digitization-2bhk-reconstruction.spec.ts:77:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Slow test file: [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts (25.1m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 failed
+    [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+

@@ -1,0 +1,251 @@
+ Image haven-popsift:0.9-cuda12.6.3-investigation-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 714B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.popsift
+#2 transferring dockerfile: 1.89kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [resolve 1/3] FROM docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09
+#5 resolve docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 391B done
+#6 DONE 0.0s
+
+#7 [resolve 2/3] RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates python3 cmake ninja-build gcc-13 g++-13 git libboost-filesystem-dev libboost-graph-dev libboost-program-options-dev libboost-system-dev libeigen3-dev libfreeimage-dev libflann-dev liblz4-dev libmetis-dev libgoogle-glog-dev libsqlite3-dev libglew-dev libceres-dev cuda-nvcc-12-6 cuda-cudart-dev-12-6 libcurand-dev-12-6 && mkdir /profile && dpkg-query -W -f='${Package}\t${Version}\n' > /profile/packages.tsv && apt-cache dumpavail > /profile/available-packages.txt
+#7 CACHED
+
+#8 [resolve 3/3] RUN /usr/local/cuda/bin/nvcc --version > /profile/nvcc-version.txt
+#8 CACHED
+
+#9 [popsift 1/5] COPY popsift-source.tar.gz /tmp/popsift-source.tar.gz
+#9 CACHED
+
+#10 [popsift 2/5] RUN echo 'dffccd79e079f679eed2b11595dc6f2698c44b4f592580a0555d092e64e589c2  /tmp/popsift-source.tar.gz' | sha256sum -c - && mkdir /source && python3 -c "import tarfile; tarfile.open('/tmp/popsift-source.tar.gz').extractall('/source',filter='data')"
+#10 CACHED
+
+#11 [popsift 3/5] COPY popsift-no-unused-cublas.patch /tmp/popsift-no-unused-cublas.patch
+#11 DONE 0.1s
+
+#12 [popsift 4/5] RUN git -C /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 apply --unidiff-zero /tmp/popsift-no-unused-cublas.patch
+#12 DONE 0.3s
+
+#13 [popsift 5/5] RUN cmake -S /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 -B /build-popsift -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCUDA_HOST_COMPILER=/usr/bin/g++-13 -DPopSift_CUDA_CC_LIST='75;86;89' -DPopSift_BUILD_EXAMPLES=OFF -DPopSift_BUILD_DOCS=OFF && cmake --build /build-popsift --parallel 2 && cmake --install /build-popsift
+#13 0.332 -- The CXX compiler identification is GNU 13.3.0
+#13 0.348 -- Detecting CXX compiler ABI info
+#13 0.411 -- Detecting CXX compiler ABI info - done
+#13 0.422 -- Check for working CXX compiler: /usr/bin/g++-13 - skipped
+#13 0.422 -- Detecting CXX compile features
+#13 0.423 -- Detecting CXX compile features - done
+#13 0.424 -- Building in Release configuration
+#13 0.426 -- BUILD_SHARED_LIBS ON
+#13 0.427 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+#13 0.492 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+#13 0.493 -- Found Threads: TRUE  
+#13 0.493 CMake Warning (dev) at CMakeLists.txt:76 (find_package):
+#13 0.493   Policy CMP0146 is not set: The FindCUDA module is removed.  Run "cmake
+#13 0.493   --help-policy CMP0146" for policy details.  Use the cmake_policy command to
+#13 0.493   set the policy and suppress this warning.
+#13 0.493 
+#13 0.493 This warning is for project developers.  Use -Wno-dev to suppress it.
+#13 0.493 
+#13 0.519 -- Found CUDA: /usr/local/cuda (found suitable version "12.6", minimum required is "7.0") 
+#13 0.520 -- CUDA Version is 12.6
+#13 0.520 -- Setting gencode flags: -gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_89,code=sm_89;-gencode;arch=compute_89,code=compute_89
+#13 0.551 
+#13 0.551 
+#13 0.551 ******************************************
+#13 0.551 Building configuration:
+#13 0.551 
+#13 0.551 -- PopSift version: 1.0.0
+#13 0.551 -- Build type: Release
+#13 0.551 -- Build Shared libs: ON
+#13 0.551 -- Build examples: OFF
+#13 0.551 -- Build documentation: OFF
+#13 0.551 -- Generate position independent code: ON
+#13 0.551 -- Use CUDA NVTX for profiling: OFF
+#13 0.551 -- Synchronize and check CUDA error after every kernel: OFF
+#13 0.551 -- Grid filtering: ON
+#13 0.551 -- Additional warning for CUDA nvcc: OFF
+#13 0.551 -- Compiling for CUDA CCs: 75;86;89
+#13 0.551 -- Install path: /usr/local
+#13 0.551 -- Testing step: OFF
+#13 0.551 
+#13 0.551 ******************************************
+#13 0.551 
+#13 0.551 
+#13 0.551 -- Configuring done (0.3s)
+#13 0.568 -- Generating done (0.0s)
+#13 0.571 -- Build files have been written to: /build-popsift
+#13 3.543 [1/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_constants.cu.o
+#13 4.703 [2/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_features.cu.o
+#13 6.780 [3/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_conf.cu.o
+#13 8.302 [4/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_gauss_filter.cu.o
+#13 10.71 [5/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_image.cu.o
+#13 12.57 [6/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_pyramid.cu.o
+#13 14.37 [7/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_octave.cu.o
+#13 16.52 [8/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_pyramid_build.cu.o
+#13 18.00 [9/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_pyramid_build_aa.cu.o
+#13 20.06 [10/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_pyramid_build_ai.cu.o
+#13 21.40 [11/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_pyramid_build_ra.cu.o
+#13 22.89 [12/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_extremum.cu.o
+#13 24.02 [13/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_pyramid_fixed.cu.o
+#13 27.80 [14/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_extrema.cu.o
+#13 28.76 [15/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_orientation.cu.o
+#13 32.07 [16/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_filtergrid.cu.o
+#13 32.07 FAILED: src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_filtergrid.cu.o /build-popsift/src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_filtergrid.cu.o 
+#13 32.07 cd /build-popsift/src/CMakeFiles/popsift.dir/popsift && /usr/bin/cmake -E make_directory /build-popsift/src/CMakeFiles/popsift.dir/popsift/. && /usr/bin/cmake -D verbose:BOOL=OFF -D build_configuration:STRING=Release -D generated_file:STRING=/build-popsift/src/CMakeFiles/popsift.dir/popsift/./popsift_generated_s_filtergrid.cu.o -D generated_cubin_file:STRING=/build-popsift/src/CMakeFiles/popsift.dir/popsift/./popsift_generated_s_filtergrid.cu.o.cubin.txt -P /build-popsift/src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_filtergrid.cu.o.Release.cmake
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(196): error: namespace "thrust" has no member "make_constant_iterator"
+#13 32.07                              thrust::make_constant_iterator(1),
+#13 32.07                                      ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(204): error: namespace "thrust" has no member "host_vector"
+#13 32.07       thrust::host_vector<int> h_cell_counts ( n );
+#13 32.07               ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(204): error: type name is not allowed
+#13 32.07       thrust::host_vector<int> h_cell_counts ( n );
+#13 32.07                           ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(204): error: identifier "h_cell_counts" is undefined
+#13 32.07       thrust::host_vector<int> h_cell_counts ( n );
+#13 32.07                                ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(205): error: namespace "thrust" has no member "host_vector"
+#13 32.07       thrust::host_vector<int> h_cell_permute ( n );
+#13 32.07               ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(205): error: type name is not allowed
+#13 32.07       thrust::host_vector<int> h_cell_permute ( n );
+#13 32.07                           ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(205): error: identifier "h_cell_permute" is undefined
+#13 32.07       thrust::host_vector<int> h_cell_permute ( n );
+#13 32.07                                ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(206): error: namespace "thrust" has no member "host_vector"
+#13 32.07       thrust::host_vector<int> h_cell_offsets ( n );
+#13 32.07               ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(206): error: type name is not allowed
+#13 32.07       thrust::host_vector<int> h_cell_offsets ( n );
+#13 32.07                           ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(206): error: identifier "h_cell_offsets" is undefined
+#13 32.07       thrust::host_vector<int> h_cell_offsets ( n );
+#13 32.07                                ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(207): error: namespace "thrust" has no member "host_vector"
+#13 32.07       thrust::host_vector<int> h_cell_limits ( n );
+#13 32.07               ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(207): error: type name is not allowed
+#13 32.07       thrust::host_vector<int> h_cell_limits ( n );
+#13 32.07                           ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(207): error: identifier "h_cell_limits" is undefined
+#13 32.07       thrust::host_vector<int> h_cell_limits ( n );
+#13 32.07                                ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(208): error: namespace "thrust" has no member "host_vector"
+#13 32.07       thrust::host_vector<int> cell_count_prefix_sums( n );
+#13 32.07               ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(208): error: type name is not allowed
+#13 32.07       thrust::host_vector<int> cell_count_prefix_sums( n );
+#13 32.07                           ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(208): error: identifier "cell_count_prefix_sums" is undefined
+#13 32.07       thrust::host_vector<int> cell_count_prefix_sums( n );
+#13 32.07                                ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(209): error: namespace "thrust" has no member "host_vector"
+#13 32.07       thrust::host_vector<int> cell_count_sumup ( n );
+#13 32.07               ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(209): error: type name is not allowed
+#13 32.07       thrust::host_vector<int> cell_count_sumup ( n );
+#13 32.07                           ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(209): error: identifier "cell_count_sumup" is undefined
+#13 32.07       thrust::host_vector<int> cell_count_sumup ( n );
+#13 32.07                                ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(230): error: namespace "thrust" has no member "host_vector"
+#13 32.07       thrust::host_vector<int> h_reverse_index(n);
+#13 32.07               ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(230): error: type name is not allowed
+#13 32.07       thrust::host_vector<int> h_reverse_index(n);
+#13 32.07                           ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(230): error: identifier "h_reverse_index" is undefined
+#13 32.07       thrust::host_vector<int> h_reverse_index(n);
+#13 32.07                                ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(249): error: namespace "thrust" has no member "count_if"
+#13 32.07       int ct = thrust::count_if( cell_count_sumup.begin(), cell_count_sumup.end(),
+#13 32.07                        ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(258): error: namespace "thrust" has no member "make_constant_iterator"
+#13 32.07                          thrust::make_constant_iterator<int>(newlimit),
+#13 32.07                                  ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(258): error: type name is not allowed
+#13 32.07                          thrust::make_constant_iterator<int>(newlimit),
+#13 32.07                                                         ^
+#13 32.07 
+#13 32.07 /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu(299): error: namespace "thrust" has no member "make_constant_iterator"
+#13 32.07                   thrust::make_constant_iterator(o),
+#13 32.07                           ^
+#13 32.07 
+#13 32.07 26 errors detected in the compilation of "/source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu".
+#13 32.07 CMake Error at popsift_generated_s_filtergrid.cu.o.Release.cmake:280 (message):
+#13 32.07   Error generating file
+#13 32.07   /build-popsift/src/CMakeFiles/popsift.dir/popsift/./popsift_generated_s_filtergrid.cu.o
+#13 32.07 
+#13 32.07 
+#13 32.67 [17/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_desc.cu.o
+#13 32.67 ninja: build stopped: subcommand failed.
+#13 ERROR: process "/bin/sh -c cmake -S /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 -B /build-popsift -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCUDA_HOST_COMPILER=/usr/bin/g++-13 -DPopSift_CUDA_CC_LIST='75;86;89' -DPopSift_BUILD_EXAMPLES=OFF -DPopSift_BUILD_DOCS=OFF && cmake --build /build-popsift --parallel 2 && cmake --install /build-popsift" did not complete successfully: exit code: 1
+------
+ > [popsift 5/5] RUN cmake -S /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 -B /build-popsift -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCUDA_HOST_COMPILER=/usr/bin/g++-13 -DPopSift_CUDA_CC_LIST='75;86;89' -DPopSift_BUILD_EXAMPLES=OFF -DPopSift_BUILD_DOCS=OFF && cmake --build /build-popsift --parallel 2 && cmake --install /build-popsift:
+32.07                           ^
+32.07 
+32.07 26 errors detected in the compilation of "/source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537/src/popsift/s_filtergrid.cu".
+32.07 CMake Error at popsift_generated_s_filtergrid.cu.o.Release.cmake:280 (message):
+32.07   Error generating file
+32.07   /build-popsift/src/CMakeFiles/popsift.dir/popsift/./popsift_generated_s_filtergrid.cu.o
+32.07 
+32.07 
+32.67 [17/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_desc.cu.o
+32.67 ninja: build stopped: subcommand failed.
+------
+Dockerfile.popsift:13
+
+--------------------
+
+  11 |     COPY popsift-no-unused-cublas.patch /tmp/popsift-no-unused-cublas.patch
+
+  12 |     RUN git -C /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 apply --unidiff-zero /tmp/popsift-no-unused-cublas.patch
+
+  13 | >>> RUN cmake -S /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 -B /build-popsift -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCUDA_HOST_COMPILER=/usr/bin/g++-13 -DPopSift_CUDA_CC_LIST='75;86;89' -DPopSift_BUILD_EXAMPLES=OFF -DPopSift_BUILD_DOCS=OFF && cmake --build /build-popsift --parallel 2 && cmake --install /build-popsift
+
+  14 |     USER 10001:10001
+
+  15 |     CMD ["/usr/local/cuda/bin/nvcc","--version"]
+
+--------------------
+
+failed to solve: process "/bin/sh -c cmake -S /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 -B /build-popsift -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCUDA_HOST_COMPILER=/usr/bin/g++-13 -DPopSift_CUDA_CC_LIST='75;86;89' -DPopSift_BUILD_EXAMPLES=OFF -DPopSift_BUILD_DOCS=OFF && cmake --build /build-popsift --parallel 2 && cmake --install /build-popsift" did not complete successfully: exit code: 1
+

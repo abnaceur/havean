@@ -1,0 +1,55 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-tenant-deletion.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 3672[2mms[22m[39m
+   [33m[2m✓[22m[39m tenant erasure fences active CPU work and removes originals and derivatives while retaining credential, account and organization history[33m 3324[2mms[22m[39m
+   [33m[2m✓[22m[39m a tenant tombstone retains an original still bound to another live tenant and never inherits that tenant access[33m 345[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 20:31:23
+[2m   Duration [22m 6.71s[2m (tests 57%, import 28%, transform 15%)[22m
+
+ Container haven-integration-tests-run-792837ee374d Creating 
+ Container haven-integration-tests-run-792837ee374d Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-tenant-deletion.spec.ts:5:1 › platform administrator explicitly erases a fresh tenant engine scope through server sessions and retains its tombstone after reload (5.0s)
+  ✓  2 [mobile] › tests/e2e/digitization-tenant-deletion.spec.ts:5:1 › platform administrator explicitly erases a fresh tenant engine scope through server sessions and retains its tombstone after reload (39.0s)
+
+
+  1) [desktop] › tests/e2e/digitization-tenant-deletion.spec.ts:5:1 › platform administrator explicitly erases a fresh tenant engine scope through server sessions and retains its tombstone after reload 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      11 |  await submit.click();await expect(panel).toContainText('Engine access is permanently revoked.');await expect(panel).toContainText('Online cleanup jobs have completed.');await expect(submit).toHaveCount(0);
+      12 |  const response=await page.request.get(`${origin}/api/v1/ops/organizations/${fixture.organizationId}/digitization-deletion`);expect(response.status()).toBe(200);expect((await response.json()).data.request).toMatchObject({pendingJobs:0,retainedOriginals:0});
+    > 13 |  for(const width of [320,390,768,1440]){await page.setViewportSize({width,height:900});expect(await panel.evaluate(node=>node.scrollWidth<=node.clientWidth+1)).toBe(true);}
+         |                                                                                                                                                                 ^
+      14 |  await panel.screenshot({path:`evidence/digitization/tenant-engine-deletion-${info.project.name}.png`});await page.reload();await panel.getByLabel('Organization for engine deletion').selectOption(fixture.organizationId);await expect(panel).toContainText('Engine access is permanently revoked.');
+      15 |  const anonymous=await browser.newContext();try{expect((await anonymous.request.get(`${origin}/api/v1/ops/organizations/${fixture.organizationId}/digitization-deletion`)).status()).toBe(401);}finally{await anonymous.close();}
+      16 | });
+        at /workspace/tests/e2e/digitization-tenant-deletion.spec.ts:13:161
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-tenant-deleti-107cd--its-tombstone-after-reload-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-tenant-deleti-107cd--its-tombstone-after-reload-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-tenant-deleti-107cd--its-tombstone-after-reload-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-tenant-deleti-107cd--its-tombstone-after-reload-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-tenant-deletion.spec.ts:5:1 › platform administrator explicitly erases a fresh tenant engine scope through server sessions and retains its tombstone after reload 
+  1 passed (45.7s)
+

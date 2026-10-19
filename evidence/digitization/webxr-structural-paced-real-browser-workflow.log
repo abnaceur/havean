@@ -1,0 +1,88 @@
+{"project":"desktop","privatePageCommitted":true}
+{"project":"mobile","privatePageCommitted":true}
+{"project":"desktop-floors","privatePageCommitted":true}
+{"project":"mobile-floors","privatePageCommitted":true}
+{"project":"desktop-dimensions","privatePageCommitted":true}
+{"project":"mobile-dimensions","privatePageCommitted":true}
+{"project":"conflicts","privatePageCommitted":true}
+{"project":"reuse","privatePageCommitted":true}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-render-reuse.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 2042[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C10 unchanged document pixels reuse real private storage/current lineage; media invalidates synthetic scene approval and preserves OCR dependency identity[33m 2040[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-trace-checkpoints.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 564[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-E07 two distinct current reviewers preserve their own checkpoints and the winning canonical reference on a real concurrent 409[33m 562[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 21:49:49
+[2m   Duration [22m 5.36s[2m (tests 51%, import 38%, transform 11%)[22m
+
+ Container haven-integration-tests-run-51b3580f7896 Creating 
+ Container haven-integration-tests-run-51b3580f7896 Created 
+
+Running 8 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (10.1s)
+  ✓  2 [desktop] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (8.4s)
+  ✓  3 [desktop] › tests/e2e/digitization-plan.spec.ts:45:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay (6.3s)
+  ✓  4 [desktop] › tests/e2e/digitization-plan.spec.ts:61:1 › HE-E10 empty dimensions require explicit user entries; saved provenance and a real private GLB survive reload (9.3s)
+  ✓  5 [desktop] › tests/e2e/digitization-plan.spec.ts:80:1 › HE-E11 actual structural viewer synchronizes room IDs, keyboard navigation and resource cleanup (5.1s)
+  ✓  6 [desktop] › tests/e2e/digitization-plan.spec.ts:83:1 › HE-E06 actual split/merge and selected floor/stair persistence keep vertical dimensions unknown (8.9s)
+  ✓  7 [desktop] › tests/e2e/digitization-plan.spec.ts:95:1 › HE-E07 undo/redo and private autosave survive reload for explicit trace recovery (8.7s)
+  ✓  8 [desktop] › tests/e2e/digitization-plan.spec.ts:102:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts (7.0s)
+
+  8 passed (1.1m)
+ Container haven-integration-tests-run-7a78c5c91ce9 Creating 
+ Container haven-integration-tests-run-7a78c5c91ce9 Created 
+
+Running 8 tests using 1 worker
+
+  ✓  1 [mobile] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (8.2s)
+  ✓  2 [mobile] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (6.9s)
+  ✓  3 [mobile] › tests/e2e/digitization-plan.spec.ts:45:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay (6.4s)
+  ✓  4 [mobile] › tests/e2e/digitization-plan.spec.ts:61:1 › HE-E10 empty dimensions require explicit user entries; saved provenance and a real private GLB survive reload (9.8s)
+  ✓  5 [mobile] › tests/e2e/digitization-plan.spec.ts:80:1 › HE-E11 actual structural viewer synchronizes room IDs, keyboard navigation and resource cleanup (4.9s)
+  ✓  6 [mobile] › tests/e2e/digitization-plan.spec.ts:83:1 › HE-E06 actual split/merge and selected floor/stair persistence keep vertical dimensions unknown (8.3s)
+  ✓  7 [mobile] › tests/e2e/digitization-plan.spec.ts:95:1 › HE-E07 undo/redo and private autosave survive reload for explicit trace recovery (7.9s)
+  ✘  8 [mobile] › tests/e2e/digitization-plan.spec.ts:102:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts (21.4s)
+
+
+  1) [mobile] › tests/e2e/digitization-plan.spec.ts:102:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Room capture checklist' }).getByRole('button', { name: 'Start room capture', exact: true })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'Room capture checklist' }).getByRole('button', { name: 'Start room capture', exact: true }) with timeout 15000ms
+      - waiting for getByRole('region', { name: 'Room capture checklist' }).getByRole('button', { name: 'Start room capture', exact: true })
+
+
+      113 |   const context=page.context();await page.close();reopened=await context.newPage();await reopened.goto(origin+path);const recovered=reopened.getByRole('region',{name:'Room capture checklist'});await expect(recovered.getByLabel('Entrance captured')).toBeChecked();await expect(recovered.getByLabel('Current capture room')).toHaveValue(saved.activeRoomId);await expect(recovered.getByText('1 linked clip uploads. Current room: 1 uploaded parts recovered.',{exact:true})).toBeVisible();
+      114 |   await recovered.getByRole('button',{name:'Finish capture checklist',exact:true}).click();await expect(recovered.getByText('Complete the checklist and uploads before closing capture.',{exact:true})).toBeVisible();
+    > 115 |   await recovered.getByRole('button',{name:'Discard capture checklist',exact:true}).click();await expect(recovered.getByRole('button',{name:'Start room capture',exact:true})).toBeVisible();
+          |                                                                                                                                                                                ^
+      116 |  }finally{const client=reopened?.request??page.context().request;await client.post(captureRoute+'/'+upload.id+'/cancel',{headers:{origin,'idempotency-key':crypto.randomUUID()},data:{version:upload.version}});await reopened?.close();}
+      117 | });
+      118 |
+        at /workspace/tests/e2e/digitization-plan.spec.ts:115:176
+
+    Error Context: test-results/digitization-plan-HE-F04-c-03c65--actual-uploaded-clip-parts-mobile/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-F04-c-03c65--actual-uploaded-clip-parts-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-F04-c-03c65--actual-uploaded-clip-parts-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile] › tests/e2e/digitization-plan.spec.ts:102:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts 
+  7 passed (1.3m)
+

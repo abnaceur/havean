@@ -1,0 +1,9 @@
+file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:43
+  try{const endpoint='http://'+name+':8333',until=Date.now()+30000;for(;;){try{docker(['exec','haven-integration-api-1','node','-e',"fetch(process.argv[1]).then(r=>process.exit(r.status<500?0:1)).catch(()=>process.exit(1))",endpoint]);break;}catch{/* Wait for the isolated S3 service within this deadline. */}if(Date.now()>until)throw Error('RECOVERY_FIXTURE_STORAGE_NOT_READY');await new Promise(resolve=>setTimeout(resolve,250));}
+                                                                                                                                                                                                                                                                                                                                               ^
+
+Error: RECOVERY_FIXTURE_STORAGE_NOT_READY
+    at prepareDatabase (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:43:336)
+    at async file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:79:35
+
+Node.js v20.20.0

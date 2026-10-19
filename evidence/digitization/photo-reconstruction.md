@@ -1,0 +1,36 @@
+# Capture-based 3D workflow correction — 13 October 2026
+
+O: User clarified that property 3D must be reconstructed from actual videos and photographs, rather than manually drawn structure or placed furniture. Earlier construction-studio work did not satisfy that primary interaction.
+
+R: Existing inventory-owned private source, processing, frame privacy, COLMAP and gsplat ports; `docs/digitization/specification.md`. The supplied specification is unchanged. The licensed TUM RGB-D freiburg1_xyz real-camera reference and its retained provenance are the functional inputs; these are not apartment photographs.
+
+P: `view=construction` and `view=reconstruction` now open video/photo reconstruction. The manual geometry studio is separately labelled at `view=manual-plan`. New private workspaces start in reconstruction. The agent can upload a set of JPEG/PNG photographs, prepare photo/video views, select/analyze views, inspect privacy exclusions/masks, recover cameras and run GPU scene training. Reviewable scene outputs use the same actor, current source revision, immutable artifacts and independent publication gates as before.
+
+P: Added `private-photo-frame-v1` to the existing confined CPU decoder. It verifies source MIME, corrects orientation, strips metadata, bounds derived images to 640 pixels, persists exact source fingerprints and never classifies a photo as a floor plan. Candidate listing admits only successful current private photo/video derivatives and deduplicates repeat preparation. Dataset analysis and masked training preparation revalidate each source according to its actual purpose. Separate source calibration groups avoid assuming that photographs share a lens; the existing 32-group budget is now checked before scheduling camera work.
+
+P: Migrations 228–229 extend the existing dataset and mask-recipe guards to the exact new photo profile and still-image provenance marker, and allow the prepared camera archive to retain an original photo anchor. The functional run exposed the older video-only SQL restriction; its actor/revision/checksum/privacy invariants remain in force.
+
+P: Multi-photo validation exposed expensive RLS joins and progress polling contention. Frame validation now uses separate bounded artifact/stage/run lookups, retaining each table's RLS; the observed lookup changed from 18,571 ms to 602 + 571 + 502 ms. Active camera/training status reads retain actor, creator, current-revision and live source-grant checks without repeatedly loading frame lineage; completed camera reports validate their input once rather than twice; processing mutations and completed reports still perform that validation. The existing 60-second preparation budget is unchanged. Query observations: `photo-reconstruction-query-profile.log`. Stalled test attempts were closed through scoped cancellation/runner tombstones; original captures were retained.
+
+P: Batch source preparation respects processing capacity. The first functional attempt exposed the four-run agency quota; the interface now waits and continues on that specific rejection. Preparation and camera jobs remain bounded. A later test timeout was increased to allow the queued native jobs to finish; no runtime timeout was removed.
+
+P: Real photo camera recovery exposed a video-only evaluation assumption: one image per calibration group provided no temporal holdouts. Still photographs now use a deterministic distinct-content-hash holdout, while video retains temporal blocks and excluded neighbours. The prepared manifest records capture kind; both runners recompute the same split. Duplicate still-image bytes are rejected. Geometric independence remains unverified.
+
+P: The next real camera run produced one valid all-16-view model plus a small overlapping hypothesis. The previous model-count rule treated these as disconnected coverage. Selection now uses a unique advisory-passing connected model only when it contains every selected view; partial/disconnected and ambiguous complete alternatives remain unreduced. Original candidates remain in private diagnostics. One focused selection check passes (`photo-reconstruction-model-selection-test.log`); CPU activation is recorded in `photo-reconstruction-model-selection-runtime.log`.
+
+P: Collapsed capture-upload and selection panels now mount on demand instead of issuing unused source/frame requests during scene/status loading. Unknown GPU status is shown as loading rather than incorrectly disabled. The functional browser wait allows the bounded authenticated loading to finish.
+
+P: Actual photo-derived GPU result: 500 steps, 3,300 splats, 17.369902 seconds, zero OOM fallbacks, two 105,600-byte viewer tiers and a 185,160-byte PLY. Held-out PSNR is 21.7381 / 21.2731 dB; these are observed metrics, not visual approval. Machine-readable result: `photo-reconstruction-gpu-result.json`. Camera run `dd6ce536-2299-46be-96a8-6054db80586c`; training/export run `e2af6d4a-fbaf-41ee-b271-beb94611eeaf`.
+
+P: The actual viewer visibly shows the captured desk and contents; it is rough and incomplete. The canvas now precedes review forms and held-out images. Direct private preview as Agent Demo: http://localhost:8089/ops/digitization?workspace=b448848e-bf1a-47e5-9541-2396ebfe3277&view=scene .
+
+## Minimum evidence
+
+- `tests/e2e/digitization-photo-reconstruction.spec.ts`, run in Docker Compose, exercises normal agent/BFF upload of 16 real-camera reference photographs and the actual CPU/GPU workflow, with no geometry or furniture records. Retained workspace: `b448848e-bf1a-47e5-9541-2396ebfe3277`. Final resumed browser journey passes in 1.5 minutes, including the main workflow, loaded 500-step scene, absence of manual geometry, rejection of foreign-workspace frame selection, and automatic rendering at the direct scene link. See `photo-reconstruction-functional.log` for the observed outcome and run IDs; `photo-reconstruction-scene.png` is the actual canvas. Earlier failed attempts remain separately recorded.
+- Focused API/ops types, changed-file lint and canonical contracts: `photo-reconstruction-api-types.log`, `photo-reconstruction-ops-types.log`, `photo-reconstruction-lint.log`, `photo-reconstruction-contracts-check.log`.
+- Two focused photo/video split checks pass: `photo-reconstruction-split-tests.log` (2 passed).
+- Migration: `photo-reconstruction-migration.log`.
+- CPU runner build and activation: `photo-reconstruction-runtime.log`. Both runners were rebuilt with the capture-kind/evaluation fix; pinned native dependencies remain unchanged. GPU build/activation: `photo-reconstruction-gpu-build.log`, `photo-reconstruction-gpu-activation.log`. Active immutable GPU image: `sha256:429b0050d0310de61c62c30c4d1b14d32fd845e5652dda57f0848272054b0512`.
+- Usage and input limits: [capture reconstruction](../../docs/digitization/CAPTURE-RECONSTRUCTION.md).
+
+V: No complete customer property capture was supplied. The real reference is a desk-area scan, not a whole apartment, editable semantic furniture, measured CAD, independent visual approval or production admission. No public listing has been replaced. The reconstruction represents observed surfaces; completeness and metric scale require additional evidence. VR remains paused. No task newly marked done; root120/120, engine56/95,37 non-VR unfinished and2pausedVR.

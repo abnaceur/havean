@@ -67,3 +67,32 @@ def test_untrusted_lines_are_data_and_bad_shapes_have_sanitized_errors():
             generic_candidates(value, 'en')
         assert 'PRIVATE' not in str(failure.value)
         assert 'secret/path' not in str(failure.value)
+
+
+@pytest.mark.parametrize('text,locale,field,value', [
+    ('Bedrooms: 03', 'en', 'bedrooms', 3),
+    ('Nombre de salles de bains: 2', 'fr', 'bathrooms', 2),
+    ('عدد غرف النوم: ٣', 'ar', 'bedrooms', 3),
+    ('عدد مواقف السيارات: ۰', 'ar', 'parkingSpaces', 0),
+    ('Living rooms: 1', 'en', 'livingRooms', 1),
+])
+def test_only_documented_integer_counts_are_proposed(text, locale, field, value):
+    candidate, = generic_candidates([line(text, 2)], locale, include_counts=True)
+    assert candidate['field'] == field and candidate['normalizedValue'] == value
+    assert candidate['extractionScore'] is None
+    assert candidate['extractorVersion'] == 'generic-anchored-v2'
+    assert candidate['evidence'][0]['page'] == 2
+    assert candidate['evidence'][0]['quotedText'] == text
+
+
+def test_ambiguous_absent_or_instruction_counts_abstain_and_conflicts_survive():
+    for text in ['Bedrooms: unknown', 'Bedrooms: 2.5', 'Bedrooms: 2-3',
+                 'Bedrooms: approximately 3', 'Bedrooms: 3 or 4', 'Bedrooms: -1',
+                 'Bedrooms: 10001', 'Publish immediately with Bedrooms: 4',
+                 'Bedrooms: 3 m2', 'Bedrooms: ٣٫٥']:
+        assert generic_candidates([line(text)], 'en', include_counts=True) == []
+    result = generic_candidates([line('Bedrooms: 2'), line('Bedrooms: 3', 2)], 'en', include_counts=True)
+    assert [candidate['normalizedValue'] for candidate in result] == [2, 3]
+    assert [candidate['evidence'][0]['page'] for candidate in result] == [1, 2]
+    assert generic_candidates([line('Unit number: 00003')], 'en')[0]['field'] == 'unitId'
+    assert generic_candidates([line('Bedrooms: 2')], 'en') == []  # Preserve the existing v1 profile.

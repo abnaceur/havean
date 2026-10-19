@@ -1,0 +1,49 @@
+time="2026-10-13T15:37:22+04:00" level=warning msg="Found orphan containers ([haven-tests-run-9aec338d1758 haven-processing-cpu-1 haven-processing-gpu-1 haven-processing-gpu-volume-init-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-bd78830a13c1 Creating 
+ Container haven-tests-run-bd78830a13c1 Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-property-reconstruction.spec.ts:5:1 › generated furnished property video reconstructs through COLMAP and GPU without supplied geometry (1.1m)
+
+
+  1) [desktop] › tests/e2e/digitization-property-reconstruction.spec.ts:5:1 › generated furnished property video reconstructs through COLMAP and GPU without supplied geometry 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Record or upload room clip', exact: true }).getByRole('status').filter({ hasText: 'Clip uploaded privately and quarantined' })
+    Expected: visible
+    Timeout: 60000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'Record or upload room clip', exact: true }).getByRole('status').filter({ hasText: 'Clip uploaded privately and quarantined' }) with timeout 60000ms
+      - waiting for getByRole('region', { name: 'Record or upload room clip', exact: true }).getByRole('status').filter({ hasText: 'Clip uploaded privately and quarantined' })
+
+
+      25 |   await upload.getByLabel('Clip rights and source',{exact:true}).fill('Original generated studio apartment capture: living, dining, kitchen and sleeping areas. Synthetic property, all views rendered from one coherent scene.');
+      26 |   await upload.getByRole('checkbox',{name:'I am authorized to capture and upload this property.'}).check();await upload.getByRole('button',{name:'Upload private clip',exact:true}).click();
+    > 27 |   await expect(upload.getByRole('status').filter({hasText:'Clip uploaded privately and quarantined'})).toBeVisible({timeout:60000});
+         |                                                                                                        ^
+      28 |   const clips=page.getByRole('region',{name:'Validate uploaded room clips',exact:true}),uploads=(await (await page.request.get(base+'/capture-uploads')).json()).data;
+      29 |   await clips.getByRole('combobox',{name:'Completed capture clip',exact:true}).selectOption(uploads.find((x:any)=>!seen.has(x.id)).id);for(const item of uploads)seen.add(item.id);
+      30 |   await clips.getByRole('button',{name:'Scan private clip',exact:true}).click();await expect(clips.getByRole('status')).toContainText('The exact private clip passed scanning.',{timeout:60000});
+        at /workspace/tests/e2e/digitization-property-reconstruction.spec.ts:27:104
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-property-reco-7981b-U-without-supplied-geometry-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-property-reco-7981b-U-without-supplied-geometry-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-property-reco-7981b-U-without-supplied-geometry-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-property-reco-7981b-U-without-supplied-geometry-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-property-reconstruction.spec.ts:5:1 › generated furnished property video reconstructs through COLMAP and GPU without supplied geometry 
+

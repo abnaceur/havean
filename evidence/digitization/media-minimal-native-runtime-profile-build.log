@@ -1,0 +1,87 @@
+ Image haven-processing-tests-cpu Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 608B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.cpu
+#2 transferring dockerfile: 3.06kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 192B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 43.93kB done
+#5 DONE 0.1s
+
+#6 [media-build 1/8] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#6 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#6 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.1s done
+#6 DONE 0.1s
+
+#7 [cpu  2/11] WORKDIR /opt/processing
+#7 CACHED
+
+#8 [media-build 6/8] WORKDIR /build/ffmpeg-7.1.5
+#8 CACHED
+
+#9 [media-build 2/8] RUN apt-get update && apt-get install -y --no-install-recommends gcc=4:14.2.0-1 gcc-14=14.2.0-19 make=4.4.1-2 zlib1g-dev=1:1.3.dfsg+really1.3.1-1+b1 && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [media-build 4/8] COPY services/property-processing/media-build.json /build/profile.json
+#10 CACHED
+
+#11 [media-build 3/8] WORKDIR /build
+#11 CACHED
+
+#12 [media-build 5/8] RUN --mount=type=bind,source=services/property-processing/.media-sources,target=/sources,readonly python -c "import hashlib,json,pathlib,tarfile; p=json.load(open('/build/profile.json')); f=pathlib.Path('/sources/ffmpeg-7.1.5.tar.xz'); assert hashlib.sha256(f.read_bytes()).hexdigest()==p['sourceSha256']; tarfile.open(f).extractall('/build',filter='data')"
+#12 CACHED
+
+#13 [media-build 7/8] RUN python -c "import json,subprocess; p=json.load(open('/build/profile.json')); subprocess.run(['./configure','--prefix=/opt/media',*p['flags']],check=True)" && make -j2 && make install
+#13 CACHED
+
+#14 [media-build 8/8] RUN python -c "import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))"
+#14 0.307 Traceback (most recent call last):
+#14 0.307   File "<string>", line 1, in <module>
+#14 0.307   File "/usr/local/lib/python3.12/pathlib.py", line 1019, in read_bytes
+#14 0.308     with self.open(mode='rb') as f:
+#14 0.308          ^^^^^^^^^^^^^^^^^^^^
+#14 0.308   File "/usr/local/lib/python3.12/pathlib.py", line 1013, in open
+#14 0.308     return io.open(self, mode, buffering, encoding, errors, newline)
+#14 0.308            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#14 0.308 FileNotFoundError: [Errno 2] No such file or directory: '/opt/media/bin/ffmpeg'
+#14 ERROR: process "/bin/sh -c python -c \"import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))\"" did not complete successfully: exit code: 1
+------
+ > [media-build 8/8] RUN python -c "import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))":
+0.307 Traceback (most recent call last):
+0.307   File "<string>", line 1, in <module>
+0.307   File "/usr/local/lib/python3.12/pathlib.py", line 1019, in read_bytes
+0.308     with self.open(mode='rb') as f:
+0.308          ^^^^^^^^^^^^^^^^^^^^
+0.308   File "/usr/local/lib/python3.12/pathlib.py", line 1013, in open
+0.308     return io.open(self, mode, buffering, encoding, errors, newline)
+0.308            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+0.308 FileNotFoundError: [Errno 2] No such file or directory: '/opt/media/bin/ffmpeg'
+------
+Dockerfile.cpu:8
+
+--------------------
+
+   6 |     WORKDIR /build/ffmpeg-7.1.5
+
+   7 |     RUN python -c "import json,subprocess; p=json.load(open('/build/profile.json')); subprocess.run(['./configure','--prefix=/opt/media',*p['flags']],check=True)" && make -j2 && make install
+
+   8 | >>> RUN python -c "import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))"
+
+   9 |     
+
+  10 |     FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS cpu
+
+--------------------
+
+failed to solve: process "/bin/sh -c python -c \"import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))\"" did not complete successfully: exit code: 1
+

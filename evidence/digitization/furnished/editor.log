@@ -1,0 +1,40 @@
+time="2026-10-13T05:47:28+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-998dc4c59de4 Creating 
+ Container haven-tests-run-998dc4c59de4 Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-furnishings-editor.spec.ts:4:1 › agent loads saved property objects and invalid or stale object edits preserve the saved revision (2.0m)
+
+
+  1) [desktop] › tests/e2e/digitization-furnishings-editor.spec.ts:4:1 › agent loads saved property objects and invalid or stale object edits preserve the saved revision 
+
+    Test timeout of 120000ms exceeded.
+
+    Error: apiRequestContext._wrapApiCall: ENOENT: no such file or directory, copyfile '/workspace/test-results/.playwright-artifacts-0/traces/85c7ebe09de3bb2a2966-61c5387f79f3d9be3e2d-recording1.network' -> '/workspace/test-results/.playwright-artifacts-0/traces/85c7ebe09de3bb2a2966-61c5387f79f3d9be3e2d-recording1-pwnetcopy-1.network'
+
+    Error: browserContext._wrapApiCall: ENOENT: no such file or directory, open '/workspace/test-results/.playwright-artifacts-0/traces/85c7ebe09de3bb2a2966-61c5387f79f3d9be3e2d.network'
+
+    Error: locator.selectOption: Test ended.
+    Call log:
+      - waiting for getByRole('region', { name: 'Property furnishings', exact: true }).getByLabel('Object to edit', { exact: true })
+
+
+       8 |  const read=async()=>{const response=await page.request.get('http://localhost:8089/api/v1'+path);expect(response.ok()).toBe(true);return (await response.json()).data;},before=await read();expect(before.geometry.furnishings).toHaveLength(46);
+       9 |  await page.goto(`http://localhost:8089/ops/digitization?workspace=${prior.engineId}`);const editor=page.getByRole('region',{name:'Property furnishings',exact:true});await expect(editor).toBeVisible({timeout:30000});await expect(editor.getByText('46 objects in this draft',{exact:true})).toBeVisible();
+    > 10 |  await editor.getByLabel('Object to edit',{exact:true}).selectOption('object-2');await expect(editor.getByLabel('Object label',{exact:true})).toHaveValue('Linen three-seat sofa');await editor.getByLabel('Object height (metres)',{exact:true}).fill('9');await editor.getByRole('button',{name:'Update object',exact:true}).click();
+         |                                                         ^
+      11 |  await editor.getByLabel('Object source note',{exact:true}).fill('Functional rejection check: intentionally invalid object height.');await editor.getByRole('checkbox').check();const rejected=page.waitForResponse(r=>r.url().endsWith('/geometry/furnishings')&&r.request().method()==='POST');await editor.getByRole('button',{name:'Save property furnishings',exact:true}).click();expect((await rejected).status()).toBe(422);await expect(editor.getByRole('alert')).toContainText('ceiling');expect((await read()).geometry.id).toBe(before.geometry.id);
+      12 |  const stale=await apiRequest(page,path+'/furnishings',{version:before.workspaceVersion-1,geometryRevisionId:before.geometry.id,note:'Stale author input functional check.',suppliedObjectsConfirmed:true,furnishings:[]});expect(stale.status()).toBe(409);expect((await read()).geometry.furnishings).toHaveLength(46);
+      13 |  await page.reload();await editor.getByLabel('Object to edit',{exact:true}).selectOption('object-2');await expect(editor.getByLabel('Object height (metres)',{exact:true})).toHaveValue('0.9');
+        at /workspace/tests/e2e/digitization-furnishings-editor.spec.ts:10:57
+
+    Error: ENOENT: no such file or directory, open '/workspace/test-results/.playwright-artifacts-0/672770aafb11fd93f06f86f95c2be12c.zip'
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-furnishings-e-198bd-preserve-the-saved-revision-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-furnishings-editor.spec.ts:4:1 › agent loads saved property objects and invalid or stale object edits preserve the saved revision 
+

@@ -1,3 +1,4 @@
+import {validatePropertyModel} from './property-model.js';
 import {Controller,Post,Put,Get,Param,Req,Res,Body,Inject} from '@nestjs/common';
 import type {FastifyRequest,FastifyReply} from 'fastify';
 import {z} from 'zod';
@@ -16,10 +17,10 @@ export class MediaController{
  constructor(@Inject(Identity) private readonly identity:Identity){}
  @Post('media/upload-intents') async intent(@Req() req:FastifyRequest,@Body() body:unknown){
   const a=await this.identity.actor(req);
-  const x=z.object({mime:z.enum(['image/jpeg','image/png','application/pdf','video/mp4','video/webm']),size:z.number().int().positive().max(40*1024*1024),rights:z.string().min(5).max(300),visibility:z.enum(['private','public']),purpose:z.enum(['photo','floor_plan','panorama','video','document']).optional()}).parse(body);
+  const x=z.object({mime:z.enum(['image/jpeg','image/png','application/pdf','video/mp4','video/webm','model/gltf-binary']),size:z.number().int().positive().max(40*1024*1024),rights:z.string().min(5).max(300),visibility:z.enum(['private','public']),purpose:z.enum(['photo','floor_plan','panorama','video','document','model_3d']).optional()}).parse(body);
   const purpose=x.purpose||(x.mime.startsWith('video/')?'video':x.mime==='application/pdf'?'document':'photo');
-  const limit=purpose==='video'?40*1024*1024:purpose==='panorama'||purpose==='document'?20*1024*1024:10*1024*1024;
-  if(x.size>limit||(purpose==='video'?!x.mime.startsWith('video/'):purpose==='document'?x.mime!=='application/pdf':!x.mime.startsWith('image/'))||(x.visibility==='public'&&purpose==='document'))fail(400,'Unsupported file type, purpose, visibility or upload size');
+  const limit=purpose==='model_3d'?32*1024*1024:purpose==='video'?40*1024*1024:purpose==='panorama'||purpose==='document'?20*1024*1024:10*1024*1024;
+  if(x.size>limit||(purpose==='model_3d'?x.mime!=='model/gltf-binary':purpose==='video'?!x.mime.startsWith('video/'):purpose==='document'?!['application/pdf','image/jpeg','image/png'].includes(x.mime):!x.mime.startsWith('image/'))||(x.visibility==='public'&&purpose==='document'))fail(400,'Unsupported file type, purpose, visibility or upload size');
   return transaction(a,async c=>{const r=await c.query('INSERT INTO media_assets(owner_id,object_key,mime,size,rights,visibility,purpose) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING id,version',[a.id,crypto.randomUUID(),x.mime,x.size,x.rights,x.visibility,purpose]);const id=r.rows[0].id,signature=encrypt({assetId:id,actorId:a.id,assetVersion:r.rows[0].version,expires:Date.now()+600000});return data({id,uploadUrl:'/api/v1/media/'+id+'/content?signature='+signature,method:'PUT',expiresIn:600});});
  }
  @Get('media/:id/status') async status(@Req() req:FastifyRequest,@Param('id') id:string){const a=await this.identity.actor(req);return transaction(a,async c=>{const m=(await c.query('SELECT id,status,purpose,width,height,duration,scan_at,version FROM media_assets WHERE id=$1 AND owner_id=$2',[id,a.id])).rows[0];if(!m)fail(404,'Owned upload not found');return data(m);});}
@@ -31,13 +32,17 @@ export class MediaController{
   return transaction(a,async c=>{
    const m=(await c.query("SELECT * FROM media_assets WHERE id=$1 AND owner_id=$2 AND status='quarantined' AND created_at>now()-interval '1 hour' FOR UPDATE",[id,a.id])).rows[0];
    if(!m)fail(404,'Valid upload intent not found');
+   if(m.digitization_capture_id)fail(409,'Capture originals use their dedicated scan and admission port.','CAPTURE_SOURCE_UPLOAD_PORT_REQUIRED');
    if(signature.assetVersion!==undefined&&m.version!==signature.assetVersion)fail(409,'Upload changed');if(signature.conversationId){const context=(await c.query("SELECT c.version FROM conversations c JOIN conversation_uploads cu ON cu.conversation_id=c.id AND cu.asset_id=$2 AND cu.creator_id=$3 WHERE c.id=$1 AND c.state='active' AND conversation_scope(c.id) FOR SHARE OF c",[signature.conversationId,id,a.id])).rows[0];if(!context||context.version!==signature.conversationVersion)fail(409,'Conversation access changed before attachment upload');}
    if(body.length!==Number(m.size)||body.length>40*1024*1024||req.headers['content-type']!==m.mime)fail(400,'File size or content type does not match the upload intent');
    try{await s3.send(new CreateBucketCommand({Bucket:bucket}));}catch(e:any){if(!['BucketAlreadyOwnedByYou','BucketAlreadyExists'].includes(e.name)&&e.$metadata?.httpStatusCode!==409)throw e;}
    await s3.send(new PutObjectCommand({Bucket:bucket,Key:'quarantine/'+m.object_key,Body:body,ContentType:m.mime}));
    await scanFile(body);
    const variants:Record<string,string>={};let width:number|undefined,height:number|undefined,duration:number|undefined;
-   if(m.mime.startsWith('image/')){
+   if(m.purpose==='model_3d'){
+    await validatePropertyModel(body);variants.model='variants/'+m.object_key+'.glb';
+    await s3.send(new PutObjectCommand({Bucket:bucket,Key:variants.model,Body:body,ContentType:'model/gltf-binary'}));
+   }else if(m.mime.startsWith('image/')){
     let variant:Buffer,thumbnail:Buffer;
     try{
      const image=sharp(body,{limitInputPixels:40e6,failOn:'warning'}),metadata=await image.metadata();
@@ -61,6 +66,10 @@ export class MediaController{
   });
  }
  @Get('media/:id/view') async view(@Req() req:FastifyRequest,@Param('id') id:string,@Res() reply:FastifyReply){const a=req.headers.cookie?.includes('haven_session=')?await this.identity.actor(req).catch(()=>null):null;return transaction(a,async c=>{const m=(await c.query("SELECT variants FROM media_assets WHERE id=$1 AND visibility='public' AND status='approved' AND scan_at IS NOT NULL",[id])).rows[0];if(!m?.variants.display)fail(404,'Public image not found');const result=await s3.send(new GetObjectCommand({Bucket:bucket,Key:m.variants.display}));reply.header('Content-Type','image/webp');reply.header('Cache-Control','private,no-store');return reply.send(Buffer.from(await result.Body!.transformToByteArray()));});}
+ @Get('media/:id/model') async model(@Req() req:FastifyRequest,@Param('id') id:string,@Res() reply:FastifyReply){const a=req.headers.cookie?.includes('haven_session=')?await this.identity.actor(req).catch(()=>null):null;return transaction(a,async c=>{
+  const m=(await c.query("SELECT variants FROM media_assets WHERE id=$1 AND purpose='model_3d' AND visibility='public' AND status='approved' AND scan_at IS NOT NULL",[id])).rows[0];if(!m?.variants.model)fail(404,'Property model not found');
+  const result=await s3.send(new GetObjectCommand({Bucket:bucket,Key:m.variants.model}));return reply.header('Content-Type','model/gltf-binary').header('Cache-Control','private,no-store').header('Content-Disposition','inline; filename=property-plan.glb').send(Buffer.from(await result.Body!.transformToByteArray()));
+ });}
  @Get('media/:id/video') async video(@Req() req:FastifyRequest,@Param('id') id:string,@Res() reply:FastifyReply){const a=req.headers.cookie?.includes('haven_session=')?await this.identity.actor(req).catch(()=>null):null;return transaction(a,async c=>{
   const m=(await c.query("SELECT variants FROM media_assets WHERE id=$1 AND visibility='public' AND status='approved' AND scan_at IS NOT NULL AND purpose='video'",[id])).rows[0];if(!m?.variants.video)fail(404,'Public video not found');
   const head=await s3.send(new HeadObjectCommand({Bucket:bucket,Key:m.variants.video})),size=Number(head.ContentLength);

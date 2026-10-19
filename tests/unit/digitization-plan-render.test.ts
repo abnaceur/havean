@@ -1,4 +1,5 @@
 import {expect,it} from 'vitest';
+import {createHash} from 'node:crypto';
 import {createRequire} from 'node:module';
 const sharp=createRequire(new URL('../../apps/api/package.json',import.meta.url))('sharp');
 import type {DigitizationGeometryRevision} from '../../packages/contracts/src/index';
@@ -6,6 +7,16 @@ import {renderPlanSvg,renderPlanPng} from '../../apps/api/src/inventory/digitiza
 const source={kind:'manual' as const,actorId:'10000000-0000-4000-8000-000000000001',note:'Synthetic authored test geometry'};
 const polygon=[{x:0,y:0},{x:10,y:0},{x:10,y:10},{x:0,y:10}];
 const geometry:DigitizationGeometryRevision={schemaVersion:2,id:source.actorId,organizationId:source.actorId,targetId:source.actorId,revision:1,parentRevision:null,coordinateSystem:'right-handed-z-up',unit:'px',scaleStatus:'unscaled',sourceAssets:[],sources:[source],scaleAnchors:[],floors:[{id:'ground',name:'Ground',elevation:'0',height:null,source}],rooms:[{id:'living',floorId:'ground',name:'Living <script>alert(1)</script>',type:'living',polygon,holes:[[{x:2,y:2},{x:4,y:2},{x:4,y:4},{x:2,y:4}]],panoramaSceneId:null,source,areaBasis:'geometry_room_net'}],walls:[{id:'south',floorId:'ground',start:{x:0,y:0},end:{x:10,y:0},thickness:'0.2',height:null,source,confirmed:true}],openings:[{id:'door',wallId:'south',offset:'2',width:'2',type:'door',sill:null,height:null,source,confirmed:true}],stairs:[],review:{status:'pending',actorId:null}};
+it('confirmed synthetic metric reference preserves exact topology/dimensions and deterministic multilingual pixels with the pinned embedded font',async()=>{
+ const reference:DigitizationGeometryRevision={...geometry,unit:'m',scaleStatus:'measured',review:{status:'confirmed',actorId:'10000000-0000-4000-8000-000000000002'},scaleAnchors:[{id:'reference-edge',points:[{x:0,y:0},{x:10,y:0}],distanceMetres:'10',source,reviewerId:source.actorId,status:'confirmed'}],rooms:[{...geometry.rooms[0],name:'Living / Séjour / غرفة معيشة'}]};
+ const svg=renderPlanSvg(reference,'ground');expect(svg).toContain('96.00 m² net');expect(svg).toContain('Measured scale anchors');expect(svg).not.toContain(' — Draft');
+ expect(svg).toContain('M 0 0 L 10 0 L 10 -10 L 0 -10 Z');expect(svg).toContain('M 2 -2 L 4 -2 L 4 -4 L 2 -4 Z');
+ expect(svg).toContain('data:font/ttf;base64,');expect(svg).toContain('Bitstream');expect(svg).not.toContain('src:url(http');
+ const first=await renderPlanPng(reference,'ground',512),second=await renderPlanPng(reference,'ground',512);
+ expect(createHash('sha256').update(first).digest('hex')).toBe(createHash('sha256').update(second).digest('hex'));
+ const decoded=await sharp(first).metadata();expect(decoded.width).toBeLessThanOrEqual(512);expect(decoded.height).toBeLessThanOrEqual(512);
+ expect(reference.floors[0].height).toBeNull();expect(reference.walls[0].height).toBeNull();
+});
 it('renders deterministic topology with canonical XY projection, holes, approved openings and escaped labels',()=>{
  const svg=renderPlanSvg(geometry,'ground');expect(svg).toBe(renderPlanSvg(geometry,'ground'));
  expect(svg).toContain('fill-rule="evenodd"');expect(svg).toContain('M 0 0 L 10 0 L 10 -10 L 0 -10 Z');

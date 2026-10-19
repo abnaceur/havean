@@ -1,0 +1,13 @@
+# Full-screen property media experience — 18 October 2026
+
+O: Current application media viewers, approved-media API responses, and authored synthetic media fixtures. Existing plan-derived room maps and linked panorama navigation are retained.
+
+R: User requests an improved full-screen experience for pictures, video, plans, realistic 3D and 360° displays. The specification requires keyboard/swipe gallery navigation, visible focus, modal focus return, accessible controls and narrow mobile layouts. No external visual parity is claimed.
+
+P: Shared edge-to-edge dialog with property context, counted format navigation, persistent close, optional browser full screen, image zoom/drag/fit, keyboard/swipe browsing, thumbnail strip, native video playback, directly opened 3D view with orbit/zoom/reset and studio environment lighting. Existing 360°/plan room navigation is embedded in the same viewing shell. Standalone photo galleries and previously approved reconstructed models/tours also have full-window presentation. 3D quality comes from supplied geometry/materials; no automatic reconstruction or photorealism certification. Digitalization engine remains disabled.
+
+V: `browser-final.log`: 2/2 desktop/mobile checks pass on the local Docker Compose application. All five formats switch inside a full-viewport dialog; image zoom/keyboard navigation, video load without autoplay, GLB and panorama rendering, panorama room changes, modal close/focus return and 320px overflow checks pass. Axe scans of the viewer and information panel have no serious/critical violations. Media responses in these focused UI checks use explicitly authored fixture assets; they are not production-content evidence.
+
+V: `upload-regression.log`: the actual agent draft → scanned uploads → independent review → public 3D display journey passes (1/1), including required-media and disabled-engine checks. `types-final.log` passes UI/web/ops types; `lint-final.log` passes focused lint. `fullscreen-desktop.png` and `fullscreen-mobile.png` were visually inspected; a white close-button background found in the first captures was removed. Final captures reflect the corrected styling. No reference parity, photorealistic reconstruction or physical-device certification is claimed.
+
+V: `browser.log` records an initial desktop teardown failure caused by concurrent tests sharing Playwright artifact paths; the mobile test passed. The browser run was repeated with isolated output paths, and `browser-verified.log` and `browser-final.log` both pass 2/2. Processing containers remain stopped. Existing 120/120 specification tasks and 56/95 engine acceptance counts are unchanged; unfinished release gates continue to fail.

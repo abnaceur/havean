@@ -1,0 +1,16 @@
+time="2026-10-09T23:44:45+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-ocr-confined-investigation-run-4d9e7502195d Creating 
+ Container haven-ocr-confined-investigation-run-4d9e7502195d Created 
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/processing/property_processing/ocr_cpu.py", line 83, in <module>
+    print(json.dumps(recognize(args.directory,args.name,args.locale,args.sha256,args.page),ensure_ascii=False))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/ocr_cpu.py", line 71, in recognize
+    return _recognize(directory,name,locale,source_sha256,page)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/ocr_cpu.py", line 42, in _recognize
+    raise ValueError('Private OCR source checksum or byte budget mismatch')
+ValueError: Private OCR source checksum or byte budget mismatch
+

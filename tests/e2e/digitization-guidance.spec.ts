@@ -1,0 +1,11 @@
+import {test,expect,chromium} from '@playwright/test';
+import {writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {login,apiRequest} from '../support/browser';
+test('HE-F06 blur guidance measures actual flat video pixels and leaves coverage unknown',async()=>{
+ // Self-authored neutral raw YUV input, not customer capture or physical camera evidence.
+ const fixture=resolve('infra/generated/integration/flat-capture.y4m');writeFileSync(fixture,Buffer.concat([Buffer.from('YUV4MPEG2 W128 H128 F30:1 Ip A1:1 C420\nFRAME\n'),Buffer.alloc(128*128*3/2,128)]));
+ const browser=await chromium.launch({args:['--use-fake-ui-for-media-stream','--use-fake-device-for-media-stream','--use-file-for-fake-video-capture='+fixture]}),context=await browser.newContext(),page=await context.newPage();try{
+  await login(page,'agent','http://localhost:8089','/ops');const created=await apiRequest(page,'/ops/digitization-intakes',{authorityConfirmed:true});expect(created.ok()).toBe(true);const workspace=(await created.json()).data;await page.goto('http://localhost:8089/ops/digitization?workspace='+workspace.id);await page.getByRole('button',{name:'Start room capture',exact:true}).click();const form=page.getByRole('region',{name:'Record or upload room clip'});await form.getByRole('button',{name:'Record room clip',exact:true}).click();const guidance=form.getByRole('complementary',{name:'Capture guidance'});await expect(guidance.getByText('This frame appears blurred or has little texture. Slow down, refocus and capture textured surfaces.',{exact:true})).toBeVisible();await expect(guidance.locator('[data-frame-variance]')).toHaveAttribute('data-frame-variance','0.000');await expect.poll(async()=>Number(await guidance.locator('[data-frame-time]').getAttribute('data-frame-time'))).toBeGreaterThan(0);await expect(guidance.getByText('Room coverage is unknown. Camera poses, dimensions and reconstruction suitability require later validation.',{exact:true})).toBeVisible();expect(await guidance.innerText()).not.toContain('%');await form.getByRole('button',{name:'Stop recording',exact:true}).click();await expect(form.getByText(/bytes selected/)).toBeVisible();await page.goto('http://localhost:8089/ops');
+ }finally{await context.close();await browser.close();}
+});

@@ -1,0 +1,17 @@
+FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS verify
+COPY services/property-processing/.colmap-runtime/ /export/
+COPY services/property-processing/colmap-source-runtime.json /expected.json
+COPY services/property-processing/property_processing/colmap_runtime.py /verify_runtime.py
+RUN python -c "import json;from verify_runtime import verify_runtime;verify_runtime('/export',json.load(open('/expected.json')))"
+
+FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS cpu
+COPY --from=verify /export/bin/colmap /usr/bin/colmap
+COPY --from=verify /export/lib/ /opt/colmap/lib/
+COPY --from=verify /export/notices/ /opt/colmap/notices/
+COPY --from=verify /export/runtime-profile.json /opt/colmap/runtime-profile.json
+WORKDIR /opt/processing
+COPY services/property-processing/property_processing/__init__.py services/property-processing/property_processing/colmap_cli.py services/property-processing/property_processing/colmap_runtime.py services/property-processing/property_processing/reconstruction_quality.py services/property-processing/property_processing/reconstruction_pairs.py services/property-processing/property_processing/training_data.py ./property_processing/
+COPY services/property-processing/property_processing/errors.py services/property-processing/property_processing/decoder_isolation.py services/property-processing/property_processing/colmap_process.py ./property_processing/
+RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+USER 10001:10001
+CMD ["python", "-m", "property_processing.colmap_cli", "--help"]

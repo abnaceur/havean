@@ -1,4 +1,24 @@
-import {digitizationUnitApplicationReceipt} from './digitization-inventory';
+import {propertyAuthoringRecord} from './property-authoring';
+import {digitizationSceneEvidence} from './digitization-scene-evidence';
+import {digitizationConstructionReport} from './digitization-construction';
+import {digitizationTenantDeletionContext,digitizationTenantDeletionReceipt,digitizationTenantDeletionOrganizations} from './digitization-tenant-deletion';
+import {digitizationCameraReview,digitizationReconstructionStatus} from './digitization-camera';
+import {digitizationPublicModel,digitizationModelPublicationReviews} from './digitization-model-publication';
+import {digitizationModelReviewRequest,digitizationModelReviewQueue,digitizationModelReviewApproval} from './digitization-model-review';
+import {digitizationRegistrationReviewRequest,digitizationRegistrationReviewQueue,digitizationRegistrationReviewApproval,digitizationRegistrationNavigation} from './digitization-registration-review';
+import {digitizationScenePrivacyContext,digitizationScenePrivacyRecord} from './digitization-scene-privacy';
+import {digitizationPublicationReceipt,digitizationPublicTour,digitizationPublicationStatus,digitizationPublicationReviews} from './digitization-publication';
+import {digitizationQualitySummary} from './digitization-quality';
+import {digitizationSceneRegistration,digitizationSceneRegistrations,digitizationPrivateSceneTiers} from './digitization-registration';
+import {digitizationProcessingSources,digitizationProcessingRuns,digitizationProcessingReceipt,digitizationProcessingMetrics} from './digitization-processing';
+import {digitizationDraftReceipt} from './digitization-draft';
+import {digitizationFactReview} from './digitization-fact-review';
+import {digitizationPlanProposals} from './digitization-inputs';
+import {digitizationFramePrivacyRecord} from './digitization-frame-privacy';
+import {digitizationTourReviewRequest,digitizationTourReviewQueue,digitizationTourReviewApproval,digitizationTourReviewers} from './digitization-tour-review';
+import {digitizationTourRecord,digitizationPanoramaCandidates} from './digitization-tours';
+import {digitizationFrameCandidates,digitizationFrameDatasetRecord} from './digitization-frames';
+import {digitizationUnitApplicationReceipt,digitizationUnitApplicationContext} from './digitization-inventory';
 import {sitemapPage} from './seo';
 import {digitizationCleanupReceipt,digitizationLeaseRecord,digitizationGpuLeaseRecord,digitizationLeaseRenewal,digitizationExecutionAcknowledgement,digitizationRunDispatchReceipt,digitizationRenderReceipt,digitizationOutboxReceipt,digitizationCancellationReceipt} from './digitization-worker';
 import {digitizationExecutionRequest} from './digitization';
@@ -15,7 +35,8 @@ import {tenantLeasePage,tenantLeaseRecord} from './tenant-leases';
 import {depositRecord,depositLedgerRecord} from './deposits';
 import {financialReversalRecord} from './financial-reversals';
 import {digitizationInputReceipt,digitizationInputReservation,digitizationPlanPageSelection,digitizationGeometryDraft,digitizationTraceCheckpointRecord,digitizationTraceConflict,digitizationPlanPageList} from './digitization-inputs';
-import {digitizationCaptureSessionRecord,digitizationCaptureRecord,digitizationCapturePartGrant,digitizationCaptureReceipt} from './digitization-capture';
+import {digitizationCaptureSourceRecord,digitizationCaptureSessionRecord,digitizationCaptureRecord,digitizationCapturePartGrant,digitizationCaptureReceipt} from './digitization-capture';
+import {digitizationModelSourcePermissionScope,digitizationDelegatedSources} from './digitization-model-source-consent';
 import {digitizationWorkspaceRecord,digitizationEvidenceGrantRecord} from './digitization-intake';
 import {allocationRecord,allocationLedgerRecord} from './payment-allocations';
 import {paymentEvidenceRecord,paymentEvidenceSource} from './payment-evidence';
@@ -69,18 +90,36 @@ const leaseSummary=m.leases.pick({id:true,start_date:true,end_date:true,rent:tru
 const chargeSummary=m.charges.pick({id:true,period:true,due_date:true,amount:true,currency:true,kind:true,reverses_id:true});
 const mediaMetadata=propertyMediaMetadata;
 const studioMedia=m.listing_media.extend({metadata:mediaMetadata,pending_metadata:mediaMetadata.nullable(),purpose:s,width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),rights:s,scan_at:s.nullable()});
-const publicMedia=z.object({id:uuid,kind:z.enum(['photo','floor_plan','panorama','video']),title:s,position:n,floorPlanId:uuid.nullable(),url:s,poster:s.nullable(),width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),caption:s,spatial:floorLayout.safeExtend({rooms:z.array(floorLayout.shape.rooms.element)}).nullable(),hotspots:mediaMetadata.shape.hotspots});
+const publicMedia=z.object({id:uuid,kind:z.enum(['photo','floor_plan','panorama','video','model_3d']),title:s,position:n,floorPlanId:uuid.nullable(),url:s,poster:s.nullable(),width:n.nullable(),height:n.nullable(),duration:decimal.nullable(),caption:s,spatial:floorLayout.safeExtend({rooms:z.array(floorLayout.shape.rooms.element)}).nullable(),hotspots:mediaMetadata.shape.hotspots});
 const geographyRecord=z.union([m.transit_stations,m.communities.extend({latitude:n.nullable(),longitude:n.nullable()}),m.buildings,m.neighborhoods,m.cities,m.districts,m.transit_lines]);
 const market=z.object({country:s,credentialRules,ownershipTags:z.array(ownershipTag),contactLinks,chargeProration:z.enum(['calendar_days','full_month']),legacyChargeDueDay:n,name:s,currency:s,timezone:s,areaUnit:z.enum(['m²','sq ft']),annualRate:decimal,mortgageEstimateNotes:z.string().default(defaultMortgageEstimateNotes),rentPeriod:s,supportEmail:s,demo:bool,pricePresets:z.array(pricePreset).default([]),requiredOwnerEvidenceTypes:z.array(z.enum(['ownership','authorization'])).default(['ownership'])});
 const inventoryStatistic=z.object({count:n,pricedCount:n,medianPrice:decimal.nullable(),currency:s});
 const inventoryActions=z.object({can_edit:bool,can_media:bool,allowed_transitions:z.array(s)});
 const draft=m.listings.pick({id:true,unit_id:true,organization_id:true,owner_id:true,agent_id:true,title:true,description:true,transaction:true,segment:true,currency:true,price:true,rent_period:true,furnishing:true,available_from:true,features:true,status:true,version:true,slug:true});
 export const responses={
+ DigitizationTenantDeletionController_context:digitizationTenantDeletionContext,DigitizationTenantDeletionController_request:digitizationTenantDeletionReceipt,DigitizationTenantDeletionController_organizations:digitizationTenantDeletionOrganizations,
+ DigitizationFactController_read:digitizationFactReview,DigitizationFactController_decide:digitizationFactReview,
+ DigitizationArtifactController_construction:digitizationConstructionReport,DigitizationArtifactController_constructionEdit:digitizationGeometryDraft.nullable(),
+ DigitizationArtifactController_furnishings:digitizationGeometryDraft.nullable(),DigitizationArtifactController_dimensions:digitizationGeometryDraft.nullable(),DigitizationArtifactController_geometryGlb:z.unknown(),
+ DigitizationArtifactController_geometryPng:z.unknown(),
  DigitizationInventoryController_proposeUnit:digitizationUnitApplicationReceipt,
  DigitizationWorkerController_cleanup:digitizationCleanupReceipt,
+ DigitizationController_quality:digitizationQualitySummary,
+ DigitizationPublicationController_status:digitizationPublicationStatus,DigitizationPublicationController_queue:digitizationPublicationReviews,
+ DigitizationPublicationController_propose:digitizationPublicationReceipt,DigitizationPublicationController_manifest:digitizationPublicTour.nullable(),DigitizationPublicationController_content:z.instanceof(Blob),DigitizationPublicationController_revoke:z.strictObject({packageId:z.uuid(),revoked:z.literal(true)}),
+ DigitizationController_submitRegistrationReview:digitizationRegistrationReviewRequest,DigitizationController_registrationReviewQueue:digitizationRegistrationReviewQueue,DigitizationController_registrationReview:digitizationRegistrationReviewRequest,DigitizationController_reviewRegistration:digitizationRegistrationReviewApproval,DigitizationController_sceneNavigation:digitizationRegistrationNavigation,
+ DigitizationController_scenePrivacy:digitizationScenePrivacyContext,DigitizationController_declareScenePrivacy:digitizationScenePrivacyRecord,
+ DigitizationController_registrations:digitizationSceneRegistrations,DigitizationController_registerScene:digitizationSceneRegistration,
+ DigitizationController_sceneEvidenceContent:z.instanceof(Blob),
+ DigitizationController_sceneEvidence:digitizationSceneEvidence,
+ DigitizationController_sceneTiers:digitizationPrivateSceneTiers,
+ DigitizationController_sceneContent:z.instanceof(Blob),DigitizationController_registrationReviewScene:z.instanceof(Blob),DigitizationController_registrationReviewPlan:z.instanceof(Blob),
+ DigitizationController_metrics:digitizationProcessingMetrics,
+ DigitizationController_sources:digitizationProcessingSources,DigitizationController_runs:digitizationProcessingRuns,DigitizationController_process:digitizationProcessingReceipt,
  DigitizationController_workspace:digitizationWorkspaceRecord,
  DigitizationInputController_bindIntake:digitizationInputReceipt,DigitizationInputController_bindListing:digitizationInputReceipt,DigitizationInputController_removeIntake:digitizationInputReceipt,DigitizationInputController_removeListing:digitizationInputReceipt,
  DigitizationInputController_reserveListing:digitizationInputReservation,
+ DigitizationCaptureController_source:digitizationCaptureSourceRecord.nullable(),DigitizationCaptureController_admitSource:digitizationCaptureSourceRecord,
  DigitizationCaptureController_uploads:z.array(digitizationCaptureRecord).max(100),DigitizationCaptureController_session:digitizationCaptureSessionRecord.nullable(),DigitizationCaptureController_startSession:digitizationCaptureSessionRecord,DigitizationCaptureController_saveSession:digitizationCaptureSessionRecord,
  DigitizationCaptureController_completeIntake:digitizationCaptureReceipt,DigitizationCaptureController_completeListing:digitizationCaptureReceipt,
  DigitizationWorkerController_start:digitizationExecutionAcknowledgement,
@@ -90,7 +129,10 @@ export const responses={
  DigitizationWorkerController_cancel:digitizationCancellationReceipt,DigitizationWorkerController_completeCancel:digitizationCancellationReceipt,
  DigitizationController_cancelRun:digitizationCancellationReceipt,
  DigitizationArtifactController_preview:z.instanceof(Blob),
+ DigitizationInventoryController_unitContext:digitizationUnitApplicationContext,
+ DigitizationInventoryController_createDraft:digitizationDraftReceipt,
  DigitizationArtifactController_planPage:digitizationPlanPageSelection,
+ DigitizationArtifactController_planProposals:digitizationPlanProposals,
  DigitizationArtifactController_geometry:digitizationGeometryDraft.nullable(),DigitizationArtifactController_saveGeometry:digitizationGeometryDraft,
  DigitizationArtifactController_planPages:digitizationPlanPageList,
  DigitizationArtifactController_geometrySvg:z.instanceof(Blob),
@@ -106,7 +148,7 @@ export const responses={
  TenantLeasesController_list:tenantLeasePage,TenantLeasesController_read:tenantLeaseRecord,TenantLeasesController_download:z.instanceof(Blob),
  DigitizationCaptureController_createIntake:digitizationCaptureRecord,DigitizationCaptureController_readIntake:digitizationCaptureRecord,DigitizationCaptureController_partIntake:digitizationCapturePartGrant,DigitizationCaptureController_cancelIntake:digitizationCaptureRecord,DigitizationCaptureController_createListing:digitizationCaptureRecord,DigitizationCaptureController_readListing:digitizationCaptureRecord,DigitizationCaptureController_partListing:digitizationCapturePartGrant,DigitizationCaptureController_cancelListing:digitizationCaptureRecord,
  DigitizationController_intakeEvents:z.string(),DigitizationController_listingEvents:z.string(),
- DigitizationController_create:digitizationWorkspaceRecord,DigitizationController_list:z.array(digitizationWorkspaceRecord),DigitizationController_intake:digitizationWorkspaceRecord,DigitizationController_createListing:digitizationWorkspaceRecord,DigitizationController_listing:digitizationWorkspaceRecord.nullable(),DigitizationController_ownerListing:digitizationWorkspaceRecord,DigitizationController_grant:digitizationEvidenceGrantRecord,
+ DigitizationController_create:digitizationWorkspaceRecord,DigitizationController_list:z.array(digitizationWorkspaceRecord),DigitizationController_intake:digitizationWorkspaceRecord,DigitizationController_createListing:digitizationWorkspaceRecord,DigitizationController_listing:digitizationWorkspaceRecord.nullable(),DigitizationController_ownerListing:digitizationWorkspaceRecord,DigitizationController_grant:digitizationEvidenceGrantRecord,DigitizationController_sourcePermissions:digitizationModelSourcePermissionScope,DigitizationController_delegatedSources:digitizationDelegatedSources,DigitizationController_revokeGrant:digitizationEvidenceGrantRecord,
  AgencyMembershipsController_invitations:z.array(agencyInvitationRecord),AgencyMembershipsController_invite:agencyInvitationRecord,AgencyMembershipsController_own:z.array(agencyInvitationRecord),AgencyMembershipsController_decision:agencyInvitationRecord,AgencyMembershipsController_update:agencyMemberRecord,AgencyMembershipsController_history:z.array(z.object({id:uuid,membership_id:uuid,target_user_id:uuid,actor_id:uuid.nullable(),role:s,status:s,previous_role:s.nullable(),previous_status:s.nullable(),version:n.int().positive(),reason:s,created_at:s})),
  AgentCredentialsController_read:z.array(ownedAgentProfile),AgentCredentialsController_create:ownedAgentProfile,AgentCredentialsController_update:ownedAgentProfile,AgentCredentialsController_credentials:z.array(ownedAgentCredential),AgentCredentialsController_submit:ownedAgentCredential,AgentCredentialsController_queue:z.array(credentialReviewRow),AgentCredentialsController_review:ownedAgentCredential,
  DevelopmentReviewController_read:z.object({project:m.developments,review:m.development_publication}),DevelopmentReviewController_submit:z.object({project:m.developments,review:m.development_publication}),DevelopmentReviewController_decision:z.object({project:m.developments,review:m.development_publication}),DevelopmentReviewController_queue:z.array(m.developments.extend({review:m.development_publication})),DevelopmentReviewController_detail:z.object({project:m.developments,review:m.development_publication,types:z.array(m.floor_plans),phases:z.array(m.development_phases)}),DevelopmentReviewController_leads:z.array(m.leads.extend({type_name:s.nullable(),project_name:s})),
@@ -124,6 +166,7 @@ DiscoveryEventsController_consent:z.object({enabled:bool,version:z.number().int(
  RankingsController_rankings:z.array(publicListing),RankingsController_recommendations:z.array(publicListing),RankingsController_developments:z.array(recommendedDevelopment),
  HomeDiscoveryController_home:z.object({resale:z.array(publicListing),rentals:z.array(publicListing),developments:z.array(recommendedDevelopment.extend({city:s})),curatedResale:z.array(publicListing),curatedDevelopments:z.array(recommendedDevelopment.extend({city:s})),taxonomy:z.array(z.object({category:z.enum(['buy','rent','new-homes','commercial']),label:s,version:n})),sections:z.array(z.object({id:s,version:n,title:s,copy:s,position:n,category:z.enum(['buy','rent','new-homes','commercial']),categoryLabel:s,url:s,listings:z.array(publicListing),developments:z.array(recommendedDevelopment.extend({city:s}))}))}),
  SearchHistoryController_read:z.array(z.object({id:uuid,city:s,query:s,version:n,updated_at:s})),SearchHistoryController_record:z.object({id:uuid,city:s,query:s,version:n,updated_at:s}),SearchHistoryController_clear:z.object({cleared:bool}),
+ PropertyAuthoringController_list:z.array(propertyAuthoringRecord),PropertyAuthoringController_create:propertyAuthoringRecord,PropertyAuthoringController_read:propertyAuthoringRecord,PropertyAuthoringController_save:propertyAuthoringRecord,PropertyAuthoringController_prepare:propertyAuthoringRecord,PropertyAuthoringController_submit:propertyAuthoringRecord,
  DraftInventoryController_grants:z.array(z.object({id:uuid,unit_id:uuid,status:z.enum(['active','revoked']),version:n.int().positive(),source:z.enum(['recorded_listing','reviewed_submission']),expires_at:s.nullable(),created_at:s})),DraftInventoryController_units:z.array(z.object({id:uuid,area:decimal,beds:n,floor:n,community:s,unit_kind:z.enum(['property','room']),parent_unit_id:uuid.nullable(),room_label:s.nullable(),version:n.int().positive(),ownerGrantVersion:n.int().positive().nullable()})),DraftInventoryController_owned:z.array(draft),DraftInventoryController_read:draft.extend({commercial:commercialRecord.nullable(),ownerContact:z.object({contact:s,audience:z.enum(['reviewers_only','assigned_team'])}).nullable()}),DraftInventoryController_create:draft.extend({commercial:commercialRecord.nullable(),ownerContact:z.object({contact:s,audience:z.enum(['reviewers_only','assigned_team'])}).nullable()}),DraftInventoryController_update:draft.extend({commercial:commercialRecord.nullable(),ownerContact:z.object({contact:s,audience:z.enum(['reviewers_only','assigned_team'])}).nullable()}),
  GeographyController_statistics:z.object({sale:inventoryStatistic,rent:inventoryStatistic,asOf:s,definition:s}),GeographyController_listings:z.array(publicListing),
  GeographyController_geography:z.object({city:m.cities,districts:z.array(m.districts),neighborhoods:z.array(m.neighborhoods),lines:z.array(m.transit_lines),stations:z.array(m.transit_stations)}),
@@ -160,12 +203,17 @@ DiscoveryEventsController_consent:z.object({enabled:bool,version:z.number().int(
  InventoryController_approveRevision:z.object({approved:bool}),InventoryController_rejectRevision:z.object({approved:bool}),InventoryController_publicHistory:z.object({prices:z.array(z.object({id:uuid,previous_price:decimal.nullable(),next_price:decimal,currency:s,created_at:s,reason:s})),statuses:z.array(z.object({id:uuid,status:s,created_at:s}))}),InventoryController_review:z.union([z.object({status:s,listingId:uuid,slug:s}),z.object({status:s})]),
  InventoryController_plans:z.array(m.floor_plans.extend({development_version:n})),InventoryController_editDevelopment:versioned,
  InventoryController_editPlan:m.floor_plans.pick({id:true,development_id:true,available:true}),InventoryController_assign:assignmentResult,InventoryController_developments:z.array(m.developments),
- RichMediaController_publicMedia:z.array(publicMedia),RichMediaController_owned:z.array(m.listings.pick({id:true,title:true,slug:true,version:true,status:true})),
+ DigitizationModelPublicationController_queue:digitizationModelPublicationReviews,DigitizationModelPublicationController_propose:digitizationPublicationReceipt,DigitizationModelPublicationController_manifest:digitizationPublicModel.nullable(),DigitizationModelPublicationController_content:z.instanceof(Blob),
+ DigitizationModelReviewController_latest:digitizationModelReviewQueue,DigitizationModelReviewController_submit:digitizationModelReviewRequest,DigitizationModelReviewController_queue:digitizationModelReviewQueue,DigitizationModelReviewController_detail:digitizationModelReviewRequest,DigitizationModelReviewController_review:digitizationModelReviewApproval,DigitizationModelReviewController_content:z.instanceof(Blob),
+ DigitizationTourReviewController_reviewers:digitizationTourReviewers,DigitizationTourReviewController_submit:digitizationTourReviewRequest,DigitizationTourReviewController_queue:digitizationTourReviewQueue,DigitizationTourReviewController_review:digitizationTourReviewApproval,DigitizationTourReviewController_latest:digitizationTourReviewApproval.nullable(),DigitizationTourReviewController_preview:z.instanceof(Blob),
+ DigitizationTourController_candidates:digitizationPanoramaCandidates,DigitizationTourController_save:digitizationTourRecord,DigitizationTourController_latest:digitizationTourRecord.nullable(),
+ DigitizationFrameController_train:digitizationProcessingReceipt,DigitizationFrameController_reconstructionStatus:digitizationReconstructionStatus,DigitizationFrameController_calibratedTraining:z.instanceof(Blob),DigitizationFrameController_camera:digitizationProcessingReceipt,DigitizationFrameController_cameraReport:digitizationCameraReview.nullable(),DigitizationFrameController_privacy:digitizationFramePrivacyRecord,DigitizationFrameController_training:z.instanceof(Blob),DigitizationFrameController_candidates:digitizationFrameCandidates,DigitizationFrameController_create:digitizationFrameDatasetRecord,DigitizationFrameController_latest:digitizationFrameDatasetRecord.nullable(),
+ RichMediaController_publicMedia:z.array(publicMedia),RichMediaController_publicGallery:z.array(publicMedia.extend({kind:z.literal('photo')})),RichMediaController_owned:z.array(m.listings.pick({id:true,title:true,slug:true,version:true,status:true})),
  RichMediaController_workbench:z.object({listing:z.object({id:uuid,title:s,version:n,status:s}),media:z.array(studioMedia),floorPlans:z.array(m.floor_plans.pick({id:true,name:true}))}),
  RichMediaController_attach:m.listing_media,RichMediaController_revise:m.listing_media,RichMediaController_reviews:z.array(m.listing_media.extend({property_title:s,rights:s,scan_at:s.nullable()})),RichMediaController_review:versioned,RichMediaController_remove:z.object({removed:bool}),
  MediaController_intent:z.object({id:uuid,uploadUrl:s,method:z.literal('PUT'),expiresIn:n}),MediaController_status:m.media_assets.pick({id:true,status:true,purpose:true,width:true,height:true,duration:true,scan_at:true,version:true}),
  MediaController_content:z.object({id:uuid,status:s,visibility:s,purpose:s}),
- MediaController_view:z.instanceof(Blob),MediaController_video:z.instanceof(Blob),MediaController_download:z.instanceof(Blob),MediaController_downloadLink:z.object({url:s,expiresIn:n}),MediaController_attach:z.object({attached:bool}),
+ MediaController_view:z.instanceof(Blob),MediaController_video:z.instanceof(Blob),MediaController_model:z.instanceof(Blob),MediaController_download:z.instanceof(Blob),MediaController_downloadLink:z.object({url:s,expiresIn:n}),MediaController_attach:z.object({attached:bool}),
  TenantLinksController_invitations:z.array(tenantInviteRecord),TenantLinksController_ownInvitations:z.array(tenantInviteRecord),TenantLinksController_invite:tenantInviteRecord,TenantLinksController_decide:tenantInviteRecord,TenantLinksController_profiles:z.array(tenantProfileRecord),TenantLinksController_profile:tenantProfileRecord,
  LeaseDraftsController_options:leaseDraftSource,LeaseDraftsController_read:leaseDraftRecord,LeaseDraftsController_create:leaseDraftRecord,LeaseDraftsController_activate:leaseDraftRecord,LeaseDraftsController_update:leaseDraftRecord,LeaseDraftsController_download:z.instanceof(Blob),
  ManagementController_properties:z.array(managementGrantRecord),ManagementController_tenants:z.array(m.tenants.pick({id:true,name:true,email:true,user_id:true})),

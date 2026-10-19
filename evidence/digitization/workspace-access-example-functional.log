@@ -1,0 +1,53 @@
+time="2026-10-12T12:43:13+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-5a49e1d3ffa8 Creating 
+ Container haven-tests-run-5a49e1d3ffa8 Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-workspace-access.spec.ts:4:1 › private example shows one access message for another account and source results for its creator (28.0s)
+
+
+  1) [desktop] › tests/e2e/digitization-workspace-access.spec.ts:4:1 › private example shows one access message for another account and source results for its creator 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Private document fact review' }).getByText('Recorded value:')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'Private document fact review' }).getByText('Recorded value:') with timeout 15000ms
+      - waiting for getByRole('region', { name: 'Private document fact review' }).getByText('Recorded value:')
+
+
+      22 |   const facts=agent.getByRole('region',{name:'Private document fact review'});
+      23 |   await expect(facts.getByLabel('Source fact',{exact:true})).toBeVisible();
+    > 24 |   await expect(facts.getByText('Recorded value:',{exact:false})).toBeVisible();
+         |                                                                  ^
+      25 |   const crop=facts.getByRole('img',{name:/Source crop for/});await expect(crop).toBeVisible();
+      26 |   const source=await crop.locator('image').getAttribute('href');expect(source).toBeTruthy();
+      27 |   expect((await agent.request.get(origin+source)).status()).toBe(200);
+        at /workspace/tests/e2e/digitization-workspace-access.spec.ts:24:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-workspace-acc-11b25-rce-results-for-its-creator-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-workspace-acc-11b25-rce-results-for-its-creator-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-workspace-acc-11b25-rce-results-for-its-creator-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-workspace-acc-11b25-rce-results-for-its-creator-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-workspace-acc-11b25-rce-results-for-its-creator-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-workspace-access.spec.ts:4:1 › private example shows one access message for another account and source results for its creator 
+

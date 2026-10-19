@@ -1,0 +1,42 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-tenant-deletion.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 3824[2mms[22m[39m
+   [33m[2m✓[22m[39m tenant erasure fences active CPU work and removes originals and derivatives while retaining credential, account and organization history[33m 3263[2mms[22m[39m
+   [33m[2m✓[22m[39m a tenant tombstone retains an original still bound to another live tenant and never inherits that tenant access[33m 315[2mms[22m[39m
+[31m   [31m×[31m a concurrent foreign-tenant binding cannot commit after erasure acquires the source lock[39m[32m 243[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-tenant-deletion.test.ts[2m > [22ma concurrent foreign-tenant binding cannot commit after erasure acquires the source lock
+[31m[1mAssertionError[22m: expected HttpException: Source authority or versio… { …(4) } to match object { code: '40001' }
+(9 matching properties omitted from actual)[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- {[39m
+[32m-   "code": "40001",[39m
+[31m+ HttpException {[39m
+[31m+   "message": "Source authority or version changed. Validate the current upload.",[39m
+[31m+   "response": {[39m
+[31m+     "code": "SOURCE_ACCESS_CHANGED",[39m
+[31m+     "message": "Source authority or version changed. Validate the current upload.",[39m
+[31m+   },[39m
+[31m+   "status": 403,[39m
+[31m+   "options": undefined,[39m
+[31m+   "errorCode": undefined,[39m
+[31m+   "name": "HttpException",[39m
+[2m  }[22m
+
+[36m [2m❯[22m tests/integration/digitization-tenant-deletion.test.ts:[2m111:146[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 20:49:15
+[2m   Duration [22m 5.56s[2m (tests 70%, import 18%, transform 12%)[22m
+

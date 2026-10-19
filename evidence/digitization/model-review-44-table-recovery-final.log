@@ -1,0 +1,10 @@
+{"label":"P","status":"synthetic-source-snapshot-locked","sourceMutated":false}
+file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:98
+  const drift=path.join(root,'database-drift-plaintext');fs.cpSync(restored,drift,{recursive:true});const proofFile=path.join(drift,'database/digitization-proof.json'),proof=JSON.parse(fs.readFileSync(proofFile,'utf8'));if(proof.schemaVersion!==2||JSON.stringify(proof.tables.map(table=>table.table))!==JSON.stringify(digitizationRecoveryTables))throw Error('RECOVERY_TEST_DIGITIZATION_PROOF_INCOMPLETE');const registration=proof.tables.find(table=>table.table==='digitization_scene_registrations');registration.digest='0'.repeat(64);fs.writeFileSync(proofFile,JSON.stringify(proof)+'\n',{mode:0o600});
+                                                                                                                                                                                                                                                                                                                                                                ^
+
+Error: RECOVERY_TEST_DIGITIZATION_PROOF_INCOMPLETE
+    at file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:98:353
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+Node.js v20.20.0

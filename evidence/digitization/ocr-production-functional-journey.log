@@ -1,0 +1,39 @@
+sha256:4093327c4de292a9636a030e436166daf595446defc9c7300234e10876f1dcb9
+ Container haven-ocr-protocol-3081016 Creating 
+ Container haven-ocr-protocol-3081016 Created 
+ Container haven-ocr-protocol-3081016 Starting 
+ Container haven-ocr-protocol-3081016 Started 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-document-ocr.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 28771[2mms[22m[39m
+[31m   [31m×[31m real confined en raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[39m[33m 14432[2mms[22m[39m
+[31m   [31m×[31m real confined fr raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[39m[33m 7143[2mms[22m[39m
+[31m   [31m×[31m real confined ar raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[39m[33m 7194[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-image-ocr.test.ts [2m([22m[2m2 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[33m 7263[2mms[22m[39m
+   [33m[2m✓[22m[39m actual png document OCR persists upright source-linked review[33m 7261[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-document-ocr.test.ts[2m > [22mreal confined en raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately
+[41m[1m FAIL [22m[49m tests/integration/digitization-document-ocr.test.ts[2m > [22mreal confined fr raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately
+[41m[1m FAIL [22m[49m tests/integration/digitization-document-ocr.test.ts[2m > [22mreal confined ar raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately
+[31m[1mHttpException[22m: This run no longer accepts execution.[39m
+[36m [2m❯[22m fail apps/api/src/platform/core.ts:[2m10:87[22m[39m
+
+[90m [2m❯[22m currentStage apps/api/src/inventory/digitization/leases.ts:[2m12:93[22m[39m
+[90m [2m❯[22m requireCurrentExecution apps/api/src/inventory/digitization/leases.ts:[2m41:12[22m[39m
+[90m [2m❯[22m prepareCpuExecution apps/api/src/inventory/digitization/execution-scope.ts:[2m35:14[22m[39m
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m collectDocumentFacts apps/api/src/inventory/digitization/native-fact-results.ts:[2m85:3[22m[39m
+[90m [2m❯[22m collectCpuRenders apps/api/src/inventory/digitization/execution-results.ts:[2m77:60[22m[39m
+[90m [2m❯[22m tests/integration/digitization-document-ocr.test.ts:[2m90:29[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (5)[39m
+[2m   Start at [22m 07:08:53
+[2m   Duration [22m 38.62s[2m (tests 94%, import 5%, transform 2%)[22m
+

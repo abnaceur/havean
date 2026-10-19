@@ -1,0 +1,11 @@
+file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:29
+  await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{child.kill();reject(Error('RECOVERY_FIXTURE_SOURCE_LOCK_TIMEOUT'));},10000);child.once('error',error=>{clearTimeout(timer);reject(error);});child.once('exit',()=>{clearTimeout(timer);reject(Error('RECOVERY_FIXTURE_SOURCE_BUSY'));});child.stdout.once('data',chunk=>{clearTimeout(timer);if(String(chunk)==='ready\n')resolve();else reject(Error('RECOVERY_FIXTURE_SOURCE_LOCK_INVALID'));});});
+                                                                                                                                                                                                                                                                 ^
+
+Error: RECOVERY_FIXTURE_SOURCE_BUSY
+    at ChildProcess.<anonymous> (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:29:258)
+    at Object.onceWrapper (node:events:639:26)
+    at ChildProcess.emit (node:events:536:35)
+    at ChildProcess._handle.onexit (node:internal/child_process:293:12)
+
+Node.js v20.20.0

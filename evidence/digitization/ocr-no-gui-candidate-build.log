@@ -1,0 +1,90 @@
+ Image haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 741B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.ocr-investigation
+#2 transferring dockerfile: 3.27kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 ...
+
+#4 [auth] library/python:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 2.5s
+
+#5 [internal] load .dockerignore
+#5 transferring context:
+#5 transferring context: 192B done
+#5 DONE 0.6s
+
+#6 [install 1/8] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#6 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#6 DONE 0.1s
+
+#7 [internal] load build context
+#7 transferring context: 80.10kB 0.2s done
+#7 DONE 0.3s
+
+#8 [install 4/8] COPY services/property-processing/verify_ocr_investigation.py /tmp/verify-worker-downloads.py
+#8 CACHED
+
+#9 [install 6/8] COPY services/property-processing/.ocr-wheels/models /opt/ocr-models
+#9 CACHED
+
+#10 [install 7/8] COPY services/property-processing/clean_ocr_investigation.py /tmp/worker-cleanup.py
+#10 CACHED
+
+#11 [install 2/8] COPY services/property-processing/ocr-investigation-build.json /tmp/ocr-investigation-build.json
+#11 CACHED
+
+#12 [install 5/8] RUN --mount=type=bind,source=services/property-processing/.ocr-wheels,target=/wheels,readonly python /tmp/verify-worker-downloads.py && python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/ocr-investigation.lock && python -m pip check && mkdir /native-debs && dpkg-deb -x /wheels/libgomp1_14.2.0-19_amd64.deb /native-debs && dpkg-deb -x /wheels/libglib2.0-0t64_2.84.4-3~deb13u5_amd64.deb /native-debs
+#12 CACHED
+
+#13 [install 3/8] COPY services/property-processing/ocr-investigation.lock /tmp/ocr-investigation.lock
+#13 CACHED
+
+#14 [install 8/8] RUN python /tmp/worker-cleanup.py
+#14 CACHED
+
+#15 [no-gui-install 1/2] COPY services/property-processing/exclude_ocr_gui.py /tmp/exclude-ocr-gui.py
+#15 DONE 0.2s
+
+#16 [no-gui-install 2/2] RUN python /tmp/exclude-ocr-gui.py
+#16 DONE 0.4s
+
+#6 [install 1/8] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#6 CACHED
+
+#17 [worker-no-gui-investigation  2/10] COPY --from=no-gui-install /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+#17 DONE 3.2s
+
+#18 [worker-no-gui-investigation  3/10] COPY --from=no-gui-install /native-debs /
+#18 DONE 0.3s
+
+#19 [worker-no-gui-investigation  4/10] COPY --from=no-gui-install /opt/ocr-models /opt/ocr-models
+#19 DONE 0.3s
+
+#20 [worker-no-gui-investigation  5/10] COPY --from=no-gui-install /tmp/ocr-gui-exclusions.json /opt/processing/ocr-native-exclusions.json
+#20 DONE 0.1s
+
+#21 [worker-no-gui-investigation  6/10] COPY docs/adr/licenses /usr/share/doc/haven-processing/source-notices
+#21 DONE 0.2s
+
+#22 [worker-no-gui-investigation  7/10] COPY docs/adr/processing-dependencies.json /opt/processing/dependencies.json
+#22 DONE 0.1s
+
+#23 [worker-no-gui-investigation  8/10] COPY services/property-processing/property_processing /opt/processing/property_processing
+#23 DONE 0.1s
+
+#24 [worker-no-gui-investigation  9/10] COPY services/property-processing/tests/ocr_worker_smoke.py /opt/processing/ocr_worker_smoke.py
+#24 DONE 0.1s
+
+#25 [worker-no-gui-investigation 10/10] WORKDIR /opt/processing
+#25 DONE 0.1s
+
+#26 exporting to image
+#26 exporting layers

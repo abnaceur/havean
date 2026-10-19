@@ -1,0 +1,42 @@
+time="2026-10-14T14:31:54+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-processing-gpu-volume-init-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-ca521f59e204 Creating 
+ Container haven-tests-run-ca521f59e204 Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-ai-property-flow.spec.ts:6:1 › reference-constrained AI property sources exercise the actual agent digitization flow (1.2m)
+
+
+  1) [desktop] › tests/e2e/digitization-ai-property-flow.spec.ts:6:1 › reference-constrained AI property sources exercise the actual agent digitization flow 
+
+    TimeoutError: locator.selectOption: Timeout 60000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Private source processing', exact: true }).getByLabel('Source purpose', { exact: true })
+
+
+      37 |    const remaining=group.files.filter((file:string)=>!sources.some((s:any)=>s.purpose===group.purpose&&s.bytes===statSync(assets+'/'+file).size));
+      38 |    if(!remaining.length)continue;
+    > 39 |    await upload.getByLabel('Source purpose',{exact:true}).selectOption(group.purpose);
+         |                                                           ^
+      40 |    await upload.getByLabel('Choose property source',{exact:true}).setInputFiles(remaining.map((file:string)=>assets+'/'+file));
+      41 |    await upload.getByLabel('Source rights and origin',{exact:true}).fill('Authorized original AI-generated synthetic property experiment. Reference-constrained images; geometry unverified. Schematic plan is not surveyed. Panorama is synthetic, not genuine camera capture.');
+      42 |    await upload.getByRole('checkbox',{name:'I am authorized to upload and process this property source.',exact:true}).check();
+        at /workspace/tests/e2e/digitization-ai-property-flow.spec.ts:39:59
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results-ai-property-flow/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results-ai-property-flow/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results-ai-property-flow/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results-ai-property-flow/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-ai-property-flow.spec.ts:6:1 › reference-constrained AI property sources exercise the actual agent digitization flow 
+

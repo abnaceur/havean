@@ -1,0 +1,113 @@
+sha256:435ac3fe75be4f5c7309ac8d76f178176c98d58327a82569a149a2e052423ead
+ Container haven-ocr-protocol-362894 Creating 
+ Container haven-ocr-protocol-362894 Created 
+ Container haven-ocr-protocol-362894 Starting 
+ Container haven-ocr-protocol-362894 Started 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-document-ocr.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 74487[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined en raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 18747[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined fr raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 12124[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined ar raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 11845[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined en-browser-desktop raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 15783[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined en-browser-mobile raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 15983[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 00:24:46
+[2m   Duration [22m 76.13s[2m (tests 98%, import 1%, transform 1%)[22m
+
+ Container haven-integration-tests-run-8e39b73a244a Creating 
+ Container haven-integration-tests-run-8e39b73a244a Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-fact-review.spec.ts:5:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history (12.0s)
+  ✘  2 [mobile] › tests/e2e/digitization-fact-review.spec.ts:5:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history (9.5s)
+
+
+  1) [desktop] › tests/e2e/digitization-fact-review.spec.ts:5:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Private plan editor' }).getByText('Explicitly edited source label', { exact: true })
+    Expected: visible
+    Error: strict mode violation: getByRole('region', { name: 'Private plan editor' }).getByText('Explicitly edited source label', { exact: true }) resolved to 4 elements:
+        1) <text font-size="12" fill="#202c29" direction="auto" transform="translate(67 344) scale(1 -1)" data-room-label="room-16bd1dab-4bfd-4f36-aab6-0dda5bd956d8">Explicitly edited source label</text> aka getByRole('img', { name: 'Plan drawing canvas' }).getByText('Explicitly edited source label')
+        2) <span>Explicitly edited source label</span> aka locator('span').filter({ hasText: 'Explicitly edited source label' })
+        3) <option value="room-16bd1dab-4bfd-4f36-aab6-0dda5bd956d8">Explicitly edited source label</option> aka getByLabel('Room to edit')
+        4) <option value="room-16bd1dab-4bfd-4f36-aab6-0dda5bd956d8">Explicitly edited source label</option> aka getByLabel('Second room to merge')
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'Private plan editor' }).getByText('Explicitly edited source label', { exact: true }) with timeout 15000ms
+      - waiting for getByRole('region', { name: 'Private plan editor' }).getByText('Explicitly edited source label', { exact: true })
+
+
+      19 |  for(const position of [{x:40,y:60},{x:180,y:60},{x:180,y:180}])await canvas.click({position});await editor.getByRole('button',{name:'Close room boundary',exact:true}).click();await editor.getByRole('button',{name:'Save private trace',exact:true}).click();await expect(editor.getByText('Private trace saved.',{exact:true})).toBeVisible();
+      20 |  const trace=(await (await page.request.get(geometryRoute)).json()).data;expect(trace.geometry.review.status).toBe('pending');expect(trace.geometry.unit).toBe('px');expect(trace.geometry.rooms).toHaveLength(1);expect(trace.geometry.rooms[0].name).toBe('Explicitly edited source label');expect(trace.geometry.rooms[0].source).toMatchObject({kind:'asset',page:expect.any(Number)});
+    > 21 |  await page.reload();await expect(editor.getByText('Explicitly edited source label',{exact:true})).toBeVisible();await expect(editor.getByRole('group',{name:'Source text label suggestions',exact:true})).toHaveCount(0);
+         |                                                                                                    ^
+      22 |  const review=page.getByRole('region',{name:'Private document fact review'}),select=review.getByLabel('Source fact',{exact:true});await expect(select).toBeVisible();await select.selectOption(fixture.candidateId);
+      23 |  await expect(review.getByRole('blockquote')).toContainText('123.45');const crop=review.getByRole('img',{name:/Source crop for unitArea, page [12]/});await expect(crop).toBeVisible();expect((await crop.getAttribute('viewBox'))?.split(' ')).toHaveLength(4);
+      24 |  const read=async()=>{const response=await page.request.get(origin+route);expect(response.status()).toBe(200);return (await response.json()).data;};
+        at /workspace/tests/e2e/digitization-fact-review.spec.ts:21:100
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-fact-review.spec.ts:5:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Private plan editor' }).getByText('Explicitly edited source label', { exact: true })
+    Expected: visible
+    Error: strict mode violation: getByRole('region', { name: 'Private plan editor' }).getByText('Explicitly edited source label', { exact: true }) resolved to 4 elements:
+        1) <text font-size="12" fill="#202c29" direction="auto" transform="translate(208 903) scale(1 -1)" data-room-label="room-f63acb4b-8ee7-470e-8658-078eba8edd9b">Explicitly edited source label</text> aka getByRole('img', { name: 'Plan drawing canvas' }).getByText('Explicitly edited source label')
+        2) <span>Explicitly edited source label</span> aka locator('span').filter({ hasText: 'Explicitly edited source label' })
+        3) <option value="room-f63acb4b-8ee7-470e-8658-078eba8edd9b">Explicitly edited source label</option> aka getByLabel('Room to edit')
+        4) <option value="room-f63acb4b-8ee7-470e-8658-078eba8edd9b">Explicitly edited source label</option> aka getByLabel('Second room to merge')
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'Private plan editor' }).getByText('Explicitly edited source label', { exact: true }) with timeout 15000ms
+      - waiting for getByRole('region', { name: 'Private plan editor' }).getByText('Explicitly edited source label', { exact: true })
+
+
+      19 |  for(const position of [{x:40,y:60},{x:180,y:60},{x:180,y:180}])await canvas.click({position});await editor.getByRole('button',{name:'Close room boundary',exact:true}).click();await editor.getByRole('button',{name:'Save private trace',exact:true}).click();await expect(editor.getByText('Private trace saved.',{exact:true})).toBeVisible();
+      20 |  const trace=(await (await page.request.get(geometryRoute)).json()).data;expect(trace.geometry.review.status).toBe('pending');expect(trace.geometry.unit).toBe('px');expect(trace.geometry.rooms).toHaveLength(1);expect(trace.geometry.rooms[0].name).toBe('Explicitly edited source label');expect(trace.geometry.rooms[0].source).toMatchObject({kind:'asset',page:expect.any(Number)});
+    > 21 |  await page.reload();await expect(editor.getByText('Explicitly edited source label',{exact:true})).toBeVisible();await expect(editor.getByRole('group',{name:'Source text label suggestions',exact:true})).toHaveCount(0);
+         |                                                                                                    ^
+      22 |  const review=page.getByRole('region',{name:'Private document fact review'}),select=review.getByLabel('Source fact',{exact:true});await expect(select).toBeVisible();await select.selectOption(fixture.candidateId);
+      23 |  await expect(review.getByRole('blockquote')).toContainText('123.45');const crop=review.getByRole('img',{name:/Source crop for unitArea, page [12]/});await expect(crop).toBeVisible();expect((await crop.getAttribute('viewBox'))?.split(' ')).toHaveLength(4);
+      24 |  const read=async()=>{const response=await page.request.get(origin+route);expect(response.status()).toBe(200);return (await response.json()).data;};
+        at /workspace/tests/e2e/digitization-fact-review.spec.ts:21:100
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-fact-review.spec.ts:5:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+    [mobile] › tests/e2e/digitization-fact-review.spec.ts:5:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+

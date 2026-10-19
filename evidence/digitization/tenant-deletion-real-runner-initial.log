@@ -1,0 +1,37 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-tenant-deletion.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 3337[2mms[22m[39m
+[31m   [31m×[31m tenant erasure fences active CPU work and removes originals and derivatives while retaining credential, account and organization history[39m[33m 3334[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-tenant-deletion.test.ts[2m > [22mtenant erasure fences active CPU work and removes originals and derivatives while retaining credential, account and organization history
+[31m[1mAssertionError[22m: expected error: column reference "a.id" is ambiguo… { …(15) } to match object { code: '40001' }
+(17 matching properties omitted from actual)[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- {[39m
+[32m-   "code": "40001",[39m
+[31m+ DatabaseError {[39m
+[31m+   "code": "42702",[39m
+[2m  }[22m
+
+[36m [2m❯[22m tests/integration/digitization-tenant-deletion.test.ts:[2m54:95[22m[39m
+    [90m 52|[39m   await expect(new DigitizationTenantDeletionController(identity(actor…
+    [90m 53|[39m   const payload={scopeVersion:context.scopeVersion,deletionConfirmed:t…
+    [90m 54|[39m   await expect(controller.request(req('/stale'),org,{...payload,scopeV…
+    [90m   |[39m                                                                                               [31m^[39m
+    [90m 55|[39m   const receipt=(await controller.request(command,org,payload)).data;e…
+    [90m 56|[39m   expect((await controller.request(command,org,payload)).data).toEqual…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m   Start at [22m 20:28:59
+[2m   Duration [22m 5.00s[2m (tests 68%, import 20%, transform 12%)[22m
+

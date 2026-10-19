@@ -1,0 +1,28 @@
+ Image haven-colmap-dependency-resolver Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 667B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.colmap
+#2 transferring dockerfile: 620B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 ERROR: failed to do request: Head "https://registry-1.docker.io/v2/library/python/manifests/sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea": tls: failed to verify certificate: x509: certificate is valid for *.facebook.com, *.facebook.net, *.fbcdn.net, *.fbsbx.com, *.m.facebook.com, *.messenger.com, *.xx.fbcdn.net, *.xy.fbcdn.net, *.xz.fbcdn.net, facebook.com, messenger.com, not registry-1.docker.io
+------
+ > [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea:
+------
+Dockerfile.colmap:1
+
+--------------------
+
+   1 | >>> FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS resolve
+
+   2 |     # Development dependency discovery only. The runtime target will consume exact
+
+   3 |     # versions and package hashes captured from the signed Debian package index.
+
+--------------------
+
+failed to solve: python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea: failed to resolve source metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea: failed to do request: Head "https://registry-1.docker.io/v2/library/python/manifests/sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea": tls: failed to verify certificate: x509: certificate is valid for *.facebook.com, *.facebook.net, *.fbcdn.net, *.fbsbx.com, *.m.facebook.com, *.messenger.com, *.xx.fbcdn.net, *.xy.fbcdn.net, *.xz.fbcdn.net, facebook.com, messenger.com, not registry-1.docker.io
+

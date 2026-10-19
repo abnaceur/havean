@@ -1,0 +1,188 @@
+ Image haven-recovery-web:1.0.0-locked-registration-review Building 
+ Image haven-recovery-ops:1.0.0-locked-registration-review Building 
+ Image haven-recovery-api:1.0.0-locked-registration-review Building 
+ Image haven-recovery-worker:1.0.0-locked-registration-review Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.01kB done
+#1 DONE 0.0s
+
+#2 [web internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.45kB done
+#2 DONE 0.1s
+
+#3 [web internal] load metadata for docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b
+#3 DONE 0.1s
+
+#4 [api internal] load .dockerignore
+#4 transferring context:
+#4 transferring context: 2B done
+#4 DONE 0.1s
+
+#5 [web  1/24] FROM docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336
+#5 resolve docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336 0.1s done
+#5 resolve docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336 0.1s done
+#5 DONE 0.1s
+
+#6 [web internal] load build context
+#6 transferring context: 397.12MB 4.9s
+#6 transferring context: 633.68MB 7.6s done
+#6 DONE 7.9s
+
+#7 [worker  2/24] WORKDIR /workspace
+#7 CACHED
+
+#8 [api  3/24] COPY apps/worker/src/digitization/coordinator.ts /workspace/apps/worker/src/digitization/coordinator.ts
+#8 DONE 0.2s
+
+#9 [worker  4/24] COPY apps/worker/src/main.ts /workspace/apps/worker/src/main.ts
+#9 DONE 0.2s
+
+#10 [api  5/24] RUN rm -rf /workspace/apps/web/node_modules
+#10 DONE 0.4s
+
+#11 [web  6/24] COPY dependencies-0/ /workspace/apps/web/node_modules/
+#11 DONE 0.1s
+
+#12 [web  7/24] RUN rm -rf /workspace/apps/worker/node_modules
+#12 DONE 0.3s
+
+#13 [ops  8/24] COPY dependencies-1/ /workspace/apps/worker/node_modules/
+#13 DONE 0.2s
+
+#14 [ops  9/24] RUN rm -rf /workspace/node_modules
+#14 DONE 1.9s
+
+#15 [api 10/24] COPY dependencies-2/ /workspace/node_modules/
+#15 DONE 4.3s
+
+#16 [ops 11/24] RUN rm -rf /workspace/packages/database/node_modules
+#16 DONE 0.5s
+
+#17 [web 12/24] COPY dependencies-3/ /workspace/packages/database/node_modules/
+#17 DONE 0.1s
+
+#18 [api 13/24] RUN rm -rf /workspace/apps/api/node_modules
+#18 DONE 0.3s
+
+#19 [ops 14/24] COPY dependencies-4/ /workspace/apps/api/node_modules/
+#19 DONE 0.1s
+
+#20 [web 15/24] RUN rm -rf /workspace/apps/ops/node_modules
+#20 DONE 0.3s
+
+#21 [worker 16/24] COPY dependencies-5/ /workspace/apps/ops/node_modules/
+#21 DONE 0.1s
+
+#22 [ops 17/24] RUN rm -rf /workspace/packages/config/node_modules
+#22 DONE 0.3s
+
+#23 [api 18/24] COPY dependencies-6/ /workspace/packages/config/node_modules/
+#23 DONE 0.1s
+
+#24 [web 19/24] RUN rm -rf /workspace/packages/contracts/node_modules
+#24 DONE 0.3s
+
+#25 [api 20/24] COPY dependencies-7/ /workspace/packages/contracts/node_modules/
+#25 DONE 0.1s
+
+#26 [api 21/24] RUN rm -rf /workspace/packages/test-support/node_modules
+#26 DONE 0.3s
+
+#27 [web 22/24] COPY dependencies-8/ /workspace/packages/test-support/node_modules/
+#27 DONE 0.3s
+
+#28 [api 23/24] RUN rm -rf /workspace/packages/ui/node_modules
+#28 DONE 0.3s
+
+#29 [api 24/24] COPY dependencies-9/ /workspace/packages/ui/node_modules/
+#29 DONE 0.1s
+
+#30 [web] exporting to image
+#30 exporting layers
+#30 ...
+
+#31 [api] exporting to image
+#31 ...
+
+#32 [worker] exporting to image
+#32 ...
+
+#33 [ops] exporting to image
+#33 ...
+
+#32 [worker] exporting to image
+#32 exporting layers 27.9s done
+#32 exporting manifest sha256:703c3b3b47555095cb56fa69aeca15e2563d50523866e15e2ac444b0eb65ce40
+#32 exporting manifest sha256:703c3b3b47555095cb56fa69aeca15e2563d50523866e15e2ac444b0eb65ce40 0.2s done
+#32 exporting config sha256:1b103fb85c6507d505f641d9e3d9501a04f11626e43693bba40a903d0e5dc219
+#32 exporting config sha256:1b103fb85c6507d505f641d9e3d9501a04f11626e43693bba40a903d0e5dc219 0.2s done
+#32 exporting attestation manifest sha256:e6bbce6e722f637d174cd008bb8fd152bfa0a317783b06473dcf834b051f30ad
+#32 exporting attestation manifest sha256:e6bbce6e722f637d174cd008bb8fd152bfa0a317783b06473dcf834b051f30ad 0.4s done
+#32 exporting manifest list sha256:ae46c1ef81f94e99ea4cd04d12bfc1f37d02ccb56f427e611a52beb8eea8ce1a
+#32 exporting manifest list sha256:ae46c1ef81f94e99ea4cd04d12bfc1f37d02ccb56f427e611a52beb8eea8ce1a 0.2s done
+#32 naming to docker.io/library/haven-recovery-worker:1.0.0-locked-registration-review 0.0s done
+#32 unpacking to docker.io/library/haven-recovery-worker:1.0.0-locked-registration-review
+#32 ...
+
+#31 [api] exporting to image
+#31 exporting layers 28.0s done
+#31 exporting manifest sha256:b150bc3cbfe568ef9f2192ad8534af22d7adf121803dba55d294cd06f1c30ea8 0.2s done
+#31 exporting config sha256:d4e378e28919c02976c01b44e2a3af013145ddf3fc135c48c23d85d89b15faad 0.2s done
+#31 exporting attestation manifest sha256:c841a8fda5d52af1739adde2d1eb6476d67da64df4a83b07d42a192f4d4f109d 0.4s done
+#31 exporting manifest list sha256:9124f62340aa70941e5cfe4187dd3f6def1bdf432c550d48105c52181f9d3efb 0.2s done
+#31 naming to docker.io/library/haven-recovery-api:1.0.0-locked-registration-review 0.0s done
+#31 unpacking to docker.io/library/haven-recovery-api:1.0.0-locked-registration-review
+#31 ...
+
+#33 [ops] exporting to image
+#33 exporting layers 27.9s done
+#33 exporting manifest sha256:828658c6aadea377d509fd8fd75352e9c7767663d8e88f727b571998e5366c8c 0.2s done
+#33 exporting config sha256:4eb1edc0c135b76242a5c60e9fdff2540da707e999ea27ecdc90d1f8e5797bf4 0.2s done
+#33 exporting attestation manifest sha256:303bf6d00939d486a02e449fbe9bc920f96dac5e247c9490880ae0759fa2dcb6 0.4s done
+#33 exporting manifest list sha256:5fceb514719dc68b8b5cc4367078b7761eae2f87cd2dac45c26dd285a872aee1 0.2s done
+#33 naming to docker.io/library/haven-recovery-ops:1.0.0-locked-registration-review 0.0s done
+#33 unpacking to docker.io/library/haven-recovery-ops:1.0.0-locked-registration-review
+#33 ...
+
+#30 [web] exporting to image
+#30 exporting layers 27.9s done
+#30 exporting manifest sha256:7f7370f4e358ef54d7f58b785dd4ca408c3a02d36e9bfe1b188680195e85182d 0.2s done
+#30 exporting config sha256:af3513a4f46fcb45d32a72d518ba87c6e1902cae8ae162e06055b35c4e677846 0.2s done
+#30 exporting attestation manifest sha256:d12e86bd3eac9384b724e460783ba578e0e39ed31080add3e7e9be1d7a373de8 0.4s done
+#30 exporting manifest list sha256:6204f5dc0c72a6311539be29e2f3fad76d6379bf224401f4ec3f3b656fe4fa77 0.2s done
+#30 naming to docker.io/library/haven-recovery-web:1.0.0-locked-registration-review 0.1s done
+#30 unpacking to docker.io/library/haven-recovery-web:1.0.0-locked-registration-review
+#30 ...
+
+#32 [worker] exporting to image
+#32 unpacking to docker.io/library/haven-recovery-worker:1.0.0-locked-registration-review 12.5s done
+#32 DONE 41.8s
+
+#30 [web] exporting to image
+#30 unpacking to docker.io/library/haven-recovery-web:1.0.0-locked-registration-review 12.5s done
+#30 DONE 41.8s
+
+#33 [ops] exporting to image
+#33 unpacking to docker.io/library/haven-recovery-ops:1.0.0-locked-registration-review 12.5s done
+#33 DONE 41.8s
+
+#31 [api] exporting to image
+#31 unpacking to docker.io/library/haven-recovery-api:1.0.0-locked-registration-review 12.5s done
+#31 DONE 41.8s
+
+#34 [worker] resolving provenance for metadata file
+#34 DONE 0.3s
+
+#35 [api] resolving provenance for metadata file
+#35 DONE 0.1s
+
+#36 [web] resolving provenance for metadata file
+#36 DONE 0.3s
+
+#37 [ops] resolving provenance for metadata file
+#37 DONE 0.0s
+ Image haven-recovery-worker:1.0.0-locked-registration-review Built 
+ Image haven-recovery-api:1.0.0-locked-registration-review Built 
+ Image haven-recovery-ops:1.0.0-locked-registration-review Built 
+ Image haven-recovery-web:1.0.0-locked-registration-review Built 
+{"label":"P","status":"locked-local-fixture-images-built","lockSha256":"1bfa8ae038760d2b68d06f5693658af4d218123335e03e2276c5b3d5c0fb994e","dependencyVolumes":10,"installedLockSha256":"1bfa8ae038760d2b68d06f5693658af4d218123335e03e2276c5b3d5c0fb994e","registryDownload":false,"productionImageAcceptance":false}

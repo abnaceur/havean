@@ -1,0 +1,48 @@
+time="2026-10-13T23:52:29+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-processing-gpu-volume-init-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-b24be014bb2d Creating 
+ Container haven-tests-run-b24be014bb2d Created 
+
+Running 1 test using 1 worker
+
+Property capture inputs are uploaded and bound.
+  ✘  1 [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform (28.6m)
+
+
+  1) [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: undefined
+
+    Call Log:
+    - Timeout 1300000ms exceeded while waiting on the predicate
+
+      85 |   const cameraResponse=await cameraQueued;expect(cameraResponse.ok(),await cameraResponse.text()).toBe(true);
+      86 |   }
+    > 87 |   await expect.poll(async()=>{status=(await (await page.request.get(base+'/reconstruction-status')).json()).data;if(['failed','awaiting_input'].includes(status.camera?.state))throw Error(JSON.stringify(status.camera));return status.camera?.report?.trainingArchiveAvailable;},{timeout:1300000,intervals:[3000,5000]}).toBe(true);
+         |                                                                                                                                                                                                                                                                                                                             ^
+      88 |  }
+      89 |  await page.reload();
+      90 |  const reconstruction=page.getByLabel('Property reconstruction status',{exact:true});
+        at /workspace/tests/e2e/digitization-2bhk-reconstruction.spec.ts:87:317
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Slow test file: [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts (28.6m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 failed
+    [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+

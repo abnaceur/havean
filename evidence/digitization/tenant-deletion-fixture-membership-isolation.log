@@ -1,0 +1,33 @@
+node:internal/child_process:1160
+    result.error = new ErrnoException(result.error, 'spawnSync ' + options.file);
+                   ^
+
+<ref *1> Error: spawnSync docker ENOENT
+    at Object.spawnSync (node:internal/child_process:1160:20)
+    at spawnSync (node:child_process:928:24)
+    at execFileSync (node:child_process:971:15)
+    at ip (/workspace/tests/support/env.ts:5:79)
+    at <anonymous> (/workspace/tests/support/env.ts:6:62)
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'spawnSync docker',
+  path: 'docker',
+  spawnargs: [
+    'inspect',
+    '-f',
+    '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}',
+    'haven-db-1'
+  ],
+  error: [Circular *1],
+  status: null,
+  signal: null,
+  output: null,
+  pid: 0,
+  stdout: undefined,
+  stderr: undefined
+}
+
+Node.js v24.21.0

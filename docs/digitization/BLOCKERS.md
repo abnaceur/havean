@@ -1,3 +1,101 @@
+## Real GPU reconstruction generated — 13 October 2026 (O/R/P/V)
+
+O/R: user authorized GPU use and local driver repair; credentials stayed in sudo. P: NVIDIA595.99.02/DKMS now runs on GTX1650Ti4GiB without reboot. A pinned gsplat1.5.3/torch2.7.1+cu126 SM75 runtime is active on the private development runner. The agent action completed actual500-step training and private export from the licensed16-view reference capture:3,354 splats,18.5575 seconds including held-out evaluation/export, no OOM fallback. A weights-only load verifies the500-step checkpoint and finite parameters. Both107,328-byte viewer tiers and188,184-byte PLY are nonempty and checksummed. The real browser journey passes download, orbit, zoom and reset. Evidence: `evidence/digitization/gsplat-real-functional.md` and `gsplat-real-result.json`.
+
+P: fixed real CUDA sandbox startup, job-local export moves, temporary-file ordering, the missing native-loader dependency and overly large uniform splat initialization. Local-neighbour sizing makes captured desk objects recognizable in held-out renders; preview framing now avoids distant outliers. View as Agent Demo: http://localhost:8089/ops/digitization?workspace=9acf2520-a922-4b23-830e-0a55aa0b97a6#digitization-scene and open the scene preview.
+
+V: this is a rough partial reference desk-area scan, not the authored apartment or a complete furnished property/metric floor plan. No independent render/privacy approval, public publication, editable furniture inference, production/native distribution admission or full GPU fault/recovery acceptance. VR remains paused. HE-H06's exact real-checkpoint/scene minimum passes; task remains in_progress because prerequisite HE-H03 is unfinished. Counts unchanged: root120/120, engine56/95,37 unfinished non-VR plus2pausedVR. Older blocked/deferred notes below are historical and superseded by this update.
+
+## GPU use authorized; host driver repair required — 13 October 2026 (O/R/P/V)
+
+O/R: user now explicitly requested “use the GPU”, lifting the previous GPU-validation deferral. VR remains paused. P: actual host and Docker device checks attempted. The GTX1650Ti Mobile PCI device is present, but running kernel7.0.0-34-generic has no NVIDIA module. Driver595.84 and its module exist for older kernel7.0.0-31; current-kernel package595.91.07 is available. The Docker NVIDIA runtime exists but fails device admission. `sudo -n true` requires a password. Existing unrelated baidunetdisk dependencies also block APT; a simulated repair installs six libraries with no removals. Prepared `scripts/repair-gsplat-gpu-host.sh` for interactive local sudo, dependency repair, current-kernel driver installation and modprobe; it refuses removals and does not reboot. User was asked to run it locally without sharing their password.
+
+V: GPU work is authorized, not deferred, but remains blocked by host administrator access. No CUDA/training success, runtime build, completed scene, GPU acceptance or public-property replacement is claimed. Evidence: `evidence/digitization/gsplat-host-admission.json`, `gsplat-device-probe.log`, `gsplat-host-package-repair-preview.log`. After repair run `docker compose -f compose.gsplat-probe.yaml run --rm gpu-probe`, then prepare the pinned gsplat runtime and execute the real calibrated fixture. Task counts unchanged: root120/120, engine56/95;37 non-VR unfinished and2pausedVR.
+
+## gsplat integration update — 13 October 2026 (O/R/P/V)
+
+O/R: user retained GPU-validation deferral and paused VR. P: durable calibrated-input binding, background training/export jobs, private output collection, cancellation/resource fencing and agent status are implemented; minimum CPU/API/browser checks pass. See `evidence/digitization/gsplat-integration.md` and `docs/runbooks/gsplat-investigation.md`. This supersedes older statements that the durable gsplat connection is missing. V: no GPU runtime build, setup, CUDA training, actual trained-property result or production/native admission. Exact GPU acceptance remains pending; engine56/95 and37 unfinished non-VR tasks are unchanged.
+
+## HE-D03 completed: exact document normalization — 12 October 2026 (O/R/P/V)
+
+O/R: user requested the next task. HE-D03 follows accepted HE-A03/HE-D02; its original acceptance remains normalization of decimals, units, IDs and calendars, with `184,20 m²` normalized correctly and leading-zero IDs retained as strings.
+
+P: existing runtime implementation meets this task; no new runtime changes were needed. Three focused current CPU cases and three API/contract cases pass (`normalization-minimum-cpu-functional.log`, `normalization-minimum-api-functional.log`). They cover French decimal strings/area basis, original evidence, leading-zero IDs, Arabic quantity checks, explicit calendars/precision and invalid or tampered value refusal. All other cases were deselected; prior accepted real OCR evidence is reused. No broad suite, model rebuild, GPU or VR test was run. Exact commands and scope are in `evidence/digitization/tasks/HE-D03.md`.
+
+V: engine56/95 accepted;35 in_progress,2 todo,2 paused. There are37 non-VR unfinished tasks plus2 paused VR tasks; root remains120/120. HE-D04 extraction/abstention is next. Representative country/property accuracy, remaining reconstruction/integration, physical-device/human/parity and production release gates remain outstanding. GPU validation remains deferred and VR paused. No deployment occurred; release must refuse unfinished tasks.
+
+## HE-D02 completed: offline production OCR package — 12 October 2026 (O/R/P/V)
+
+O: authorized self-authored English/French/Arabic PDF and PNG fixtures, actual confined runner/API/SQL/S3 results and checksum-pinned publisher artifacts. The user requested completion of the first remaining item, production document processing. GPU validation stays deferred; VR stays paused.
+
+R/P: HE-D02 now meets its unchanged acceptance and exact minimum: a real locale-aware worker produces nonempty source-linked tokens for all three languages. The separately gated production package retains63 exact wheels,4 models,270 runtime files,333 notices and55 source/distribution archives. Matching native provenance, required corresponding sources, reproducible Compose bootstrap/build, strict release-SHA activation, production API manifest packaging, private runner configuration and the release runbook are complete. A second-collector receipt race exposed by the functional check is fixed without bypassing actor/scope/version/workflow checks. Original failed attempts remain retained.
+
+P: `ocr-production-final-functional-journey.log` passes four focused real OCR journeys on final image `sha256:10f946939efd523188b68202fc9af3e6d25a7d2ff6d4c8cce2f41599911525f8`; one redundant JPEG case is skipped. Four activation/refusal checks, final bundle/image/license gates, generated contracts, API types, focused lint and synthetic production Compose validation pass. `ocr-production-runtime-equivalence.json` records that the old intermediate image was unavailable, so the four final-image checks were rerun instead of claiming equivalence. See `evidence/digitization/tasks/HE-D02.md` and `docs/runbooks/ocr-release.md`. No broad suite or GPU/headset validation was run.
+
+V: engine55/95 accepted;36 in_progress,2 todo and2 paused, leaving38 non-VR tasks plus2 paused VR tasks. Root remains120/120. This supersedes earlier statements that OCR distribution admission is pending; it does not accept country/property accuracy, GPU training-to-artifact integration, physical-device/human/parity results, current full recovery/remote CI or production release. The package is built and validated locally; no registry push or deployment occurred. Release must continue refusing unfinished tasks.
+
+Final ledger validation passes: platform120/120 and engine55/95 (`ocr-production-platform-ledger.log`, `ocr-production-engine-ledger.log`). Release correctly exits1 for40 unfinished engine tasks, including both paused VR tasks, and existing external release gates (`ocr-production-release-refusal.log`). HE-D02 is absent from the unfinished list. Final whitespace validation passes (`ocr-production-final-diff-check.log`).
+
+## GPU validation remains deferred; calibrated handoff and recovery — 12 October 2026 (O/R/P/V)
+
+O: the user explicitly reaffirmed “Keep GPU validation deferred”. VR remains paused in the UI. No GPU driver setup, CUDA training or headset validation was performed.
+
+P: the supervised training CLI now accepts the actual private calibrated camera tar with mandatory SHA-256 and optional dataset fingerprint. Extraction admits only the exact bounded regular model/image members, validates calibrated image hashes, and removes temporary pixels on exit. The real retained16-view CPU dataset passes checksum, traversal and cleanup checks in `training-calibrated-archive-corrected-functional.log`; this is input handoff evidence, not trained-scene evidence.
+
+P: training now persists a fsynced wall-clock reservation and excludes concurrent attempts. Graceful interruption charges time since the last model checkpoint. A killed supervisor leaves its full reservation charged, so resume cannot reset its time allowance. Incomplete scene/render/export files can be cleared after checkpoint validation without deleting checkpoints; completed outputs refuse resume. `training-no-network-final-functional.log` passes six focused CPU functional checks including real subprocess termination/SIGKILL. The CPU test service uses network_mode:none, avoiding unnecessary Docker address-pool allocation. Earlier failed/corrected archive/supervision runs remain retained.
+
+P: the targeted current recovery initially refused the isolated integration database because migration225 was absent. The normal migration command applied225 (`camera-integration-migration-functional.log`). `camera-current-47-table-recovery-corrected-functional.log` then passes signed encrypted database/object/runner restoration with47 table proofs, tamper and signed-history-drift refusal, interrupted source upload, actual completed decoder/preview recovery, tombstone retention and stale-request refusal. The47th table is present but has no camera rows in this integration snapshot; this is not a populated camera-run recovery or a new full restored-application/off-host rehearsal. The old46-table full application result remains historical.
+
+R/V: preserve exact original acceptance and ordered prerequisites. Engine remains54/95 accepted,39 non-VR unfinished and2 VR paused; root remains120/120. Remaining implementation includes production OCR/native distribution admission and durable GPU training-to-artifact integration. Representative country/property/calibration inputs, physical-device results and current full application/remote-CI/production acceptance remain outstanding. CPU handoff, authored export guards and recovery do not satisfy the deferred real GPU minimums. Release must continue refusing unfinished tasks.
+
+## VR paused; non-VR camera review corrected — 12 October 2026 (O/R/P/V)
+
+O: user explicitly paused VR and requested completion of the remaining engine. HE-I05 and HE-I06 are now `paused`, retaining their original acceptance and dependencies. Headset entry and capability probing are disconnected from the structural viewer; the reusable session controller is retained for later resumption. Structural, panorama and splat viewers show a visible pause notice. The ordinary panorama tab now reads “360° tour”. Browser 3D and room-hotspot navigation remain available.
+
+R: preserve the supplied specification and exact acceptance. A paused task is unfinished: the ledger schema accepts this state, and full release validation still refuses it. GPU validation remains deferred under the earlier user instruction; pausing VR does not complete or remove GPU reconstruction, device or release requirements.
+
+P: `vr-pause-structural-functional-retry.log` passes one actual desktop structural-viewer journey (room selection, keyboard zoom/reset, wall cutaway, repeated open/close and pause notice). The initial attempt did not run because the isolated proxy was stopped; `vr-pause-structural-functional.log` retains that failure. The existing polling gateway was restarted without changing source data. `vr-pause-release-guard.log` passes one focused paused-ledger/release-refusal check. `camera-disconnected-review-functional.log` passes one synthetic multi-model projection check: counts from the largest model stay separate, while connected components include all returned models, avoiding shared-view double counting. `camera-quality-current-browser-functional.log` passes the current retained real CPU result through scoped API/OIDC and both operator review sections; it reuses the existing 16-view/3364-point result without repeating reconstruction. This does not supply a real disconnected-property benchmark. Changed UI/API/ops/web types pass in `vr-pause-*-types.log`.
+
+V: engine acceptance remains54/95;37 in_progress,2 todo,2 paused. There are39 non-VR unfinished tasks. Remaining software includes production OCR/native packaging/admission and GPU training-to-artifact integration; real training/resume/export cannot be accepted on the deferred/unavailable CUDA runtime. Authorized representative property/country inputs, named physical-device measurements, current full47-table restore, remote CI and independent production/reference acceptance remain unverified. Optional structured suggestions stay disabled and are not a baseline prerequisite. No full non-VR feature or release completion is claimed.
+
+## Current software checkpoint — 12 October 2026 (O/R/P/V)
+
+O/P: local confined CPU camera processing is now integrated with durable queue execution, exact privacy/frame lineage, private report/training archive persistence, scoped download, review summary, cancellation and replay. The real queued licensed-reference-derived fixture passes16 registered cameras/3364 points. Optional provider transport is integrated into document collection, defaults off, and rejects ungrounded IDs without blocking OCR/manual review. See the latest COMPLETION-AUDIT for exact logs. A concrete structured model service is still absent; transport fixture responses are not a deployed model or accuracy result.
+
+R/V:54/95 accepted;41 unfinished. Retain production/native/model distribution admission, representative country/property/calibration fixtures, deferred GPU training/export and physical headset/device checks, human/parity and current release/recovery/CI gates. Local software progress does not admit a production reconstruction/model runtime or fabricate physical results. The new47-table/v6 recovery descriptor has focused validation only; earlier46-table full-restore evidence is preserved as historical.
+
+## Current local completion boundary — 12 October 2026 (O/R/P/V)
+
+Local opt-in OCR is now usable from the operator/API path for PDF/JPEG/PNG and is active on this host. The actual durable queue/worker/source-linked review journey passes. A bounded high-resolution rotated-JPEG case passes; exact input tokens, source hashes and orientation remain reviewable. The no-GUI OCR candidate has no unresolved static system-library links. These supersede older statements below that local OCR execution/persistence is absent.
+
+Full engine acceptance remains54/95, with41 unfinished (38in_progress,3todo). Production/native/model distribution admission, country/property datasets, GPU/headset acceptance, human/parity/off-host/remote-CI and remaining reconstruction/provider integration are not established by these local results. GPU validation retains the previously recorded user deferral. The earlier16-lane suite has no complete passing result; current work uses only focused functional checks as requested.
+
+O: actual local application/worker/SQL/S3/model observations and authored fixtures. R: user's minimal-functional-validation instruction and preserved original acceptance. P: current logs referenced in PROGRESS.md. V: the remaining gates above; no full-feature completion claimed.
+
+## Current acceptance audit — 11 October 2026 (O/R/P/V)
+
+The authoritative ledger records54/95 accepted and41 unfinished (37in_progress,4todo); root120/120 remains separate. HE-R07 is now accepted from exact reviewed inventory evidence. Current software covers private source review/assisted labels, independently reviewed panorama/structural/authored-splat publication and withdrawal, actual account/tenant erasure and real collector/copier SIGKILL cleanup.224 units,9 workspace types, lint and435 canonical operations pass. Current46/v5 signed restored application is running; no pass is inferred from the earlier45/v4 result.
+
+O: actual local Compose/SQL/S3/OIDC/browser/process results and authored fixtures. R: preserved acceptance dependencies and source/actor/version/workflow rules. P: see current PROGRESS.md and task logs. V: native/model distribution admission, independent country/property examples, usable GPU (explicitly deferred), physical headset, human/parity and off-host/production acceptance remain unfinished. Missing HE-I06/K07/K08/A05-GPU evidence files now explicitly record unsupported/unverified limits. Splat WebXR is unsupported by the current adapter; structural VR software does not prove splat stereo. These gates do not justify stopping remaining software implementation or calling it accepted.
+
+Runnable source gaps still include admitted reconstruction-stage integration, concrete disabled-provider execution integration, complete native distribution audit and current operations/release evidence. Keep those distinct from external hardware/data/human inputs.
+
+## Source review checkpoint — 10 October 2026
+
+53/95 accepted; 42 unfinished (8 in progress, 34 not started). Actual private native/OCR page and candidate persistence is verified. Provisional generic source review, reasoned decisions, original-candidate preservation and history now pass real desktop/mobile/API/database/storage checks. Full country/conflict/inventory application and reviewed publication remain unfinished; source review is not final HE-D09 acceptance. See COMPLETION-AUDIT.md and evidence/digitization/tasks/HE-D09.md.
+
+The fresh GPU probe in evidence/digitization/engine-completion-gpu-check.log still exits 9. No supplied physical headset or independently labeled country/property benchmark is inferred. OCR/model and COLMAP distribution admission remain blocked. These inputs do not block all remaining implementation work.
+
+O: authored source pixels and actual private receipts. R: preserved specification and acceptance order. P: final real Compose checks. V: no production/country/customer/hardware/human/parity/public-package/full-engine approval.
+
+## 10 October 2026 checkpoint
+
+53/95 accepted;42 unfinished. Real authored trilingual OCR, a two-page PDF and private API proposal validation now run locally; production/model distribution and persistent review integration still need implementation. The local NVIDIA driver cannot initialize, and no physical headset connection has been supplied. Hardware questions remain pending; no CUDA capacity or VR acceptance is inferred from successful compilation.
+
+COLMAP3.10 upstream SiftGPU restriction conflicts with Debian aggregate MIT metadata. The exploratory source CUDA build was stopped and COLMAP enablement is blocked by the license gate. A pinned MPL-2.0 PopSift library actually compiles; its feature adapter and GPU runtime are pending. An independent CPU source build verifies145 actual built objects exclude SiftGPU/LSD, removes restricted installed headers and actually registers16 cameras/3,088 points in its largest licensed TUM model; its discovery image is not admitted for production distribution. These restrictions do not block all remaining software work. No accepted task was reversed or dependent task falsely completed.
+
+O: authored document pixels, existing licensed TUM dataset and publisher source archives. R: preserved specification and Abu Dhabi priority. P: actual local source/protocol/build checks. V: customer/country data, human/parity, working GPU/headset, production and whole-engine acceptance absent.
+
 # External acceptance inputs
 
 O: host inspection only. R: supplied real GPU/device/country benchmark gates.
@@ -13,3 +111,22 @@ Local availability recheck: PCI `0000:01:00.0`, NVIDIA vendor/device `10de:1f95`
 
 ## 7 October execution boundary
 HE-B03 is now accepted (15/95 done); source-binding routes and actual scoped CPU start are implemented/tested but HE-B04/B05/C02–C04 and reviewed result persistence remain incomplete. Missing GPU/country examples/headset do not explain or block all 80 remaining tasks; queue/result-commit, OCR model audit, review UI and manual editor work remain runnable. Original release still fails unfinished ledgers. Shared host file-watcher exhaustion blocked default isolated web/Traefik startup. A temporary test-only static gateway/polling web override permits real legacy-tour/API checks; it does not establish normal startup or visual/device acceptance. No host limit or unrelated project was changed.
+
+
+## Continuation scope — 10 October 2026
+
+Disabled country families/benchmark tooling, structured suggestion validation, conflict fences, source ink suggestions, intake-to-draft mapping/UI and CPU grouping/quality/fallback have further local implementation and retained tests. These are in_progress while exact task acceptance/prerequisites remain unmet. See latest PROGRESS/COMPLETION-AUDIT. Do not classify all42 unfinished tasks as hardware blockers: downstream software still requires work. Authorized representative country documents/property/lens-switch captures, working NVIDIA GPU runtime/headset and reviewed production dependency admission are concrete outstanding external inputs. An authored split of one licensed camera sequence proves calibration separation code only. O: current source and actual fixtures/logs. R: exact acceptance. P: retained passing local evidence. V: listed inputs and full downstream acceptance.
+
+
+## User clarification: generic documents and host resources — 10 October 2026
+
+The user specified using the local host and extracting facts from documents without requiring a particular country template; unavailable facts must remain unfilled. Generic extraction now has explicit v3 evidence-backed English/French/Arabic text fields (country/region/city/district/address/property type/tenure/owner/boundary), string identifiers preserving leading zeros, and explicit standalone count phrases in flexible line/semicolon layouts. Original quote/page/crop and pending review remain attached. Blank/unknown/n/a fields and unlabeled numbers do not generate candidates. The API independently rechecks each normalized value against actual retained native/OCR text and refuses version substitution or invented text. No document author claim creates owner authority or canonical geography automatically.
+
+Current host inventory: Intel i9-10885H,16 logical CPU threads,62 GiB RAM, and NVIDIA GTX1650Ti Mobile PCI device. The running kernel is7.0.0-34-generic and `modinfo nvidia` reports no module; `nvidia-smi` cannot communicate with a driver. CPU workers run on the existing host through bounded Compose services. This is a missing usable CUDA driver/runtime, not an absent physical GPU. No kernel/driver installation, hardware device acceptance or GPU processing result is claimed.
+
+No special document template or representative country upload is required for the generic extraction/review/private draft path. Representative country/property fixtures remain acceptance inputs for disabled specialized profiles and physical reconstruction benchmarks only. Mandatory canonical unit fields remain blank in the intake until explicitly supplied; creating a canonical unit without them would require invented values and is blocked.
+
+O: user's latest clarification, actual host CPU/RAM/PCI/driver probes and retained actual document text. R: format-independent supported-document extraction with unknowns omitted, exact source evidence and host resource limits. P: generic v3 implementation, actual native-PDF parsing and strict API validation. V: current CUDA driver unavailable; GPU/headset, specialized benchmark/admission and downstream software acceptance remain pending.
+
+
+10 October user decision: continue all software work; GPU validation must wait. This defers real CUDA acceptance and authorizes continued implementation. It does not defer OCR/document/editor/tour/publication/operations software or justify calling all42 unfinished tasks hardware-blocked. O: explicit user answer. R: exact acceptance retained. P: host CPU/software work continues. V: GPU validation deferred; no GPU result invented.

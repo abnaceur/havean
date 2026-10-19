@@ -1,0 +1,17 @@
+# Minimal actual device admission check. Uses an already cached immutable image.
+name: haven-gsplat-probe
+services:
+  gpu-probe:
+    image: nvidia/cuda@sha256:133c78a0575303be34164d0b90137a042172bdf60696af01a3c424ab402d86e2
+    pull_policy: never
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    pids_limit: 32
+    deploy:
+      resources:
+        reservations:
+          devices: [{driver: nvidia, count: 1, capabilities: [gpu]}]
+    command: [nvidia-smi, '--query-gpu=name,driver_version,memory.total', '--format=csv,noheader']

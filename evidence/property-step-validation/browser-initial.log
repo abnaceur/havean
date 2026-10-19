@@ -1,0 +1,48 @@
+
+Running 8 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/commercial-facts.spec.ts:4:1 › Q04 / C01 agent authors an annual per-usable-area furnished office, corrects invalid area, and restores explicit commercial facts after editing and refresh (53.0s)
+  ✓  2 [desktop] › tests/e2e/property-wizard.spec.ts:5:1 › guided property creation saves incomplete progress, resumes and submits required media (1.1m)
+  ✓  3 [desktop] › tests/e2e/property-wizard.spec.ts:72:1 › all submission routes reject an incomplete price without publishing the draft (1.2s)
+  ✓  4 [desktop] › tests/e2e/property-wizard.spec.ts:84:1 › new-unit and commercial steps validate their own fields and support keyboard continuation (25.3s)
+  ✓  5 [mobile] › tests/e2e/commercial-facts.spec.ts:4:1 › Q04 / C01 agent authors an annual per-usable-area furnished office, corrects invalid area, and restores explicit commercial facts after editing and refresh (16.2s)
+  ✓  6 [mobile] › tests/e2e/property-wizard.spec.ts:5:1 › guided property creation saves incomplete progress, resumes and submits required media (32.8s)
+  ✓  7 [mobile] › tests/e2e/property-wizard.spec.ts:72:1 › all submission routes reject an incomplete price without publishing the draft (1.1s)
+  ✘  8 [mobile] › tests/e2e/property-wizard.spec.ts:84:1 › new-unit and commercial steps validate their own fields and support keyboard continuation (3.0m)
+
+
+  1) [mobile] › tests/e2e/property-wizard.spec.ts:84:1 › new-unit and commercial steps validate their own fields and support keyboard continuation 
+
+    Test timeout of 180000ms exceeded.
+
+    Error: locator.click: Test timeout of 180000ms exceeded.
+    Call log:
+      - waiting for locator('dialog.property-wizard-dialog').getByRole('button', { name: /Step 3 Photos & media/ })
+
+
+      90 |  await dialog.getByLabel('Area (m²)',{exact:true}).fill('100.00');await dialog.getByLabel('Private unit address',{exact:true}).fill('Synthetic private office 204');await dialog.getByLabel('Floor',{exact:true}).fill('2');
+      91 |  await dialog.getByLabel('Property title',{exact:true}).press('Enter');await expect(dialog.getByRole('heading',{name:'Details & pricing',exact:true})).toBeVisible();
+    > 92 |  await dialog.getByRole('button',{name:/Step 3 Photos & media/}).click();await expect(dialog.getByRole('heading',{name:'Details & pricing',exact:true})).toBeVisible();await expect(dialog.getByLabel('Property description',{exact:true})).toBeFocused();
+         |                                                                  ^
+      93 |  for(const field of ['Gross area (m²)','Usable area (m²)','Fit-out','Permitted uses (separate with commas)'])await expect(dialog.getByLabel(field,{exact:true})).toHaveAttribute('aria-invalid','true');
+      94 |  await dialog.getByLabel('Property description',{exact:true}).fill('A synthetic office created to verify per-step validation.');await dialog.getByLabel('Asking price (decimal amount)',{exact:true}).fill('800000.75');
+      95 |  await dialog.getByLabel('Gross area (m²)',{exact:true}).fill('100.00');await dialog.getByLabel('Usable area (m²)',{exact:true}).fill('110.00');await dialog.getByLabel('Advertised area and per-area price basis',{exact:true}).selectOption('gross');await dialog.getByLabel('Commercial price basis',{exact:true}).selectOption('total');await dialog.getByLabel('Fit-out',{exact:true}).fill('Fitted');await dialog.getByLabel('Permitted uses (separate with commas)',{exact:true}).fill('Office');
+        at /workspace/tests/e2e/property-wizard.spec.ts:92:66
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/step-validation/property-wizard-new-unit-a-ab9c6-pport-keyboard-continuation-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/step-validation/property-wizard-new-unit-a-ab9c6-pport-keyboard-continuation-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/step-validation/property-wizard-new-unit-a-ab9c6-pport-keyboard-continuation-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/step-validation/property-wizard-new-unit-a-ab9c6-pport-keyboard-continuation-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile] › tests/e2e/property-wizard.spec.ts:84:1 › new-unit and commercial steps validate their own fields and support keyboard continuation 
+  7 passed (6.3m)

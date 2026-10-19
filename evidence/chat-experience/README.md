@@ -1,0 +1,20 @@
+# Chat experience
+
+O: Inspected `/ops/messages?conversation=dfcd926b-19bd-4b55-a2cf-c8d358215d74&inboxPage=1` using the existing agent session flow. The conversation list stretched the page, messages did not distinguish senders, and the closed thread displayed a large disabled composer. Before screenshots and `before.log` record this state.
+
+R: Improve the requested chat page using the current code and existing Haven styling. Preserve conversation access, persisted messages, private files, real-time updates, draft recovery and read state. The linked conversation is closed and must remain read-only.
+
+P: Added a bounded two-pane inbox with separately scrolling lists/history, searchable participants/inquiry types on the current page, All/Unread filters and compact pagination. Header shows actual other participants, inquiry context, closed/read-only state and expandable participant details. Message bubbles identify senders, distinguish the current user's replies, group dates and show saved timestamps without inventing delivery/read receipts. Live connection status remains explicitly separate from participant presence.
+
+Mobile uses list/thread views with a Back control and retained room drafts. Hidden mobile threads do not advance read cursors. Jump to latest returns focus to message history. Active conversations use an expanding text area, Ctrl/Command+Enter sending, attachment tiles/removal and permission confirmation; closed threads use a compact read-only footer. Shared controls apply to the consumer inbox as well. No API, database, transport, authorization or dependency changes were required. The requested conversation was only inspected; new send/download tests use separate synthetic conversations.
+
+V: Verification complete for this requested chat change. Recorded evidence:
+
+- `before.log` and `preview-initial.log`: requested conversation inspected on desktop/mobile before and after implementation.
+- `browser-initial.log`: desktop scope/realtime and inbox retry/read-state journeys passed. Mobile accessibility scans found an unnamed icon-only Details summary, now labelled. The mobile test helper also attempted navigation before the inbox loaded; it now awaits the inbox. One desktop attachment run remained at account loading with an unfinished `/me` read, before the message form; the test now awaits authenticated page readiness before fixture navigation.
+- `browser-final.log`: all eight desktop/mobile journeys pass (requested-page preview, conversation scope/realtime, inbox draft/read-state/retry, and private attachments/lost-ack retry). `browser-evidence-final.log`: four final desktop/mobile preview and attachment reruns pass after making the local preview opt-in and awaiting authenticated account readiness. The preview uses `CHAT_PREVIEW_CONVERSATION`; it skips without that environment variable so clean CI does not depend on the user-specific conversation.
+- `ledger-final.log`: synchronized task validation passes. `release-final.log`: release validation still rejects existing unfinished integration/engine and release evidence requirements.
+- `types-final.log`, `lint-final.log`, `boundaries.log`, `diff-check.log`: UI/web/ops types, focused lint, application import boundaries and whitespace checks pass.
+- Screenshots: `before-*` / `after-*` show the requested closed conversation; `active-*` show a synthetic active conversation; `attachment-*` show private PDF messaging; `dark-*` cover the requested page in dark mode. Desktop/mobile checks cover bounded height, narrow-screen overflow, search/unread filters, details, jump-to-latest/focus and representative axe scans.
+
+Search and unread filters apply to the current API page and do not claim global search. Timestamps use the device's time zone, explained in conversation details. Existing API scope, scanning, versions, retry identifiers and read-cursor rules remain authoritative. No external reference-parity, physical-device or production-release approval is claimed; existing release blockers and disabled digitalization remain unchanged.

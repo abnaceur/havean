@@ -1,0 +1,32 @@
+# Separate offline candidate. No production/model admission or signing keys.
+name: haven-ocr-no-gui-investigation
+services:
+  ocr-no-gui-investigation:
+    image: haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2
+    build:
+      context: .
+      dockerfile: services/property-processing/Dockerfile.ocr-investigation
+      target: worker-no-gui-investigation
+    init: true
+    network_mode: none
+    read_only: true
+    user: '10001:10001'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 4g
+    cpus: 1
+    pids_limit: 64
+    tmpfs:
+      - /tmp:size=67108864,mode=1777
+      - /job:size=67108864,uid=10001,gid=10001,mode=0700
+    volumes:
+      - ./infra/generated/ocr-confined/en.png:/fixtures/en.png:ro
+      - ./infra/generated/ocr-confined/fr.png:/fixtures/fr.png:ro
+      - ./infra/generated/ocr-confined/ar.png:/fixtures/ar.png:ro
+    environment:
+      PROCESSING_DEPLOYMENT: test
+      PROCESSING_ENABLE_OCR_INVESTIGATION: 'true'
+    command:
+      - python
+      - -c
+      - "import shutil, runpy; [shutil.copyfile('/fixtures/'+locale+'.png', '/job/'+locale+'.png') for locale in ('en', 'fr', 'ar')]; runpy.run_path('/opt/processing/ocr_worker_smoke.py', run_name='__main__')"

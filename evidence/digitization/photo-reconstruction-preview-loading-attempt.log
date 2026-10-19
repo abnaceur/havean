@@ -1,0 +1,49 @@
+time="2026-10-13T14:45:50+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-processing-gpu-volume-init-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-700170879f77 Creating 
+ Container haven-tests-run-700170879f77 Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-photo-reconstruction.spec.ts:5:1 › real photographs reconstruct through the agent flow without a manual plan or furniture (4.7m)
+
+
+  1) [desktop] › tests/e2e/digitization-photo-reconstruction.spec.ts:5:1 › real photographs reconstruct through the agent flow without a manual plan or furniture 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Private reconstructed property', exact: true }).locator('canvas[aria-label="Private reconstructed scene"]')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'Private reconstructed property', exact: true }).locator('canvas[aria-label="Private reconstructed scene"]') with timeout 15000ms
+      - waiting for getByRole('region', { name: 'Private reconstructed property', exact: true }).locator('canvas[aria-label="Private reconstructed scene"]')
+
+
+      63 |  await page.reload();
+      64 |  const scene=page.getByRole('region',{name:'Private reconstructed property',exact:true});
+    > 65 |  await expect(scene.locator('canvas[aria-label="Private reconstructed scene"]')).toBeVisible();
+         |                                                                                  ^
+      66 |  await expect(scene.getByRole('button',{name:'Measure scene performance',exact:true})).toBeEnabled();
+      67 |  await expect(scene.getByRole('region',{name:'Captured scene evidence'})).toContainText('500 training steps');
+      68 |  expect((await (await page.request.get(base+'/geometry')).json()).data).toBeNull();
+        at /workspace/tests/e2e/digitization-photo-reconstruction.spec.ts:65:82
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-photo-reconst-636e3--a-manual-plan-or-furniture-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-photo-reconst-636e3--a-manual-plan-or-furniture-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-photo-reconst-636e3--a-manual-plan-or-furniture-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-photo-reconst-636e3--a-manual-plan-or-furniture-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-photo-reconstruction.spec.ts:5:1 › real photographs reconstruct through the agent flow without a manual plan or furniture 
+

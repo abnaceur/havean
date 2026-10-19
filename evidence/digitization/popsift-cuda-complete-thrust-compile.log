@@ -1,0 +1,183 @@
+ Image haven-popsift:0.9-cuda12.6.3-investigation-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 714B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.popsift
+#2 transferring dockerfile: 1.87kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [resolve 1/3] FROM docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09
+#5 resolve docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 919B done
+#6 DONE 0.0s
+
+#7 [resolve 2/3] RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates python3 cmake ninja-build gcc-13 g++-13 git libboost-filesystem-dev libboost-graph-dev libboost-program-options-dev libboost-system-dev libeigen3-dev libfreeimage-dev libflann-dev liblz4-dev libmetis-dev libgoogle-glog-dev libsqlite3-dev libglew-dev libceres-dev cuda-nvcc-12-6 cuda-cudart-dev-12-6 libcurand-dev-12-6 && mkdir /profile && dpkg-query -W -f='${Package}\t${Version}\n' > /profile/packages.tsv && apt-cache dumpavail > /profile/available-packages.txt
+#7 CACHED
+
+#8 [resolve 3/3] RUN /usr/local/cuda/bin/nvcc --version > /profile/nvcc-version.txt
+#8 CACHED
+
+#9 [popsift 1/5] COPY popsift-source.tar.gz /tmp/popsift-source.tar.gz
+#9 CACHED
+
+#10 [popsift 2/5] RUN echo 'dffccd79e079f679eed2b11595dc6f2698c44b4f592580a0555d092e64e589c2  /tmp/popsift-source.tar.gz' | sha256sum -c - && mkdir /source && python3 -c "import tarfile; tarfile.open('/tmp/popsift-source.tar.gz').extractall('/source',filter='data')"
+#10 CACHED
+
+#11 [popsift 3/5] COPY popsift-no-unused-cublas.patch /tmp/popsift-no-unused-cublas.patch
+#11 DONE 0.1s
+
+#12 [popsift 4/5] RUN git -C /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 apply /tmp/popsift-no-unused-cublas.patch
+#12 DONE 0.4s
+
+#13 [popsift 5/5] RUN cmake -S /source/popsift-c8a669bce33db2525f6873a89c6d7c7434f93537 -B /build-popsift -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCUDA_HOST_COMPILER=/usr/bin/g++-13 -DPopSift_CUDA_CC_LIST='75;86;89' -DPopSift_BUILD_EXAMPLES=OFF -DPopSift_BUILD_DOCS=OFF && cmake --build /build-popsift --parallel 2 && cmake --install /build-popsift
+#13 0.325 -- The CXX compiler identification is GNU 13.3.0
+#13 0.342 -- Detecting CXX compiler ABI info
+#13 0.404 -- Detecting CXX compiler ABI info - done
+#13 0.417 -- Check for working CXX compiler: /usr/bin/g++-13 - skipped
+#13 0.417 -- Detecting CXX compile features
+#13 0.418 -- Detecting CXX compile features - done
+#13 0.419 -- Building in Release configuration
+#13 0.420 -- BUILD_SHARED_LIBS ON
+#13 0.422 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+#13 0.487 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+#13 0.489 -- Found Threads: TRUE  
+#13 0.489 CMake Warning (dev) at CMakeLists.txt:76 (find_package):
+#13 0.489   Policy CMP0146 is not set: The FindCUDA module is removed.  Run "cmake
+#13 0.489   --help-policy CMP0146" for policy details.  Use the cmake_policy command to
+#13 0.489   set the policy and suppress this warning.
+#13 0.489 
+#13 0.489 This warning is for project developers.  Use -Wno-dev to suppress it.
+#13 0.489 
+#13 0.515 -- Found CUDA: /usr/local/cuda (found suitable version "12.6", minimum required is "7.0") 
+#13 0.515 -- CUDA Version is 12.6
+#13 0.516 -- Setting gencode flags: -gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_89,code=sm_89;-gencode;arch=compute_89,code=compute_89
+#13 0.546 -- PopSift version: 1.0.0
+#13 0.546 -- Build type: Release
+#13 0.546 -- Build Shared libs: ON
+#13 0.546 -- Build examples: OFF
+#13 0.546 -- Build documentation: OFF
+#13 0.546 -- Generate position independent code: ON
+#13 0.546 -- Use CUDA NVTX for profiling: OFF
+#13 0.546 -- Synchronize and check CUDA error after every kernel: OFF
+#13 0.546 -- Grid filtering: ON
+#13 0.546 -- Additional warning for CUDA nvcc: OFF
+#13 0.546 -- Compiling for CUDA CCs: 75;86;89
+#13 0.546 -- Install path: /usr/local
+#13 0.546 -- Testing step: OFF
+#13 0.546 
+#13 0.546 
+#13 0.546 ******************************************
+#13 0.546 Building configuration:
+#13 0.546 
+#13 0.546 
+#13 0.546 ******************************************
+#13 0.546 
+#13 0.546 
+#13 0.547 -- Configuring done (0.3s)
+#13 0.561 -- Generating done (0.0s)
+#13 0.564 -- Build files have been written to: /build-popsift
+#13 3.453 [1/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_constants.cu.o
+#13 4.537 [2/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_features.cu.o
+#13 6.551 [3/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_conf.cu.o
+#13 7.950 [4/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_gauss_filter.cu.o
+#13 10.34 [5/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_image.cu.o
+#13 12.16 [6/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_pyramid.cu.o
+#13 13.77 [7/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_octave.cu.o
+#13 16.16 [8/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_pyramid_build.cu.o
+#13 17.45 [9/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_pyramid_build_aa.cu.o
+#13 19.65 [10/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_pyramid_build_ai.cu.o
+#13 21.05 [11/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_pyramid_build_ra.cu.o
+#13 22.48 [12/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_extremum.cu.o
+#13 23.62 [13/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_pyramid_fixed.cu.o
+#13 28.20 [14/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_extrema.cu.o
+#13 29.31 [15/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_orientation.cu.o
+#13 33.20 [16/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_sift_desc.cu.o
+#13 37.02 [17/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_desc_loop.cu.o
+#13 40.75 [18/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_desc_iloop.cu.o
+#13 44.61 [19/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_desc_grid.cu.o
+#13 48.40 [20/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_desc_igrid.cu.o
+#13 52.63 [21/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_desc_notile.cu.o
+#13 55.74 [22/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/common/popsift_generated_assist.cu.o
+#13 59.38 [23/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/common/popsift_generated_plane_2d.cu.o
+#13 62.62 [24/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/common/popsift_generated_write_plane_2d.cu.o
+#13 65.70 [25/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/common/popsift_generated_debug_macros.cu.o
+#13 69.26 [26/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/common/popsift_generated_device_prop.cu.o
+#13 95.61 [27/31] Building NVCC (Device) object src/CMakeFiles/popsift.dir/popsift/popsift_generated_s_filtergrid.cu.o
+#13 96.11 [28/31] Building NVCC intermediate link file src/CMakeFiles/popsift.dir/popsift_intermediate_link.o
+#13 97.39 [29/31] Building CXX object src/CMakeFiles/popsift.dir/popsift/popsift.cpp.o
+#13 97.47 [30/31] Linking CXX shared library Linux-x86_64/libpopsift.so.1.0.0
+#13 97.48 [31/31] Creating library symlink Linux-x86_64/libpopsift.so
+#13 97.49 -- Install configuration: "Release"
+#13 97.49 -- Installing: /usr/local/lib/libpopsift.so.1.0.0
+#13 97.49 -- Set non-toolchain portion of runtime path of "/usr/local/lib/libpopsift.so.1.0.0" to ""
+#13 97.49 -- Installing: /usr/local/lib/libpopsift.so
+#13 97.49 -- Installing: /usr/local/include/popsift
+#13 97.49 -- Installing: /usr/local/include/popsift/s_pyramid_build_ra.h
+#13 97.49 -- Installing: /usr/local/include/popsift/s_desc_normalize.h
+#13 97.49 -- Installing: /usr/local/include/popsift/s_desc_igrid.h
+#13 97.49 -- Installing: /usr/local/include/popsift/s_desc_norm_rs.h
+#13 97.49 -- Installing: /usr/local/include/popsift/sift_pyramid.h
+#13 97.49 -- Installing: /usr/local/include/popsift/popsift.h
+#13 97.49 -- Installing: /usr/local/include/popsift/s_pyramid_build_aa.h
+#13 97.49 -- Installing: /usr/local/include/popsift/s_desc_loop.h
+#13 97.49 -- Installing: /usr/local/include/popsift/s_gradiant.h
+#13 97.50 -- Installing: /usr/local/include/popsift/s_desc_iloop.h
+#13 97.50 -- Installing: /usr/local/include/popsift/sift_constants.h
+#13 97.50 -- Installing: /usr/local/include/popsift/s_solve.h
+#13 97.50 -- Installing: /usr/local/include/popsift/gauss_filter.h
+#13 97.50 -- Installing: /usr/local/include/popsift/s_image.h
+#13 97.50 -- Installing: /usr/local/include/popsift/s_pyramid_build_ai.h
+#13 97.50 -- Installing: /usr/local/include/popsift/s_desc_norm_l2.h
+#13 97.50 -- Installing: /usr/local/include/popsift/sift_octave.h
+#13 97.50 -- Installing: /usr/local/include/popsift/s_desc_grid.h
+#13 97.50 -- Installing: /usr/local/include/popsift/sift_extremum.h
+#13 97.50 -- Installing: /usr/local/include/popsift/sift_conf.h
+#13 97.50 -- Installing: /usr/local/include/popsift/features.h
+#13 97.50 -- Installing: /usr/local/include/popsift/s_desc_notile.h
+#13 97.50 -- Installing: /usr/local/include/popsift/common
+#13 97.50 -- Installing: /usr/local/include/popsift/common/sync_queue.h
+#13 97.50 -- Installing: /usr/local/include/popsift/common/assist.h
+#13 97.50 -- Installing: /usr/local/include/popsift/common/vec_macros.h
+#13 97.50 -- Installing: /usr/local/include/popsift/common/write_plane_2d.h
+#13 97.50 -- Installing: /usr/local/include/popsift/common/debug_macros.h
+#13 97.50 -- Installing: /usr/local/include/popsift/common/excl_blk_prefix_sum.h
+#13 97.50 -- Installing: /usr/local/include/popsift/common/plane_2d.h
+#13 97.50 -- Installing: /usr/local/include/popsift/common/warp_bitonic_sort.h
+#13 97.50 -- Installing: /usr/local/include/popsift/common/device_prop.h
+#13 97.50 -- Installing: /usr/local/include/popsift/common/clamp.h
+#13 97.50 -- Installing: /usr/local/include/popsift/clamp.h
+#13 97.50 -- Installing: /usr/local/lib/cmake/PopSift/PopSiftConfig.cmake
+#13 97.50 -- Installing: /usr/local/lib/cmake/PopSift/PopSiftConfigVersion.cmake
+#13 97.50 -- Installing: /usr/local/lib/cmake/PopSift/PopSiftTargets.cmake
+#13 97.50 -- Installing: /usr/local/lib/cmake/PopSift/PopSiftTargets-release.cmake
+#13 97.50 -- Installing: /usr/local/include/popsift/sift_config.h
+#13 97.50 -- Installing: /usr/local/include/popsift/version.hpp
+#13 DONE 97.6s
+
+#14 exporting to image
+#14 exporting layers
+#14 exporting layers 1.9s done
+#14 exporting manifest sha256:65f11754df480a9e4d1e06d8b036b1ccb3a958664afaf5287e5813dc1873c830 0.1s done
+#14 exporting config sha256:bb4508b3b77263c944b0685015ee480beefd3273c8950e649699398ab2d703a2 0.1s done
+#14 exporting attestation manifest sha256:e3ff474eff8f7df95ad78837611f274cf4c512843f39b503e8504950a400d6cf 0.1s done
+#14 exporting manifest list sha256:0472d0aaaed12ec6c98b29e4bbbe01c241cf1bd44f2d64efaeff465c6974195e
+#14 exporting manifest list sha256:0472d0aaaed12ec6c98b29e4bbbe01c241cf1bd44f2d64efaeff465c6974195e 0.1s done
+#14 naming to docker.io/library/haven-popsift:0.9-cuda12.6.3-investigation-v1 done
+#14 unpacking to docker.io/library/haven-popsift:0.9-cuda12.6.3-investigation-v1
+#14 unpacking to docker.io/library/haven-popsift:0.9-cuda12.6.3-investigation-v1 0.4s done
+#14 DONE 2.8s
+
+#15 resolving provenance for metadata file
+#15 DONE 0.0s
+ Image haven-popsift:0.9-cuda12.6.3-investigation-v1 Built 

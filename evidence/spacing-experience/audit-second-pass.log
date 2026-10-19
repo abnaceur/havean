@@ -1,0 +1,50 @@
+
+Running 3 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/spacing-experience.spec.ts:17:1 › representative spacing before and after (20.7s)
+  ✘  2 [desktop] › tests/e2e/spacing-experience.spec.ts:25:1 › public templates and authorized navigation share responsive spacing (2.5m)
+  ✓  3 [desktop] › tests/e2e/spacing-experience.spec.ts:45:1 › spacing, accessible dialogs and action targets on compact screens (2.0m)
+
+
+  1) [desktop] › tests/e2e/spacing-experience.spec.ts:25:1 › public templates and authorized navigation share responsive spacing 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: locator('main h1')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" locator('main h1') with timeout 15000ms
+      - waiting for locator('main h1')
+
+
+       8 | const ops=process.env.PUBLIC_OPS_URL||'http://localhost:8089';
+       9 | const web=process.env.PUBLIC_WEB_URL||'http://localhost:8088';
+    > 10 | async function ready(page:Page){await expect(page.locator('main h1')).toBeVisible();await expect(page.locator('main .loading')).toHaveCount(0);await expect(page.locator('html')).toHaveAttribute('data-theme',/light|dark/);await page.evaluate(()=>document.fonts.ready);}
+         |                                                                       ^
+      11 | async function capture(page:Page,name:string){await page.screenshot({path:`${evidence}/${baseline?'before':'after'}-${name}.png`,scale:'css',animations:'disabled'});}
+      12 | async function geometry(page:Page,route:string){
+      13 |  const result=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,clipped:[...document.querySelectorAll('main h1,main h2,main input,main select,main .button')].filter(el=>{const r=el.getBoundingClientRect();return r.width&&r.height&&(r.left< -1||r.right>innerWidth+1);}).map(el=>el.textContent?.slice(0,60))}));
+        at ready (/workspace/tests/e2e/spacing-experience.spec.ts:10:71)
+        at audit (/workspace/tests/e2e/spacing-experience.spec.ts:28:99)
+        at /workspace/tests/e2e/spacing-experience.spec.ts:40:112
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/spacing-audit-second/spacing-experience-public--49a42-on-share-responsive-spacing-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/spacing-audit-second/spacing-experience-public--49a42-on-share-responsive-spacing-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/spacing-audit-second/spacing-experience-public--49a42-on-share-responsive-spacing-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/spacing-audit-second/spacing-experience-public--49a42-on-share-responsive-spacing-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/spacing-experience.spec.ts:25:1 › public templates and authorized navigation share responsive spacing 
+  2 passed (5.0m)

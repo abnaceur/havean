@@ -4,15 +4,19 @@ import {z} from 'zod';
 import {validDigitizationWorker} from '@haven/config';
 import {digitizationCleanupCommand,digitizationStageLease,digitizationStageExecution,digitizationStagePreparation,digitizationRunDispatch,digitizationOutboxDelivery,digitizationCancellationHandoff,digitizationGpuLease,digitizationGpuLeaseRenewal} from '@haven/contracts';
 import {reclaimExpiredCapture} from './cleanup.js';
+import {reclaimDeletedAccountProcessing} from './deletion-cleanup.js';
 import {data,fail,pool,transaction,env} from '../../platform/core.js';
 import {acquireGpuLease,renewGpuLease,releaseGpuLease} from './gpu-leases.js';
 import {leaseStage,renewStageLease} from './leases.js';
-import {startCpuExecution,configuredCpuRunner} from './execution-start.js';
+import {startCpuExecution,configuredCpuRunner,configuredStageRunner} from './execution-start.js';
 import {prepareCpuExecution} from './execution-scope.js';
 import {dispatchRunGraph} from './workflow.js';
 import {collectCpuRenders} from './execution-results.js';
 import {consumeDigitizationEvent} from './outbox.js';
 import {completeRunCancellation,requestRunCancellation} from './cancellation.js';
+
+import {isGsplatTrainingProfile} from './training-configuration.js';
+import {renewTrainingGpu} from './training-gpu.js';
 
 /** Service authentication grants only these guarded execution commands. Current
  * initiating-actor authority is reconstructed from the database on every call;
@@ -31,7 +35,7 @@ export async function digitizationCommandActor(req:FastifyRequest,body:{actorId:
 }
 @Controller('api/v1')
 export class DigitizationWorkerController{
- @Post('internal/digitization/maintenance/cleanup') async cleanup(@Req() req:FastifyRequest,@Body() body:unknown){digitizationCleanupCommand.parse(body);authorizeDigitizationService(req);return data(await reclaimExpiredCapture());}
+ @Post('internal/digitization/maintenance/cleanup') async cleanup(@Req() req:FastifyRequest,@Body() body:unknown){digitizationCleanupCommand.parse(body);authorizeDigitizationService(req);const deletion=await reclaimDeletedAccountProcessing();return data(deletion.reclaimed?deletion:await reclaimExpiredCapture());}
  @Post('internal/digitization/stages/:id/gpu-lease') async gpuLease(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){z.uuid().parse(id);const x=digitizationGpuLease.parse(body),a=await digitizationCommandActor(req,x);return transaction(a,async c=>data(await acquireGpuLease(c,a,x.engineId,id,x.executionId,x.fencingToken)));}
  @Post('internal/digitization/stages/:id/gpu-release') async gpuRelease(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){z.uuid().parse(id);const x=digitizationGpuLeaseRenewal.parse(body),a=await digitizationCommandActor(req,x);return transaction(a,async c=>data(await releaseGpuLease(c,a,x.engineId,id,x.executionId,x.fencingToken,x.slotId,x.slotFence)));}
  @Post('internal/digitization/stages/:id/gpu-renew') async gpuRenew(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){z.uuid().parse(id);const x=digitizationGpuLeaseRenewal.parse(body),a=await digitizationCommandActor(req,x);return transaction(a,async c=>data(await renewGpuLease(c,a,x.engineId,id,x.executionId,x.fencingToken,x.slotId,x.slotFence)));}
@@ -60,14 +64,14 @@ export class DigitizationWorkerController{
  }
  @Post('internal/digitization/stages/:id/renew') async renew(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){
   z.uuid().parse(id);const x=digitizationStageExecution.parse(body),a=await digitizationCommandActor(req,x);
-  return transaction(a,async c=>data(await renewStageLease(c,a,x.engineId,id,x.executionId,x.fencingToken)));
+  return transaction(a,async c=>{const renewed=await renewStageLease(c,a,x.engineId,id,x.executionId,x.fencingToken);const profile=(await c.query('SELECT profile_id FROM processing_stages WHERE id=$1 AND digitization_id=$2',[id,x.engineId])).rows[0]?.profile_id;if(isGsplatTrainingProfile(profile))await renewTrainingGpu(c,a,x.engineId,id,x.executionId,x.fencingToken);return data(renewed);});
  }
  @Post('internal/digitization/stages/:id/start') @HttpCode(202) async start(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){
-  z.uuid().parse(id);const x=digitizationStagePreparation.parse(body),a=await digitizationCommandActor(req,x),client=await configuredCpuRunner();
+  z.uuid().parse(id);const x=digitizationStagePreparation.parse(body),a=await digitizationCommandActor(req,x),client=await configuredStageRunner(a,x.engineId,id);
   return data(await startCpuExecution(a,x.engineId,id,x.executionId,x.fencingToken,x.assetId,client));
  }
  @Post('internal/digitization/stages/:id/collect-renders') async collect(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){
-  z.uuid().parse(id);const x=digitizationStagePreparation.parse(body),a=await digitizationCommandActor(req,x),client=await configuredCpuRunner();
+  z.uuid().parse(id);const x=digitizationStagePreparation.parse(body),a=await digitizationCommandActor(req,x),client=await configuredStageRunner(a,x.engineId,id);
   return data(await collectCpuRenders(a,x.engineId,id,x.executionId,x.fencingToken,x.assetId,client));
  }
  @Post('internal/digitization/stages/:id/prepare') async prepare(@Req() req:FastifyRequest,@Param('id') id:string,@Body() body:unknown){

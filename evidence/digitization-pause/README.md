@@ -1,0 +1,18 @@
+# Digitalization engine pause — 19 October 2026
+
+O: Operator UI, private/internal routes and workers were already disabled; owner routes, public engine artifacts and ordinary review endpoints still permitted engine access. Processing CPU/GPU containers were already stopped. Normal dev.sh still started a runner.
+
+R: User explicitly pauses all digitalization engine work and user access. Keep manual property media available and preserve existing data for a later authorized resumption.
+
+P: Extended the API pause to all engine routes, including owner permissions and public manifests/content. Hidden public engine viewers and owner source permissions; removed the paused engine from homepage capability copy. Excluded engine proposals from the normal moderation queue and blocked their generic approval/rejection paths before source access or idempotency replay. Normal development startup omits engine dependencies; camera/OCR startup scripts refuse while paused. Retained jobs, artifacts and proposals. All 39 unfinished engine tasks are paused; 56 previously accepted tasks retain their status. Previous task states are recorded in previous-task-statuses.json.
+
+V: Verification complete for the requested pause:
+
+- `regressions.log`: 14 unit/ledger tests pass; six desktop/mobile UI, manual upload/public GLB and ordinary revision journeys pass. Two initial direct API checks hit the existing CSRF guard because the test omitted Origin. `final-checks.log` reruns those with the trusted origin: both pass, covering 12 public/owner/operator/internal paths each, returning DIGITIZATION_DISABLED and no-store. The same log records both desktop/mobile viewing-booking regressions passing (lost response retry, conflicts and agent confirmation). Ten distinct browser checks are verified across the two logs.
+- `initial-tests.log`: earlier isolated ledger fixture omitted evidence for supplemental tasks added since its creation. The fixture now copies all supplemental evidence entries; all 14 tests pass in regressions.log. Engine proposal denial tests cover both package and unit-fact proposals, preserving ordinary revision handling.
+- `worker-state.log`: engine flag false and zero active engine queue workers. `runner-state.log`: CPU/GPU runners remain stopped. Stored engine rows, queued jobs, files and publication proposals were not deleted or cancelled.
+- `types.log`, `lint.log`, `ledger-lint.log`, `final-lint.log`, `boundaries.log`, `startup-syntax.log` and `diff-check.log`: API/web/ops/worker types, focused lint, import boundaries, shell syntax and whitespace pass. Camera/OCR startup refusal logs confirm those commands exit before starting services. Normal dev.sh omits the engine overlay and processing downloads; it was inspected, not executed against the legacy local volumes.
+- `ledger-final.log`: synchronized task validation passes (root 120 accepted; engine 56 accepted, 39 paused). `release-final.log`: full release validation intentionally still rejects unfinished tasks and existing release requirements. No acceptance was fabricated or release gate bypassed.
+- `disabled-desktop.png` / `disabled-mobile.png`: engine deep link shows the disabled state with a route back to manual property drafts.
+
+Normal manual photo, floor-plan, video, panorama and GLB workflows remain enabled. API business authorization, scanning and independent media review remain authoritative. Historical notes that previously approved engine media remained readable are superseded by this full pause. Existing logical migration and local compatibility instructions still apply; this is not a production upgrade. Do not resume engine work or access until the user explicitly requests it. No production or visual parity approval is claimed.

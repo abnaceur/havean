@@ -1,0 +1,49 @@
+time="2026-10-12T22:17:23+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-703c14c22dee Creating 
+ Container haven-tests-run-703c14c22dee Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-agent-actions.spec.ts:9:1 › agent uploads document, confirms and fills facts, resumes inventory and creates listing digitization (42.2s)
+
+
+  1) [desktop] › tests/e2e/digitization-agent-actions.spec.ts:9:1 › agent uploads document, confirms and fills facts, resumes inventory and creates listing digitization 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('status').filter({ hasText: 'Upload prepared and submitted' })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('status').filter({ hasText: 'Upload prepared and submitted' }) with timeout 15000ms
+      - waiting for getByRole('status').filter({ hasText: 'Upload prepared and submitted' })
+
+
+      39 |  await page.reload();await expect(page.getByRole('link',{name:'Open inventory draft',exact:true})).toHaveAttribute('href','/ops/listings?edit='+listingId);await page.getByRole('link',{name:'Open inventory draft',exact:true}).click();await expect(page.getByRole('dialog',{name:'Edit listing',exact:true})).toBeVisible();await page.getByRole('button',{name:'Close dialog',exact:true}).click();
+      40 |  const row=page.locator(`tr[data-record-id="${listingId}"]`);await row.getByRole('button',{name:'Media',exact:true}).click();
+    > 41 |  await page.getByLabel('Media title',{exact:true}).fill('Self-authored example living room');await page.getByLabel('Rights / source',{exact:true}).fill('Project-authored synthetic property visualization.');await page.getByLabel('Property media file',{exact:true}).setInputFiles('apps/web/public/homes/home-1.jpg');await page.getByRole('checkbox',{name:'I have the rights and permission to publish this media.',exact:true}).check();await page.getByRole('button',{name:'Upload and submit for review',exact:true}).click();await expect(page.getByRole('status').filter({hasText:'Upload prepared and submitted'})).toBeVisible();await page.getByRole('button',{name:'Close dialog',exact:true}).click();
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+      42 |  await row.getByRole('button',{name:'Digitize property',exact:true}).click();await expect(page).toHaveURL(/workspace=/);const engineId=new URL(page.url()).searchParams.get('workspace')!;expect(engineId).not.toBe(intakeId);
+      43 |  await expect(page.getByRole('region',{name:'Digitization workflow'})).toBeVisible();await expect(page.getByRole('button',{name:'Reload capture scope',exact:true})).toBeVisible();await page.getByRole('button',{name:'Reload capture scope',exact:true}).click();await expect(page.getByRole('region',{name:'Private panorama capture review'})).toContainText('No processed panorama captures');
+      44 |  const workbench=(await (await page.request.get(`${origin}/api/v1/ops/listings/${listingId}/workbench`)).json()).data;expect(workbench).toMatchObject({beds:2,baths:1,area:'95.50',price:'2500000.25'});
+        at /workspace/tests/e2e/digitization-agent-actions.spec.ts:41:609
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-agent-actions-edf3f-reates-listing-digitization-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-agent-actions-edf3f-reates-listing-digitization-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-agent-actions-edf3f-reates-listing-digitization-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-agent-actions-edf3f-reates-listing-digitization-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-agent-actions.spec.ts:9:1 › agent uploads document, confirms and fills facts, resumes inventory and creates listing digitization 
+

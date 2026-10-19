@@ -1,0 +1,82 @@
+ Container haven-integration-tests-run-054bd46183ce Creating 
+ Container haven-integration-tests-run-054bd46183ce Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history (25.8s)
+  ✘  2 [mobile] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history (1.5m)
+
+
+  1) [desktop] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('region', { name: 'Private document fact review' }).getByRole('blockquote')
+    Expected substring: "123.45"
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('region', { name: 'Private document fact review' }).getByRole('blockquote') with timeout 15000ms
+      - waiting for getByRole('region', { name: 'Private document fact review' }).getByRole('blockquote')
+
+
+       7 |  await login(page,'agent',origin,'/ops');await page.goto(origin+'/ops/digitization?workspace='+fixture.engineId);
+       8 |  const review=page.getByRole('region',{name:'Private document fact review'}),select=review.getByLabel('Source fact',{exact:true});await expect(select).toBeVisible();await select.selectOption(fixture.candidateId);
+    >  9 |  await expect(review.getByRole('blockquote')).toContainText('123.45');const crop=review.getByRole('img',{name:/Source crop for unitArea, page [12]/});await expect(crop).toBeVisible();expect((await crop.getAttribute('viewBox'))?.split(' ')).toHaveLength(4);
+         |                                               ^
+      10 |  const read=async()=>{const response=await page.request.get(origin+route);expect(response.status()).toBe(200);return (await response.json()).data;};
+      11 |  const before=await read();const evidence=before.candidates.find((item:any)=>item.id===fixture.candidateId).evidence[0],source=before.pages.find((item:any)=>item.assetId===evidence.assetId&&item.page===evidence.page);
+      12 |  expect(await crop.getAttribute('viewBox')).toBe(`${evidence.bbox[0]*source.width} ${evidence.bbox[1]*source.height} ${(evidence.bbox[2]-evidence.bbox[0])*source.width} ${(evidence.bbox[3]-evidence.bbox[1])*source.height}`);
+        at /workspace/tests/e2e/digitization-fact-review.spec.ts:9:47
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.getAttribute: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByRole('region', { name: 'Private document fact review' }).getByRole('img', { name: /Source crop for unitArea, page [12]/ })
+
+
+      10 |  const read=async()=>{const response=await page.request.get(origin+route);expect(response.status()).toBe(200);return (await response.json()).data;};
+      11 |  const before=await read();const evidence=before.candidates.find((item:any)=>item.id===fixture.candidateId).evidence[0],source=before.pages.find((item:any)=>item.assetId===evidence.assetId&&item.page===evidence.page);
+    > 12 |  expect(await crop.getAttribute('viewBox')).toBe(`${evidence.bbox[0]*source.width} ${evidence.bbox[1]*source.height} ${(evidence.bbox[2]-evidence.bbox[0])*source.width} ${(evidence.bbox[3]-evidence.bbox[1])*source.height}`);
+         |                    ^
+      13 |  expect(await crop.locator('image').getAttribute('href')).toBe(`/api/v1/ops/digitizations/${fixture.engineId}/artifacts/${source.artifactId}/preview`);
+      14 |  const preview=await page.request.get(origin+`/api/v1/ops/digitizations/${fixture.engineId}/artifacts/${source.artifactId}/preview`);expect(preview.status()).toBe(200);expect(preview.headers()['cache-control']).toContain('no-store');
+      15 |  await review.getByLabel('Fact decision reason',{exact:true}).fill('CI actor checked authored quote and page crop.');await review.getByRole('button',{name:'Accept source value',exact:true}).click();await expect(review.getByText('Private fact decision saved. Inventory review remains required.',{exact:true})).toBeVisible();let saved=await read();expect(saved.candidates.find((item:any)=>item.id===fixture.candidateId).review.status).toBe('accepted');
+        at /workspace/tests/e2e/digitization-fact-review.spec.ts:12:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+    [mobile] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+

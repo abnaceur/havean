@@ -1,0 +1,87 @@
+{"label":"P","status":"synthetic-source-snapshot-locked","sourceMutated":false}
+{"label":"P","status":"fixture-objects-copied-and-verified","objects":2408,"bytes":117483476,"digest":"2906553247fd339b713e2183b9858cdc13290df56adbbf5575f6c11b747ea820","sourceMutated":false,"physicalPropertyEvidence":false}
+{"status":"failed","code":"RESTORED_DIGITIZATION_RECONCILIATION_FAILED"}
+{"label":"P","status":"application-configuration-created","project":"haven-recovery-18995017-app","bind":"127.0.0.2","databaseContainer":"haven-recovery-7d21af33-db","applicationVerified":false}
+Running 2 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts (34.1s)
+  ✓  2 [desktop] › tests/e2e/digitization-unit-application.spec.ts:9:1 › native source confirmation proposes shared unit facts, canonical location and independent review without exposing private evidence (1.4m)
+
+  2 passed (2.0m)
+Running 1 test using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/digitization-publication.spec.ts:4:1 › Reviewed panorama publication uses independent inventory approval, public viewer and withdrawal (33.4s)
+
+  1 passed (34.2s)
+Running 1 test using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/digitization-model-publication.spec.ts:5:1 › reviewed structural and splat models use separate listing approval, public rendering and withdrawal (41.9s)
+
+  1 passed (42.8s)
+{"label":"P","status":"owned-synthetic-failure-diagnostics-retained","directory":"evidence/digitization/haven-recovery-18995017-failure","requestFailures":27}
+{"label":"P","queueCounts":{"active":0,"completed":259,"delayed":0,"failed":31,"prioritized":12010,"waiting":0,"waiting-children":0},"failureCodes":{"ENGINE_EVENT_UNSUPPORTED":4,"RUN_NOT_EXECUTABLE":24,"SOURCE_SELECTION_AMBIGUOUS":3}}
+{"label":"P","scopedModelQueueRows":0,"localDiagnosticMilliseconds":845.3136319999999,"productionMeasurement":false}
+node:internal/errors:984
+  const err = new Error(message);
+              ^
+
+Error: Command failed: docker compose -f /tmp/haven-recovery-18995017-jZEuXg/application/application.json --profile tests run --rm --no-deps tests pnpm exec playwright test tests/e2e/digitization-capture-source.spec.ts --project=desktop --output=/workspace/test-results/run --max-failures=1
+ Container haven-recovery-18995017-app-tests-run-b2c1cc3eceba Creating 
+ Container haven-recovery-18995017-app-tests-run-b2c1cc3eceba Created 
+
+
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execFileSync (node:child_process:927:15)
+    at docker (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:17:41)
+    at compose (file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:50:22)
+    at verifyRestoredApplication (file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:63:15)
+    at async file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:119:98 {
+  status: 1,
+  signal: null,
+  output: [
+    null,
+    "Error: ENOENT: no such file or directory, open 'services/property-processing/tests/fixtures/media-frames-synthetic.json'\n" +
+      '\n' +
+      '   at digitization-capture-source.spec.ts:5\n' +
+      '\n' +
+      "  3 | import AxeBuilder from '@axe-core/playwright';\n" +
+      "  4 | import {login} from '../support/browser';\n" +
+      "> 5 | const frames=JSON.parse(readFileSync('services/property-processing/tests/fixtures/media-frames-synthetic.json','utf8'));\n" +
+      '    |                         ^\n' +
+      "  6 | test('real agency capture upload, scanning, binding and isolated CPU processing retain private pending frames',async({page},info)=>{\n" +
+      "  7 |  if(process.env.HAVEN_RECOVERY_REHEARSAL==='true')test.setTimeout(600000);\n" +
+      "  8 |  const {engineId}=JSON.parse(readFileSync(`infra/generated/integration/capture-source-${info.project.name}.json`,'utf8')),origin='http://localhost:8089';\n" +
+      '    at /workspace/tests/e2e/digitization-capture-source.spec.ts:5:25\n' +
+      'Error: No tests found.\n' +
+      'Make sure that arguments are regular expressions matching test files.\n' +
+      'You may need to escape symbols like "$" or "*" and quote the arguments.\n' +
+      '\n',
+    ' Container haven-recovery-18995017-app-tests-run-b2c1cc3eceba Creating \n' +
+      ' Container haven-recovery-18995017-app-tests-run-b2c1cc3eceba Created \n' +
+      '\n'
+  ],
+  pid: 173524,
+  stdout: "Error: ENOENT: no such file or directory, open 'services/property-processing/tests/fixtures/media-frames-synthetic.json'\n" +
+    '\n' +
+    '   at digitization-capture-source.spec.ts:5\n' +
+    '\n' +
+    "  3 | import AxeBuilder from '@axe-core/playwright';\n" +
+    "  4 | import {login} from '../support/browser';\n" +
+    "> 5 | const frames=JSON.parse(readFileSync('services/property-processing/tests/fixtures/media-frames-synthetic.json','utf8'));\n" +
+    '    |                         ^\n' +
+    "  6 | test('real agency capture upload, scanning, binding and isolated CPU processing retain private pending frames',async({page},info)=>{\n" +
+    "  7 |  if(process.env.HAVEN_RECOVERY_REHEARSAL==='true')test.setTimeout(600000);\n" +
+    "  8 |  const {engineId}=JSON.parse(readFileSync(`infra/generated/integration/capture-source-${info.project.name}.json`,'utf8')),origin='http://localhost:8089';\n" +
+    '    at /workspace/tests/e2e/digitization-capture-source.spec.ts:5:25\n' +
+    'Error: No tests found.\n' +
+    'Make sure that arguments are regular expressions matching test files.\n' +
+    'You may need to escape symbols like "$" or "*" and quote the arguments.\n' +
+    '\n',
+  stderr: ' Container haven-recovery-18995017-app-tests-run-b2c1cc3eceba Creating \n' +
+    ' Container haven-recovery-18995017-app-tests-run-b2c1cc3eceba Created \n' +
+    '\n'
+}
+
+Node.js v20.20.0

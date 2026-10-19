@@ -1,0 +1,8 @@
+import {expect,it} from 'vitest';
+import {digitizationTourGraph} from '../../packages/contracts/src/digitization-tours';
+function fixture(){const a=crypto.randomUUID(),b=crypto.randomUUID();return {schemaVersion:1 as const,geometryRevisionId:null,entryNodeId:a,nodes:[{id:a,label:'Entry',tierArtifactIds:[crypto.randomUUID()],captureDeclaration:null,roomId:null,headingDegrees:null,hotspots:[{targetNodeId:b,label:'Next room',yaw:30,pitch:0}]},{id:b,label:'Room',tierArtifactIds:[crypto.randomUUID()],captureDeclaration:null,roomId:null,headingDegrees:null,hotspots:[{targetNodeId:a,label:'Return',yaw:-30,pitch:0}]}]};}
+it('tour graph allows explicit reciprocal navigation without guessing capture provenance, geometry or heading',()=>{const graph=fixture();expect(digitizationTourGraph.parse(graph)).toEqual(graph);expect(graph.nodes.every(node=>node.captureDeclaration===null&&node.roomId===null&&node.headingDegrees===null)).toBe(true);});
+it('dangling/self/duplicate nodes, tiers and room links without geometry are rejected',()=>{
+ const graph=fixture();expect(digitizationTourGraph.safeParse({...graph,entryNodeId:crypto.randomUUID()}).success).toBe(false);
+ for(const first of [{...graph.nodes[0],id:graph.nodes[1].id},{...graph.nodes[0],tierArtifactIds:graph.nodes[1].tierArtifactIds},{...graph.nodes[0],roomId:'unknown-room'},{...graph.nodes[0],hotspots:[{targetNodeId:crypto.randomUUID(),label:'Dangling',yaw:0,pitch:0}]},{...graph.nodes[0],hotspots:[{targetNodeId:graph.nodes[0].id,label:'Self',yaw:0,pitch:0}]}])expect(digitizationTourGraph.safeParse({...graph,nodes:[first,graph.nodes[1]]}).success).toBe(false);
+});

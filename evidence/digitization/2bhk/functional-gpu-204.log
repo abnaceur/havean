@@ -1,0 +1,50 @@
+time="2026-10-14T01:03:42+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-processing-gpu-volume-init-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-ef7b3562349a Creating 
+ Container haven-tests-run-ef7b3562349a Created 
+
+Running 1 test using 1 worker
+
+Property capture inputs are uploaded and bound.
+  ✘  1 [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform (4.4m)
+
+
+  1) [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+
+    Error: expect(locator).toBeEnabled() failed
+
+    Locator: getByLabel('Property reconstruction status', { exact: true }).getByRole('button', { name: 'Reconstruct captured property', exact: true })
+    Expected: enabled
+    Timeout: 60000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeEnabled" getByLabel('Property reconstruction status', { exact: true }).getByRole('button', { name: 'Reconstruct captured property', exact: true }) with timeout 60000ms
+      - waiting for getByLabel('Property reconstruction status', { exact: true }).getByRole('button', { name: 'Reconstruct captured property', exact: true })
+
+
+      91 |  status=(await (await page.request.get(base+'/reconstruction-status')).json()).data;
+      92 |  if(status.sceneTraining.job?.exportState!=='succeeded'||process.env.RETRAIN_2BHK_DEMO==='true'){
+    > 93 |   await expect(reconstruction.getByRole('button',{name:'Reconstruct captured property',exact:true})).toBeEnabled({timeout:60000});
+         |                                                                                                      ^
+      94 |   await reconstruction.getByRole('button',{name:'Reconstruct captured property',exact:true}).click();
+      95 |   await expect.poll(async()=>{status=(await (await page.request.get(base+'/reconstruction-status')).json()).data;if(status.sceneTraining.job?.state==='failed')throw Error(JSON.stringify(status.sceneTraining.job));return status.sceneTraining.job?.exportState;},{timeout:1800000,intervals:[3000,5000]}).toBe('succeeded');
+      96 |  }
+        at /workspace/tests/e2e/digitization-2bhk-reconstruction.spec.ts:93:102
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+

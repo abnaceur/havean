@@ -1,0 +1,34 @@
+import {test,expect} from '@playwright/test';
+import {login} from '../support/browser';
+
+test('agent queues real CPU camera recovery, keeps masks during polling and resumes status after reload',async({page})=>{
+ const workspace=process.env.HAVEN_CAMERA_REVIEW_WORKSPACE;
+ test.skip(!workspace,'Requires the retained licensed reference-derived CPU camera dataset.');test.setTimeout(330000);
+ const origin='http://localhost:8089',path=`/api/v1/ops/digitizations/${workspace}`;let submissions=0,statusReads=0;
+ page.on('request',request=>{if(request.url().endsWith(path+'/camera-processing')&&request.method()==='POST')submissions++;if(request.url().endsWith(path+'/reconstruction-status'))statusReads++;});
+ await login(page,'agent',origin,'/ops');
+ const initial=await page.request.get(origin+path+'/reconstruction-status');expect(initial.status()).toBe(200);
+ const before=(await initial.json()).data;expect(before.sceneTraining).toMatchObject({available:false,reason:'GPU_VALIDATION_DEFERRED'});
+ if(before.camera?.state==='cancelled')expect(before.camera.report).toBeNull();
+ await page.goto(`${origin}/ops/digitization?workspace=${workspace}`);
+ const section=page.getByRole('region',{name:'Training frame privacy',exact:true}),status=section.getByLabel('Property reconstruction status', {exact:true});
+ await expect(status.getByText('Scene training is disabled pending GPU validation on this deployment.',{exact:false})).toBeVisible();
+ await section.getByRole('combobox',{name:'Frame to inspect',exact:true}).selectOption({index:1});
+ for(const [key,value] of Object.entries({x:'0',y:'0',width:'8',height:'8'}))await section.getByRole('spinbutton',{name:'Mask '+key,exact:true}).fill(value);
+ await section.getByRole('button',{name:'Add black mask',exact:true}).click();
+ await section.getByRole('checkbox',{name:'I inspected the selected frames and supplied their exclusions and masks',exact:true}).check();
+ const submitted=page.waitForResponse(r=>r.url().endsWith(path+'/camera-processing')&&r.request().method()==='POST');
+ await section.getByRole('button',{name:'Reconstruct cameras from masked frames',exact:true}).click();expect((await submitted).ok()).toBe(true);
+ await expect(section.getByRole('button',{name:'Reconstruct cameras from masked frames',exact:true})).toBeDisabled();
+ await section.getByRole('spinbutton',{name:'Mask width',exact:true}).fill('13');const previousReads=statusReads;
+ await expect.poll(()=>statusReads,{timeout:15000}).toBeGreaterThan(previousReads+1);
+ await expect(section.getByRole('spinbutton',{name:'Mask width',exact:true})).toHaveValue('13');
+ await expect(section.getByText(/1 mask rectangles supplied/)).toBeVisible();
+ await page.reload();
+ await expect(status.getByText('Camera positions recovered. Scene training has not run.',{exact:true})).toBeVisible({timeout:280000});
+ await expect(section.getByRole('link',{name:'Download private calibrated training inputs',exact:true})).toBeVisible();
+ expect(submissions).toBe(1);
+ const response=await page.request.get(origin+path+'/reconstruction-status');expect(response.status()).toBe(200);const after=(await response.json()).data;
+ expect(after.camera.stageState).toBe('succeeded');expect(after.camera.report.registeredCameraCount).toBeGreaterThanOrEqual(10);expect(after.camera.report.pointCount).toBeGreaterThan(0);expect(after.publiclyServed).toBe(false);expect(after.sceneTraining.available).toBe(false);
+ console.log(JSON.stringify({label:'O/P',workspaceId:workspace,camera:after.camera,automaticTrainingAvailable:false,gpuExecuted:false,jobSubmissions:submissions,privacyEditsSurvivedPolling:true,resumedAfterReload:true}));
+});

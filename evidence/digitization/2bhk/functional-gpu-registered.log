@@ -1,0 +1,41 @@
+time="2026-10-14T01:18:42+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-processing-gpu-volume-init-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-faadb1a065f1 Creating 
+ Container haven-tests-run-faadb1a065f1 Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform (35.3s)
+
+
+  1) [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+
+    Error: expect(received).toBeNull()
+
+    Received: undefined
+
+      14 |  await expect(page.getByRole('region',{name:'Property 3D reconstruction',exact:true})).toBeVisible();
+      15 |  await expect(page.getByRole('region',{name:'3D construction studio',exact:true})).toHaveCount(0);
+    > 16 |  expect((await (await page.request.get(base+'/geometry')).json()).data).toBeNull();
+         |                                                                         ^
+      17 |  const sources=(await (await page.request.get(base+'/sources')).json()).data;
+      18 |  if(sources.length<17){
+      19 |   const sourcePanel=page.getByRole('region',{name:'Private source processing',exact:true});
+        at /workspace/tests/e2e/digitization-2bhk-reconstruction.spec.ts:16:73
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results-2bhk-reconstruction/digitization-2bhk-reconstr-c469b--through-the-agent-platform-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-2bhk-reconstruction.spec.ts:5:1 › high-resolution furnished two-bedroom apartment reconstructs through the agent platform 
+

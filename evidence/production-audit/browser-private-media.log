@@ -1,0 +1,77 @@
+time="2026-10-10T08:48:34+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-df2e18a72ce5 Creating 
+ Container haven-tests-run-df2e18a72ce5 Created 
+
+Running 4 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/provider-security-readiness.spec.ts:6:1 › Q06 / real sessions reject CSRF, rotated credentials and another actor’s scanned private download (9.4s)
+  ✘  2 [desktop] › tests/e2e/provider-security-readiness.spec.ts:18:1 › Q06 / configured public map renders actual provider tiles and a provider outage retains the property list (216ms)
+  ✓  3 [mobile] › tests/e2e/provider-security-readiness.spec.ts:6:1 › Q06 / real sessions reject CSRF, rotated credentials and another actor’s scanned private download (7.2s)
+  ✘  4 [mobile] › tests/e2e/provider-security-readiness.spec.ts:18:1 › Q06 / configured public map renders actual provider tiles and a provider outage retains the property list (209ms)
+
+
+  1) [desktop] › tests/e2e/provider-security-readiness.spec.ts:18:1 › Q06 / configured public map renders actual provider tiles and a provider outage retains the property list 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "https://tiles.openfreemap.org/styles/liberty"
+    Received: null
+
+      17 | });
+      18 | test('Q06 / configured public map renders actual provider tiles and a provider outage retains the property list',async({page},info)=>{
+    > 19 |  test.setTimeout(120000);const config=(await (await page.request.get(web+'/api/v1/map/config')).json()).data;expect(config.style).toBe('https://tiles.openfreemap.org/styles/liberty');const received:{url:string;status:number;type:string}[]=[];page.on('response',r=>{if(r.url().startsWith('https://tiles.openfreemap.org/')&&r.ok()&&!r.url().includes('/styles/'))received.push({url:r.url(),status:r.status(),type:r.headers()['content-type']||''});});
+         |                                                                                                                                   ^
+      20 |  await page.goto('/bj/map?transaction=sale&segment=residential&sort=newest');await expect(page.locator('.map-canvas')).toHaveAttribute('data-map-ready','true');await expect.poll(()=>received.filter(r=>/protobuf|vector-tile|octet-stream/.test(r.type)).length,{timeout:45000}).toBeGreaterThan(0);await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText('OpenFreeMap');await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText('OpenStreetMap');await expect(page.locator('.map-list .listing-card').first()).toBeVisible();await expect(page.locator('.map-failure')).toHaveCount(0);await page.screenshot({path:`evidence/q06-live-map-${info.project.name}.png`,scale:'css'});fs.writeFileSync(`evidence/q06-map-provider-${info.project.name}.json`,JSON.stringify({label:'P',style:config.style,actualResponses:received,positiveMocked:false},null,2)+'\n');
+      21 |  await page.route('https://tiles.openfreemap.org/**',route=>route.abort('failed'));await page.reload();await expect(page.locator('.map-failure')).toContainText('unavailable');await expect(page.locator('.map-list .listing-card').first()).toBeVisible();await page.screenshot({path:`evidence/q06-map-outage-${info.project.name}.png`,scale:'css'});
+      22 | });
+        at /workspace/tests/e2e/provider-security-readiness.spec.ts:19:131
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    evidence/production-audit/browser-results/provider-security-readines-d493f-e-retains-the-property-list-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: evidence/production-audit/browser-results/provider-security-readines-d493f-e-retains-the-property-list-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    evidence/production-audit/browser-results/provider-security-readines-d493f-e-retains-the-property-list-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace evidence/production-audit/browser-results/provider-security-readines-d493f-e-retains-the-property-list-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/provider-security-readiness.spec.ts:18:1 › Q06 / configured public map renders actual provider tiles and a provider outage retains the property list 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "https://tiles.openfreemap.org/styles/liberty"
+    Received: null
+
+      17 | });
+      18 | test('Q06 / configured public map renders actual provider tiles and a provider outage retains the property list',async({page},info)=>{
+    > 19 |  test.setTimeout(120000);const config=(await (await page.request.get(web+'/api/v1/map/config')).json()).data;expect(config.style).toBe('https://tiles.openfreemap.org/styles/liberty');const received:{url:string;status:number;type:string}[]=[];page.on('response',r=>{if(r.url().startsWith('https://tiles.openfreemap.org/')&&r.ok()&&!r.url().includes('/styles/'))received.push({url:r.url(),status:r.status(),type:r.headers()['content-type']||''});});
+         |                                                                                                                                   ^
+      20 |  await page.goto('/bj/map?transaction=sale&segment=residential&sort=newest');await expect(page.locator('.map-canvas')).toHaveAttribute('data-map-ready','true');await expect.poll(()=>received.filter(r=>/protobuf|vector-tile|octet-stream/.test(r.type)).length,{timeout:45000}).toBeGreaterThan(0);await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText('OpenFreeMap');await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText('OpenStreetMap');await expect(page.locator('.map-list .listing-card').first()).toBeVisible();await expect(page.locator('.map-failure')).toHaveCount(0);await page.screenshot({path:`evidence/q06-live-map-${info.project.name}.png`,scale:'css'});fs.writeFileSync(`evidence/q06-map-provider-${info.project.name}.json`,JSON.stringify({label:'P',style:config.style,actualResponses:received,positiveMocked:false},null,2)+'\n');
+      21 |  await page.route('https://tiles.openfreemap.org/**',route=>route.abort('failed'));await page.reload();await expect(page.locator('.map-failure')).toContainText('unavailable');await expect(page.locator('.map-list .listing-card').first()).toBeVisible();await page.screenshot({path:`evidence/q06-map-outage-${info.project.name}.png`,scale:'css'});
+      22 | });
+        at /workspace/tests/e2e/provider-security-readiness.spec.ts:19:131
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    evidence/production-audit/browser-results/provider-security-readines-d493f-e-retains-the-property-list-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: evidence/production-audit/browser-results/provider-security-readines-d493f-e-retains-the-property-list-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    evidence/production-audit/browser-results/provider-security-readines-d493f-e-retains-the-property-list-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace evidence/production-audit/browser-results/provider-security-readines-d493f-e-retains-the-property-list-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/provider-security-readiness.spec.ts:18:1 › Q06 / configured public map renders actual provider tiles and a provider outage retains the property list 
+    [mobile] › tests/e2e/provider-security-readiness.spec.ts:18:1 › Q06 / configured public map renders actual provider tiles and a provider outage retains the property list 
+  2 passed (18.9s)
+

@@ -1,0 +1,137 @@
+{"label":"P","status":"synthetic-source-snapshot-locked","sourceMutated":false}
+{"label":"P","status":"fixture-objects-copied-and-verified","objects":2408,"bytes":117483476,"digest":"2906553247fd339b713e2183b9858cdc13290df56adbbf5575f6c11b747ea820","sourceMutated":false,"physicalPropertyEvidence":false}
+{"status":"failed","code":"RESTORED_DIGITIZATION_RECONCILIATION_FAILED"}
+{"label":"P","status":"application-configuration-created","project":"haven-recovery-0ed88fc0-app","bind":"127.0.0.2","databaseContainer":"haven-recovery-72228883-db","applicationVerified":false}
+Running 2 tests using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts (33.9s)
+  ✓  2 [desktop] › tests/e2e/digitization-unit-application.spec.ts:9:1 › native source confirmation proposes shared unit facts, canonical location and independent review without exposing private evidence (1.4m)
+
+  2 passed (2.0m)
+Running 1 test using 1 worker
+
+  ✓  1 [desktop] › tests/e2e/digitization-publication.spec.ts:4:1 › Reviewed panorama publication uses independent inventory approval, public viewer and withdrawal (42.6s)
+
+  1 passed (43.5s)
+{"label":"P","status":"owned-synthetic-failure-diagnostics-retained","directory":"evidence/digitization/haven-recovery-0ed88fc0-failure","requestFailures":23}
+{"label":"P","queueCounts":{"active":0,"completed":259,"delayed":0,"failed":31,"prioritized":12410,"waiting":0,"waiting-children":0},"failureCodes":{"ENGINE_EVENT_UNSUPPORTED":4,"RUN_NOT_EXECUTABLE":24,"SOURCE_SELECTION_AMBIGUOUS":3}}
+node:internal/errors:984
+  const err = new Error(message);
+              ^
+
+Error: Command failed: docker compose -f /tmp/haven-recovery-0ed88fc0-3icvdE/application/application.json --profile tests run --rm --no-deps tests pnpm exec playwright test tests/e2e/digitization-model-publication.spec.ts --project=desktop --output=/workspace/test-results/run --max-failures=1
+ Container haven-recovery-0ed88fc0-app-tests-run-3796a17ffd55 Creating 
+ Container haven-recovery-0ed88fc0-app-tests-run-3796a17ffd55 Created 
+
+
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execFileSync (node:child_process:927:15)
+    at docker (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:17:41)
+    at compose (file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:50:22)
+    at verifyRestoredApplication (file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:62:15)
+    at async file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:116:98 {
+  status: 1,
+  signal: null,
+  output: [
+    null,
+    '\n' +
+      'Running 1 test using 1 worker\n' +
+      '\n' +
+      '  ✘  1 [desktop] › tests/e2e/digitization-model-publication.spec.ts:5:1 › reviewed structural and splat models use separate listing approval, public rendering and withdrawal (39.5s)\n' +
+      'Testing stopped early after 1 maximum allowed failures.\n' +
+      '\n' +
+      '\n' +
+      '  1) [desktop] › tests/e2e/digitization-model-publication.spec.ts:5:1 › reviewed structural and splat models use separate listing approval, public rendering and withdrawal \n' +
+      '\n' +
+      '    Error: expect(received).toBe(expected) // Object.is equality\n' +
+      '\n' +
+      '    Expected: 200\n' +
+      '    Received: 503\n' +
+      '\n' +
+      "      14 |   const pending=page.waitForResponse(response=>response.url().endsWith('/model-publication-proposals')&&response.request().method()==='POST');await form.getByRole('button',{name:'Propose reviewed model publication',exact:true}).click();const response=await pending;expect(response.status()).toBe(201);const proposal=(await response.json()).data;\n" +
+      '      15 |   const staffContext=await browser.newContext({viewport:info.project.use.viewport}),staff=await staffContext.newPage();try{\n' +
+      '    > 16 |    await login(staff,\'moderator\',origin,\'/ops\');const queueReady=staff.waitForResponse(response=>response.url().endsWith(\'/api/v1/ops/digitization-model-publication-reviews\')&&response.request().method()===\'GET\',{timeout:40000});await staff.goto(origin+\'/ops/reviews\');const queueResponse=await queueReady;expect(queueResponse.status()).toBe(200);expect((await queueResponse.json()).data.some((row:{revisionId:string})=>row.revisionId===proposal.revisionId)).toBe(true);const article=staff.locator(`[data-model-publication-review-id="${proposal.revisionId}"]`);await expect(article).toBeVisible();\n' +
+      '         |                                                                                                                                                                                                                                                                                                                                                  ^\n' +
+      "      17 |    await expect(article.getByRole('button',{name:'Approve model publication revision',exact:true})).toBeDisabled();\n" +
+      "      18 |    await article.getByRole('button',{name:'Inspect publication model',exact:true}).click();await article.getByRole('button',{name:modelType==='structural'?'Open 3D preview':'Open scene preview',exact:true}).click();await expect(article.getByRole('status')).toContainText(modelType==='structural'?'Structural model loaded':'Scene loaded:',{timeout:30000});\n" +
+      "      19 |    await article.getByRole('checkbox',{name:'I independently verified this exact reviewed model, privacy treatment, visualization limitations and current listing authority.',exact:true}).check();\n" +
+      '        at /workspace/tests/e2e/digitization-model-publication.spec.ts:16:338\n' +
+      '\n' +
+      '    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n' +
+      '    test-results/run/digitization-model-publica-4ef57-ic-rendering-and-withdrawal-desktop/test-failed-1.png\n' +
+      '    ────────────────────────────────────────────────────────────────────────────────────────────────\n' +
+      '\n' +
+      '    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────\n' +
+      '    test-results/run/digitization-model-publica-4ef57-ic-rendering-and-withdrawal-desktop/test-failed-2.png\n' +
+      '    ────────────────────────────────────────────────────────────────────────────────────────────────\n' +
+      '\n' +
+      '    Error Context: test-results/run/digitization-model-publica-4ef57-ic-rendering-and-withdrawal-desktop/error-context.md\n' +
+      '\n' +
+      '    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────\n' +
+      '    test-results/run/digitization-model-publica-4ef57-ic-rendering-and-withdrawal-desktop/trace.zip\n' +
+      '    Usage:\n' +
+      '\n' +
+      '        pnpm exec playwright show-trace test-results/run/digitization-model-publica-4ef57-ic-rendering-and-withdrawal-desktop/trace.zip\n' +
+      '\n' +
+      '    ────────────────────────────────────────────────────────────────────────────────────────────────\n' +
+      '\n' +
+      '  1 failed\n' +
+      '    [desktop] › tests/e2e/digitization-model-publication.spec.ts:5:1 › reviewed structural and splat models use separate listing approval, public rendering and withdrawal \n' +
+      '  1 error was not a part of any test, see above for details\n',
+    ' Container haven-recovery-0ed88fc0-app-tests-run-3796a17ffd55 Creating \n' +
+      ' Container haven-recovery-0ed88fc0-app-tests-run-3796a17ffd55 Created \n' +
+      '\n'
+  ],
+  pid: 66189,
+  stdout: '\n' +
+    'Running 1 test using 1 worker\n' +
+    '\n' +
+    '  ✘  1 [desktop] › tests/e2e/digitization-model-publication.spec.ts:5:1 › reviewed structural and splat models use separate listing approval, public rendering and withdrawal (39.5s)\n' +
+    'Testing stopped early after 1 maximum allowed failures.\n' +
+    '\n' +
+    '\n' +
+    '  1) [desktop] › tests/e2e/digitization-model-publication.spec.ts:5:1 › reviewed structural and splat models use separate listing approval, public rendering and withdrawal \n' +
+    '\n' +
+    '    Error: expect(received).toBe(expected) // Object.is equality\n' +
+    '\n' +
+    '    Expected: 200\n' +
+    '    Received: 503\n' +
+    '\n' +
+    "      14 |   const pending=page.waitForResponse(response=>response.url().endsWith('/model-publication-proposals')&&response.request().method()==='POST');await form.getByRole('button',{name:'Propose reviewed model publication',exact:true}).click();const response=await pending;expect(response.status()).toBe(201);const proposal=(await response.json()).data;\n" +
+    '      15 |   const staffContext=await browser.newContext({viewport:info.project.use.viewport}),staff=await staffContext.newPage();try{\n' +
+    '    > 16 |    await login(staff,\'moderator\',origin,\'/ops\');const queueReady=staff.waitForResponse(response=>response.url().endsWith(\'/api/v1/ops/digitization-model-publication-reviews\')&&response.request().method()===\'GET\',{timeout:40000});await staff.goto(origin+\'/ops/reviews\');const queueResponse=await queueReady;expect(queueResponse.status()).toBe(200);expect((await queueResponse.json()).data.some((row:{revisionId:string})=>row.revisionId===proposal.revisionId)).toBe(true);const article=staff.locator(`[data-model-publication-review-id="${proposal.revisionId}"]`);await expect(article).toBeVisible();\n' +
+    '         |                                                                                                                                                                                                                                                                                                                                                  ^\n' +
+    "      17 |    await expect(article.getByRole('button',{name:'Approve model publication revision',exact:true})).toBeDisabled();\n" +
+    "      18 |    await article.getByRole('button',{name:'Inspect publication model',exact:true}).click();await article.getByRole('button',{name:modelType==='structural'?'Open 3D preview':'Open scene preview',exact:true}).click();await expect(article.getByRole('status')).toContainText(modelType==='structural'?'Structural model loaded':'Scene loaded:',{timeout:30000});\n" +
+    "      19 |    await article.getByRole('checkbox',{name:'I independently verified this exact reviewed model, privacy treatment, visualization limitations and current listing authority.',exact:true}).check();\n" +
+    '        at /workspace/tests/e2e/digitization-model-publication.spec.ts:16:338\n' +
+    '\n' +
+    '    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n' +
+    '    test-results/run/digitization-model-publica-4ef57-ic-rendering-and-withdrawal-desktop/test-failed-1.png\n' +
+    '    ────────────────────────────────────────────────────────────────────────────────────────────────\n' +
+    '\n' +
+    '    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────\n' +
+    '    test-results/run/digitization-model-publica-4ef57-ic-rendering-and-withdrawal-desktop/test-failed-2.png\n' +
+    '    ────────────────────────────────────────────────────────────────────────────────────────────────\n' +
+    '\n' +
+    '    Error Context: test-results/run/digitization-model-publica-4ef57-ic-rendering-and-withdrawal-desktop/error-context.md\n' +
+    '\n' +
+    '    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────\n' +
+    '    test-results/run/digitization-model-publica-4ef57-ic-rendering-and-withdrawal-desktop/trace.zip\n' +
+    '    Usage:\n' +
+    '\n' +
+    '        pnpm exec playwright show-trace test-results/run/digitization-model-publica-4ef57-ic-rendering-and-withdrawal-desktop/trace.zip\n' +
+    '\n' +
+    '    ────────────────────────────────────────────────────────────────────────────────────────────────\n' +
+    '\n' +
+    '  1 failed\n' +
+    '    [desktop] › tests/e2e/digitization-model-publication.spec.ts:5:1 › reviewed structural and splat models use separate listing approval, public rendering and withdrawal \n' +
+    '  1 error was not a part of any test, see above for details\n',
+  stderr: ' Container haven-recovery-0ed88fc0-app-tests-run-3796a17ffd55 Creating \n' +
+    ' Container haven-recovery-0ed88fc0-app-tests-run-3796a17ffd55 Created \n' +
+    '\n'
+}
+
+Node.js v20.20.0

@@ -1,0 +1,47 @@
+ Container haven-processing-tests-cpu-run-ea50e23beaa9 Creating 
+ Container haven-processing-tests-cpu-run-ea50e23beaa9 Created 
+...................F.................................................... [ 83%]
+..............                                                           [100%]
+=================================== FAILURES ===================================
+___ test_configured_real_runner_process_accepts_quickly_and_completes_async ____
+
+tmp_path = PosixPath('/tmp/pytest-of-processing/pytest-0/test_configured_real_runner_pr0')
+
+    def test_configured_real_runner_process_accepts_quickly_and_completes_async(tmp_path):
+        import os
+        import subprocess
+        import sys
+        secret_file = tmp_path / 'runner-key'
+        secret_file.write_bytes(SECRET)
+        secret_file.chmod(0o600)
+        root = tmp_path / 'receipts'
+        root.mkdir(mode=0o700)
+        content = pdf('Private asynchronous native text 00123')
+        body = request(content)
+        directory = root / body['executionId']
+        environment = {**os.environ, 'PROCESSING_EXECUTION_ROOT': str(root),
+                       'PROCESSING_SIGNING_KEY_FILE': str(secret_file), 'PROCESSING_ADAPTER': 'unavailable',
+                       'PROCESSING_ENABLE_SIMULATOR': 'false', 'PROCESSING_DEPLOYMENT': 'test'}
+        process = subprocess.Popen([sys.executable, '-m', 'property_processing.server'], env=environment,
+                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+        origin = 'http://127.0.0.1:8020'
+        try:
+            ready = time.monotonic()+5
+            while True:
+                assert process.poll() is None
+                try:
+                    with urlopen(origin+'/health/ready', timeout=0.2) as ready_response:
+                        capabilities = json.load(ready_response)["data"]["capabilities"]
+                        assert capabilities["executionProtocolAvailable"]
+>                       assert capabilities["executionProfileIds"] == ["generic-native-facts-ar-v1", "generic-native-facts-en-v1", "generic-native-facts-fr-v1", "pdfium-150dpi-v1", "upright-image-v1"]
+E                       AssertionError: assert ['generic-nat...ght-image-v1'] == ['generic-nat...ght-image-v1']
+E                         
+E                         At index 4 diff: 'private-panorama-candidate-v1' != 'upright-image-v1'
+E                         Left contains one more item: 'upright-image-v1'
+E                         Use -v to get more diff
+
+tests/test_executions.py:279: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_executions.py::test_configured_real_runner_process_accepts_quickly_and_completes_async
+1 failed, 85 passed in 24.67s
+

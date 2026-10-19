@@ -1,0 +1,9 @@
+file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:33
+ const damaged=path.join(root,'damaged');fs.cpSync(path.join(root,'encrypted'),damaged,{recursive:true});const ciphertext=path.join(damaged,fs.readdirSync(damaged).find(name=>name.endsWith('.bin'))),bytes=fs.readFileSync(ciphertext);bytes[0]^=1;fs.writeFileSync(ciphertext,bytes);let tamperRejected=false;try{await decryptSnapshot(damaged,path.join(root,'refused'),path.join(root,'recovery.key'),path.join(root,'signing.pub'));}catch(error){if(error.message!=='RECOVERY_CIPHERTEXT_MISMATCH')throw error;tamperRejected=true;}if(!tamperRejected||fs.existsSync(path.join(root,'refused')))throw Error('RECOVERY_TEST_TAMPER_ACCEPTED');
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ^
+
+Error: RECOVERY_TEST_TAMPER_ACCEPTED
+    at file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:33:592
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+Node.js v20.20.0

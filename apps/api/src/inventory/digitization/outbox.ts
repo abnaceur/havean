@@ -5,7 +5,10 @@ import {fail} from '../../platform/core.js';
 import {checkedWorkspace,requireDigitizationAgency} from './intakes.js';
 import {cpuSourceFingerprint} from './execution-scope.js';
 import {leaseStage} from './leases.js';
-const notifications=new Set(['digitization.created','digitization.intake_created','digitization.evidence_granted','digitization.inputs_changed','digitization.capture_reserved','digitization.capture_started','digitization.capture_cancelled','digitization.capture_quarantined','digitization.run_created','digitization.stage_failed','digitization.run_cancelled','digitization.stage_leased','digitization.stage_started','digitization.geometry_saved']);
+import {cameraProfile,currentCameraInput} from './camera-input.js';
+import {gsplatExportProfile,isGsplatTrainingProfile} from './training-configuration.js';
+import {currentTrainingInput} from './training-input.js';
+const notifications=new Set(['digitization.created','digitization.intake_created','digitization.evidence_granted','digitization.evidence_revoked','digitization.inputs_changed','digitization.capture_reserved','digitization.capture_started','digitization.capture_cancelled','digitization.capture_source_admitted','digitization.capture_quarantined','digitization.run_created','digitization.stage_failed','digitization.run_cancelled','digitization.stage_leased','digitization.stage_started','digitization.geometry_saved','digitization.fact_decided','digitization.intake_draft_created','digitization.capture_session_created','digitization.capture_session_saved','digitization.frame_dataset_created','digitization.frame_privacy_created','digitization.scene_registration_saved','digitization.registration_review_requested','digitization.registration_reviewed','digitization.model_review_requested','digitization.model_reviewed','digitization.scene_privacy_declared','digitization.tour_saved','digitization.tour_review_requested','digitization.tour_reviewed','digitization.publication_proposed','digitization.package_published','digitization.package_revoked']);
 
 /** An engine effect acknowledges durable execution handoffs, never publication.
  * The event lock and receipt are in the same transaction as acquiring leases.
@@ -42,12 +45,12 @@ export async function consumeDigitizationEvent(c:pg.PoolClient,a:Actor,eventId:s
   if(!runId||event.payload.runId!==runId)fail(422,'The event has no scoped processing run.','ENGINE_EVENT_INVALID');
   const run=(await c.query('SELECT state,input_revision,created_by,cancel_requested_at,deadline<=statement_timestamp() expired FROM processing_runs WHERE id=$1 AND digitization_id=$2 FOR UPDATE',[runId,engine])).rows[0];
   if(!run||run.created_by!==a.id)fail(403,'The initiating actor no longer has processing authority.','EXECUTION_SCOPE_REQUIRED');
-  if(run.input_revision!==workspace.inputRevision||run.cancel_requested_at||run.expired||!['queued','running'].includes(run.state)&&!(event.kind==='digitization.stage_completed'&&['awaiting_review','ready'].includes(run.state)&&!(await c.query("SELECT 1 FROM processing_stages WHERE run_id=$1 AND state NOT IN('succeeded','skipped') LIMIT 1",[runId])).rowCount))fail(409,'This run no longer accepts execution.','RUN_NOT_EXECUTABLE');
+  if(run.input_revision!==workspace.inputRevision||run.cancel_requested_at||run.expired||!['queued','running'].includes(run.state)&&!(event.kind==='digitization.stage_completed'&&['awaiting_input','awaiting_review','ready'].includes(run.state)&&!(await c.query("SELECT 1 FROM processing_stages WHERE run_id=$1 AND state NOT IN('succeeded','skipped') LIMIT 1",[runId])).rowCount))fail(409,'This run no longer accepts execution.','RUN_NOT_EXECUTABLE');
   const sources=(await c.query('SELECT source_set FROM property_input_revisions WHERE digitization_id=$1 AND revision=$2',[engine,run.input_revision])).rows[0]?.source_set??[];
-  const queued=(await c.query("SELECT id,version,input_fingerprint,profile_id FROM processing_stages WHERE run_id=$1 AND state='queued' ORDER BY id FOR UPDATE",[runId])).rows;
+  const queued=(await c.query("SELECT id,version,input_revision,input_fingerprint,profile_id FROM processing_stages WHERE run_id=$1 AND state='queued' ORDER BY id FOR UPDATE",[runId])).rows;
   if(queued.length>100)fail(422,'This graph exceeds its stage budget.','INVALID_RUN_GRAPH');
   for(const stage of queued){
-   const matches=sources.filter((source:any)=>cpuSourceFingerprint(engine,a.orgId!,run.input_revision,stage.profile_id,source)===stage.input_fingerprint);
+   const matches=(isGsplatTrainingProfile(stage.profile_id)||stage.profile_id===gsplatExportProfile)?[(await currentTrainingInput(c,a,engine,stage)).source]:stage.profile_id===cameraProfile?[(await currentCameraInput(c,a,engine,stage)).source]:sources.filter((source:any)=>cpuSourceFingerprint(engine,a.orgId!,run.input_revision,stage.profile_id,source)===stage.input_fingerprint);
    if(matches.length!==1)fail(422,'Stage inputs must identify exactly one scoped source.','SOURCE_SELECTION_AMBIGUOUS');
    const source=matches[0];
    if(!(await c.query("SELECT digitization_asset_access($1,$2,$3,$4,'document_processing') allowed",[engine,source.assetId,source.assetVersion,run.input_revision])).rows[0].allowed)fail(403,'Current evidence processing authority is required.','SOURCE_ACCESS_CHANGED');

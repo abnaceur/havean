@@ -1,0 +1,9 @@
+file:///home/abn/project/real-estate-solution/scripts/recovery/build-fixture-images.mjs:25
+ const deployment=JSON.parse(docker(['compose','--env-file','.env.integration','-p','haven-integration','-f','compose.yaml','-f','compose.integration.yaml','config','--format','json'])),browserBase=JSON.parse(docker(['image','inspect',deployment.services.tests.image??'haven-integration-tests']))[0].Id,browserName='haven-recovery-browser-base:1.0.0-'+browserBase.split(':')[1].slice(0,12);docker(['image','tag',browserBase,browserName]);
+                                                                                                                                                                                                                                                                     ^
+
+TypeError: Cannot read properties of undefined (reading 'image')
+    at file:///home/abn/project/real-estate-solution/scripts/recovery/build-fixture-images.mjs:25:262
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+Node.js v20.20.0

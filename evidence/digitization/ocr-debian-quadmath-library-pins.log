@@ -1,0 +1,12 @@
+time="2026-10-10T01:21:31+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-processing-colmap-smoke-run-3c72a95b1836 Creating 
+ Container haven-processing-colmap-smoke-run-3c72a95b1836 Created 
+Traceback (most recent call last):
+  File "/copy-ocr-blas-libraries.py", line 5, in <module>
+    source=Path('/usr/lib/x86_64-linux-gnu')/name;target=out/name;shutil.copyfile(source,target)
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/shutil.py", line 260, in copyfile
+    with open(src, 'rb') as fsrc:
+         ^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/usr/lib/x86_64-linux-gnu/libquadmath.so.0'
+

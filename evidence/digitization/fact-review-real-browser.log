@@ -1,0 +1,107 @@
+sha256:435ac3fe75be4f5c7309ac8d76f178176c98d58327a82569a149a2e052423ead
+ Container haven-ocr-protocol-386413 Creating 
+ Container haven-ocr-protocol-386413 Created 
+ Container haven-ocr-protocol-386413 Starting 
+ Container haven-ocr-protocol-386413 Started 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-document-ocr.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 63385[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined en raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 18721[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined fr raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 9409[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined ar raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 8372[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined en-browser-desktop raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 13467[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined en-browser-mobile raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 13410[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 02:36:10
+[2m   Duration [22m 66.10s[2m (tests 96%, import 2%, transform 2%)[22m
+
+ Container haven-integration-tests-run-5fdea77ac5d5 Creating 
+ Container haven-integration-tests-run-5fdea77ac5d5 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history (20.0s)
+  ✘  2 [mobile] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history (17.8s)
+
+
+  1) [desktop] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Private document fact review' }).getByLabel('Source fact', { exact: true })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'Private document fact review' }).getByLabel('Source fact', { exact: true }) with timeout 15000ms
+      - waiting for getByRole('region', { name: 'Private document fact review' }).getByLabel('Source fact', { exact: true })
+
+
+       6 |  const denied=await page.request.get(origin+route);expect(denied.status()).toBe(401);
+       7 |  await login(page,'agent',origin,'/ops');await page.goto(origin+'/ops/digitization?workspace='+fixture.engineId);
+    >  8 |  const review=page.getByRole('region',{name:'Private document fact review'}),select=review.getByLabel('Source fact',{exact:true});await expect(select).toBeVisible();await select.selectOption(fixture.candidateId);
+         |                                                                                                                                                        ^
+       9 |  await expect(review.getByRole('blockquote')).toContainText('123.45');const crop=review.getByRole('img',{name:'Source crop for unitArea, page 1'});await expect(crop).toBeVisible();expect((await crop.getAttribute('viewBox'))?.split(' ')).toHaveLength(4);
+      10 |  const read=async()=>{const response=await page.request.get(origin+route);expect(response.status()).toBe(200);return (await response.json()).data;};
+      11 |  const before=await read();const evidence=before.candidates.find((item:any)=>item.id===fixture.candidateId).evidence[0],source=before.pages.find((item:any)=>item.assetId===evidence.assetId&&item.page===evidence.page);
+        at /workspace/tests/e2e/digitization-fact-review.spec.ts:8:152
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-fact-review-H-22373-d-immutable-private-history-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Private document fact review' }).getByLabel('Source fact', { exact: true })
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'Private document fact review' }).getByLabel('Source fact', { exact: true }) with timeout 15000ms
+      - waiting for getByRole('region', { name: 'Private document fact review' }).getByLabel('Source fact', { exact: true })
+
+
+       6 |  const denied=await page.request.get(origin+route);expect(denied.status()).toBe(401);
+       7 |  await login(page,'agent',origin,'/ops');await page.goto(origin+'/ops/digitization?workspace='+fixture.engineId);
+    >  8 |  const review=page.getByRole('region',{name:'Private document fact review'}),select=review.getByLabel('Source fact',{exact:true});await expect(select).toBeVisible();await select.selectOption(fixture.candidateId);
+         |                                                                                                                                                        ^
+       9 |  await expect(review.getByRole('blockquote')).toContainText('123.45');const crop=review.getByRole('img',{name:/Source crop for unitArea, page [12]/});await expect(crop).toBeVisible();expect((await crop.getAttribute('viewBox'))?.split(' ')).toHaveLength(4);
+      10 |  const read=async()=>{const response=await page.request.get(origin+route);expect(response.status()).toBe(200);return (await response.json()).data;};
+      11 |  const before=await read();const evidence=before.candidates.find((item:any)=>item.id===fixture.candidateId).evidence[0],source=before.pages.find((item:any)=>item.assetId===evidence.assetId&&item.page===evidence.page);
+        at /workspace/tests/e2e/digitization-fact-review.spec.ts:8:152
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-fact-review-H-22373-d-immutable-private-history-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+    [mobile] › tests/e2e/digitization-fact-review.spec.ts:4:1 › HE-D09 provisional source fact acceptance and correction keep exact crops and immutable private history 
+

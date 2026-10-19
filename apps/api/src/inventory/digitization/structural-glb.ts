@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';
 import {digitizationGeometryRevision,triangulateDigitizationRoom,type DigitizationGeometryRevision} from '@haven/contracts';
+import {furnishingMeshes} from './furnishing-meshes.js';
 type Point=[number,number,number];
 const MAX_VERTICES=300000;
 function subtract(a:Point,b:Point):Point{return a.map((v,i)=>v-b[i]) as Point;}
@@ -11,6 +12,10 @@ export function renderStructuralGlb(input:DigitizationGeometryRevision,slabThick
  if(geometry.unit!=='m'||!['estimated','measured'].includes(geometry.scaleStatus))throw Error('STRUCTURAL_SCALE_REQUIRED');
  if(!/^0\.\d{1,4}$/.test(slabThickness)||thickness<.001||thickness>.5)throw Error('STRUCTURAL_SLAB_PROFILE_INVALID');
  const document:any={asset:{version:'2.0',generator:'Haven structural geometry v1',extras:{geometryId:geometry.id,geometryRevision:geometry.revision,scaleStatus:geometry.scaleStatus,reviewStatus:geometry.review.status,modelType:'structural',coordinateConversion:'canonical(x,y,z)-to-gltf(x,z,-y)',slabThickness:{amount:slabThickness,unit:'m',basis:'illustrative_assumption'},limitations:['Visualization slab thickness is an illustrative assumption; geometry room net area is not official built-up area.']}},scene:0,scenes:[{nodes:[]}],nodes:[],meshes:[],bufferViews:[],accessors:[],buffers:[{byteLength:0}],materials:[{name:'floor',pbrMetallicRoughness:{baseColorFactor:[.19,.46,.37,1],metallicFactor:0,roughnessFactor:1},doubleSided:true},{name:'wall',pbrMetallicRoughness:{baseColorFactor:[.78,.78,.74,1],metallicFactor:0,roughnessFactor:1}},{name:'draft wall',pbrMetallicRoughness:{baseColorFactor:[.8,.55,.24,1],metallicFactor:0,roughnessFactor:1}}]};
+ const furnished=Boolean(geometry.furnishings?.length);
+ if(furnished){document.materials[0].pbrMetallicRoughness.baseColorFactor=[.48,.33,.19,1];document.materials[1].pbrMetallicRoughness.baseColorFactor=[.83,.8,.74,1];document.asset.extras.furnishingCount=geometry.furnishings!.length;document.asset.extras.furnishingBasis='supplied_unverified';document.asset.extras.limitations.push('Furnishings are authored objects, not recovered from photographs.');}
+ const materialCache=new Map<string,number>();
+ function colorMaterial(color:string){if(materialCache.has(color))return materialCache.get(color)!;const index=document.materials.length;document.materials.push({name:'Object material',pbrMetallicRoughness:{baseColorFactor:[...color.slice(1).match(/../g)!.map(v=>Math.pow(parseInt(v,16)/255,2.2)),1],metallicFactor:0,roughnessFactor:.8},doubleSided:true});materialCache.set(color,index);return index;}
  const buffers:Buffer[]=[];let offset=0,totalTriangles=0;
  function mesh(name:string,extras:Record<string,unknown>,material:number,build:(triangle:(a:Point,b:Point,c:Point)=>void)=>void){
   const positions:number[]=[],normals:number[]=[];
@@ -58,8 +63,10 @@ export function renderStructuralGlb(input:DigitizationGeometryRevision,slabThick
    });
   }
  }
+ for(const item of geometry.furnishings??[]){const room=geometry.rooms.find(r=>r.id===item.roomId)!,floor=geometry.floors.find(f=>f.id===room.floorId)!;furnishingMeshes(item,Number(floor.elevation),(name,color,build)=>mesh(name,{kind:'furnishing',floorId:floor.id,roomId:room.id,furnishingId:item.id,basis:item.basis},colorMaterial(color),build));}
  if(!document.meshes.length)throw Error('STRUCTURAL_EMPTY_GEOMETRY');
  document.asset.extras.unconfirmedOpeningIds=geometry.openings.filter(opening=>!opening.confirmed).map(opening=>opening.id);
+ document.asset.extras.openingVerticalDimensions=geometry.openings.filter(opening=>opening.confirmed).map(opening=>({id:opening.id,basis:opening.verticalSource?'supplied_unverified':'legacy_supplied_unverified'}));
  document.asset.extras.unrenderedStairConnections=geometry.stairs.map(stair=>({id:stair.id,fromFloorId:stair.fromFloorId,toFloorId:stair.toFloorId}));
  document.buffers[0].byteLength=offset;
  const rawJson=Buffer.from(JSON.stringify(document)),json=Buffer.alloc(Math.ceil(rawJson.length/4)*4,0x20);rawJson.copy(json);const binary=Buffer.concat(buffers,offset),header=Buffer.alloc(20),binHeader=Buffer.alloc(8);header.writeUInt32LE(0x46546c67,0);header.writeUInt32LE(2,4);header.writeUInt32LE(12+8+json.length+8+binary.length,8);header.writeUInt32LE(json.length,12);header.writeUInt32LE(0x4e4f534a,16);binHeader.writeUInt32LE(binary.length,0);binHeader.writeUInt32LE(0x004e4942,4);

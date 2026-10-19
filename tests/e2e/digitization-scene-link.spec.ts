@@ -1,0 +1,31 @@
+import {test,expect} from '@playwright/test';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {login} from '../support/browser';
+
+test('latest apartment scene refreshes and a captured view has a direct link',async({page})=>{
+ test.skip(process.env.RECONSTRUCT_2BHK_DEMO!=='true','Opt-in retained private apartment scene.');
+ test.setTimeout(360000);page.setDefaultTimeout(60000);
+ const origin='http://localhost:8089',workspace=JSON.parse(readFileSync('infra/generated/two-bedroom-demo.json','utf8')).workspaceId;
+ await login(page,'agent',origin,'/ops');
+ const base=origin+'/api/v1/ops/digitizations/'+workspace;
+ const [tierResponse,statusResponse]=await Promise.all([page.request.get(base+'/scene-tiers',{timeout:240000}),page.request.get(base+'/reconstruction-status',{timeout:240000})]);
+ expect(tierResponse.ok()).toBe(true);expect(statusResponse.ok()).toBe(true);
+ const tiers=(await tierResponse.json()).data,status=(await statusResponse.json()).data;
+ expect(status.sceneTraining.job.artifactIds).toContain(tiers[0].id);
+ await page.goto(origin+'/ops/digitization?workspace='+workspace+'&view=scene');
+ const selected=page.getByRole('combobox',{name:'Private scene tier',exact:true});
+ await expect(selected).toHaveValue(tiers[0].id,{timeout:240000});
+ const older=tiers.find((t:any)=>!status.sceneTraining.job.artifactIds.includes(t.id));expect(older).toBeTruthy();
+ await selected.selectOption(older.id);
+ await page.evaluate(id=>window.dispatchEvent(new CustomEvent('digitization-scene-ready',{detail:id})),workspace);
+ await expect(selected).toHaveValue(tiers[0].id,{timeout:240000});
+ const view=tiers[0].captureViews.at(-1);expect(view).toBeTruthy();
+ await page.getByRole('combobox',{name:'Captured viewpoints',exact:true}).selectOption(view.id);
+ const href=await page.getByRole('link',{name:'Open this capture view directly',exact:true}).getAttribute('href');expect(href).toContain('capture=');
+ await page.goto(origin+href);
+ await expect(selected).toHaveValue(tiers[0].id,{timeout:240000});
+ await expect(page.getByRole('combobox',{name:'Captured viewpoints',exact:true})).toHaveValue(view.id);
+ await expect(page.getByRole('button',{name:'Measure scene performance',exact:true})).toBeEnabled({timeout:60000});
+ await page.locator('canvas[aria-label="Private reconstructed scene"]').screenshot({path:'evidence/digitization/2bhk/direct-living-room.png'});
+ writeFileSync('evidence/digitization/2bhk/direct-scene-link.json',JSON.stringify({labels:['O','P','V'],workspaceId:workspace,artifactId:tiers[0].id,capture:view.id,url:origin+href,newestExportVerified:true,private:true},null,2)+'\n');
+});

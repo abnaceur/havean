@@ -1,0 +1,165 @@
+{"project":"desktop","privatePageCommitted":true}
+{"project":"mobile","privatePageCommitted":true}
+{"project":"desktop-floors","privatePageCommitted":true}
+{"project":"mobile-floors","privatePageCommitted":true}
+{"project":"conflicts","privatePageCommitted":true}
+{"project":"reuse","privatePageCommitted":true}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-render-reuse.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 2548[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-C10 unchanged document pixels reuse real private storage/current lineage; media invalidates synthetic scene approval and preserves OCR dependency identity[33m 2545[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-trace-checkpoints.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 761[2mms[22m[39m
+   [33m[2m✓[22m[39m HE-E07 two distinct current reviewers preserve their own checkpoints and the winning canonical reference on a real concurrent 409[33m 757[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 15:48:34
+[2m   Duration [22m 6.52s[2m (tests 53%, import 36%, transform 11%)[22m
+
+ Container haven-integration-tests-run-9c0f9a40b635 Creating 
+ Container haven-integration-tests-run-9c0f9a40b635 Created 
+
+Running 12 tests using 1 worker
+
+  ✓   1 [desktop] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (10.1s)
+  ✘   2 [desktop] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (5.8s)
+  ✘   3 [desktop] › tests/e2e/digitization-plan.spec.ts:45:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay (4.9s)
+  ✓   4 [desktop] › tests/e2e/digitization-plan.spec.ts:61:1 › HE-E06 actual split/merge and selected floor/stair persistence keep vertical dimensions unknown (10.3s)
+  ✓   5 [desktop] › tests/e2e/digitization-plan.spec.ts:73:1 › HE-E07 undo/redo and private autosave survive reload for explicit trace recovery (8.9s)
+  ✓   6 [desktop] › tests/e2e/digitization-plan.spec.ts:80:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts (6.5s)
+  ✓   7 [mobile] › tests/e2e/digitization-plan.spec.ts:10:1 › HE-E03 real private source overlay, draw/move and server-session reload preserve unscaled geometry (7.5s)
+  ✘   8 [mobile] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG (4.8s)
+  ✘   9 [mobile] › tests/e2e/digitization-plan.spec.ts:45:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay (3.4s)
+  ✓  10 [mobile] › tests/e2e/digitization-plan.spec.ts:61:1 › HE-E06 actual split/merge and selected floor/stair persistence keep vertical dimensions unknown (7.4s)
+  ✓  11 [mobile] › tests/e2e/digitization-plan.spec.ts:73:1 › HE-E07 undo/redo and private autosave survive reload for explicit trace recovery (7.4s)
+  ✓  12 [mobile] › tests/e2e/digitization-plan.spec.ts:80:1 › HE-F04 close/reopen recovers current room, checklist and actual uploaded clip parts (5.0s)
+
+
+  1) [desktop] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 500
+
+      39 |  const invalid={version:saved.workspaceVersion,artifactId:fixture.artifactId,clockwiseDegrees:0,geometry:{...saved.geometry,id:crypto.randomUUID(),revision:saved.geometry.revision+1,parentRevision:saved.geometry.revision,openings:[{...saved.geometry.openings[0],width:'999999'}]}};
+      40 |  const refused=await page.request.post(origin+route,{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:invalid});expect(refused.status()).toBe(422);expect((await (await page.request.get(origin+route)).json()).data).toEqual(saved);
+    > 41 |  const preview=await page.request.get(origin+route+'/preview.svg'),svg=await preview.text();expect(preview.status()).toBe(200);expect(preview.headers()['content-type']).toContain('image/svg+xml');expect(preview.headers()['cache-control']).toContain('no-store');expect(preview.headers()['content-security-policy']).toContain('sandbox');expect(svg).not.toContain('<script>');expect(svg).toContain('&lt;script&gt;');expect(svg).toContain('x1="128" y1="-128" x2="160" y2="-128"');expect(svg).toContain('x1="224" y1="-128" x2="512" y2="-128"');expect(svg).not.toContain('m²');
+         |                                                                                                                      ^
+      42 |  const png=await page.request.get(origin+route+'/preview.png?maxEdge=512'),bytes=await png.body();expect(png.status()).toBe(200);expect(png.headers()['content-type']).toContain('image/png');expect(png.headers()['cache-control']).toContain('no-store');expect(bytes.subarray(0,8)).toEqual(Buffer.from([137,80,78,71,13,10,26,10]));expect(bytes.readUInt32BE(16)).toBeLessThanOrEqual(512);expect(bytes.readUInt32BE(20)).toBeLessThanOrEqual(512);expect(await (await page.request.get(origin+route+'/preview.png?maxEdge=512')).body()).toEqual(bytes);expect((await page.request.get(origin+route+'/preview.png?maxEdge=4096')).status()).toBe(422);expect((await page.request.get(origin+route+'/preview.png?floorId=not-a-floor')).status()).toBe(422);
+      43 |  await page.reload();await expect(canvas.locator('polygon[data-room-id]')).toHaveCount(1);await expect(canvas.locator('line[data-opening-id]')).toHaveCount(1);await expect(canvas.locator('text[data-room-label]')).toHaveText('Living <script>alert(1)</script>');expect((await (await page.request.get(origin+route)).json()).data).toEqual(saved);
+      44 | });
+        at /workspace/tests/e2e/digitization-plan.spec.ts:41:118
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › tests/e2e/digitization-plan.spec.ts:45:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "96.00"
+    Received string:    "{\"error\":{\"code\":\"INTERNAL_ERROR\",\"message\":\"Something went wrong. Please try again.\",\"requestId\":\"adc1acaf-fb7f-4c6d-91aa-f4e3a3cbaac6\",\"recoverable\":false}}"
+
+      52 |  await expect(page.getByText('Estimated scale saved. Geometry review and heights remain pending.',{exact:true})).toBeVisible();const scaled=await read();
+      53 |  expect(scaled.geometry).toMatchObject({unit:'m',scaleStatus:'estimated',revision:before.geometry.revision+1,parentRevision:before.geometry.revision,review:{status:'pending',actorId:null}});expect(scaled.geometry.walls[0]).toMatchObject({start:{x:4,y:4},end:{x:16,y:4},height:null});expect(scaled.geometry.floors[0].height).toBeNull();expect(scaled.geometry.openings[0]).toMatchObject({offset:'1',width:'2',height:null,sill:null});expect(scaled.view).toMatchObject({width:32,height:24,scaleRatio:0.03125});
+    > 54 |  const svg=await (await page.request.get(origin+route+'/preview.svg')).text();expect(svg).toContain('96.00');expect(svg).toContain('m²');expect(svg).toContain('estimated');expect(svg).not.toContain('<script>');
+         |                                                                                           ^
+      55 |  await expect(page.getByRole('img',{name:'Plan drawing canvas'})).toHaveAttribute('viewBox','0 0 32 24');await expect(page.getByRole('button',{name:'Save private trace',exact:true})).toBeDisabled();await page.reload();await expect(page.getByText(/saved revision 5/)).toBeVisible();expect((await read()).geometry).toEqual(scaled.geometry);
+      56 |  const headers={Origin:origin,'Idempotency-Key':sent.headers()['idempotency-key']},data=sent.postDataJSON();const replay=await page.request.post(origin+route+'/calibrate',{headers,data});expect(replay.status()).toBe(201);expect((await replay.json()).data).toEqual(scaled);
+      57 |  const invalid=await page.request.post(origin+route+'/calibrate',{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:{...data,version:scaled.workspaceVersion,geometryRevisionId:scaled.geometry.id,distanceMetres:'-1'}});expect(invalid.status()).toBe(422);expect((await read()).geometry).toEqual(scaled.geometry);
+        at /workspace/tests/e2e/digitization-plan.spec.ts:54:91
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 500
+
+      39 |  const invalid={version:saved.workspaceVersion,artifactId:fixture.artifactId,clockwiseDegrees:0,geometry:{...saved.geometry,id:crypto.randomUUID(),revision:saved.geometry.revision+1,parentRevision:saved.geometry.revision,openings:[{...saved.geometry.openings[0],width:'999999'}]}};
+      40 |  const refused=await page.request.post(origin+route,{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:invalid});expect(refused.status()).toBe(422);expect((await (await page.request.get(origin+route)).json()).data).toEqual(saved);
+    > 41 |  const preview=await page.request.get(origin+route+'/preview.svg'),svg=await preview.text();expect(preview.status()).toBe(200);expect(preview.headers()['content-type']).toContain('image/svg+xml');expect(preview.headers()['cache-control']).toContain('no-store');expect(preview.headers()['content-security-policy']).toContain('sandbox');expect(svg).not.toContain('<script>');expect(svg).toContain('&lt;script&gt;');expect(svg).toContain('x1="128" y1="-128" x2="160" y2="-128"');expect(svg).toContain('x1="224" y1="-128" x2="512" y2="-128"');expect(svg).not.toContain('m²');
+         |                                                                                                                      ^
+      42 |  const png=await page.request.get(origin+route+'/preview.png?maxEdge=512'),bytes=await png.body();expect(png.status()).toBe(200);expect(png.headers()['content-type']).toContain('image/png');expect(png.headers()['cache-control']).toContain('no-store');expect(bytes.subarray(0,8)).toEqual(Buffer.from([137,80,78,71,13,10,26,10]));expect(bytes.readUInt32BE(16)).toBeLessThanOrEqual(512);expect(bytes.readUInt32BE(20)).toBeLessThanOrEqual(512);expect(await (await page.request.get(origin+route+'/preview.png?maxEdge=512')).body()).toEqual(bytes);expect((await page.request.get(origin+route+'/preview.png?maxEdge=4096')).status()).toBe(422);expect((await page.request.get(origin+route+'/preview.png?floorId=not-a-floor')).status()).toBe(422);
+      43 |  await page.reload();await expect(canvas.locator('polygon[data-room-id]')).toHaveCount(1);await expect(canvas.locator('line[data-opening-id]')).toHaveCount(1);await expect(canvas.locator('text[data-room-label]')).toHaveText('Living <script>alert(1)</script>');expect((await (await page.request.get(origin+route)).json()).data).toEqual(saved);
+      44 | });
+        at /workspace/tests/e2e/digitization-plan.spec.ts:41:118
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-E04-o-7a433--save-reload-and-escape-SVG-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile] › tests/e2e/digitization-plan.spec.ts:45:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "96.00"
+    Received string:    "{\"error\":{\"code\":\"INTERNAL_ERROR\",\"message\":\"Something went wrong. Please try again.\",\"requestId\":\"52b143fb-8490-4385-849c-baff304645f5\",\"recoverable\":false}}"
+
+      52 |  await expect(page.getByText('Estimated scale saved. Geometry review and heights remain pending.',{exact:true})).toBeVisible();const scaled=await read();
+      53 |  expect(scaled.geometry).toMatchObject({unit:'m',scaleStatus:'estimated',revision:before.geometry.revision+1,parentRevision:before.geometry.revision,review:{status:'pending',actorId:null}});expect(scaled.geometry.walls[0]).toMatchObject({start:{x:4,y:4},end:{x:16,y:4},height:null});expect(scaled.geometry.floors[0].height).toBeNull();expect(scaled.geometry.openings[0]).toMatchObject({offset:'1',width:'2',height:null,sill:null});expect(scaled.view).toMatchObject({width:32,height:24,scaleRatio:0.03125});
+    > 54 |  const svg=await (await page.request.get(origin+route+'/preview.svg')).text();expect(svg).toContain('96.00');expect(svg).toContain('m²');expect(svg).toContain('estimated');expect(svg).not.toContain('<script>');
+         |                                                                                           ^
+      55 |  await expect(page.getByRole('img',{name:'Plan drawing canvas'})).toHaveAttribute('viewBox','0 0 32 24');await expect(page.getByRole('button',{name:'Save private trace',exact:true})).toBeDisabled();await page.reload();await expect(page.getByText(/saved revision 5/)).toBeVisible();expect((await read()).geometry).toEqual(scaled.geometry);
+      56 |  const headers={Origin:origin,'Idempotency-Key':sent.headers()['idempotency-key']},data=sent.postDataJSON();const replay=await page.request.post(origin+route+'/calibrate',{headers,data});expect(replay.status()).toBe(201);expect((await replay.json()).data).toEqual(scaled);
+      57 |  const invalid=await page.request.post(origin+route+'/calibrate',{headers:{Origin:origin,'Idempotency-Key':crypto.randomUUID()},data:{...data,version:scaled.workspaceVersion,geometryRevisionId:scaled.geometry.id,distanceMetres:'-1'}});expect(invalid.status()).toBe(422);expect((await read()).geometry).toEqual(scaled.geometry);
+        at /workspace/tests/e2e/digitization-plan.spec.ts:54:91
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-plan-HE-E05-s-a132e-e-changes-invalidate-replay-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [desktop] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG 
+    [desktop] › tests/e2e/digitization-plan.spec.ts:45:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay 
+    [mobile] › tests/e2e/digitization-plan.spec.ts:28:1 › HE-E04 opening bounds and source room labels survive private save/reload and escape SVG 
+    [mobile] › tests/e2e/digitization-plan.spec.ts:45:1 › HE-E05 supplied reference creates estimated metres and source changes invalidate replay 
+  8 passed (1.4m)
+

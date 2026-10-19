@@ -38,3 +38,11 @@ remain in the API rather than the calendar copy.
 Synthetic ended appointments in tests are explicit fixtures to exercise outcomes;
 the reports do not claim that test participants waited through multi-day appointments.
 Reminder scheduling, invalidation and scoped CSV exports remain L06.
+
+The shared UI now uses month calendars for booking, rescheduling, date filters and
+private unavailable intervals, with explicit property-zone time-slot choices. The
+agent's availability calendar previews the existing public slot projection after
+working hours or blocks change. Calendar arithmetic never supplies reservation
+authority. Appointment dots identify only the current results page; pagination
+does not silently become a complete-month count. Verification is recorded in
+`evidence/viewing-calendar-experience/README.md`.

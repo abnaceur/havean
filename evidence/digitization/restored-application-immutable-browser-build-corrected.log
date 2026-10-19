@@ -1,0 +1,88 @@
+ Image haven-recovery-api:1.0.0-locked-registration-review Building 
+ Image haven-recovery-worker:1.0.0-locked-registration-review Building 
+ Image haven-recovery-web:1.0.0-locked-registration-review Building 
+ Image haven-recovery-ops:1.0.0-locked-registration-review Building 
+ Image haven-recovery-browser:1.0.0-locked-registration-review Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.51kB done
+#1 DONE 0.0s
+
+#2 [web internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.47kB done
+#2 DONE 0.1s
+
+#3 [browser internal] load build definition from Dockerfile.browser
+#3 transferring dockerfile: 1.48kB done
+#3 DONE 0.2s
+
+#4 [ops internal] load metadata for docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b
+#4 DONE 0.1s
+
+#5 [browser internal] load metadata for docker.io/library/haven-recovery-browser-base:1.0.0-20779a72c32f
+#5 DONE 0.1s
+
+#6 [browser internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.1s
+
+#7 [worker internal] load build context
+#7 ...
+
+#8 [ops  1/25] FROM docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336
+#8 resolve docker.io/library/haven-recovery-build-base:1.0.0-1ba32e67172b@sha256:1ba32e67172ba92eca885d270d8b5c1faa3587c43e98e2edd53da740282c5336 0.1s done
+#8 DONE 0.2s
+
+#9 [web  2/25] WORKDIR /workspace
+#9 CACHED
+
+#7 [worker internal] load build context
+#7 ...
+
+#10 [browser  1/25] FROM docker.io/library/haven-recovery-browser-base:1.0.0-20779a72c32f@sha256:20779a72c32f5b1fd63b71480503dceae895af67ef8fa776e821c4b2b253f3a1
+#10 resolve docker.io/library/haven-recovery-browser-base:1.0.0-20779a72c32f@sha256:20779a72c32f5b1fd63b71480503dceae895af67ef8fa776e821c4b2b253f3a1 0.2s done
+#10 DONE 0.5s
+
+#7 [worker internal] load build context
+#7 ...
+
+#11 [browser  2/25] WORKDIR /workspace
+#11 DONE 0.8s
+
+#7 [worker internal] load build context
+#7 transferring context: 350.43MB 4.9s
+#7 transferring context: 951.27MB 9.9s
+#7 transferring context: 1.79GB 14.9s
+#7 transferring context: 2.63GB 19.9s
+#7 transferring context: 3.47GB 24.9s
+#7 transferring context: 4.31GB 29.9s
+#7 transferring context: 5.16GB 34.9s
+#7 transferring context: 6.01GB 39.9s
+#7 transferring context: 6.86GB 44.9s
+#7 transferring context: 7.73GB 50.0s
+#7 transferring context: 8.58GB 55.0s
+#7 transferring context: 9.43GB 60.0s
+#7 transferring context: 10.28GB 65.0s
+#7 transferring context: 11.10GB 70.0s
+#7 transferring context: 11.95GB 75.0s
+#7 transferring context: 12.82GB 80.0s
+
+node:internal/errors:984
+  const err = new Error(message);
+              ^
+
+Error: Command failed: docker compose -f /tmp/haven-recovery-images-w9Av7p/compose.json build
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execFileSync (node:child_process:927:15)
+    at file:///home/abn/project/real-estate-solution/scripts/recovery/build-fixture-images.mjs:28:2
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  status: 130,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 1525366,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v20.20.0

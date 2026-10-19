@@ -1,0 +1,23 @@
+# Read-only native inventory of the actual clean investigation image.
+name: haven-ocr-native-audit
+services:
+  ocr-native-audit:
+    image: ${OCR_NATIVE_AUDIT_IMAGE_ID:?}
+    init: true
+    network_mode: none
+    read_only: true
+    user: '10001:10001'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    cpus: 1
+    pids_limit: 16
+    environment:
+      PYTHONDONTWRITEBYTECODE: '1'
+      OCR_NATIVE_AUDIT_IMAGE_ID: ${OCR_NATIVE_AUDIT_IMAGE_ID:?}
+    volumes:
+      - ./services/property-processing/audit_ocr_runtime.py:/audit/audit.py:ro
+      - ./services/property-processing/ocr-investigation-build.json:/audit/pins.json:ro
+      - ./services/property-processing/.ocr-wheels/libglib2.0-0t64_2.84.4-3~deb13u5_amd64.deb:/audit/debs/libglib2.0-0t64_2.84.4-3~deb13u5_amd64.deb:ro
+      - ./services/property-processing/.ocr-wheels/libgomp1_14.2.0-19_amd64.deb:/audit/debs/libgomp1_14.2.0-19_amd64.deb:ro
+    command: [python, /audit/audit.py]

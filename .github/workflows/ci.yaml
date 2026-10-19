@@ -9,6 +9,31 @@ concurrency:
   group: haven-ci-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  digitization-software:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - name: Clean CPU and actual digitization software workflows
+        run: ./ci-digitization-software.sh
+      - name: Retain authored software fixture reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: haven-digitization-software-${{ github.run_id }}
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            evidence/digitization/validation/software-*.log
+            evidence/digitization/authored-splat-viewer-*.png
+            evidence/digitization/scene-performance-*.json
+            evidence/digitization/published-tour-*.png
+            evidence/digitization/unit-application-*.png
+      - name: Dispose owned isolated CI project
+        if: always()
+        run: docker compose --env-file .env.integration -p haven-integration -f compose.yaml -f compose.integration.yaml --profile tests down --volumes --remove-orphans
   verify:
     runs-on: ubuntu-24.04
     timeout-minutes: 360

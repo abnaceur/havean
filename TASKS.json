@@ -2697,5 +2697,239 @@
       ],
       "evidence": "evidence/tasks/Q11.md"
     }
-  ]
+  ],
+  "uiIntegration": {
+    "title": "Requested Haven design and responsive integration",
+    "status": "in_progress",
+    "referenceUrl": "https://haven-design-studio.hisec4ever.chatgpt.site/#home",
+    "localImplementation": "application and authentication styling implemented and validated; 12 application and 18 authentication desktop/mobile browser checks passed",
+    "referenceParity": "unverified",
+    "evidenceLabels": [
+      "O",
+      "R",
+      "P",
+      "V"
+    ],
+    "acceptance": [
+      "Use existing code and live session-backed API as the source of truth",
+      "Apply shared Haven styling to consumer and professional surfaces without changing business rules",
+      "Verify layout, accessible interaction, live inventory and themes at representative phone/tablet/desktop/landscape sizes",
+      "Apply the local Haven visual language to identity-managed login, registration and password recovery, retaining native forms, validation, credentials and session boundaries",
+      "Verify linked Haven reference appearance with accessible reference captures"
+    ],
+    "minimumTests": [
+      "Live inventory IDs, search criteria and suggestions, real detail navigation, theme persistence",
+      "Public pages and authenticated account/workspace across 320\u20131920 CSS pixels and 844x390 landscape",
+      "Light/dark filter accessibility, city selector, mobile navigation and focus restoration",
+      "Authentication pages at 320/390/768/1024/1440/1920 and 844x390; accessibility, credential errors, registration mismatch, real sign-in, synthetic registration and emailed password reset; development assets removed outside development",
+      "UI, web and ops type checks; lint/boundaries; synchronized task validation and unfinished release rejection"
+    ],
+    "blocker": "Linked Haven reference returns HTTP 401. Authorized reference access or supplied captures are required for exact visual review; physical-device coverage remains unverified.",
+    "evidence": "evidence/haven-design/INTEGRATION.md",
+    "verification": [
+      {
+        "check": "Core live inventory, home/detail, theme, filter, city, menu and viewport journeys",
+        "result": "passed",
+        "evidence": "evidence/haven-design/responsive-final.log",
+        "browserChecks": 10
+      },
+      {
+        "check": "38 category-detail and authorized account/workspace destinations, loaded content at 320/768/1440",
+        "result": "passed",
+        "evidence": "evidence/haven-design/navigation-final.log",
+        "browserChecks": 2
+      },
+      {
+        "check": "UI, web and ops type checks",
+        "result": "passed",
+        "evidence": "evidence/haven-design/types-final.log"
+      },
+      {
+        "check": "Full lint and application boundaries",
+        "result": "passed",
+        "evidence": "evidence/haven-design/lint-final.log"
+      },
+      {
+        "check": "Nine ledger checks, including rejecting done with unverified reference parity",
+        "result": "passed",
+        "evidence": "evidence/haven-design/ledger-guards.log"
+      },
+      {
+        "check": "Exact linked-reference visual review",
+        "result": "blocked",
+        "evidence": "evidence/haven-design/reference-access.json"
+      },
+      {
+        "check": "Authentication layouts, accessibility, validation, native password login and development account session switching",
+        "result": "passed",
+        "evidence": "evidence/haven-design/auth/browser-final.log",
+        "browserChecks": 16
+      },
+      {
+        "check": "Real synthetic registration and emailed recovery with replacement-password login and preserved local profile",
+        "result": "passed",
+        "evidence": "evidence/haven-design/auth/recovery-final.log",
+        "browserChecks": 2
+      },
+      {
+        "check": "Development-theme credential cleanup, unchanged MFA policy and ledger guards",
+        "result": "passed",
+        "evidence": "evidence/haven-design/auth/unit-final.log",
+        "unitTests": 11
+      },
+      {
+        "check": "Authentication integration full lint and import boundaries",
+        "result": "passed",
+        "evidence": "evidence/haven-design/auth/lint-final.log"
+      }
+    ]
+  },
+  "propertyMediaUpdate": {
+    "status": "done",
+    "date": "2026-10-18",
+    "title": "Manual property uploads and temporary engine pause",
+    "acceptance": [
+      "Agent drafts lead directly to media uploads; photos and a floor plan are required before submission and independently approved before publication.",
+      "360 panoramas, self-contained GLB 3D plans and video are optional; uploaded models can be reviewed and viewed publicly after approval.",
+      "The digitization workspace and private/internal API are disabled, dispatch is disabled, and local CPU/GPU processing containers are stopped."
+    ],
+    "minimumTests": [
+      "Desktop and mobile creation, required-media rejection, optional uploads, independent moderation, public 3D preview, and disabled engine journey.",
+      "Real GLB validator accepts a valid model and rejects remote resources, malformed/oversized files and invalid accessor ranges.",
+      "API/UI/worker/web/ops types, focused lint, contracts and synchronized task validation pass."
+    ],
+    "evidence": "evidence/property-media-update/README.md"
+  },
+  "propertyMediaExperience": {
+    "status": "done",
+    "date": "2026-10-18",
+    "title": "Full-screen property media experience",
+    "acceptance": [
+      "Photos, videos, floor plans, uploaded 3D models and 360 tours open in full-window viewers with consistent media switching and a persistent close action.",
+      "Photos support thumbnails, keyboard/swipe navigation and zoom; video retains native controls; 3D provides immediate orbit/zoom/reset; existing plan and panorama room navigation remains available.",
+      "Desktop and narrow mobile layouts preserve readable content, visible keyboard focus, focus return and accessible controls; digitization remains disabled."
+    ],
+    "minimumTests": [
+      "Desktop/mobile browser journeys exercise every media format, image zoom, keyboard navigation, video loading, 3D/panorama rendering, focus return and 320px overflow.",
+      "Automated accessibility scan has no serious or critical violations in the new viewer.",
+      "Actual upload/moderation/public 3D display regression, UI/web/ops types, focused lint and task validation pass."
+    ],
+    "evidence": "evidence/media-experience/README.md"
+  },
+  "propertyWizard": {
+    "title": "Guided agent property creation and durable partial drafts",
+    "status": "done",
+    "date": "2026-10-18",
+    "acceptance": [
+      "Four accessible steps with labelled icons: basics, details/pricing, media, review/submit.",
+      "Private incomplete progress autosaves through the session API, with Save & exit and dashboard resume, version conflicts and save failures visible.",
+      "Photos and floor plan are required, video/360/GLB optional, review validates and submits through existing API workflow.",
+      "Existing listings, commercial and residential inputs remain editable; engine remains disabled."
+    ],
+    "minimumTests": [
+      "Desktop/mobile real partial-save, reload/resume, required-media and successful submission journey; 320px layout and accessibility.",
+      "API stale-version, cross-actor, workflow, invalid-details and decimal persistence checks; commercial existing-draft editing regression.",
+      "API/UI/web/ops types, focused lint, generated contract checks and task/release validation."
+    ],
+    "evidence": "evidence/property-wizard/README.md",
+    "verification": [
+      {
+        "check": "Desktop/mobile wizard, actor/version guards, export, prices, upload/moderation/public GLB and engine pause",
+        "result": "passed",
+        "browserChecks": 6,
+        "evidence": "evidence/property-wizard/browser-verified.log"
+      },
+      {
+        "check": "Commercial and inventory authoring, access denial, outside-edit conflict recovery and moderation",
+        "result": "passed",
+        "browserChecks": 4,
+        "evidence": "evidence/property-wizard/regression-final.log"
+      },
+      {
+        "check": "New units, owner drafts and shared-room rentals on desktop/mobile",
+        "result": "passed",
+        "browserChecks": 6,
+        "evidence": "evidence/property-wizard/regressions-container.log"
+      },
+      {
+        "check": "Types, lint, boundaries, generated contracts and task ledger",
+        "result": "passed",
+        "evidence": "evidence/property-wizard/README.md"
+      }
+    ]
+  },
+  "spacingExperience": {
+    "title": "Consistent spacing across public, account and professional pages",
+    "status": "done",
+    "acceptance": [
+      "Shared responsive spacing scale separates headings, copy, forms, actions and panels across both applications.",
+      "All public page templates and authorized account/workspace navigation destinations are audited on phone, tablet and desktop.",
+      "Buttons remain usable, text wraps, dialogs scroll and full-screen property media and the property wizard retain their layouts."
+    ],
+    "minimumTests": [
+      "Browser route inventory and layout checks at 320, 768 and 1440 pixels; representative 375 and 390 pixel checks.",
+      "Representative light/dark accessibility checks with no serious or critical violations; keyboard dialog focus restoration.",
+      "Visual before/after evidence, media and wizard regressions, type/lint and task ledger validation."
+    ],
+    "evidence": "evidence/spacing-experience/README.md"
+  },
+  "propertyStepValidation": {
+    "title": "Validation at each property creation step",
+    "status": "done",
+    "acceptance": [
+      "Basics, details and media must pass their own API validation before forward navigation, including step navigation buttons and resumed drafts.",
+      "Accessible field errors, error summary and first-invalid-field focus retain input; Back and incomplete draft saves remain available.",
+      "Final submission revalidates facts and required photos/floor plan; optional video, panorama and GLB remain optional."
+    ],
+    "minimumTests": [
+      "Unit coverage of canonical basics/details constraints, raw numeric blanks and commercial validation.",
+      "Desktop/mobile browser checks for blocked steps, field errors/focus, incomplete save/resume, API bypass rejection, required-media gating and successful submission.",
+      "API/UI/web/ops types, focused lint, contracts and synchronized task/release validation."
+    ],
+    "evidence": "evidence/property-step-validation/README.md"
+  },
+  "viewingCalendarExperience": {
+    "title": "Calendar controls throughout viewing availability and bookings",
+    "status": "done",
+    "acceptance": [
+      "Booking and rescheduling use an accessible month calendar and property-zone time slots sourced from the API.",
+      "Personal/professional calendars support date/month navigation and existing scoped actions; availability uses calendar dates and previews real saved slots.",
+      "Responsive keyboard/touch controls retain conflict handling, idempotent retries, private block reasons and URL filters."
+    ],
+    "minimumTests": [
+      "Date-only calendar arithmetic and property-zone unit tests.",
+      "Desktop/mobile availability, booking and reschedule/action regressions with calendar keyboard, focus, empty states and accessibility checks.",
+      "UI/web/ops types, focused lint, boundaries and synchronized task/release validation."
+    ],
+    "evidence": "evidence/viewing-calendar-experience/README.md"
+  },
+  "chatExperience": {
+    "title": "Conversation inbox and chat experience",
+    "status": "done",
+    "acceptance": [
+      "Requested operations conversation uses a bounded two-pane inbox with independently scrollable conversation/message lists, clear senders, dates and closed state.",
+      "Search/unread filters, mobile list/thread navigation, keyboard composer and removable private attachments preserve room drafts, server acknowledgement, read cursors and scope.",
+      "Responsive light/dark layouts, accessible controls and retained realtime/retry behavior verified on desktop/mobile."
+    ],
+    "minimumTests": [
+      "Read-only inspection of requested conversation before/after at desktop/mobile widths.",
+      "Real consumer/professional fixture journeys for room draft retention, unread/read cursors, live updates, failed/lost-ack retry, attachments, scoped downloads and UI controls.",
+      "UI/web/ops type checks, focused lint, import boundaries and synchronized task/release validation."
+    ],
+    "evidence": "evidence/chat-experience/README.md"
+  },
+  "digitizationPause": {
+    "title": "Pause all digitalization engine access and processing",
+    "status": "done",
+    "acceptance": [
+      "Public, owner, operator and internal engine endpoints refuse access; manual media and normal property workflows remain available.",
+      "Engine viewers, owner source controls and pending engine reviews are hidden; generic review decisions cannot apply engine proposals.",
+      "Engine runners stay stopped, normal development startup excludes them, unfinished engine tasks are paused without deleting data or claiming completion."
+    ],
+    "minimumTests": [
+      "Actual API denial checks and desktop/mobile UI checks for owner, agent, moderator and public pages.",
+      "Manual upload/public viewer and ordinary listing revision regression; API/web/ops/worker types, lint and task validation."
+    ],
+    "evidence": "evidence/digitization-pause/README.md"
+  }
 }

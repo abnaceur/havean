@@ -1,0 +1,72 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-capture-source.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 6986[2mms[22m[39m
+   [33m[2m✓[22m[39m real multipart capture is scanned once, privately bound and decoded into source-linked review-pending frames[33m 5448[2mms[22m[39m
+   [33m[2m✓[22m[39m capture checksum mismatch leaves a durable private reservation and replay cannot falsely admit its copied source[33m 550[2mms[22m[39m
+   [33m[2m✓[22m[39m completed multipart originals above the registered profile remain quarantined without a copied media reservation[33m 409[2mms[22m[39m
+[31m   [31m×[31m a valid-container multipart original carrying the standard antivirus test signature cannot be admitted or copied[39m[33m 527[2mms[22m[39m
+[31m   [31m×[31m tenant deletion counts and physically removes an admitted capture original before any input binding while preserving business identities[39m[32m 30[2mms[22m[39m
+[31m   [31m×[31m an interrupted unbound copy is retained through its real five-minute lease, then verified removed; a tombstoned actor cannot admit it late[39m[32m 19[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-capture-source.test.ts[2m > [22ma valid-container multipart original carrying the standard antivirus test signature cannot be admitted or copied
+[31m[1mAssertionError[22m: promise resolved "{ data: { …(11) } }" instead of rejecting[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Error {[39m
+[32m-   "message": "rejected promise",[39m
+[31m+ {[39m
+[31m+   "data": {[39m
+[31m+     "assetId": "0f6fe713-016f-4e24-b5ed-13d62512899f",[39m
+[31m+     "assetVersion": 2,[39m
+[31m+     "bytes": "5978",[39m
+[31m+     "captureId": "15719241-bef3-4c15-84d4-4c9ecda15e73",[39m
+[31m+     "captureVersion": 3,[39m
+[31m+     "decoderState": "requires_isolated_media_decoder",[39m
+[31m+     "digitizationId": "60d73d6b-0640-470f-b69c-3e89f1dcaee8",[39m
+[31m+     "mime": "video/mp4",[39m
+[31m+     "publiclyServed": false,[39m
+[31m+     "state": "admitted",[39m
+[31m+     "workspaceVersion": 1,[39m
+[31m+   },[39m
+[2m  }[22m
+
+[36m [2m❯[22m tests/integration/digitization-capture-source.test.ts:[2m68:79[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-capture-source.test.ts[2m > [22mtenant deletion counts and physically removes an admitted capture original before any input binding while preserving business identities
+[31m[1merror[22m: Initial digitization actor and workflow required[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m createIntake apps/api/src/inventory/digitization/intakes.ts:[2m17:13[22m[39m
+
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m uploaded tests/integration/digitization-capture-source.test.ts:[2m30:18[22m[39m
+[90m [2m❯[22m tenantCapture tests/integration/digitization-capture-source.test.ts:[2m72:628[22m[39m
+[90m [2m❯[22m tests/integration/digitization-capture-source.test.ts:[2m75:10[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-capture-source.test.ts[2m > [22man interrupted unbound copy is retained through its real five-minute lease, then verified removed; a tombstoned actor cannot admit it late
+[31m[1merror[22m: Initial digitization actor and workflow required[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m createIntake apps/api/src/inventory/digitization/intakes.ts:[2m17:13[22m[39m
+
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m uploaded tests/integration/digitization-capture-source.test.ts:[2m30:18[22m[39m
+[90m [2m❯[22m tenantCapture tests/integration/digitization-capture-source.test.ts:[2m72:628[22m[39m
+[90m [2m❯[22m tests/integration/digitization-capture-source.test.ts:[2m81:10[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 22:21:53
+[2m   Duration [22m 8.76s[2m (tests 81%, import 12%, transform 7%)[22m
+

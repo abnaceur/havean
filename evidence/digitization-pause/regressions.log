@@ -1,0 +1,89 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/unit/digitization-ledger.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 2517[2mms[22m[39m
+   [32m✓[39m HE-R01 separate digitization acceptance and release gate [2m(10)[22m
+     [33m[2m✓[22m[39m retains paused VR tasks as unfinished release requirements[33m 435[2mms[22m[39m
+     [33m[2m✓[22m[39m rejects duplicate IDs, removed baseline rows and dependency cycles[33m 313[2mms[22m[39m
+     [33m[2m✓[22m[39m rejects missing provenance and unfinished done prerequisites[33m 337[2mms[22m[39m
+     [33m[2m✓[22m[39m accepts reviewed evidence and requires explicit markdown regeneration[33m 320[2mms[22m[39m
+ [32m✓[39m tests/unit/engine-pause.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m14 passed[39m[22m[90m (14)[39m
+[2m   Start at [22m 06:51:22
+[2m   Duration [22m 5.56s[2m (tests 48%, import 28%, transform 24%)[22m
+
+
+Running 8 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/engine-pause.spec.ts:5:1 › engine API is paused across public, owner, operator and worker routes (213ms)
+  ✓  2 [desktop] › tests/e2e/engine-pause.spec.ts:22:1 › engine controls and owner deep links are inaccessible while normal pages remain available (32.2s)
+  ✓  3 [desktop] › tests/e2e/property-media-upload.spec.ts:5:1 › agent requires photos and plan, uploads optional 360 and 3D, and engine stays disabled (1.5m)
+  ✓  4 [desktop] › tests/e2e/published-revisions.spec.ts:11:1 › I05/I06 approved price changes publish atomically, rejected changes stay private and public history excludes notes (56.4s)
+  ✘  5 [mobile] › tests/e2e/engine-pause.spec.ts:5:1 › engine API is paused across public, owner, operator and worker routes (129ms)
+  ✓  6 [mobile] › tests/e2e/engine-pause.spec.ts:22:1 › engine controls and owner deep links are inaccessible while normal pages remain available (27.7s)
+  ✓  7 [mobile] › tests/e2e/property-media-upload.spec.ts:5:1 › agent requires photos and plan, uploads optional 360 and 3D, and engine stays disabled (55.9s)
+  ✓  8 [mobile] › tests/e2e/published-revisions.spec.ts:11:1 › I05/I06 approved price changes publish atomically, rejected changes stay private and public history excludes notes (48.9s)
+
+
+  1) [desktop] › tests/e2e/engine-pause.spec.ts:5:1 › engine API is paused across public, owner, operator and worker routes 
+
+    Error: me/owner-listings/10000000-0000-4000-8000-000000001000/digitization
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 503
+    Received: 403
+
+      15 |  ]){
+      16 |   const response=await request.fetch(root+'/api/v1/'+path,{method,...(method==='POST'?{data:{}}:{})});
+    > 17 |   expect(response.status(),path).toBe(503);expect((await response.json()).error.code,path).toBe('DIGITIZATION_DISABLED');
+         |                                  ^
+      18 |   expect(response.headers()['cache-control']).toBe('no-store');
+      19 |  }
+      20 | });
+        at /workspace/tests/e2e/engine-pause.spec.ts:17:34
+
+    Error Context: test-results/engine-pause/engine-pause-engine-API-is-20d2c--operator-and-worker-routes-desktop/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/engine-pause/engine-pause-engine-API-is-20d2c--operator-and-worker-routes-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/engine-pause/engine-pause-engine-API-is-20d2c--operator-and-worker-routes-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/engine-pause.spec.ts:5:1 › engine API is paused across public, owner, operator and worker routes 
+
+    Error: me/owner-listings/10000000-0000-4000-8000-000000001000/digitization
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 503
+    Received: 403
+
+      15 |  ]){
+      16 |   const response=await request.fetch(root+'/api/v1/'+path,{method,headers:{Origin:ops},...(method==='POST'?{data:{}}:{})});
+    > 17 |   expect(response.status(),path).toBe(503);expect((await response.json()).error.code,path).toBe('DIGITIZATION_DISABLED');
+         |                                  ^
+      18 |   expect(response.headers()['cache-control']).toBe('no-store');
+      19 |  }
+      20 | });
+        at /workspace/tests/e2e/engine-pause.spec.ts:17:34
+
+    Error Context: test-results/engine-pause/engine-pause-engine-API-is-20d2c--operator-and-worker-routes-mobile/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/engine-pause/engine-pause-engine-API-is-20d2c--operator-and-worker-routes-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/engine-pause/engine-pause-engine-API-is-20d2c--operator-and-worker-routes-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/engine-pause.spec.ts:5:1 › engine API is paused across public, owner, operator and worker routes 
+    [mobile] › tests/e2e/engine-pause.spec.ts:5:1 › engine API is paused across public, owner, operator and worker routes 
+  6 passed (5.2m)

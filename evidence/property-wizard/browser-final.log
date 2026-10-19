@@ -1,0 +1,79 @@
+
+Running 6 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/property-media-upload.spec.ts:5:1 › agent requires photos and plan, uploads optional 360 and 3D, and engine stays disabled (12.7s)
+  ✘  2 [desktop] › tests/e2e/property-wizard.spec.ts:5:1 › guided property creation saves incomplete progress, resumes and submits required media (1.5m)
+  ✓  3 [desktop] › tests/e2e/property-wizard.spec.ts:60:1 › all submission routes reject an incomplete price without publishing the draft (4.9s)
+  ✓  4 [mobile] › tests/e2e/property-media-upload.spec.ts:5:1 › agent requires photos and plan, uploads optional 360 and 3D, and engine stays disabled (46.0s)
+  ✓  5 [mobile] › tests/e2e/property-wizard.spec.ts:5:1 › guided property creation saves incomplete progress, resumes and submits required media (38.4s)
+  ✓  6 [mobile] › tests/e2e/property-wizard.spec.ts:60:1 › all submission routes reject an incomplete price without publishing the draft (1.4s)
+
+
+  1) [desktop] › tests/e2e/property-media-upload.spec.ts:5:1 › agent requires photos and plan, uploads optional 360 and 3D, and engine stays disabled 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: undefined
+
+      13 |  await page.getByRole('button',{name:'Continue',exact:true}).click();
+      14 |  const dialog=page.locator('dialog.property-wizard-dialog');await expect(dialog).toBeVisible();
+    > 15 |  const records=(await (await page.request.get(origin+'/api/v1/ops/listings')).json()).data,listing=records.find((r:any)=>r.title===title);expect(listing).toBeTruthy();
+         |                                                                                                                                                           ^
+      16 |  const state=async()=>(await (await page.request.get(origin+'/api/v1/ops/listings/'+listing.id+'/media')).json()).data;
+      17 |  const submit=async()=>apiRequest(page,'/ops/listings/'+listing.id+'/transition',{status:'submitted',version:(await state()).listing.version});
+      18 |  expect((await submit()).status()).toBe(409);
+        at /workspace/tests/e2e/property-media-upload.spec.ts:15:155
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/property-wizard-final/property-media-upload-agen-cdbc1-D-and-engine-stays-disabled-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/property-wizard-final/property-media-upload-agen-cdbc1-D-and-engine-stays-disabled-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/property-wizard-final/property-media-upload-agen-cdbc1-D-and-engine-stays-disabled-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/property-wizard-final/property-media-upload-agen-cdbc1-D-and-engine-stays-disabled-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › tests/e2e/property-wizard.spec.ts:5:1 › guided property creation saves incomplete progress, resumes and submits required media 
+
+    TimeoutError: page.reload: Timeout 20000ms exceeded.
+    Call log:
+      - waiting for navigation until "load"
+        - navigated to "http://localhost:8089/ops/listings"
+
+
+      47 |  }
+      48 |  await dialog.getByRole('button',{name:'Continue',exact:true}).click();await expect(dialog.getByRole('button',{name:'Submit for review',exact:true})).toBeEnabled();
+    > 49 |  await dialog.getByRole('button',{name:'Save & exit',exact:true}).click();await page.reload();await page.locator('.draft-workbench .record-row').filter({hasText:title}).getByRole('button',{name:'Continue editing',exact:true}).click();
+         |                                                                                      ^
+      50 |  await expect(dialog.getByRole('heading',{name:'Review & submit',exact:true})).toBeVisible();await expect(dialog.getByRole('button',{name:'Submit for review',exact:true})).toBeEnabled();
+      51 |  if(info.project.name==='mobile')await page.setViewportSize({width:320,height:740});
+      52 |  expect(await dialog.evaluate(el=>el.scrollWidth<=el.clientWidth)).toBe(true);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+        at /workspace/tests/e2e/property-wizard.spec.ts:49:86
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/property-wizard-final/property-wizard-guided-pro-5abe1--and-submits-required-media-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/property-wizard-final/property-wizard-guided-pro-5abe1--and-submits-required-media-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/property-wizard-final/property-wizard-guided-pro-5abe1--and-submits-required-media-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/property-wizard-final/property-wizard-guided-pro-5abe1--and-submits-required-media-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/property-wizard-final/property-wizard-guided-pro-5abe1--and-submits-required-media-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/property-media-upload.spec.ts:5:1 › agent requires photos and plan, uploads optional 360 and 3D, and engine stays disabled 
+    [desktop] › tests/e2e/property-wizard.spec.ts:5:1 › guided property creation saves incomplete progress, resumes and submits required media 
+  4 passed (3.4m)

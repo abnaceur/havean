@@ -48,7 +48,7 @@ it.skipIf(!origin)('HE-R06/C02 dedicated real queue recovers both enqueue crash 
   await expect(dispatchDigitizationEvents(pool,queue,{eventIds:[eventId],afterEnqueue:async()=>{throw Error('CRASH_AFTER_ENQUEUE');}})).rejects.toThrow('CRASH_AFTER_ENQUEUE');
   expect((await pool.query('SELECT processed_at,dispatched_at FROM outbox WHERE id=$1',[eventId])).rows[0]).toEqual({processed_at:null,dispatched_at:null});
   await dispatchDigitizationEvents(pool,queue,{eventIds:[eventId]});
-  expect(await queue.getJobCounts('waiting')).toMatchObject({waiting:1});
+  expect(await queue.getJobCounts('waiting','prioritized')).toMatchObject({waiting:0,prioritized:1});
   const command=engineCommands(apiOrigin,testKey);
   await expect(engineCommands(apiOrigin,'4'.repeat(64))('/api/v1/internal/digitization/outbox/consume',{eventId})).rejects.toMatchObject({status:401});
   // Two simultaneous service deliveries serialize on the outbox row and return
@@ -60,7 +60,7 @@ it.skipIf(!origin)('HE-R06/C02 dedicated real queue recovers both enqueue crash 
   await (await queue.getJob(eventId))!.remove();
   await pool.query("UPDATE outbox SET dispatched_at=now()-interval '61 seconds' WHERE id=$1",[eventId]);
   await dispatchDigitizationEvents(pool,queue,{eventIds:[eventId]});
-  expect(await queue.getWaitingCount()).toBe(1);
+  expect(await queue.getJobCounts('waiting','prioritized')).toMatchObject({waiting:0,prioritized:1});
   await transaction(actor,c=>c.query("UPDATE processing_stages SET lease_until=statement_timestamp()+interval '20 milliseconds',version=version+1 WHERE id=$1",[stageId]));
   await new Promise(resolve=>setTimeout(resolve,40));
   const recovered=await Promise.all([command('/api/v1/internal/digitization/outbox/consume',{eventId}),command('/api/v1/internal/digitization/outbox/consume',{eventId})]);

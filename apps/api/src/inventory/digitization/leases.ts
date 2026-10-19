@@ -1,6 +1,6 @@
 import type pg from 'pg';
 import {event,type Actor} from '@haven/database';
-import {fail} from '../../platform/core.js';
+import {fail,transaction} from '../../platform/core.js';
 import {checkedWorkspace,requireDigitizationAgency} from './intakes.js';
 async function currentStage(c:pg.PoolClient,a:Actor,engine:string,stageId:string){
  await requireDigitizationAgency(c,a);const workspace=await checkedWorkspace(c,engine);
@@ -41,4 +41,15 @@ export async function requireCurrentExecution(c:pg.PoolClient,a:Actor,engine:str
  const row=await currentStage(c,a,engine,stageId);
  if(!['leased','running'].includes(row.state)||row.execution_id!==executionId||String(row.fencing_token)!==fencingToken||row.lease_expired)fail(409,'The execution lease expired or was replaced.','STALE_EXECUTION');
  return row;
+}
+
+/** Keep the exact fenced execution alive during bounded archive preparation.
+ * The work still rechecks actor/source/workflow before submitting or committing.
+ */
+export async function withStageLeaseHeartbeat<T>(a:Actor,engine:string,stageId:string,executionId:string,fencingToken:string,work:()=>Promise<T>):Promise<T>{
+ await transaction(a,c=>renewStageLease(c,a,engine,stageId,executionId,fencingToken));
+ let active=true,pending:Promise<unknown>=Promise.resolve();let timer:ReturnType<typeof setTimeout>;
+ const tick=()=>{pending=transaction(a,c=>renewStageLease(c,a,engine,stageId,executionId,fencingToken));void pending.then(()=>{if(active)timer=setTimeout(tick,25000);},()=>{active=false;});};
+ timer=setTimeout(tick,25000);
+ try{return await work();}finally{active=false;clearTimeout(timer);await pending.catch(()=>undefined);}
 }

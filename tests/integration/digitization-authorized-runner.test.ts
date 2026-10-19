@@ -1,4 +1,5 @@
 import '../support/env';
+import {readProcessingMetrics} from '../../apps/api/src/inventory/digitization/processing-metrics';
 import {afterAll,expect,it,vi} from 'vitest';
 import {createRequire} from 'node:module';
 import {pool,transaction,type Actor} from '../../packages/database/src/index';
@@ -97,7 +98,11 @@ it.skipIf(!origin).each(['upright-image-v1','pdfium-150dpi-v1','pdfium-overbudge
    await expect(collectCpuRenders(actor,workspace.id,stageId,lease.execution_id,String(lease.fencing_token),asset.id,client)).rejects.toMatchObject({status:422});
    expect(await transaction(actor,async c=>(await c.query('SELECT state FROM processing_stages WHERE id=$1',[stageId])).rows[0].state)).toBe('failed_terminal');
    expect(await transaction(actor,async c=>(await c.query('SELECT count(*)::int n FROM artifacts WHERE stage_id=$1',[stageId])).rows[0].n)).toBe(0);
-   expect(await transaction(actor,async c=>(await c.query('SELECT state FROM processing_stages WHERE id=$1',[dependentId])).rows[0].state)).toBe('pending');
+   expect(await transaction(actor,async c=>(await c.query('SELECT state FROM processing_stages WHERE id=$1',[dependentId])).rows[0].state)).toBe('skipped');
+   expect(await transaction(actor,async c=>(await c.query('SELECT state FROM processing_runs WHERE id=$1',[runId])).rows[0].state)).toBe('failed');
+   expect(await transaction(actor,async c=>(await c.query('SELECT error_code FROM processing_stages WHERE id=$1',[stageId])).rows[0].error_code)).toBe('CPU_SOURCE_REJECTED');
+   const metrics=await transaction(actor,c=>readProcessingMetrics(c,actor,workspace.id));expect(metrics).toMatchObject({observedOutcomes:1,durationSamples:1,runStates:[{state:'failed',count:1}],failures:[{code:'CPU_SOURCE_REJECTED',count:1}],physicalDeviceBenchmark:false});expect(Number(metrics.p50Seconds)).toBeGreaterThan(0);
+   expect(await transaction(actor,async c=>(await c.query('UPDATE digitization_stage_outcomes SET elapsed_seconds=0 WHERE digitization_id=$1 RETURNING id',[workspace.id])).rowCount)).toBe(0);
    return;
   }
   expect(state.state).toBe('succeeded');

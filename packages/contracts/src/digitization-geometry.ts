@@ -10,6 +10,9 @@ export const geometrySource=z.discriminatedUnion('kind',[
  z.strictObject({kind:z.literal('manual'),actorId:z.uuid(),note:z.string().min(2).max(500)})
 ]);
 const id=z.string().regex(/^[a-zA-Z0-9_-]{1,80}$/);
+export const furnishingKind=z.enum(['sofa','armchair','bed','table','chair','coffee_table','cabinet','counter','fridge','sink','toilet','bathtub','shower','wardrobe','rug','plant','lamp','picture','curtain','tv']);
+export const furnishingInput=z.strictObject({id,roomId:id,label:z.string().trim().min(1).max(80),kind:furnishingKind,position:geometryPoint,bottom:geometryDecimal.refine(v=>Number(v)>=0&&Number(v)<=20).default('0'),rotationDegrees:z.number().finite().min(-180).max(180),width:positive,depth:positive,height:positive,color:z.string().regex(/^#[0-9a-fA-F]{6}$/)});
+export const geometryFurnishing=furnishingInput.extend({basis:z.literal('supplied_unverified'),source:z.strictObject({kind:z.literal('manual'),actorId:z.uuid(),note:z.string().min(5).max(500)})});
 const ring=z.array(geometryPoint).min(3).max(128);
 const height=z.strictObject({amount:positive,basis:z.enum(['measured','supplied_unverified','illustrative_assumption']),source:geometrySource});
 const anchor=z.strictObject({id,points:z.tuple([geometryPoint,geometryPoint]).describe('Endpoints in this revision’s canonical XY coordinates and unit; source-image endpoints must first use the recorded source transform.'),distanceMetres:positive,source:geometrySource,reviewerId:z.uuid(),status:z.enum(['pending','confirmed'])}).refine(a=>a.points[0].x!==a.points[1].x||a.points[0].y!==a.points[1].y,'Scale anchor points must differ');
@@ -20,14 +23,19 @@ export const digitizationGeometryRevision=z.strictObject({
  floors:z.array(z.strictObject({id,name:z.string().min(1).max(80),elevation:geometryDecimal,height:height.nullable(),source:geometrySource})).min(1).max(20),
  rooms:z.array(z.strictObject({id,floorId:id,name:z.string().min(1).max(80),type:z.string().min(1).max(50),polygon:ring,holes:z.array(ring).max(10),panoramaSceneId:z.uuid().nullable(),source:geometrySource,areaBasis:z.literal('geometry_room_net')})).max(200),
  walls:z.array(z.strictObject({id,floorId:id,start:geometryPoint,end:geometryPoint,thickness:positive,height:height.nullable(),source:geometrySource,confirmed:z.boolean()})).max(2000),
- openings:z.array(z.strictObject({id,wallId:id,offset:geometryDecimal,width:positive,type:z.enum(['door','window']),sill:geometryDecimal.nullable(),height:positive.nullable(),source:geometrySource,confirmed:z.boolean()})).max(2000),
+ openings:z.array(z.strictObject({id,wallId:id,offset:geometryDecimal,width:positive,type:z.enum(['door','window']),sill:geometryDecimal.nullable(),height:positive.nullable(),source:geometrySource,verticalSource:geometrySource.optional(),confirmed:z.boolean()})).max(2000),
  stairs:z.array(z.strictObject({id,fromFloorId:id,toFloorId:id,source:geometrySource})).max(100),
+ furnishings:z.array(geometryFurnishing).max(200).optional(),
  review:z.strictObject({status:z.enum(['pending','confirmed','rejected']),actorId:z.uuid().nullable()})
 }).superRefine((g,ctx)=>{
  const issue=(path:(string|number)[],message:string)=>ctx.addIssue({code:'custom',path,message});
- const objects=[...g.floors,...g.rooms,...g.walls,...g.openings,...g.stairs,...g.scaleAnchors];
+ const objects=[...g.floors,...g.rooms,...g.walls,...g.openings,...g.stairs,...g.scaleAnchors,...(g.furnishings??[])];
  if(new Set(objects.map(o=>o.id)).size!==objects.length)issue(['id'],'Geometry IDs must be unique');
  const floors=new Set(g.floors.map(f=>f.id)),walls=new Map(g.walls.map(w=>[w.id,w]));
+ for(const [index,item] of (g.furnishings??[]).entries()){
+  if(g.unit!=='m'||!g.rooms.some(room=>room.id===item.roomId))issue(['furnishings',index],'Furnishings require metric geometry and an existing room');
+  if([item.width,item.depth,item.height].some(value=>Number(value)>20))issue(['furnishings',index],'Object dimensions must not exceed 20 metres');
+ }
  for(const [index,room] of g.rooms.entries()){
   if(!floors.has(room.floorId))issue(['rooms',index,'floorId'],'Unknown floor');
   const topologyError=roomTopologyError(room.polygon,room.holes);if(topologyError)issue(['rooms',index,'polygon'],topologyError);

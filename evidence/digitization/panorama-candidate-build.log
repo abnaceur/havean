@@ -1,0 +1,135 @@
+ Image haven-processing-tests-cpu Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 608B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.cpu
+#2 transferring dockerfile: 3.72kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 ...
+
+#4 [auth] library/python:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 2.7s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 192B done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 95.68kB done
+#6 DONE 0.1s
+
+#7 [media-build  1/10] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#7 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#7 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.1s done
+#7 DONE 0.1s
+
+#8 [cpu  3/14] COPY --from=media-build /opt/media /opt/media
+#8 CACHED
+
+#9 [media-build  7/10] WORKDIR /build/ffmpeg-7.1.5
+#9 CACHED
+
+#10 [cpu  7/14] COPY docs/adr/licenses/media-zlib-1.3.1 /usr/share/doc/haven-processing/media-zlib-1.3.1
+#10 CACHED
+
+#11 [cpu  5/14] COPY docs/adr/licenses/ffmpeg-7.1.5 /usr/share/doc/haven-processing/ffmpeg-7.1.5
+#11 CACHED
+
+#12 [cpu  2/14] WORKDIR /opt/processing
+#12 CACHED
+
+#13 [media-build  2/10] COPY services/property-processing/locks/media-build-apt.json /tmp/media-build-apt.json
+#13 CACHED
+
+#14 [media-build  3/10] RUN python -c "import json,subprocess; p=json.load(open('/tmp/media-build-apt.json'))['packages']; subprocess.run(['apt-get','update'],check=True); subprocess.run(['apt-get','install','-y','--no-install-recommends',*[name+'='+version for name,version in p.items()]],check=True)" && rm -rf /var/lib/apt/lists/*
+#14 CACHED
+
+#15 [cpu  6/14] COPY docs/adr/licenses/media-glibc-2.41 /usr/share/doc/haven-processing/media-glibc-2.41
+#15 CACHED
+
+#16 [media-build  4/10] WORKDIR /build
+#16 CACHED
+
+#17 [media-build  5/10] COPY services/property-processing/media-build.json /build/profile.json
+#17 CACHED
+
+#18 [cpu  4/14] COPY services/property-processing/media-build.json /opt/media/build-profile.json
+#18 CACHED
+
+#19 [cpu 10/14] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
+#19 CACHED
+
+#20 [cpu 11/14] COPY docs/adr/processing-dependencies.json ./dependencies.json
+#20 CACHED
+
+#21 [cpu  9/14] COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
+#21 CACHED
+
+#22 [cpu  8/14] COPY docs/adr/licenses/media-libgcc-14.2.0 /usr/share/doc/haven-processing/media-libgcc-14.2.0
+#22 CACHED
+
+#23 [media-build  6/10] RUN --mount=type=bind,source=services/property-processing/.media-sources,target=/sources,readonly python -c "import hashlib,json,pathlib,tarfile; p=json.load(open('/build/profile.json')); f=pathlib.Path('/sources/ffmpeg-7.1.5.tar.xz'); assert hashlib.sha256(f.read_bytes()).hexdigest()==p['sourceSha256']; tarfile.open(f).extractall('/build',filter='data')"
+#23 CACHED
+
+#24 [media-build 10/10] RUN python -c "import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))"
+#24 CACHED
+
+#25 [media-build  9/10] RUN python -c "import subprocess; assert all(b'INTERP' not in subprocess.check_output(['readelf','-l','/opt/media/bin/'+name]) for name in ('ffmpeg','ffprobe'))"
+#25 CACHED
+
+#26 [media-build  8/10] RUN python -c "import json,subprocess; p=json.load(open('/build/profile.json')); subprocess.run(['./configure','--prefix=/opt/media',*p['flags']],check=True)" && make -j2 && make install
+#26 CACHED
+
+#27 [cpu 12/14] COPY docs/adr/licenses/pypdfium2-5.14.0 /usr/share/doc/haven-processing/pypdfium2-5.14.0
+#27 CACHED
+
+#28 [cpu 13/14] COPY services/property-processing/property_processing ./property_processing
+#28 DONE 0.1s
+
+#29 [cpu 14/14] RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+#29 DONE 0.5s
+
+#30 [cpu-tests 1/3] COPY services/property-processing/locks/test.lock /tmp/test.lock
+#30 DONE 0.2s
+
+#31 [cpu-tests 2/3] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/test.lock && python -m pip check
+#31 2.053 Looking in links: /wheels
+#31 2.054 Requirement already satisfied: pypdf==6.1.1 in /usr/local/lib/python3.12/site-packages (from -r /tmp/test.lock (line 2)) (6.1.1)
+#31 2.055 Requirement already satisfied: pillow==11.3.0 in /usr/local/lib/python3.12/site-packages (from -r /tmp/test.lock (line 4)) (11.3.0)
+#31 2.063 Processing /wheels/pytest-8.4.2-py3-none-any.whl (from -r /tmp/test.lock (line 6))
+#31 2.072 Processing /wheels/iniconfig-2.1.0-py3-none-any.whl (from -r /tmp/test.lock (line 8))
+#31 2.074 Processing /wheels/packaging-25.0-py3-none-any.whl (from -r /tmp/test.lock (line 10))
+#31 2.077 Processing /wheels/pluggy-1.6.0-py3-none-any.whl (from -r /tmp/test.lock (line 12))
+#31 2.080 Processing /wheels/pygments-2.19.2-py3-none-any.whl (from -r /tmp/test.lock (line 14))
+#31 2.115 Installing collected packages: pygments, pluggy, packaging, iniconfig, pytest
+#31 3.374 Successfully installed iniconfig-2.1.0 packaging-25.0 pluggy-1.6.0 pygments-2.19.2 pytest-8.4.2
+#31 3.374 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#31 4.506 No broken requirements found.
+#31 DONE 4.6s
+
+#32 [cpu-tests 3/3] COPY services/property-processing/tests ./tests
+#32 DONE 0.1s
+
+#33 exporting to image
+#33 exporting layers
+#33 exporting layers 1.0s done
+#33 exporting manifest sha256:a8489a0038f454eabe03cc42c1e5fdcd96bd68f30cd80871b03f512f0aebc620 0.0s done
+#33 exporting config sha256:6cc3c5c3b156845d389ca7aa4c24ce0383ef669c31543f12c47a49390019e1a0 0.0s done
+#33 exporting attestation manifest sha256:8c500aeac15c7ae2060eef018e5e52a75c13320075b441daa286538c1bd53dee
+#33 exporting attestation manifest sha256:8c500aeac15c7ae2060eef018e5e52a75c13320075b441daa286538c1bd53dee 0.1s done
+#33 exporting manifest list sha256:1549a88b5d469e29861086587f005601099835756f7e0a103194df055c9b6609
+#33 exporting manifest list sha256:1549a88b5d469e29861086587f005601099835756f7e0a103194df055c9b6609 0.0s done
+#33 naming to docker.io/library/haven-processing-tests-cpu:latest done
+#33 unpacking to docker.io/library/haven-processing-tests-cpu:latest
+#33 unpacking to docker.io/library/haven-processing-tests-cpu:latest 0.4s done
+#33 DONE 1.7s
+
+#34 resolving provenance for metadata file
+#34 DONE 0.0s
+ Image haven-processing-tests-cpu Built 

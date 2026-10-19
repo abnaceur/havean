@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "tool": "ffmpeg",
+  "version": "7.1.5",
+  "source": "https://ffmpeg.org/releases/ffmpeg-7.1.5.tar.xz",
+  "sourceSha256": "de668509caf9e35e3cd162473441fdb29538c6d96ed080292b3cf9e6fc5d558f",
+  "flags": [
+    "--disable-everything",
+    "--disable-network",
+    "--disable-autodetect",
+    "--disable-doc",
+    "--disable-x86asm",
+    "--disable-shared",
+    "--enable-static",
+    "--disable-debug",
+    "--disable-avdevice",
+    "--disable-postproc",
+    "--enable-ffmpeg",
+    "--enable-ffprobe",
+    "--enable-protocol=file,pipe",
+    "--enable-demuxer=mov,matroska,image2",
+    "--enable-decoder=h264,hevc,vp8,vp9,png,mjpeg",
+    "--enable-parser=h264,hevc,vp8,vp9,png,mjpeg",
+    "--enable-filter=scale,transpose,hflip,vflip,format,select,showinfo",
+    "--enable-encoder=png",
+    "--enable-muxer=image2",
+    "--enable-swscale",
+    "--enable-zlib",
+    "--enable-pthreads",
+    "--extra-ldflags=-static"
+  ],
+  "status": "pinned_recipe_runtime_activation_requires_verified_dependency_manifest"
+}

@@ -1,0 +1,47 @@
+time="2026-10-14T14:45:09+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-processing-gpu-volume-init-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-55e755c3084e Creating 
+ Container haven-tests-run-55e755c3084e Created 
+
+Running 2 tests using 1 worker
+
+Actual COLMAP camera job queued.
+  ✘  1 [desktop] › tests/e2e/digitization-ai-property-flow.spec.ts:6:1 › reference-constrained AI property sources exercise the actual agent digitization flow (3.6m)
+  ✓  2 [desktop] › tests/e2e/digitization-ai-property-flow.spec.ts:124:1 › agent reviews synthetic document facts and the inventory form fills only confirmed values (28.1s)
+
+
+  1) [desktop] › tests/e2e/digitization-ai-property-flow.spec.ts:6:1 › reference-constrained AI property sources exercise the actual agent digitization flow 
+
+    Error: AI multiview images must actually reconstruct; an unsuitable-input result is not end-to-end success.
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: undefined
+
+      103 |   state.camera=status.camera;save();record();await page.reload();
+      104 |   const reconstruction=page.getByLabel('Property reconstruction status',{exact:true});await reconstruction.screenshot({path:evidence+'/camera-result.png'});
+    > 105 |   expect(status.camera?.report?.trainingArchiveAvailable,'AI multiview images must actually reconstruct; an unsuitable-input result is not end-to-end success.').toBe(true);
+          |                                                                                                                                                                  ^
+      106 |   if(status.sceneTraining.job?.exportState!=='succeeded'){
+      107 |    if(!['draft','queued','running'].includes(status.sceneTraining.job?.state)){
+      108 |     await expect(reconstruction.getByRole('button',{name:'Reconstruct captured property',exact:true})).toBeEnabled();
+        at /workspace/tests/e2e/digitization-ai-property-flow.spec.ts:105:162
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results-ai-property-flow/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results-ai-property-flow/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results-ai-property-flow/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results-ai-property-flow/digitization-ai-property-f-90da3-ual-agent-digitization-flow-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-ai-property-flow.spec.ts:6:1 › reference-constrained AI property sources exercise the actual agent digitization flow 
+  1 passed (4.1m)
+

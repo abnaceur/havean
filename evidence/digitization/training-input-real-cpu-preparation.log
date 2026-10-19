@@ -1,0 +1,18 @@
+time="2026-10-10T09:11:26+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-web-1 haven-ops-1 haven-worker-1 haven-api-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-processing-training-input-run-6addd42f0c4f Creating 
+ Container haven-processing-training-input-run-6addd42f0c4f Created 
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/processing/property_processing/colmap_cli.py", line 211, in <module>
+    print(json.dumps(solve(args.input, args.output, args.max_seconds, args.prepare_training), sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/colmap_cli.py", line 198, in solve
+    report['trainingInput'] = prepare_training_dataset(root, manifest, output / summaries[0]['model'], output, run)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/colmap_cli.py", line 72, in prepare_training_dataset
+    run(['image_undistorter', '--image_path', str(root / 'frames'), '--input_path', str(model),
+  File "/opt/processing/property_processing/colmap_cli.py", line 129, in run
+    raise RuntimeError('COLMAP command failed: ' + command[0])
+RuntimeError: COLMAP command failed: image_undistorter
+

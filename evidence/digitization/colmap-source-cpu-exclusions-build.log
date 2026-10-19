@@ -1,0 +1,646 @@
+ Image haven-colmap-source:3.10-cpu-exclusions-investigation-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 751B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.colmap-source-cpu
+#2 transferring dockerfile: 2.60kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [resolve 1/3] FROM docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09
+#5 resolve docker.io/nvidia/cuda:12.6.3-base-ubuntu24.04@sha256:6b3201183858bad08441837f5a5efc2c75290135cc25fcc87d9ff763190cfd09 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 3.48MB 0.0s done
+#6 DONE 0.1s
+
+#7 [resolve 2/3] RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates python3 cmake ninja-build gcc-13 g++-13 git libboost-filesystem-dev libboost-graph-dev libboost-program-options-dev libboost-system-dev libeigen3-dev libfreeimage-dev libflann-dev liblz4-dev libmetis-dev libgoogle-glog-dev libsqlite3-dev libglew-dev libceres-dev cuda-nvcc-12-6 cuda-cudart-dev-12-6 libcurand-dev-12-6 && mkdir /profile && dpkg-query -W -f='${Package}\t${Version}\n' > /profile/packages.tsv && apt-cache dumpavail > /profile/available-packages.txt
+#7 CACHED
+
+#8 [resolve 3/3] RUN /usr/local/cuda/bin/nvcc --version > /profile/nvcc-version.txt
+#8 CACHED
+
+#9 [compile 1/7] COPY colmap-source.tar.gz /tmp/colmap-source.tar.gz
+#9 CACHED
+
+#10 [compile 2/7] RUN echo 'fe875165847c185ec2fb8d974a322852be3d118ddae4bf958d5ee8c29e6a6896  /tmp/colmap-source.tar.gz' | sha256sum -c - && mkdir /source && python3 -c "import tarfile; tarfile.open('/tmp/colmap-source.tar.gz').extractall('/source',filter='data')"
+#10 CACHED
+
+#11 [compile 3/7] RUN cmake -S /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73 -B /build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_C_COMPILER=/usr/bin/gcc-13 -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++-13 -DCMAKE_CUDA_ARCHITECTURES='75;86;89' -DGUI_ENABLED=OFF -DOPENGL_ENABLED=OFF -DCGAL_ENABLED=OFF -DCUDA_ENABLED=OFF -DLSD_ENABLED=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DIPO_ENABLED=OFF -DCCACHE_ENABLED=OFF && cmake --build /build --parallel 2 && cmake --install /build
+#11 0.228 -- Disabling LSD support
+#11 0.278 -- The C compiler identification is GNU 13.3.0
+#11 0.339 -- The CXX compiler identification is GNU 13.3.0
+#11 0.356 -- Detecting C compiler ABI info
+#11 0.412 -- Detecting C compiler ABI info - done
+#11 0.423 -- Check for working C compiler: /usr/bin/gcc-13 - skipped
+#11 0.424 -- Detecting C compile features
+#11 0.424 -- Detecting C compile features - done
+#11 0.435 -- Detecting CXX compiler ABI info
+#11 0.514 -- Detecting CXX compiler ABI info - done
+#11 0.530 -- Check for working CXX compiler: /usr/bin/g++-13 - skipped
+#11 0.530 -- Detecting CXX compile features
+#11 0.531 -- Detecting CXX compile features - done
+#11 0.550 -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.83.0/BoostConfig.cmake (found version "1.83.0") found components: filesystem graph program_options system 
+#11 0.561 -- Found FreeImage
+#11 0.561 --   Includes : /usr/include
+#11 0.561 --   Libraries : /usr/lib/x86_64-linux-gnu/libfreeimage.so
+#11 0.562 -- Found FLANN
+#11 0.562 --   Includes : /usr/include
+#11 0.562 --   Libraries : /usr/lib/x86_64-linux-gnu/libflann.so
+#11 0.563 -- Found LZ4
+#11 0.563 --   Includes : /usr/include
+#11 0.563 --   Libraries : /usr/lib/x86_64-linux-gnu/liblz4.so
+#11 0.569 -- Found Metis
+#11 0.569 --   Includes : /usr/include
+#11 0.569 --   Libraries : /usr/lib/x86_64-linux-gnu/libmetis.so
+#11 0.576 -- Found Glog
+#11 0.576 --   Target : glog::glog
+#11 0.578 -- Found SQLite3: /usr/include (found version "3.45.1") 
+#11 0.583 -- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so   
+#11 0.587 -- Found Glew
+#11 0.587 --   Includes : /usr/include
+#11 0.587 --   Libraries : /usr/lib/x86_64-linux-gnu/libGLEW.so
+#11 0.590 -- Found Git: /usr/bin/git (found version "2.43.0") 
+#11 0.646 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+#11 0.699 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+#11 0.701 -- Found Threads: TRUE  
+#11 0.931 -- Found AMD headers in: /usr/include/suitesparse
+#11 0.932 -- Found AMD library: /usr/lib/x86_64-linux-gnu/libamd.so
+#11 0.932 -- Found CAMD headers in: /usr/include/suitesparse
+#11 0.932 -- Found CAMD library: /usr/lib/x86_64-linux-gnu/libcamd.so
+#11 0.933 -- Found CCOLAMD headers in: /usr/include/suitesparse
+#11 0.933 -- Found CCOLAMD library: /usr/lib/x86_64-linux-gnu/libccolamd.so
+#11 0.934 -- Found CHOLMOD headers in: /usr/include/suitesparse
+#11 0.934 -- Found CHOLMOD library: /usr/lib/x86_64-linux-gnu/libcholmod.so
+#11 0.935 -- Found COLAMD headers in: /usr/include/suitesparse
+#11 0.935 -- Found COLAMD library: /usr/lib/x86_64-linux-gnu/libcolamd.so
+#11 0.936 -- Found SPQR headers in: /usr/include/suitesparse
+#11 0.936 -- Found SPQR library: /usr/lib/x86_64-linux-gnu/libspqr.so
+#11 0.937 -- Found Config headers in: /usr/include/suitesparse
+#11 0.937 -- Found Config library: /usr/lib/x86_64-linux-gnu/libsuitesparseconfig.so
+#11 0.941 -- Did not find Intel TBB library, assuming SuiteSparseQR was not compiled with TBB.
+#11 0.941 -- Looking for shm_open in rt
+#11 0.987 -- Looking for shm_open in rt - found
+#11 0.987 -- Adding librt to SuiteSparse_config libraries (required on Linux & Unix [not OSX] if SuiteSparse is compiled with timing).
+#11 0.990 -- Found METIS: /usr/include (found version "5.1.0") 
+#11 0.991 -- Looking for cholmod_metis
+#11 1.083 -- Looking for cholmod_metis - found
+#11 1.084 -- Found SuiteSparse: /usr/include/suitesparse (found suitable version "7.6.1", minimum required is "7.6.1") found components: AMD CAMD CCOLAMD CHOLMOD COLAMD SPQR Config 
+#11 1.087 -- Found required Ceres dependency: Eigen version 3.4.0 in /usr/share/eigen3/cmake
+#11 1.088 -- Found required Ceres dependency: glog
+#11 1.089 -- Found required Ceres dependency: gflags
+#11 1.090 -- Found Ceres version: 2.2.0 installed in: /usr with components: [EigenSparse, SparseLinearAlgebraLibrary, LAPACK, SuiteSparse, SchurSpecializations]
+#11 1.340 -- Enabling OpenMP support
+#11 1.340 -- Disabling CUDA support
+#11 1.340 -- Disabling GUI support
+#11 1.340 -- Disabling OpenGL support
+#11 1.340 -- Build type specified as Release
+#11 1.340 -- Enabling SIMD support
+#11 1.340 -- Disabling interprocedural optimization
+#11 1.340 -- Disabling ccache support
+#11 1.340 -- Disabling profiling support
+#11 1.370 -- Configuring done (1.1s)
+#11 1.449 -- Generating done (0.1s)
+#11 1.454 -- Build files have been written to: /build
+#11 7.160 [1/163] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/bundle_adjustment.cc.o
+#11 8.807 [2/163] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/automatic_reconstruction.cc.o
+#11 14.87 [3/163] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/hierarchical_mapper.cc.o
+#11 15.65 [4/163] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/feature_extraction.cc.o
+#11 21.03 [5/163] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/feature_matching_utils.cc.o
+#11 26.01 [6/163] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/image_reader.cc.o
+#11 28.57 [7/163] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/feature_matching.cc.o
+#11 31.18 [8/163] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/incremental_mapper.cc.o
+#11 39.54 [9/163] Building CXX object src/colmap/controllers/CMakeFiles/colmap_controllers.dir/option_manager.cc.o
+#11 48.81 [10/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/affine_transform.cc.o
+#11 55.42 [11/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/absolute_pose.cc.o
+#11 59.36 [12/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/alignment.cc.o
+#11 71.89 [13/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/coordinate_frame.cc.o
+#11 87.88 [14/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/bundle_adjustment.cc.o
+#11 88.76 [15/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/covariance.cc.o
+#11 108.7 [16/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/fundamental_matrix.cc.o
+#11 114.1 [17/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/generalized_absolute_pose.cc.o
+#11 115.9 [18/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/essential_matrix.cc.o
+#11 121.2 [19/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/generalized_absolute_pose_coeffs.cc.o
+#11 131.4 [20/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/generalized_relative_pose.cc.o
+#11 137.0 [21/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/homography_matrix.cc.o
+#11 151.4 [22/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/pose.cc.o
+#11 154.4 [23/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/generalized_pose.cc.o
+#11 156.7 [24/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/triangulation.cc.o
+#11 159.4 [25/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/utils.cc.o
+#11 162.0 [26/163] Building CXX object src/colmap/estimators/CMakeFiles/colmap_estimators.dir/two_view_geometry.cc.o
+#11 167.4 [27/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_exe.dir/feature.cc.o
+#11 176.7 [28/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_exe.dir/sfm.cc.o
+#11 183.9 [29/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_exe.dir/model.cc.o
+#11 184.9 [30/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/feature.cc.o
+#11 191.3 [31/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/colmap.cc.o
+#11 197.1 [32/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/database.cc.o
+#11 199.9 [33/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/gui.cc.o
+#11 201.7 [34/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/sfm.cc.o
+#11 208.4 [35/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/image.cc.o
+#11 214.3 [36/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/mvs.cc.o
+#11 217.5 [37/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/model.cc.o
+#11 219.1 [38/163] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature_types.dir/types.cc.o
+#11 223.7 [39/163] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature.dir/matcher.cc.o
+#11 223.7 In file included from /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/feature/matcher.h:38,
+#11 223.7                  from /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/feature/matcher.cc:30:
+#11 223.7 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h: In instantiation of 'value_t& colmap::LRUCache<key_t, value_t>::GetMutable(const key_t&) [with key_t = unsigned int; value_t = std::shared_ptr<std::vector<colmap::FeatureKeypoint> >]':
+#11 223.7 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:150:10:   required from 'const value_t& colmap::LRUCache<key_t, value_t>::Get(const key_t&) [with key_t = unsigned int; value_t = std::shared_ptr<std::vector<colmap::FeatureKeypoint> >]'
+#11 223.7 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/feature/matcher.cc:106:31:   required from here
+#11 223.7 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: warning: moving a temporary object prevents copy elision [-Wpessimizing-move]
+#11 223.7   157 |     Set(key, std::move(getter_func_(key)));
+#11 223.7       |     ~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#11 223.7 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: note: remove 'std::move' call
+#11 223.7 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h: In instantiation of 'value_t& colmap::LRUCache<key_t, value_t>::GetMutable(const key_t&) [with key_t = unsigned int; value_t = std::shared_ptr<Eigen::Matrix<unsigned char, -1, -1, 1> >]':
+#11 223.7 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:150:10:   required from 'const value_t& colmap::LRUCache<key_t, value_t>::Get(const key_t&) [with key_t = unsigned int; value_t = std::shared_ptr<Eigen::Matrix<unsigned char, -1, -1, 1> >]'
+#11 223.7 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/feature/matcher.cc:112:33:   required from here
+#11 223.7 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: warning: moving a temporary object prevents copy elision [-Wpessimizing-move]
+#11 223.7 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: note: remove 'std::move' call
+#11 238.8 [40/163] Building CXX object src/colmap/exe/CMakeFiles/colmap_main.dir/vocab_tree.cc.o
+#11 243.2 [41/163] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature.dir/pairing.cc.o
+#11 244.4 [42/163] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature.dir/types.cc.o
+#11 246.3 [43/163] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature.dir/utils.cc.o
+#11 251.3 [44/163] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/essential_matrix.cc.o
+#11 252.9 [45/163] Building CXX object src/colmap/feature/CMakeFiles/colmap_feature.dir/sift.cc.o
+#11 253.2 [46/163] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/gps.cc.o
+#11 257.2 [47/163] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/homography_matrix.cc.o
+#11 259.4 [48/163] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/sim3.cc.o
+#11 266.5 [49/163] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/pose.cc.o
+#11 267.3 [50/163] Building CXX object src/colmap/geometry/CMakeFiles/colmap_geometry.dir/triangulation.cc.o
+#11 267.9 [51/163] Building CXX object src/colmap/image/CMakeFiles/colmap_image.dir/line.cc.o
+#11 271.9 [52/163] Building CXX object src/colmap/image/CMakeFiles/colmap_image.dir/warp.cc.o
+#11 275.2 [53/163] Building CXX object src/colmap/math/CMakeFiles/colmap_math.dir/graph_cut.cc.o
+#11 275.6 [54/163] Building CXX object src/colmap/math/CMakeFiles/colmap_math.dir/math.cc.o
+#11 277.3 [55/163] Building CXX object src/colmap/image/CMakeFiles/colmap_image.dir/undistortion.cc.o
+#11 277.9 [56/163] Building CXX object src/colmap/math/CMakeFiles/colmap_math.dir/random.cc.o
+#11 279.7 [57/163] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/consistency_graph.cc.o
+#11 283.2 [58/163] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/depth_map.cc.o
+#11 286.3 [59/163] Building CXX object src/colmap/math/CMakeFiles/colmap_math.dir/polynomial.cc.o
+#11 289.0 [60/163] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/fusion.cc.o
+#11 290.6 [61/163] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/image.cc.o
+#11 294.8 [62/163] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/meshing.cc.o
+#11 297.6 [63/163] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/model.cc.o
+#11 298.0 [64/163] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/normal_map.cc.o
+#11 298.9 [65/163] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/combination_sampler.cc.o
+#11 301.6 [66/163] Building CXX object src/colmap/mvs/CMakeFiles/colmap_mvs.dir/workspace.cc.o
+#11 301.6 In file included from /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/mvs/workspace.h:37,
+#11 301.6                  from /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/mvs/workspace.cc:30:
+#11 301.6 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h: In instantiation of 'value_t& colmap::LRUCache<key_t, value_t>::GetMutable(const key_t&) [with key_t = int; value_t = colmap::mvs::CachedWorkspace::CachedImage]':
+#11 301.6 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/mvs/workspace.cc:173:41:   required from here
+#11 301.6 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: warning: moving a temporary object prevents copy elision [-Wpessimizing-move]
+#11 301.6   157 |     Set(key, std::move(getter_func_(key)));
+#11 301.6       |     ~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#11 301.6 /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/colmap/util/cache.h:157:8: note: remove 'std::move' call
+#11 302.8 [67/163] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/progressive_sampler.cc.o
+#11 303.6 [68/163] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/random_sampler.cc.o
+#11 303.7 [69/163] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/sprt.cc.o
+#11 303.8 [70/163] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/least_absolute_deviations.cc.o
+#11 304.5 [71/163] Building CXX object src/colmap/optim/CMakeFiles/colmap_optim.dir/support_measurement.cc.o
+#11 305.9 [72/163] Building CXX object src/colmap/retrieval/CMakeFiles/colmap_retrieval.dir/geometry.cc.o
+#11 308.9 [73/163] Building CXX object src/colmap/retrieval/CMakeFiles/colmap_retrieval.dir/vote_and_verify.cc.o
+#11 310.2 [74/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/camera.cc.o
+#11 315.9 [75/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/correspondence_graph.cc.o
+#11 316.2 [76/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/camera_rig.cc.o
+#11 322.7 [77/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/database_cache.cc.o
+#11 324.9 [78/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/database.cc.o
+#11 327.2 [79/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/image.cc.o
+#11 330.4 [80/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/projection.cc.o
+#11 335.8 [81/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/reconstruction.cc.o
+#11 337.9 [82/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/reconstruction_io.cc.o
+#11 340.2 [83/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/reconstruction_manager.cc.o
+#11 345.1 [84/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/scene_clustering.cc.o
+#11 346.1 [85/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/track.cc.o
+#11 348.1 [86/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/two_view_geometry.cc.o
+#11 349.4 [87/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/visibility_pyramid.cc.o
+#11 350.4 [88/163] Building CXX object src/colmap/scene/CMakeFiles/colmap_scene.dir/synthetic.cc.o
+#11 350.8 [89/163] Building CXX object src/colmap/sensor/CMakeFiles/colmap_sensor.dir/database.cc.o
+#11 353.4 [90/163] Building CXX object src/colmap/sensor/CMakeFiles/colmap_sensor.dir/models.cc.o
+#11 354.6 [91/163] Building CXX object src/colmap/sensor/CMakeFiles/colmap_sensor.dir/bitmap.cc.o
+#11 358.5 [92/163] Building CXX object src/colmap/sensor/CMakeFiles/colmap_sensor.dir/specs.cc.o
+#11 364.4 [93/163] Building CXX object src/colmap/sfm/CMakeFiles/colmap_sfm.dir/incremental_mapper.cc.o
+#11 365.1 [94/163] Building CXX object src/colmap/sfm/CMakeFiles/colmap_sfm.dir/incremental_triangulator.cc.o
+#11 365.8 [95/163] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/base_controller.cc.o
+#11 366.2 [96/163] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/logging.cc.o
+#11 368.3 [97/163] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/misc.cc.o
+#11 368.9 [98/163] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/opengl_utils.cc.o
+#11 370.4 [99/163] Building CXX object src/colmap/sfm/CMakeFiles/colmap_sfm.dir/observation_manager.cc.o
+#11 372.1 [100/163] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/string.cc.o
+#11 372.2 [101/163] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/ply.cc.o
+#11 373.0 [102/163] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/timer.cc.o
+#11 373.6 [103/163] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/threading.cc.o
+#11 373.8 [104/163] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/CmdLineParser.cpp.o
+#11 373.9 [105/163] Building CXX object src/colmap/util/CMakeFiles/colmap_util.dir/version.cc.o
+#11 373.9 [106/163] Linking CXX static library src/colmap/util/libcolmap_util.a
+#11 373.9 [107/163] Linking CXX static library src/colmap/feature/libcolmap_feature_types.a
+#11 374.0 [108/163] Linking CXX static library src/colmap/math/libcolmap_math.a
+#11 374.0 [109/163] Linking CXX static library src/colmap/geometry/libcolmap_geometry.a
+#11 374.0 [110/163] Linking CXX static library src/colmap/optim/libcolmap_optim.a
+#11 374.0 [111/163] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/Factor.cpp.o
+#11 374.3 [112/163] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/Geometry.cpp.o
+#11 374.7 [113/163] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/MarchingCubes.cpp.o
+#11 375.1 [114/163] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/PlyFile.cpp.o
+#11 378.6 [115/163] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/SurfaceTrimmer.cpp.o
+#11 378.8 [116/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/aib.c.o
+#11 378.8 [117/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/array.c.o
+#11 379.7 [118/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/covdet.c.o
+#11 380.0 [119/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/dsift.c.o
+#11 380.3 [120/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/fisher.c.o
+#11 380.4 [121/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/generic.c.o
+#11 380.5 [122/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/getopt_long.c.o
+#11 381.3 [123/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/gmm.c.o
+#11 381.4 [124/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/hikmeans.c.o
+#11 381.8 [125/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/hog.c.o
+#11 382.0 [126/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/homkermap.c.o
+#11 382.0 [127/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/host.c.o
+#11 382.6 [128/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/ikmeans.c.o
+#11 383.6 [129/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/imopv.c.o
+#11 384.0 [130/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/kdtree.c.o
+#11 385.6 [131/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/kmeans.c.o
+#11 385.7 [132/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/lbp.c.o
+#11 386.1 [133/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/liop.c.o
+#11 386.4 [134/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/mathop.c.o
+#11 386.6 [135/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/mser.c.o
+#11 386.7 [136/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/pgm.c.o
+#11 386.9 [137/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/quickshift.c.o
+#11 387.0 [138/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/random.c.o
+#11 387.1 [139/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/rodrigues.c.o
+#11 387.2 [140/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/scalespace.c.o
+#11 388.0 [141/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/sift.c.o
+#11 388.3 [142/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/slic.c.o
+#11 388.4 [143/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/stringop.c.o
+#11 388.6 [144/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/svm.c.o
+#11 388.7 [145/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/svmdataset.c.o
+#11 388.9 [146/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/vlad.c.o
+#11 389.5 [147/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/mathop_avx.c.o
+#11 389.7 [148/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/imopv_sse2.c.o
+#11 390.1 [149/163] Building C object src/thirdparty/VLFeat/CMakeFiles/colmap_vlfeat.dir/mathop_sse2.c.o
+#11 390.1 [150/163] Linking C static library src/thirdparty/VLFeat/libcolmap_vlfeat.a
+#11 390.1 [151/163] Linking CXX static library src/colmap/sensor/libcolmap_sensor.a
+#11 390.1 [152/163] Linking CXX static library src/colmap/scene/libcolmap_scene.a
+#11 390.2 [153/163] Linking CXX static library src/colmap/image/libcolmap_image.a
+#11 390.2 [154/163] Linking CXX static library src/colmap/estimators/libcolmap_estimators.a
+#11 390.2 [155/163] Linking CXX static library src/colmap/retrieval/libcolmap_retrieval.a
+#11 390.2 [156/163] Linking CXX static library src/colmap/feature/libcolmap_feature.a
+#11 390.3 [157/163] Linking CXX static library src/colmap/sfm/libcolmap_sfm.a
+#11 496.7 [158/163] Building CXX object src/thirdparty/PoissonRecon/CMakeFiles/colmap_poisson_recon.dir/PoissonRecon.cpp.o
+#11 496.8 [159/163] Linking CXX static library src/thirdparty/PoissonRecon/libcolmap_poisson_recon.a
+#11 496.8 [160/163] Linking CXX static library src/colmap/mvs/libcolmap_mvs.a
+#11 496.8 [161/163] Linking CXX static library src/colmap/controllers/libcolmap_controllers.a
+#11 496.8 [162/163] Linking CXX static library src/colmap/exe/libcolmap_exe.a
+#11 497.1 [163/163] Linking CXX executable src/colmap/exe/colmap
+#11 497.1 -- Install configuration: "Release"
+#11 497.1 -- Installing: /usr/share/applications/COLMAP.desktop
+#11 497.1 -- Installing: /usr/lib/libcolmap_controllers.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_estimators.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_exe.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_feature_types.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_feature.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_geometry.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_image.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_math.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_mvs.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_optim.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_retrieval.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_scene.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_sensor.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_sfm.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_util.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_poisson_recon.a
+#11 497.1 -- Installing: /usr/lib/libcolmap_vlfeat.a
+#11 497.1 -- Installing: /usr/share/colmap/colmap-config.cmake
+#11 497.1 -- Installing: /usr/share/colmap/colmap-config-version.cmake
+#11 497.1 -- Installing: /usr/share/colmap/colmap-targets.cmake
+#11 497.1 -- Installing: /usr/share/colmap/colmap-targets-release.cmake
+#11 497.1 -- Installing: /usr/include/colmap
+#11 497.1 -- Installing: /usr/include/colmap/mvs
+#11 497.1 -- Installing: /usr/include/colmap/mvs/cuda_texture.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/patch_match.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/fusion.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/depth_map.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/image.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/gpu_mat_ref_image.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/meshing.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/gpu_mat_prng.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/patch_match_cuda.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/model.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/mat.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/cuda_flip.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/gpu_mat.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/normal_map.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/cuda_transpose.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/cuda_rotate.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/workspace.h
+#11 497.1 -- Installing: /usr/include/colmap/mvs/consistency_graph.h
+#11 497.1 -- Installing: /usr/include/colmap/math
+#11 497.1 -- Installing: /usr/include/colmap/math/graph_cut.h
+#11 497.1 -- Installing: /usr/include/colmap/math/matrix.h
+#11 497.1 -- Installing: /usr/include/colmap/math/math.h
+#11 497.1 -- Installing: /usr/include/colmap/math/polynomial.h
+#11 497.1 -- Installing: /usr/include/colmap/math/random.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators
+#11 497.1 -- Installing: /usr/include/colmap/estimators/triangulation.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/essential_matrix_coeffs.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/similarity_transform.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/pose.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/euclidean_transform.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/alignment.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/affine_transform.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/generalized_absolute_pose_coeffs.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/generalized_relative_pose.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/homography_matrix.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/generalized_absolute_pose.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/two_view_geometry.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/utils.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/essential_matrix.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/covariance.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/translation_transform.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/cost_functions.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/bundle_adjustment.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/fundamental_matrix.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/essential_matrix_poly.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/absolute_pose.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/generalized_pose.h
+#11 497.1 -- Installing: /usr/include/colmap/estimators/coordinate_frame.h
+#11 497.1 -- Installing: /usr/include/colmap/util
+#11 497.1 -- Installing: /usr/include/colmap/util/base_controller.h
+#11 497.1 -- Installing: /usr/include/colmap/util/opengl_utils.h
+#11 497.1 -- Installing: /usr/include/colmap/util/logging.h
+#11 497.1 -- Installing: /usr/include/colmap/util/timer.h
+#11 497.1 -- Installing: /usr/include/colmap/util/cache.h
+#11 497.1 -- Installing: /usr/include/colmap/util/ply.h
+#11 497.1 -- Installing: /usr/include/colmap/util/cuda.h
+#11 497.1 -- Installing: /usr/include/colmap/util/endian.h
+#11 497.1 -- Installing: /usr/include/colmap/util/cudacc.h
+#11 497.1 -- Installing: /usr/include/colmap/util/threading.h
+#11 497.1 -- Installing: /usr/include/colmap/util/misc.h
+#11 497.1 -- Installing: /usr/include/colmap/util/sqlite3_utils.h
+#11 497.1 -- Installing: /usr/include/colmap/util/version.h
+#11 497.1 -- Installing: /usr/include/colmap/util/types.h
+#11 497.1 -- Installing: /usr/include/colmap/util/string.h
+#11 497.1 -- Installing: /usr/include/colmap/util/controller_thread.h
+#11 497.1 -- Installing: /usr/include/colmap/util/testing.h
+#11 497.1 -- Installing: /usr/include/colmap/util/eigen_alignment.h
+#11 497.1 -- Installing: /usr/include/colmap/sfm
+#11 497.1 -- Installing: /usr/include/colmap/sfm/incremental_mapper.h
+#11 497.1 -- Installing: /usr/include/colmap/sfm/observation_manager.h
+#11 497.1 -- Installing: /usr/include/colmap/sfm/incremental_triangulator.h
+#11 497.1 -- Installing: /usr/include/colmap/controllers
+#11 497.1 -- Installing: /usr/include/colmap/controllers/image_reader.h
+#11 497.1 -- Installing: /usr/include/colmap/controllers/feature_matching_utils.h
+#11 497.1 -- Installing: /usr/include/colmap/controllers/feature_matching.h
+#11 497.1 -- Installing: /usr/include/colmap/controllers/incremental_mapper.h
+#11 497.1 -- Installing: /usr/include/colmap/controllers/feature_extraction.h
+#11 497.1 -- Installing: /usr/include/colmap/controllers/automatic_reconstruction.h
+#11 497.1 -- Installing: /usr/include/colmap/controllers/bundle_adjustment.h
+#11 497.1 -- Installing: /usr/include/colmap/controllers/option_manager.h
+#11 497.2 -- Installing: /usr/include/colmap/controllers/hierarchical_mapper.h
+#11 497.2 -- Installing: /usr/include/colmap/ui
+#11 497.2 -- Installing: /usr/include/colmap/ui/line_painter.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/qt_utils.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/render_options.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/automatic_reconstruction_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/media
+#11 497.2 -- Installing: /usr/include/colmap/ui/render_options_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/bundle_adjustment_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/reconstruction_manager_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/undistortion_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/colormaps.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/match_matrix_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/triangle_painter.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/license_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/image_viewer_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/movie_grabber_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/reconstruction_stats_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/project_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/log_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/options_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/thread_control_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/database_management_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/shaders
+#11 497.2 -- Installing: /usr/include/colmap/ui/reconstruction_options_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/point_viewer_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/feature_extraction_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/feature_matching_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/model_viewer_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/main_window.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/point_painter.h
+#11 497.2 -- Installing: /usr/include/colmap/ui/dense_reconstruction_widget.h
+#11 497.2 -- Installing: /usr/include/colmap/feature
+#11 497.2 -- Installing: /usr/include/colmap/feature/matcher.h
+#11 497.2 -- Installing: /usr/include/colmap/feature/extractor.h
+#11 497.2 -- Installing: /usr/include/colmap/feature/utils.h
+#11 497.2 -- Installing: /usr/include/colmap/feature/types.h
+#11 497.2 -- Installing: /usr/include/colmap/feature/pairing.h
+#11 497.2 -- Installing: /usr/include/colmap/feature/sift.h
+#11 497.2 -- Installing: /usr/include/colmap/sensor
+#11 497.2 -- Installing: /usr/include/colmap/sensor/models.h
+#11 497.2 -- Installing: /usr/include/colmap/sensor/specs.h
+#11 497.2 -- Installing: /usr/include/colmap/sensor/bitmap.h
+#11 497.2 -- Installing: /usr/include/colmap/sensor/database.h
+#11 497.2 -- Installing: /usr/include/colmap/exe
+#11 497.2 -- Installing: /usr/include/colmap/exe/gui.h
+#11 497.2 -- Installing: /usr/include/colmap/exe/vocab_tree.h
+#11 497.2 -- Installing: /usr/include/colmap/exe/image.h
+#11 497.2 -- Installing: /usr/include/colmap/exe/feature.h
+#11 497.2 -- Installing: /usr/include/colmap/exe/model.h
+#11 497.2 -- Installing: /usr/include/colmap/exe/sfm.h
+#11 497.2 -- Installing: /usr/include/colmap/exe/mvs.h
+#11 497.2 -- Installing: /usr/include/colmap/exe/database.h
+#11 497.2 -- Installing: /usr/include/colmap/optim
+#11 497.2 -- Installing: /usr/include/colmap/optim/random_sampler.h
+#11 497.2 -- Installing: /usr/include/colmap/optim/least_absolute_deviations.h
+#11 497.2 -- Installing: /usr/include/colmap/optim/combination_sampler.h
+#11 497.2 -- Installing: /usr/include/colmap/optim/ransac.h
+#11 497.2 -- Installing: /usr/include/colmap/optim/loransac.h
+#11 497.2 -- Installing: /usr/include/colmap/optim/sprt.h
+#11 497.2 -- Installing: /usr/include/colmap/optim/progressive_sampler.h
+#11 497.2 -- Installing: /usr/include/colmap/optim/sampler.h
+#11 497.2 -- Installing: /usr/include/colmap/optim/support_measurement.h
+#11 497.2 -- Installing: /usr/include/colmap/image
+#11 497.2 -- Installing: /usr/include/colmap/image/line.h
+#11 497.2 -- Installing: /usr/include/colmap/image/warp.h
+#11 497.2 -- Installing: /usr/include/colmap/image/undistortion.h
+#11 497.2 -- Installing: /usr/include/colmap/retrieval
+#11 497.2 -- Installing: /usr/include/colmap/retrieval/geometry.h
+#11 497.2 -- Installing: /usr/include/colmap/retrieval/inverted_file.h
+#11 497.2 -- Installing: /usr/include/colmap/retrieval/inverted_file_entry.h
+#11 497.2 -- Installing: /usr/include/colmap/retrieval/inverted_index.h
+#11 497.2 -- Installing: /usr/include/colmap/retrieval/visual_index.h
+#11 497.2 -- Installing: /usr/include/colmap/retrieval/utils.h
+#11 497.2 -- Installing: /usr/include/colmap/retrieval/vote_and_verify.h
+#11 497.2 -- Installing: /usr/include/colmap/tools
+#11 497.2 -- Installing: /usr/include/colmap/scene
+#11 497.2 -- Installing: /usr/include/colmap/scene/track.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/reconstruction_io.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/reconstruction_manager.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/image.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/point2d.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/database_cache.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/two_view_geometry.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/projection.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/synthetic.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/reconstruction.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/visibility_pyramid.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/camera.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/database.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/point3d.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/camera_rig.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/correspondence_graph.h
+#11 497.2 -- Installing: /usr/include/colmap/scene/scene_clustering.h
+#11 497.2 -- Installing: /usr/include/colmap/geometry
+#11 497.2 -- Installing: /usr/include/colmap/geometry/triangulation.h
+#11 497.2 -- Installing: /usr/include/colmap/geometry/pose.h
+#11 497.2 -- Installing: /usr/include/colmap/geometry/rigid3.h
+#11 497.2 -- Installing: /usr/include/colmap/geometry/homography_matrix.h
+#11 497.2 -- Installing: /usr/include/colmap/geometry/essential_matrix.h
+#11 497.2 -- Installing: /usr/include/colmap/geometry/sim3.h
+#11 497.2 -- Installing: /usr/include/colmap/geometry/gps.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MultiGridOctreeData.WeightedSamples.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/BinaryNode.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MultiGridOctreeData.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Hash.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/PPolynomial.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MultiGridOctreeData.IsoSurface.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/CmdLineParser.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Octree.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MultiGridOctreeData.System.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MyTime.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/SparseMatrix.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Allocator.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/PoissonRecon.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MultiGridOctreeData.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Octree.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Array.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Polynomial.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/FunctionData.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MAT.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/PointStream.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/BSplineData.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MAT.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MarchingCubes.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MemoryUsage.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Array.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Factor.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/PPolynomial.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/BSplineData.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Geometry.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/FunctionData.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/SparseMatrix.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MultiGridOctreeData.Evaluation.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/SurfaceTrimmer.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Polynomial.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/PointStream.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/CmdLineParser.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Geometry.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/MultiGridOctreeData.SortedTreeNodes.inl
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/PoissonRecon/Ply.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/quickshift.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/lbp.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/stringop.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/rodrigues.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/imopv.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/array.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/qsort-def.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/random.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/svm.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/dsift.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/aib.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/mathop_sse2.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/hog.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/kdtree.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/host.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/hikmeans.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/mathop.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/kmeans.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/scalespace.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/pgm.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/getopt_long.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/svmdataset.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/homkermap.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/mathop_avx.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/fisher.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/gmm.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/covdet.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/imopv_sse2.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/heap-def.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/mser.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/generic.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/shuffle-def.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/sift.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/vlad.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/slic.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/liop.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/ikmeans.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/VLFeat/float.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/LSD
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/LSD/lsd.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/CuTexImage.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/ProgramCL.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/ShaderMan.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/PyramidCL.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/PyramidCU.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/GLTexImage.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/PyramidGL.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/ProgramCU.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/LiteWindow.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/SiftGPU.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/SiftMatchCU.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/SiftMatch.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/FrameBufferObject.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/ProgramCG.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/GlobalUtil.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/ProgramGPU.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/SiftPyramid.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/ProgramGLSL.h
+#11 497.2 -- Installing: /usr/include/colmap/thirdparty/SiftGPU/CLTexImage.h
+#11 497.2 -- Installing: /usr/share/colmap/cmake
+#11 497.2 -- Installing: /usr/share/colmap/cmake/FindGlew.cmake
+#11 497.2 -- Installing: /usr/share/colmap/cmake/FindGlog.cmake
+#11 497.2 -- Installing: /usr/share/colmap/cmake/FindMetis.cmake
+#11 497.2 -- Installing: /usr/share/colmap/cmake/FindFreeImage.cmake
+#11 497.2 -- Installing: /usr/share/colmap/cmake/FindLZ4.cmake
+#11 497.2 -- Installing: /usr/share/colmap/cmake/FindFLANN.cmake
+#11 497.2 -- Installing: /usr/share/colmap/cmake/FindDependencies.cmake
+#11 497.2 -- Installing: /usr/bin/colmap
+#11 DONE 497.3s
+
+#12 [compile 4/7] RUN python3 -c "import json,pathlib; c=json.loads(pathlib.Path('/build/compile_commands.json').read_text()); forbidden=[x['file'] for x in c if '/thirdparty/SiftGPU/' in x['file'] or '/thirdparty/LSD/' in x['file']]; assert not forbidden, forbidden; print('Compiled source dependency exclusions verified')"
+#12 0.323 Traceback (most recent call last):
+#12 0.323   File "<string>", line 1, in <module>
+#12 0.323 AssertionError: ['/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/CLTexImage.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/CuTexImage.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/FrameBufferObject.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/GLTexImage.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/GlobalUtil.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/ProgramCG.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/ProgramCL.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/ProgramGLSL.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/PyramidCL.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/PyramidCU.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/PyramidGL.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/ShaderMan.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/SiftGPU.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/SiftMatch.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/SiftMatchCU.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/SiftPyramid.cpp']
+#12 ERROR: process "/bin/sh -c python3 -c \"import json,pathlib; c=json.loads(pathlib.Path('/build/compile_commands.json').read_text()); forbidden=[x['file'] for x in c if '/thirdparty/SiftGPU/' in x['file'] or '/thirdparty/LSD/' in x['file']]; assert not forbidden, forbidden; print('Compiled source dependency exclusions verified')\"" did not complete successfully: exit code: 1
+------
+ > [compile 4/7] RUN python3 -c "import json,pathlib; c=json.loads(pathlib.Path('/build/compile_commands.json').read_text()); forbidden=[x['file'] for x in c if '/thirdparty/SiftGPU/' in x['file'] or '/thirdparty/LSD/' in x['file']]; assert not forbidden, forbidden; print('Compiled source dependency exclusions verified')":
+0.323 Traceback (most recent call last):
+0.323   File "<string>", line 1, in <module>
+0.323 AssertionError: ['/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/CLTexImage.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/CuTexImage.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/FrameBufferObject.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/GLTexImage.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/GlobalUtil.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/ProgramCG.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/ProgramCL.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/ProgramGLSL.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/PyramidCL.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/PyramidCU.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/PyramidGL.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/ShaderMan.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/SiftGPU.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/SiftMatch.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/SiftMatchCU.cpp', '/source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73/src/thirdparty/SiftGPU/SiftPyramid.cpp']
+------
+Dockerfile.colmap-source-cpu:12
+
+--------------------
+
+  10 |     RUN echo 'fe875165847c185ec2fb8d974a322852be3d118ddae4bf958d5ee8c29e6a6896  /tmp/colmap-source.tar.gz' | sha256sum -c - && mkdir /source && python3 -c "import tarfile; tarfile.open('/tmp/colmap-source.tar.gz').extractall('/source',filter='data')"
+
+  11 |     RUN cmake -S /source/colmap-0bd66d901c7549051e21e8f648777f802eb20a73 -B /build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_C_COMPILER=/usr/bin/gcc-13 -DCMAKE_CXX_COMPILER=/usr/bin/g++-13 -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/g++-13 -DCMAKE_CUDA_ARCHITECTURES='75;86;89' -DGUI_ENABLED=OFF -DOPENGL_ENABLED=OFF -DCGAL_ENABLED=OFF -DCUDA_ENABLED=OFF -DLSD_ENABLED=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DIPO_ENABLED=OFF -DCCACHE_ENABLED=OFF && cmake --build /build --parallel 2 && cmake --install /build
+
+  12 | >>> RUN python3 -c "import json,pathlib; c=json.loads(pathlib.Path('/build/compile_commands.json').read_text()); forbidden=[x['file'] for x in c if '/thirdparty/SiftGPU/' in x['file'] or '/thirdparty/LSD/' in x['file']]; assert not forbidden, forbidden; print('Compiled source dependency exclusions verified')"
+
+  13 |     RUN mkdir -p /opt/colmap && python3 -c "import pathlib,hashlib,json; p={'id':'colmap-3.10-source-cpu-investigation-v1','binarySha256':hashlib.sha256(pathlib.Path('/usr/bin/colmap').read_bytes()).hexdigest(),'gpuAvailable':False,'status':'compiled investigation; hardware and distribution validation pending'}; pathlib.Path('/opt/colmap/runtime-profile.json').write_text(json.dumps(p))"
+
+  14 |     WORKDIR /opt/processing
+
+--------------------
+
+failed to solve: process "/bin/sh -c python3 -c \"import json,pathlib; c=json.loads(pathlib.Path('/build/compile_commands.json').read_text()); forbidden=[x['file'] for x in c if '/thirdparty/SiftGPU/' in x['file'] or '/thirdparty/LSD/' in x['file']]; assert not forbidden, forbidden; print('Compiled source dependency exclusions verified')\"" did not complete successfully: exit code: 1
+

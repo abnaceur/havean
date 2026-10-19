@@ -1,0 +1,260 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/unit/processing-licenses.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m7 failed[39m[2m)[22m[33m 6243[2mms[22m[39m
+   [31m❯[39m HE-A02 exact processing dependency/image/model license gate [2m(8)[22m
+[31m     [31m×[31m accepts actual hash-locked baseline with unavailable GPU and no approved models[39m[33m 530[2mms[22m[39m
+     [33m[2m✓[22m[39m rejects absent package licenses and mismatched wheel hashes[33m 1082[2mms[22m[39m
+[31m     [31m×[31m rejects floating versions, unhashed wheels and unmanifested CPU/GPU base images[39m[33m 1018[2mms[22m[39m
+[31m     [31m×[31m rejects new unpinned processing service images[39m[33m 560[2mms[22m[39m
+[31m     [31m×[31m rejects floating images in root processing deployment overrides[39m[33m 505[2mms[22m[39m
+[31m     [31m×[31m requires exact separately licensed GPU compatibility and dependency locks[39m[33m 490[2mms[22m[39m
+[31m     [31m×[31m rejects enabled weights without proven licenses/checksums; disabled models require a reason[39m[33m 513[2mms[22m[39m
+[31m     [31m×[31m validates actual enabled model bytes instead of trusting a declared checksum[39m[33m 567[2mms[22m[39m
+   [33m[2m✓[22m[39m native bundled license notices are checksum-bound and script-enabled PDFium builds fail closed[33m 975[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-ledger.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 1395[2mms[22m[39m
+ [32m✓[39m tests/unit/recovery-envelope.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 824[2mms[22m[39m
+   [33m[2m✓[22m[39m Q09 authenticated streaming backup restores exact decimal records and refuses missing WAL or modified ciphertext before successful restoration[33m 820[2mms[22m[39m
+ [32m✓[39m tests/unit/ci-recording.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 219[2mms[22m[39m
+ [32m✓[39m tests/unit/mortgage-engine.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 184[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-plan-render.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 131[2mms[22m[39m
+(node:65226) [THREE_CJS_DEPRECATED] DeprecationWarning: `require("three")` is deprecated and will be removed.
+Replace `const THREE = require("three")` with `import * as THREE from "three"`.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+ [32m✓[39m tests/unit/digitization-structural-glb.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 123[2mms[22m[39m
+ [32m✓[39m tests/unit/credential-scan.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 100[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-capture-completion.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m tests/unit/ci-visual-order.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-stream.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 57[2mms[22m[39m
+ [32m✓[39m tests/unit/fixtures.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-plan-edit.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-contracts.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32m✓[39m tests/unit/mortgage-csv.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-plan-scale.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m tests/unit/contracts.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-topology.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-geometry-dimensions.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m tests/unit/notification-provider.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/unit/spatial-media.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m tests/unit/legacy-digitization-geometry.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-unit-form.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-worker-auth.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-inventory-fact-mapping.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m tests/unit/money-inputs.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-plan-page.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/unit/release-readiness.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/unit/inquiry-client.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-structural-viewer-profile.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-inventory-application-contract.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-revision-policy.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/unit/integration-lock.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/unit/exact-parity.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/unit/visual-policy.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/unit/mfa-policy.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/unit/gateway-rate-address.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/unit/development-login.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/unit/reference.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/unit/public-query.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/unit/account-experience.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/unit/reply-dates.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-video-source-container.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/unit/observability.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/unit/tour-input.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/unit/staff-mfa-flow.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 7 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/unit/processing-licenses.test.ts[2m > [22mHE-A02 exact processing dependency/image/model license gate[2m > [22maccepts actual hash-locked baseline with unavailable GPU and no approved models
+[31m[1mAssertionError[22m: file:///workspace/scripts/processing-licenses.mjs:46
+  if(native.enabled&&(!native.binaryHashes||!['ffmpeg','ffprobe'].every(name=>hash.test(native.binaryHashes[name]))||!native.validation?.scope||!native.validation.evidence?.length||native.validation.evidence.some(file=>!fs.existsSync(path.join(root,file)))))throw Error(`Native tool requires actual local validation/hash evidence: ${id}`);
+                                                                                                                                                                                                                                                                        ^
+
+Error: Native tool requires actual local validation/hash evidence: ffmpeg-media
+    at validateProcessingLicenses (file:///workspace/scripts/processing-licenses.mjs:46:265)
+    at file:///workspace/scripts/processing-licenses.mjs:97:49
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.21.0
+: expected 1 to be +0 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 0[39m
+[31m+ 1[39m
+
+[90m [2m❯[22m validateProcessingLicenses scripts/processing-licenses.mjs:[2m46:265[22m[39m
+[90m [2m❯[22m scripts/processing-licenses.mjs:[2m97:49[22m[39m
+[36m [2m❯[22m tests/unit/processing-licenses.test.ts:[2m12:156[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/unit/processing-licenses.test.ts[2m > [22mHE-A02 exact processing dependency/image/model license gate[2m > [22mrejects floating versions, unhashed wheels and unmanifested CPU/GPU base images
+[31m[1mAssertionError[22m: expected 'file:///workspace/scripts/processing-…' to contain 'Unmanifested processing image'[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Unmanifested processing image[39m
+[31m+ file:///workspace/scripts/processing-licenses.mjs:46[39m
+[31m+   if(native.enabled&&(!native.binaryHashes||!['ffmpeg','ffprobe'].every(name=>hash.test(native.binaryHashes[name]))||!native.validation?.scope||!native.validation.evidence?.length||native.validation.evidence.some(file=>!fs.existsSync(path.join(root,file)))))throw Error(`Native tool requires actual local validation/hash evidence: ${id}`);[39m
+[31m+                                                                                                                                                                                                                                                                         ^[39m
+[31m+[39m
+[31m+ Error: Native tool requires actual local validation/hash evidence: ffmpeg-media[39m
+[31m+     at validateProcessingLicenses (file:///workspace/scripts/processing-licenses.mjs:46:265)[39m
+[31m+     at file:///workspace/scripts/processing-licenses.mjs:97:49[39m
+[31m+     at ModuleJob.run (node:internal/modules/esm/module_job:561:25)[39m
+[31m+     at async node:internal/modules/esm/loader:647:26[39m
+[31m+     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)[39m
+[31m+[39m
+[31m+ Node.js v24.21.0[39m
+[31m+[39m
+
+[36m [2m❯[22m tests/unit/processing-licenses.test.ts:[2m14:439[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/unit/processing-licenses.test.ts[2m > [22mHE-A02 exact processing dependency/image/model license gate[2m > [22mrejects new unpinned processing service images
+[31m[1mAssertionError[22m: expected 'file:///workspace/scripts/processing-…' to contain 'Unmanifested processing service image'[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Unmanifested processing service image[39m
+[31m+ file:///workspace/scripts/processing-licenses.mjs:46[39m
+[31m+   if(native.enabled&&(!native.binaryHashes||!['ffmpeg','ffprobe'].every(name=>hash.test(native.binaryHashes[name]))||!native.validation?.scope||!native.validation.evidence?.length||native.validation.evidence.some(file=>!fs.existsSync(path.join(root,file)))))throw Error(`Native tool requires actual local validation/hash evidence: ${id}`);[39m
+[31m+                                                                                                                                                                                                                                                                         ^[39m
+[31m+[39m
+[31m+ Error: Native tool requires actual local validation/hash evidence: ffmpeg-media[39m
+[31m+     at validateProcessingLicenses (file:///workspace/scripts/processing-licenses.mjs:46:265)[39m
+[31m+     at file:///workspace/scripts/processing-licenses.mjs:97:49[39m
+[31m+     at ModuleJob.run (node:internal/modules/esm/module_job:561:25)[39m
+[31m+     at async node:internal/modules/esm/loader:647:26[39m
+[31m+     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)[39m
+[31m+[39m
+[31m+ Node.js v24.21.0[39m
+[31m+[39m
+
+[36m [2m❯[22m tests/unit/processing-licenses.test.ts:[2m15:240[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/unit/processing-licenses.test.ts[2m > [22mHE-A02 exact processing dependency/image/model license gate[2m > [22mrejects floating images in root processing deployment overrides
+[31m[1mAssertionError[22m: expected 'file:///workspace/scripts/processing-…' to contain 'Unmanifested processing service image'[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Unmanifested processing service image[39m
+[31m+ file:///workspace/scripts/processing-licenses.mjs:46[39m
+[31m+   if(native.enabled&&(!native.binaryHashes||!['ffmpeg','ffprobe'].every(name=>hash.test(native.binaryHashes[name]))||!native.validation?.scope||!native.validation.evidence?.length||native.validation.evidence.some(file=>!fs.existsSync(path.join(root,file)))))throw Error(`Native tool requires actual local validation/hash evidence: ${id}`);[39m
+[31m+                                                                                                                                                                                                                                                                         ^[39m
+[31m+[39m
+[31m+ Error: Native tool requires actual local validation/hash evidence: ffmpeg-media[39m
+[31m+     at validateProcessingLicenses (file:///workspace/scripts/processing-licenses.mjs:46:265)[39m
+[31m+     at file:///workspace/scripts/processing-licenses.mjs:97:49[39m
+[31m+     at ModuleJob.run (node:internal/modules/esm/module_job:561:25)[39m
+[31m+     at async node:internal/modules/esm/loader:647:26[39m
+[31m+     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)[39m
+[31m+[39m
+[31m+ Node.js v24.21.0[39m
+[31m+[39m
+
+[36m [2m❯[22m tests/unit/processing-licenses.test.ts:[2m16:241[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/unit/processing-licenses.test.ts[2m > [22mHE-A02 exact processing dependency/image/model license gate[2m > [22mrequires exact separately licensed GPU compatibility and dependency locks
+[31m[1mAssertionError[22m: expected 'file:///workspace/scripts/processing-…' to contain 'GPU requires an exact separate lock'[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- GPU requires an exact separate lock[39m
+[31m+ file:///workspace/scripts/processing-licenses.mjs:46[39m
+[31m+   if(native.enabled&&(!native.binaryHashes||!['ffmpeg','ffprobe'].every(name=>hash.test(native.binaryHashes[name]))||!native.validation?.scope||!native.validation.evidence?.length||native.validation.evidence.some(file=>!fs.existsSync(path.join(root,file)))))throw Error(`Native tool requires actual local validation/hash evidence: ${id}`);[39m
+[31m+                                                                                                                                                                                                                                                                         ^[39m
+[31m+[39m
+[31m+ Error: Native tool requires actual local validation/hash evidence: ffmpeg-media[39m
+[31m+     at validateProcessingLicenses (file:///workspace/scripts/processing-licenses.mjs:46:265)[39m
+[31m+     at file:///workspace/scripts/processing-licenses.mjs:97:49[39m
+[31m+     at ModuleJob.run (node:internal/modules/esm/module_job:561:25)[39m
+[31m+     at async node:internal/modules/esm/loader:647:26[39m
+[31m+     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)[39m
+[31m+[39m
+[31m+ Node.js v24.21.0[39m
+[31m+[39m
+
+[36m [2m❯[22m tests/unit/processing-licenses.test.ts:[2m17:170[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/unit/processing-licenses.test.ts[2m > [22mHE-A02 exact processing dependency/image/model license gate[2m > [22mrejects enabled weights without proven licenses/checksums; disabled models require a reason
+[31m[1mAssertionError[22m: expected 'file:///workspace/scripts/processing-…' to contain 'Model requires exact'[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Model requires exact[39m
+[31m+ file:///workspace/scripts/processing-licenses.mjs:46[39m
+[31m+   if(native.enabled&&(!native.binaryHashes||!['ffmpeg','ffprobe'].every(name=>hash.test(native.binaryHashes[name]))||!native.validation?.scope||!native.validation.evidence?.length||native.validation.evidence.some(file=>!fs.existsSync(path.join(root,file)))))throw Error(`Native tool requires actual local validation/hash evidence: ${id}`);[39m
+[31m+                                                                                                                                                                                                                                                                         ^[39m
+[31m+[39m
+[31m+ Error: Native tool requires actual local validation/hash evidence: ffmpeg-media[39m
+[31m+     at validateProcessingLicenses (file:///workspace/scripts/processing-licenses.mjs:46:265)[39m
+[31m+     at file:///workspace/scripts/processing-licenses.mjs:97:49[39m
+[31m+     at ModuleJob.run (node:internal/modules/esm/module_job:561:25)[39m
+[31m+     at async node:internal/modules/esm/loader:647:26[39m
+[31m+     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)[39m
+[31m+[39m
+[31m+ Node.js v24.21.0[39m
+[31m+[39m
+
+[36m [2m❯[22m tests/unit/processing-licenses.test.ts:[2m18:209[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/unit/processing-licenses.test.ts[2m > [22mHE-A02 exact processing dependency/image/model license gate[2m > [22mvalidates actual enabled model bytes instead of trusting a declared checksum
+[31m[1mAssertionError[22m: expected 'file:///workspace/scripts/processing-…' to contain 'Model checksum mismatch'[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Model checksum mismatch[39m
+[31m+ file:///workspace/scripts/processing-licenses.mjs:46[39m
+[31m+   if(native.enabled&&(!native.binaryHashes||!['ffmpeg','ffprobe'].every(name=>hash.test(native.binaryHashes[name]))||!native.validation?.scope||!native.validation.evidence?.length||native.validation.evidence.some(file=>!fs.existsSync(path.join(root,file)))))throw Error(`Native tool requires actual local validation/hash evidence: ${id}`);[39m
+[31m+                                                                                                                                                                                                                                                                         ^[39m
+[31m+[39m
+[31m+ Error: Native tool requires actual local validation/hash evidence: ffmpeg-media[39m
+[31m+     at validateProcessingLicenses (file:///workspace/scripts/processing-licenses.mjs:46:265)[39m
+[31m+     at file:///workspace/scripts/processing-licenses.mjs:97:49[39m
+[31m+     at ModuleJob.run (node:internal/modules/esm/module_job:561:25)[39m
+[31m+     at async node:internal/modules/esm/loader:647:26[39m
+[31m+     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)[39m
+[31m+[39m
+[31m+ Node.js v24.21.0[39m
+[31m+[39m
+
+[36m [2m❯[22m tests/unit/processing-licenses.test.ts:[2m19:388[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m45 passed[39m[22m[90m (46)[39m
+[2m      Tests [22m [1m[31m7 failed[39m[22m[2m | [22m[1m[32m134 passed[39m[22m[90m (141)[39m
+[2m   Start at [22m 17:11:43
+[2m   Duration [22m 23.34s[2m (tests 56%, import 37%, transform 6%, worker 1%)[22m
+
+[2m     Import [22m [33m177 modules were evaluated 346 times[39m[2m · 6.53s total, 37% of tracked time[22m
+[2m            [22m [2m~3.19s faster with [22m[33misolate: false[39m[2m — shared modules are evaluated once per worker instead of once per file[22m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-isolation[22m
+

@@ -1,0 +1,45 @@
+time="2026-10-13T05:04:35+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-a7ae4f6af19d Creating 
+ Container haven-tests-run-a7ae4f6af19d Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-coherent-demo.spec.ts:7:1 › publish the complete authored apartment and generated room tour (56.5s)
+
+
+  1) [desktop] › tests/e2e/digitization-coherent-demo.spec.ts:7:1 › publish the complete authored apartment and generated room tour 
+
+    Error: expect(received).toBeTruthy()
+
+    Received: undefined
+
+      33 |  }
+      34 |  if(!s.trace){
+    > 35 |   const pages=await api(page,base+'/plan-pages');s.pages=pages;save();expect(pages).toHaveLength(1);const p=pages[0];
+         |                                                                                                                      ^
+      36 |   const selection=await api(page,base+`/artifacts/${p.artifactId}/plan-page?clockwiseDegrees=0`),w=await workspace(),source=selection.source,m=source.originalToModel;expect(source.assetId).toBe(s.assets.plan.id);
+      37 |   const point=([x,y]:number[])=>{const px=layout.ox+x*layout.scale,py=layout.oy+y*layout.scale;return {x:m[0]*px+m[1]*py+m[2],y:m[3]*px+m[4]*py+m[5]};};
+      38 |   const geometry={schemaVersion:2,id:crypto.randomUUID(),organizationId:w.organizationId,targetId:w.target.id,revision:s.parent.geometry+1,parentRevision:s.parent.geometry,coordinateSystem:'right-handed-z-up',unit:'px',scaleStatus:'unscaled',sourceAssets:[source.assetId],sources:[source],scaleAnchors:[],floors:[{id:'floor-1',name:'Demo apartment',elevation:'0',height:null,source}],rooms:rooms.map((r:any)=>({id:r.id,floorId:'floor-1',name:r.name,type:r.id.startsWith('bedroom')?'bedroom':r.id,polygon:[[r.x,r.y],[r.x+r.w,r.y],[r.x+r.w,r.y+r.d],[r.x,r.y+r.d]].map(point),holes:[],panoramaSceneId:null,source,areaBasis:'geometry_room_net'})),walls:layout.walls.map((w:any)=>({...w,start:point(w.start),end:point(w.end),floorId:'floor-1',thickness:'12',height:null,source,confirmed:true})),openings:layout.openings.map((o:any)=>({id:o.id,wallId:'wall-'+o.wall,offset:String(o.offset*layout.scale),width:String(o.width*layout.scale),type:o.type,sill:null,height:null,source,confirmed:true})),stairs:[],review:{status:'pending',actorId:null}};
+        at /workspace/tests/e2e/digitization-coherent-demo.spec.ts:35:139
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-coherent-demo-edaeb-ent-and-generated-room-tour-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-coherent-demo-edaeb-ent-and-generated-room-tour-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-coherent-demo-edaeb-ent-and-generated-room-tour-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-coherent-demo-edaeb-ent-and-generated-room-tour-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-coherent-demo-edaeb-ent-and-generated-room-tour-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-coherent-demo.spec.ts:7:1 › publish the complete authored apartment and generated room tour 
+

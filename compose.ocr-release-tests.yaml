@@ -1,0 +1,18 @@
+# Reuse the existing isolated API test network and public fixture credential.
+# Test the immutable packaged image, without mounting processing source code.
+services:
+  ocr:
+    image: ${OCR_RELEASE_IMAGE_ID:?Use the observed immutable local release image ID}
+    environment:
+      PROCESSING_DEPLOYMENT: production
+      PROCESSING_ENABLE_OCR: 'true'
+      PROCESSING_ENABLE_OCR_INVESTIGATION: 'false'
+      PROCESSING_OCR_RELEASE_SHA256: ${PROCESSING_OCR_RELEASE_SHA256:?}
+      PROCESSING_ENABLE_MEDIA_PROBE: 'true'
+    volumes: !override
+      - type: bind
+        source: ${OCR_PROTOCOL_KEY_FILE:?}
+        target: /run/runner-test-key
+        read_only: true
+        bind:
+          create_host_path: false

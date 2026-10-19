@@ -4,21 +4,40 @@ import os
 from pathlib import Path
 import threading
 import time
+from functools import lru_cache
 from .executions import ExecutionAuthority, ExecutionStore, ExecutionError, digest, UUID_RE, SHA_RE, PROFILES
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from uuid import uuid4
 from .adapters import configure_adapter
-from .pdf_raster import verified_pdfium
 from .decoder_isolation import landlock_abi, READ_ROOTS
+from .ocr_release import production_ocr_ready
+
+
+@lru_cache(maxsize=1)
+def camera_runtime_ready():
+    if 'private-colmap-cpu-investigation-v1' not in PROFILES:
+        return False
+    from .colmap_runtime import verify_runtime
+    profile = json.loads(Path('/opt/colmap/runtime-profile.json').read_text())
+    verify_runtime('/opt/colmap', profile, installed=True)
+    return True
 
 
 def capabilities():
     adapter = configure_adapter(os.environ)
     abi = landlock_abi()  # Fail closed on a host missing the required unprivileged isolation.
+    if os.environ.get('PROCESSING_RUNNER_KIND') == 'gpu':
+        enabled = os.environ.get('PROCESSING_DEPLOYMENT') in ('test', 'development') and os.environ.get('PROCESSING_ENABLE_GSPLAT_INVESTIGATION') == 'true'
+        return {'sceneTrainingEnabled': enabled, 'gpuValidated': False, 'reconstructionAvailable': False, 'landlockAbi': abi, 'profile': 'gsplat-1.5.3-cu126-adaptive-investigation-v2'}
+    from .pdf_raster import verified_pdfium
     verified_pdfium()  # Fail closed for a substituted/script-enabled native decoder.
-    return {"adapterVersion": adapter.version, "decoderIsolationProfile": "linux-landlock-seccomp-decoder-v1", "landlockAbi": abi, "nativePdfAvailable": True, "pdfRasterAvailable": True,
-            "imageOrientationAvailable": True, "ocrAvailable": False,
-            "reconstructionAvailable": False}
+    media_enabled = os.environ.get('PROCESSING_ENABLE_MEDIA_PROBE') == 'true'
+    if media_enabled:
+        from .media_probe import verified_media_runtime
+        verified_media_runtime()
+    return {"mediaProbeAvailable": media_enabled, "mediaSourceMaxBytes": 10*1024*1024 if media_enabled else None, "adapterVersion": adapter.version, "decoderIsolationProfile": "linux-landlock-seccomp-decoder-v1", "landlockAbi": abi, "nativePdfAvailable": True, "pdfRasterAvailable": True,
+            "imageOrientationAvailable": True, "ocrAvailable": production_ocr_ready(),
+            "cameraSolveAvailable": camera_runtime_ready(), "reconstructionAvailable": False}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -59,12 +78,18 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parts = self.path.split('/')
-        if len(parts) == 5 and parts[1] == 'executions' and parts[3] == 'previews' and UUID_RE.fullmatch(parts[2]) and SHA_RE.fullmatch(parts[4]):
+        if len(parts) == 5 and parts[1] == 'executions' and parts[3] in ('previews', 'training-archives', 'training-outputs') and UUID_RE.fullmatch(parts[2]) and SHA_RE.fullmatch(parts[4]):
             try:
                 request_hash = self.execution_authority(parts[2], 'preview')
-                body = self.server.execution_store.preview(parts[2], request_hash, parts[4])
+                training = parts[3] == 'training-archives'
+                method = self.server.execution_store.training_archive if training else self.server.execution_store.preview
+                if parts[3] == 'training-outputs':
+                    body, mime = self.server.execution_store.training_output(parts[2], request_hash, parts[4])
+                else:
+                    body = method(parts[2], request_hash, parts[4])
+                    mime = 'application/x-tar' if training else 'image/png'
                 self.send_response(200)
-                self.send_header('Content-Type', 'image/png')
+                self.send_header('Content-Type', mime)
                 self.send_header('Content-Length', str(len(body)))
                 self.send_header('Cache-Control', 'no-store')
                 self.send_header('X-Content-Type-Options', 'nosniff')
@@ -91,6 +116,17 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
+            if self.path.startswith('/executions/') and self.path.endswith('/purge') and UUID_RE.fullmatch(self.path[12:-6]):
+                execution_id = self.path[12:-6]
+                request_hash = self.execution_authority(execution_id, 'purge')
+                length = int(self.headers.get('Content-Length', '0'))
+                if length < 0 or length > 16384:
+                    raise ExecutionError('EXECUTION_INVALID', 413)
+                request = json.loads(self.rfile.read(length)) if length else None
+                if request is not None and not isinstance(request, dict):
+                    raise ExecutionError('EXECUTION_INVALID')
+                self.send_json(200, {'data': self.server.execution_store.purge(execution_id, request_hash, request or None)})
+                return
             if not self.server.execution_store:
                 raise ExecutionError("EXECUTION_UNAVAILABLE", 503)
             parts = self.path.split('/')
@@ -100,7 +136,7 @@ class Handler(BaseHTTPRequestHandler):
                 if self.headers.get('Transfer-Encoding') or len(lengths) != 1 or not lengths[0].isdigit():
                     raise ExecutionError('EXECUTION_INVALID', 400)
                 length = int(lengths[0])
-                if not 0 < length <= 20*1024*1024:
+                if not 0 < length <= 384*1024*1024:
                     raise ExecutionError('EXECUTION_REQUEST_TOO_LARGE', 413)
                 result = self.server.execution_store.receive_source(parts[2], request_hash, parts[4], length,
                                                                    self.headers.get('Content-Type', ''), self.rfile)
@@ -109,7 +145,13 @@ class Handler(BaseHTTPRequestHandler):
             if self.path.startswith("/executions/") and self.path.endswith("/cancel") and UUID_RE.fullmatch(self.path[12:-7]):
                 execution_id = self.path[12:-7]
                 request_hash = self.execution_authority(execution_id, "cancel")
-                self.send_json(200, {"data": self.server.execution_store.cancel(execution_id, request_hash)})
+                length = int(self.headers.get('Content-Length', '0'))
+                if self.headers.get('Transfer-Encoding') or not 0 <= length <= 16384:
+                    raise ExecutionError('EXECUTION_INVALID', 413)
+                request = json.loads(self.rfile.read(length)) if length else None
+                if request is not None and not isinstance(request, dict):
+                    raise ExecutionError('EXECUTION_INVALID')
+                self.send_json(200, {"data": self.server.execution_store.cancel(execution_id, request_hash, request or None)})
                 return
             if self.path != "/executions":
                 raise ExecutionError("NOT_FOUND", 404)

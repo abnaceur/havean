@@ -1,0 +1,101 @@
+import {test,expect} from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+import {login,apiRequest} from '../support/browser';
+const origin='http://localhost:8089';
+test('guided property creation saves incomplete progress, resumes and submits required media',async({page,browser},info)=>{
+ test.setTimeout(240000);page.setDefaultTimeout(20000);
+ await login(page,'agent',origin,'/ops/listings');
+ await page.getByRole('button',{name:'Create property draft',exact:true}).click();
+ const dialog=page.locator('dialog.property-wizard-dialog');
+ await expect(dialog.getByRole('heading',{name:'Property basics',exact:true})).toBeFocused();
+ await dialog.getByRole('button',{name:'Continue',exact:true}).click();
+ await expect(dialog.getByRole('heading',{name:'Property basics',exact:true})).toBeVisible();
+ await expect(dialog.getByLabel('Existing property unit',{exact:true})).toHaveAttribute('aria-invalid','true');
+ await expect(dialog.getByLabel('Existing property unit',{exact:true})).toBeFocused();
+ await expect(dialog.getByLabel('Property title',{exact:true})).toHaveAttribute('aria-invalid','true');
+ const invalid=await dialog.getByLabel('Existing property unit',{exact:true}).boundingBox(),footer=await dialog.locator('.wizard-footer').boundingBox(),header=await dialog.locator('.dialog-head').boundingBox();expect(invalid!.y).toBeGreaterThanOrEqual(header!.y+header!.height);expect(invalid!.y+invalid!.height).toBeLessThan(footer!.y);
+ const basicAudit=await new AxeBuilder({page}).include('dialog.property-wizard-dialog').analyze();expect(basicAudit.violations.filter(v=>['serious','critical'].includes(v.impact||''))).toEqual([]);
+ await page.screenshot({path:'evidence/property-step-validation/basics-'+info.project.name+'.png',scale:'css'});
+ const title='Guided '+info.project.name+' '+crypto.randomUUID();
+ await dialog.getByLabel('Property title',{exact:true}).fill(title);
+ await expect(dialog.getByRole('status').filter({hasText:/^Saved$/})).toBeVisible();
+ const checkpoints=async()=>(await (await page.request.get(origin+'/api/v1/ops/property-drafts')).json()).data;
+ const partial=(await checkpoints()).find((r:any)=>r.data.values.title===title);
+ const exported=(await (await page.request.get(origin+'/api/v1/me/export')).json()).data;expect(exported.records.propertyDrafts.some((r:any)=>r.id===partial.id)).toBe(true);
+ const bypass=await apiRequest(page,'/ops/property-drafts/'+partial.id,{version:partial.version,data:partial.data,step:1},'PATCH');expect(bypass.status()).toBe(400);expect((await bypass.json()).error.fieldErrors.unitId).toBeTruthy();
+ expect((await apiRequest(page,'/ops/property-drafts',{data:partial.data,step:1})).status()).toBe(400);
+ expect(partial.listing_id).toBeNull();expect(partial.data.unitId).toBe('');expect(partial.data.values.description).toBe('');
+ expect((await apiRequest(page,'/ops/property-drafts/'+partial.id,{version:partial.version-1||999,data:partial.data,step:0},'PATCH')).status()).toBe(409);
+ expect((await apiRequest(page,'/ops/property-drafts/'+partial.id+'/prepare',{version:partial.version})).status()).toBe(400);
+ const outsider=await browser.newContext(),other=await outsider.newPage();try{await login(other,'admin',origin,'/ops/listings');expect((await other.request.get(origin+'/api/v1/ops/property-drafts/'+partial.id)).status()).toBe(404);expect((await apiRequest(other,'/ops/property-drafts/'+partial.id,{version:partial.version,data:partial.data,step:0},'PATCH')).status()).toBe(404);}finally{await outsider.close();}
+ await dialog.getByRole('button',{name:'Save & exit',exact:true}).click();await expect(dialog).toHaveCount(0);await page.reload({waitUntil:'domcontentloaded'});
+ await page.locator('.draft-workbench .record-row').filter({hasText:title}).getByRole('button',{name:'Continue editing',exact:true}).click();
+ await expect(dialog.getByLabel('Property title',{exact:true})).toHaveValue(title);
+ await dialog.getByLabel('Existing property unit',{exact:true}).selectOption('10000000-0000-4000-8000-000000001000');
+ await dialog.getByRole('button',{name:'Continue',exact:true}).click();
+ await expect(dialog.getByRole('heading',{name:'Details & pricing',exact:true})).toBeFocused();
+ await dialog.getByRole('button',{name:'Continue',exact:true}).click();await expect(dialog.getByRole('alert')).toBeVisible();
+ await expect(dialog.getByLabel('Property description',{exact:true})).toBeFocused();
+ await expect(dialog.getByLabel('Asking price (decimal amount)',{exact:true})).toHaveAttribute('aria-invalid','true');
+ await dialog.getByLabel('Property description',{exact:true}).fill('A synthetic listing for the guided property authoring and durable draft workflow.');
+ await dialog.getByLabel('Asking price (decimal amount)',{exact:true}).fill('2450000.75');
+ await expect(dialog.getByRole('status').filter({hasText:/^Saved$/})).toBeVisible();
+ let rejected=false;await page.route('**/api/v1/ops/property-drafts/'+partial.id,async route=>{if(!rejected&&route.request().method()==='PATCH'){rejected=true;await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({error:{code:'TEMPORARY_UNAVAILABLE',message:'Temporary save failure. Try again.',requestId:'wizard-test'}})});}else await route.continue();});
+ await dialog.getByLabel('Features (separate with commas)',{exact:true}).fill('Balcony, Lift');
+ await expect(dialog.getByText('Temporary save failure. Try again.',{exact:true})).toBeVisible();
+ await dialog.getByRole('button',{name:'Retry save',exact:true}).click();await expect(dialog.getByRole('status').filter({hasText:/^Saved$/})).toBeVisible();await page.unroute('**/api/v1/ops/property-drafts/'+partial.id);
+ const axe=await new AxeBuilder({page}).include('dialog.property-wizard-dialog').analyze();expect(axe.violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);
+ await page.screenshot({path:'evidence/property-wizard/details-'+info.project.name+'.png',scale:'css'});
+ await dialog.getByRole('button',{name:'Continue',exact:true}).click();await expect(dialog.getByRole('heading',{name:'Photos & media',exact:true})).toBeVisible();
+ const prepared=(await checkpoints()).find((r:any)=>r.id===partial.id);expect(prepared.listing_id).toBeTruthy();
+ const listing=(await (await page.request.get(origin+'/api/v1/ops/listings/'+prepared.listing_id+'/draft')).json()).data;expect(listing.price).toBe('2450000.75');
+ expect((await apiRequest(page,'/ops/property-drafts/'+prepared.id+'/submit',{version:prepared.version})).status()).toBe(409);
+ await dialog.getByRole('button',{name:'Continue',exact:true}).click();await expect(dialog.getByRole('heading',{name:'Photos & media',exact:true})).toBeVisible();
+ await expect(dialog.getByRole('alert')).toContainText('Upload at least one property photo');await expect(dialog.getByRole('alert')).toContainText('Upload a floor plan');await expect(dialog.getByRole('alert')).toBeFocused();
+ await page.screenshot({path:'evidence/property-step-validation/media-'+info.project.name+'.png',scale:'css'});
+ for(const kind of ['photo','floor_plan']){
+  await dialog.getByLabel('Media type',{exact:true}).selectOption(kind);await dialog.getByLabel('Media title',{exact:true}).fill('Wizard '+kind);await dialog.getByLabel('Rights / source',{exact:true}).fill('Project authored synthetic test fixture');await dialog.getByLabel('Property media file',{exact:true}).setInputFiles('packages/test-support/assets/property-plan.png');await dialog.getByRole('checkbox',{name:'I have the rights and permission to publish this media.',exact:true}).check();
+  const uploaded=page.waitForResponse(r=>r.url().endsWith('/ops/listings/'+prepared.listing_id+'/media')&&r.request().method()==='POST');await dialog.getByRole('button',{name:'Upload and submit for review',exact:true}).click();expect((await uploaded).status()).toBe(201);await expect(dialog.getByRole('status').filter({hasText:'Upload prepared and submitted for moderation.'})).toBeVisible();
+  if(kind==='photo'){await dialog.getByRole('button',{name:'Continue',exact:true}).click();await expect(dialog.getByRole('alert')).toContainText('Upload a floor plan');await expect(dialog.getByRole('alert')).not.toContainText('Upload at least one property photo');}
+ }
+ await dialog.getByRole('button',{name:'Continue',exact:true}).click();await expect(dialog.getByRole('button',{name:'Submit for review',exact:true})).toBeEnabled();
+ await dialog.getByRole('button',{name:'Save & exit',exact:true}).click();await page.reload({waitUntil:'domcontentloaded'});await page.locator('.draft-workbench .record-row').filter({hasText:title}).getByRole('button',{name:'Continue editing',exact:true}).click();
+ await expect(dialog.getByRole('heading',{name:'Review & submit',exact:true})).toBeVisible();await expect(dialog.getByRole('button',{name:'Submit for review',exact:true})).toBeEnabled();
+ if(info.project.name==='mobile')await page.setViewportSize({width:320,height:740});
+ expect(await dialog.evaluate(el=>el.scrollWidth<=el.clientWidth)).toBe(true);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ const reviewAxe=await new AxeBuilder({page}).include('dialog.property-wizard-dialog').analyze();expect(reviewAxe.violations.filter(v=>v.impact==='serious'||v.impact==='critical')).toEqual([]);
+ await page.screenshot({path:'evidence/property-wizard/review-'+info.project.name+'.png',scale:'css'});
+ await dialog.getByRole('button',{name:'Submit for review',exact:true}).click();await expect(dialog).toHaveCount(0);await expect(page.getByRole('status').filter({hasText:'Property submitted for review'})).toBeVisible();
+ const submitted=(await (await page.request.get(origin+'/api/v1/ops/listings')).json()).data.find((r:any)=>r.id===prepared.listing_id);expect(submitted.status).toBe('submitted');expect(submitted.price).toBe('2450000.75');
+ expect((await apiRequest(page,'/ops/property-drafts/'+partial.id,{version:prepared.version,data:prepared.data,step:1},'PATCH')).status()).toBe(409);
+});
+
+test('all submission routes reject an incomplete price without publishing the draft',async({page})=>{
+ await login(page,'agent',origin,'/ops/listings');
+ const response=await apiRequest(page,'/ops/listings',{unitId:'10000000-0000-4000-8000-000000001000',title:'Incomplete pricing '+crypto.randomUUID(),description:'A private property draft with unfinished pricing must not be submitted.',transaction:'sale',segment:'residential',currency:'CNY',price:null,rentPeriod:null,furnishing:'Unfurnished',availableFrom:null,features:[]});expect(response.status()).toBe(201);
+ const listing=(await response.json()).data;const submit=await apiRequest(page,'/ops/listings/'+listing.id+'/transition',{status:'submitted',version:listing.version});expect(submit.status()).toBe(400);expect(await submit.text()).toContain('positive asking price');
+ const data={values:{title:listing.title,description:listing.description,transaction:'sale',segment:'residential',currency:'CNY',price:'',rentPeriod:'month',furnishing:'Unfurnished',availableFrom:'',features:''},unitId:listing.unit_id,newUnit:false,unit:{communityId:'',area:'',beds:'',livingRooms:'',baths:'',orientation:'',floor:'',privateAddress:''},commercial:{propertyType:'office',grossArea:'',usableArea:'',areaBasis:'',priceBasis:'',fitOut:'',floor:'',parkingSpaces:'',permittedUses:''},listingVersion:listing.version};
+ const started=await apiRequest(page,'/ops/property-drafts',{listingId:listing.id,data,step:1});expect(started.status()).toBe(201);const checkpoint=(await started.json()).data;
+ const ready=await apiRequest(page,'/ops/property-drafts/'+checkpoint.id+'/prepare',{version:checkpoint.version});expect(ready.status()).toBe(400);expect((await ready.json()).error.fieldErrors['values.price']).toBeTruthy();
+ const blocked=await apiRequest(page,'/ops/property-drafts/'+checkpoint.id+'/submit',{version:checkpoint.version});expect(blocked.status()).toBe(400);expect(await blocked.text()).toContain('positive asking price');
+ const unchanged=(await (await page.request.get(origin+'/api/v1/ops/listings/'+listing.id+'/draft')).json()).data;expect(unchanged.status).toBe('draft');expect(unchanged.version).toBe(listing.version);
+ const skipped=await apiRequest(page,'/ops/property-drafts/'+checkpoint.id,{version:checkpoint.version,data,step:3},'PATCH');expect(skipped.status()).toBe(400);expect((await skipped.json()).error.fieldErrors['values.price']).toBeTruthy();
+});
+
+test('new-unit and commercial steps validate their own fields and support keyboard continuation',async({page},info)=>{
+ test.setTimeout(180000);await login(page,'agent',origin,'/ops/listings');await page.getByRole('button',{name:'Create property draft',exact:true}).click();const dialog=page.locator('dialog.property-wizard-dialog');
+ await dialog.getByRole('button',{name:'New property unit',exact:true}).click();await dialog.getByLabel('Property segment',{exact:true}).selectOption('commercial');await dialog.getByLabel('Property title',{exact:true}).fill('Step validation '+crypto.randomUUID());await dialog.getByLabel('Floor',{exact:true}).fill('');
+ await dialog.getByRole('button',{name:'Continue',exact:true}).click();await expect(dialog.getByLabel('Community',{exact:true})).toBeFocused();
+ for(const field of ['Community','Area (m²)','Private unit address','Floor'])await expect(dialog.getByLabel(field,{exact:true})).toHaveAttribute('aria-invalid','true');
+ const community=await dialog.getByLabel('Community',{exact:true}).locator('option').nth(1).getAttribute('value');await dialog.getByLabel('Community',{exact:true}).selectOption(community!);
+ await dialog.getByLabel('Area (m²)',{exact:true}).fill('100.00');await dialog.getByLabel('Private unit address',{exact:true}).fill('Synthetic private office 204');await dialog.getByLabel('Floor',{exact:true}).fill('2');
+ await dialog.getByLabel('Property title',{exact:true}).press('Enter');await expect(dialog.getByRole('heading',{name:'Details & pricing',exact:true})).toBeVisible();
+ await dialog.getByRole('button',{name:/Photos & media/}).click();await expect(dialog.getByRole('heading',{name:'Details & pricing',exact:true})).toBeVisible();await expect(dialog.getByLabel('Property description',{exact:true})).toBeFocused();
+ for(const field of ['Gross area (m²)','Usable area (m²)','Fit-out','Permitted uses (separate with commas)'])await expect(dialog.getByLabel(field,{exact:true})).toHaveAttribute('aria-invalid','true');
+ await dialog.getByLabel('Property description',{exact:true}).fill('A synthetic office created to verify per-step validation.');await dialog.getByLabel('Asking price (decimal amount)',{exact:true}).fill('800000.75');
+ await dialog.getByLabel('Gross area (m²)',{exact:true}).fill('100.00');await dialog.getByLabel('Usable area (m²)',{exact:true}).fill('110.00');await dialog.getByLabel('Advertised area and per-area price basis',{exact:true}).selectOption('gross');await dialog.getByLabel('Commercial price basis',{exact:true}).selectOption('total');await dialog.getByLabel('Fit-out',{exact:true}).fill('Fitted');await dialog.getByLabel('Permitted uses (separate with commas)',{exact:true}).fill('Office');
+ await dialog.getByRole('button',{name:'Continue',exact:true}).click();await expect(dialog.getByLabel('Usable area (m²)',{exact:true})).toBeFocused();await expect(dialog.getByRole('alert')).toContainText('Usable area must not exceed gross area');
+ await page.screenshot({path:'evidence/property-step-validation/commercial-'+info.project.name+'.png',scale:'css'});
+ await dialog.getByLabel('Usable area (m²)',{exact:true}).fill('80.00');await dialog.getByRole('button',{name:'Continue',exact:true}).click();await expect(dialog.getByRole('heading',{name:'Photos & media',exact:true})).toBeVisible();
+ await dialog.getByRole('button',{name:'Save & exit',exact:true}).click();await expect(dialog).toHaveCount(0);
+});

@@ -1,0 +1,611 @@
+time="2026-10-13T19:55:00+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-9991107401c0 Creating 
+ Container haven-encode-run-9991107401c0 Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:02:36.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x799a8a281c40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x799a8a281c40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x799a8a281c40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-0.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A    frame=   24 fps= 24 q=20.0 size=     768KiB time=00:00:02.00 bitrate=3145.9kbits/s speed=   2x    frame=   36 fps= 24 q=20.0 size=    1280KiB time=00:00:03.00 bitrate=3495.4kbits/s speed=   2x    frame=   59 fps= 29 q=23.0 size=    2560KiB time=00:00:04.91 bitrate=4265.5kbits/s speed=2.46x    frame=   74 fps= 30 q=23.0 size=    3584KiB time=00:00:06.16 bitrate=4761.2kbits/s speed=2.47x    frame=   96 fps= 32 q=20.0 size=    4352KiB time=00:00:08.00 bitrate=4456.5kbits/s speed=2.67x    frame=  119 fps= 34 q=23.0 size=    5376KiB time=00:00:09.91 bitrate=4441.1kbits/s speed=2.83x    frame=  135 fps= 34 q=23.0 size=    6656KiB time=00:00:11.25 bitrate=4846.8kbits/s speed=2.81x    [mp4 @ 0x799a8a29bd80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x799a8a298580] video:6664KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.022202%
+frame=  144 fps= 35 q=-1.0 Lsize=    6665KiB time=00:00:12.00 bitrate=4550.1kbits/s speed=2.95x    
+[libx264 @ 0x799a8a281c40] frame I:12    Avg QP:10.89  size:564660
+[libx264 @ 0x799a8a281c40] frame P:132   Avg QP:14.50  size:   357
+[libx264 @ 0x799a8a281c40] mb I  I16..4:  5.3% 45.5% 49.2%
+[libx264 @ 0x799a8a281c40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.8%  0.0%  0.0%  0.0%  0.0%    skip:99.1%
+[libx264 @ 0x799a8a281c40] 8x8 transform intra:45.6% inter:75.2%
+[libx264 @ 0x799a8a281c40] coded y,uvDC,uvAC intra: 92.3% 77.8% 72.8% inter: 0.1% 0.6% 0.0%
+[libx264 @ 0x799a8a281c40] i16 v,h,dc,p: 11% 13% 46% 30%
+[libx264 @ 0x799a8a281c40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 13% 23% 22%  6%  6%  4%  9%  5% 12%
+[libx264 @ 0x799a8a281c40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 23% 26%  9%  6%  7%  5%  8%  5%  8%
+[libx264 @ 0x799a8a281c40] i8c dc,h,v,p: 56% 24% 16%  5%
+[libx264 @ 0x799a8a281c40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x799a8a281c40] ref P L0: 95.7%  0.1%  3.8%  0.5%
+[libx264 @ 0x799a8a281c40] kb/s:4548.70
+time="2026-10-13T19:55:05+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-1c365d4cbe91 Creating 
+ Container haven-encode-run-1c365d4cbe91 Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:02:24.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x7d4be68f2c40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x7d4be68f2c40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x7d4be68f2c40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-1.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    1 fps=0.0 q=23.0 size=       0KiB time=00:00:00.08 bitrate=   4.6kbits/s speed=0.167x    frame=   24 fps= 24 q=20.0 size=    1024KiB time=00:00:02.00 bitrate=4194.5kbits/s speed=   2x    frame=   41 fps= 27 q=23.0 size=    2048KiB time=00:00:03.41 bitrate=4910.5kbits/s speed=2.28x    frame=   60 fps= 30 q=20.0 size=    2560KiB time=00:00:05.00 bitrate=4194.4kbits/s speed= 2.5x    frame=   84 fps= 34 q=20.0 size=    3584KiB time=00:00:07.00 bitrate=4194.4kbits/s speed= 2.8x    frame=   96 fps= 32 q=20.0 size=    4096KiB time=00:00:08.00 bitrate=4194.4kbits/s speed=2.67x    frame=  120 fps= 34 q=20.0 size=    5376KiB time=00:00:10.00 bitrate=4404.1kbits/s speed=2.86x    frame=  136 fps= 34 q=23.0 size=    6656KiB time=00:00:11.33 bitrate=4811.1kbits/s speed=2.83x    [mp4 @ 0x7d4be690cd80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x7d4be6909580] video:6857KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.021749%
+frame=  144 fps= 35 q=-1.0 Lsize=    6858KiB time=00:00:12.00 bitrate=4681.8kbits/s speed=2.96x    
+[libx264 @ 0x7d4be68f2c40] frame I:12    Avg QP:10.87  size:581693
+[libx264 @ 0x7d4be68f2c40] frame P:132   Avg QP:15.18  size:   304
+[libx264 @ 0x7d4be68f2c40] mb I  I16..4:  6.2% 48.2% 45.6%
+[libx264 @ 0x7d4be68f2c40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.7%  0.0%  0.0%  0.0%  0.0%    skip:99.3%
+[libx264 @ 0x7d4be68f2c40] 8x8 transform intra:48.2% inter:76.9%
+[libx264 @ 0x7d4be68f2c40] coded y,uvDC,uvAC intra: 93.1% 71.0% 66.8% inter: 0.0% 0.5% 0.0%
+[libx264 @ 0x7d4be68f2c40] i16 v,h,dc,p: 16% 13% 41% 31%
+[libx264 @ 0x7d4be68f2c40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 25% 18% 18%  4%  4%  5% 10%  4% 11%
+[libx264 @ 0x7d4be68f2c40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 22% 22%  9%  5%  9%  7% 14%  5%  7%
+[libx264 @ 0x7d4be68f2c40] i8c dc,h,v,p: 61% 21% 15%  4%
+[libx264 @ 0x7d4be68f2c40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x7d4be68f2c40] ref P L0: 96.2%  0.0%  3.3%  0.5%
+[libx264 @ 0x7d4be68f2c40] kb/s:4680.33
+time="2026-10-13T19:55:10+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-810e9fe990b2 Creating 
+ Container haven-encode-run-810e9fe990b2 Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:02:12.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x74dc9e997c40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x74dc9e997c40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x74dc9e997c40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-2.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A    frame=   22 fps= 22 q=23.0 size=    1024KiB time=00:00:01.83 bitrate=4575.8kbits/s speed=1.83x    frame=   36 fps= 24 q=20.0 size=    1536KiB time=00:00:03.00 bitrate=4194.4kbits/s speed=   2x    frame=   60 fps= 30 q=20.0 size=    2816KiB time=00:00:05.00 bitrate=4613.8kbits/s speed= 2.5x    frame=   72 fps= 29 q=20.0 size=    3584KiB time=00:00:06.00 bitrate=4893.4kbits/s speed= 2.4x    frame=   91 fps= 30 q=23.0 size=    4864KiB time=00:00:07.58 bitrate=5254.5kbits/s speed=2.53x    frame=  108 fps= 31 q=20.0 size=    5376KiB time=00:00:09.00 bitrate=4893.4kbits/s speed=2.57x    frame=  132 fps= 33 q=20.0 size=    6400KiB time=00:00:11.00 bitrate=4766.3kbits/s speed=2.75x    [mp4 @ 0x74dc9e9b1d80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x74dc9e9ae580] video:7153KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.020575%
+frame=  144 fps= 34 q=-1.0 Lsize=    7154KiB time=00:00:12.00 bitrate=4883.8kbits/s speed=2.86x    
+[libx264 @ 0x74dc9e997c40] frame I:12    Avg QP:10.97  size:606860
+[libx264 @ 0x74dc9e997c40] frame P:132   Avg QP:14.71  size:   313
+[libx264 @ 0x74dc9e997c40] mb I  I16..4:  7.0% 44.4% 48.6%
+[libx264 @ 0x74dc9e997c40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.7%  0.0%  0.0%  0.0%  0.0%    skip:99.2%
+[libx264 @ 0x74dc9e997c40] 8x8 transform intra:44.4% inter:77.9%
+[libx264 @ 0x74dc9e997c40] coded y,uvDC,uvAC intra: 94.2% 76.1% 71.2% inter: 0.1% 0.5% 0.0%
+[libx264 @ 0x74dc9e997c40] i16 v,h,dc,p:  8%  9% 37% 46%
+[libx264 @ 0x74dc9e997c40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 13% 20% 19%  7%  6%  4% 10%  6% 14%
+[libx264 @ 0x74dc9e997c40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 19% 21% 10%  8%  9%  6% 11%  6% 10%
+[libx264 @ 0x74dc9e997c40] i8c dc,h,v,p: 60% 20% 16%  5%
+[libx264 @ 0x74dc9e997c40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x74dc9e997c40] ref P L0: 95.8%  0.0%  3.8%  0.4%
+[libx264 @ 0x74dc9e997c40] kb/s:4882.42
+time="2026-10-13T19:55:15+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-2c7c20fe6117 Creating 
+ Container haven-encode-run-2c7c20fe6117 Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:02:00.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x703bb596ec40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x703bb596ec40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x703bb596ec40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-3.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    3 fps=0.0 q=23.0 size=     256KiB time=00:00:00.25 bitrate=8390.1kbits/s speed= 0.5x    frame=   24 fps= 24 q=20.0 size=     768KiB time=00:00:02.00 bitrate=3145.9kbits/s speed=   2x    frame=   48 fps= 32 q=20.0 size=    1792KiB time=00:00:04.00 bitrate=3670.1kbits/s speed=2.67x    frame=   68 fps= 34 q=23.0 size=    2560KiB time=00:00:05.66 bitrate=3700.9kbits/s speed=2.83x    frame=   84 fps= 34 q=20.0 size=    3072KiB time=00:00:07.00 bitrate=3595.2kbits/s speed= 2.8x    frame=  108 fps= 36 q=20.0 size=    4096KiB time=00:00:09.00 bitrate=3728.3kbits/s speed=   3x    frame=  130 fps= 37 q=23.0 size=    5120KiB time=00:00:10.83 bitrate=3871.7kbits/s speed=3.09x    [mp4 @ 0x703bb5988d80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x703bb5985580] video:5688KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.026079%
+frame=  144 fps= 38 q=-1.0 Lsize=    5690KiB time=00:00:12.00 bitrate=3884.2kbits/s speed=3.17x    
+[libx264 @ 0x703bb596ec40] frame I:12    Avg QP:10.29  size:481443
+[libx264 @ 0x703bb596ec40] frame P:132   Avg QP:13.78  size:   354
+[libx264 @ 0x703bb596ec40] mb I  I16..4:  5.1% 49.7% 45.2%
+[libx264 @ 0x703bb596ec40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.8%  0.0%  0.0%  0.0%  0.0%    skip:99.1%
+[libx264 @ 0x703bb596ec40] 8x8 transform intra:49.7% inter:59.2%
+[libx264 @ 0x703bb596ec40] coded y,uvDC,uvAC intra: 84.7% 83.9% 80.4% inter: 0.0% 0.6% 0.0%
+[libx264 @ 0x703bb596ec40] i16 v,h,dc,p: 31% 16% 27% 26%
+[libx264 @ 0x703bb596ec40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 22% 20% 18%  6%  5%  5%  6%  5% 13%
+[libx264 @ 0x703bb596ec40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 34% 21%  9%  5%  5%  6%  6%  4% 10%
+[libx264 @ 0x703bb596ec40] i8c dc,h,v,p: 54% 18% 25%  4%
+[libx264 @ 0x703bb596ec40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x703bb596ec40] ref P L0: 96.5%  0.0%  2.9%  0.5%
+[libx264 @ 0x703bb596ec40] kb/s:3882.73
+time="2026-10-13T19:55:19+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-6cadd2ff57e0 Creating 
+ Container haven-encode-run-6cadd2ff57e0 Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:01:48.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x72daeb5c1c40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x72daeb5c1c40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x72daeb5c1c40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-4.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A    frame=   24 fps= 24 q=20.0 size=     768KiB time=00:00:02.00 bitrate=3145.9kbits/s speed=   2x    frame=   42 fps= 28 q=23.0 size=    1792KiB time=00:00:03.50 bitrate=4194.4kbits/s speed=2.33x    frame=   60 fps= 30 q=20.0 size=    2560KiB time=00:00:05.00 bitrate=4194.4kbits/s speed= 2.5x    frame=   81 fps= 32 q=23.0 size=    3328KiB time=00:00:06.75 bitrate=4039.0kbits/s speed= 2.7x    frame=   96 fps= 32 q=20.0 size=    3840KiB time=00:00:08.00 bitrate=3932.2kbits/s speed=2.67x    frame=  120 fps= 34 q=20.0 size=    4864KiB time=00:00:10.00 bitrate=3984.6kbits/s speed=2.86x    frame=  143 fps= 36 q=23.0 size=    5888KiB time=00:00:11.91 bitrate=4047.7kbits/s speed=2.98x    [mp4 @ 0x72daeb5dbd80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x72daeb5d8580] video:6021KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.024768%
+frame=  144 fps= 36 q=-1.0 Lsize=    6022KiB time=00:00:12.00 bitrate=4111.1kbits/s speed=   3x    
+[libx264 @ 0x72daeb5c1c40] frame I:12    Avg QP:10.57  size:510290
+[libx264 @ 0x72daeb5c1c40] frame P:132   Avg QP:14.35  size:   311
+[libx264 @ 0x72daeb5c1c40] mb I  I16..4:  5.3% 39.4% 55.3%
+[libx264 @ 0x72daeb5c1c40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.7%  0.0%  0.1%  0.0%  0.0%    skip:99.2%
+[libx264 @ 0x72daeb5c1c40] 8x8 transform intra:39.4% inter:71.6%
+[libx264 @ 0x72daeb5c1c40] coded y,uvDC,uvAC intra: 87.2% 82.7% 78.8% inter: 0.1% 0.5% 0.0%
+[libx264 @ 0x72daeb5c1c40] i16 v,h,dc,p: 22% 21% 32% 25%
+[libx264 @ 0x72daeb5c1c40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 17% 25% 19%  5%  5%  4%  8%  6% 10%
+[libx264 @ 0x72daeb5c1c40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 23% 24% 10%  6%  7%  5% 11%  5%  9%
+[libx264 @ 0x72daeb5c1c40] i8c dc,h,v,p: 56% 23% 16%  4%
+[libx264 @ 0x72daeb5c1c40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x72daeb5c1c40] ref P L0: 96.0%  0.1%  3.6%  0.4%
+[libx264 @ 0x72daeb5c1c40] kb/s:4109.69
+time="2026-10-13T19:55:24+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-78b3fefea6bd Creating 
+ Container haven-encode-run-78b3fefea6bd Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:01:36.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x78f89628cc40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x78f89628cc40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x78f89628cc40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-5.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    2 fps=0.0 q=23.0 size=     256KiB time=00:00:00.16 bitrate=12585.2kbits/s speed=0.333x    frame=   24 fps= 24 q=20.0 size=     768KiB time=00:00:02.00 bitrate=3145.9kbits/s speed=   2x    frame=   37 fps= 25 q=23.0 size=    1280KiB time=00:00:03.08 bitrate=3400.9kbits/s speed=2.06x    frame=   60 fps= 30 q=20.0 size=    2560KiB time=00:00:05.00 bitrate=4194.4kbits/s speed= 2.5x    frame=   72 fps= 29 q=20.0 size=    3072KiB time=00:00:06.00 bitrate=4194.4kbits/s speed= 2.4x    frame=   96 fps= 32 q=20.0 size=    4352KiB time=00:00:08.00 bitrate=4456.5kbits/s speed=2.67x    frame=  108 fps= 31 q=20.0 size=    4864KiB time=00:00:09.00 bitrate=4427.4kbits/s speed=2.57x    frame=  120 fps= 30 q=20.0 size=    5632KiB time=00:00:10.00 bitrate=4613.8kbits/s speed= 2.5x    frame=  139 fps= 31 q=23.0 size=    6656KiB time=00:00:11.58 bitrate=4707.3kbits/s speed=2.57x    [mp4 @ 0x78f8962a6d80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x78f8962a3580] video:6894KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.021460%
+frame=  144 fps= 32 q=-1.0 Lsize=    6896KiB time=00:00:12.00 bitrate=4707.4kbits/s speed=2.63x    
+[libx264 @ 0x78f89628cc40] frame I:12    Avg QP:11.02  size:584152
+[libx264 @ 0x78f89628cc40] frame P:132   Avg QP:15.18  size:   372
+[libx264 @ 0x78f89628cc40] mb I  I16..4:  5.2% 44.6% 50.2%
+[libx264 @ 0x78f89628cc40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.9%  0.0%  0.0%  0.0%  0.0%    skip:99.0%
+[libx264 @ 0x78f89628cc40] 8x8 transform intra:44.6% inter:61.3%
+[libx264 @ 0x78f89628cc40] coded y,uvDC,uvAC intra: 90.9% 83.0% 79.4% inter: 0.1% 0.7% 0.0%
+[libx264 @ 0x78f89628cc40] i16 v,h,dc,p:  9% 21% 40% 30%
+[libx264 @ 0x78f89628cc40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 13% 26% 20%  6%  7%  5%  8%  5% 10%
+[libx264 @ 0x78f89628cc40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 19% 26% 10%  6%  9%  6% 11%  5%  9%
+[libx264 @ 0x78f89628cc40] i8c dc,h,v,p: 56% 24% 16%  4%
+[libx264 @ 0x78f89628cc40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x78f89628cc40] ref P L0: 95.3%  0.0%  4.0%  0.7%
+[libx264 @ 0x78f89628cc40] kb/s:4705.94
+time="2026-10-13T19:55:30+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-161a37afbcac Creating 
+ Container haven-encode-run-161a37afbcac Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:01:24.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x79977a41dc40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x79977a41dc40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x79977a41dc40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-6.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A    frame=   12 fps= 12 q=20.0 size=     256KiB time=00:00:01.00 bitrate=2097.5kbits/s speed=   1x    frame=   24 fps= 16 q=20.0 size=     768KiB time=00:00:02.00 bitrate=3145.9kbits/s speed=1.33x    frame=   38 fps= 19 q=23.0 size=    1792KiB time=00:00:03.16 bitrate=4635.9kbits/s speed=1.58x    frame=   52 fps= 21 q=23.0 size=    2304KiB time=00:00:04.33 bitrate=4355.7kbits/s speed=1.73x    frame=   71 fps= 24 q=23.0 size=    3072KiB time=00:00:05.91 bitrate=4253.4kbits/s speed=1.97x    frame=   84 fps= 24 q=20.0 size=    3584KiB time=00:00:07.00 bitrate=4194.4kbits/s speed=   2x    frame=  106 fps= 26 q=23.0 size=    4608KiB time=00:00:08.83 bitrate=4273.5kbits/s speed=2.21x    frame=  120 fps= 27 q=20.0 size=    5120KiB time=00:00:10.00 bitrate=4194.3kbits/s speed=2.22x    [mp4 @ 0x79977a437d80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x79977a434580] video:6509KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.022731%
+frame=  144 fps= 29 q=-1.0 Lsize=    6510KiB time=00:00:12.00 bitrate=4444.3kbits/s speed= 2.4x    
+[libx264 @ 0x79977a41dc40] frame I:12    Avg QP:11.05  size:551241
+[libx264 @ 0x79977a41dc40] frame P:132   Avg QP:13.92  size:   374
+[libx264 @ 0x79977a41dc40] mb I  I16..4:  4.7% 46.8% 48.5%
+[libx264 @ 0x79977a41dc40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.9%  0.0%  0.0%  0.0%  0.0%    skip:99.1%
+[libx264 @ 0x79977a41dc40] 8x8 transform intra:46.9% inter:79.0%
+[libx264 @ 0x79977a41dc40] coded y,uvDC,uvAC intra: 92.3% 82.2% 77.7% inter: 0.1% 0.7% 0.0%
+[libx264 @ 0x79977a41dc40] i16 v,h,dc,p: 13%  7% 20% 60%
+[libx264 @ 0x79977a41dc40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 13% 29% 16%  5%  5%  3%  8%  4% 16%
+[libx264 @ 0x79977a41dc40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 20% 27%  9%  4%  9%  4% 13%  3% 12%
+[libx264 @ 0x79977a41dc40] i8c dc,h,v,p: 55% 25% 15%  5%
+[libx264 @ 0x79977a41dc40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x79977a41dc40] ref P L0: 96.9%  0.0%  2.7%  0.3%
+[libx264 @ 0x79977a41dc40] kb/s:4442.88
+time="2026-10-13T19:55:36+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-391c9234d164 Creating 
+ Container haven-encode-run-391c9234d164 Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:01:12.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x78b9c3532c40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x78b9c3532c40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x78b9c3532c40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-7.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A    frame=   24 fps= 24 q=20.0 size=     768KiB time=00:00:02.00 bitrate=3145.9kbits/s speed=   2x    frame=   38 fps= 25 q=23.0 size=    2048KiB time=00:00:03.16 bitrate=5298.2kbits/s speed=2.11x    frame=   60 fps= 30 q=20.0 size=    2560KiB time=00:00:05.00 bitrate=4194.4kbits/s speed= 2.5x    frame=   84 fps= 34 q=20.0 size=    3584KiB time=00:00:07.00 bitrate=4194.4kbits/s speed= 2.8x    frame=   98 fps= 33 q=23.0 size=    4608KiB time=00:00:08.16 bitrate=4622.3kbits/s speed=2.72x    frame=  120 fps= 34 q=20.0 size=    5120KiB time=00:00:10.00 bitrate=4194.3kbits/s speed=2.86x    frame=  140 fps= 35 q=23.0 size=    6400KiB time=00:00:11.66 bitrate=4493.9kbits/s speed=2.92x    [mp4 @ 0x78b9c354cd80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x78b9c3549580] video:6518KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.023000%
+frame=  144 fps= 36 q=-1.0 Lsize=    6519KiB time=00:00:12.00 bitrate=4450.3kbits/s speed=2.98x    
+[libx264 @ 0x78b9c3532c40] frame I:12    Avg QP:10.81  size:552099
+[libx264 @ 0x78b9c3532c40] frame P:132   Avg QP:14.16  size:   365
+[libx264 @ 0x78b9c3532c40] mb I  I16..4:  5.7% 39.5% 54.9%
+[libx264 @ 0x78b9c3532c40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.8%  0.0%  0.0%  0.0%  0.0%    skip:99.1%
+[libx264 @ 0x78b9c3532c40] 8x8 transform intra:39.5% inter:79.5%
+[libx264 @ 0x78b9c3532c40] coded y,uvDC,uvAC intra: 92.6% 82.8% 78.4% inter: 0.1% 0.6% 0.0%
+[libx264 @ 0x78b9c3532c40] i16 v,h,dc,p: 11%  6% 27% 56%
+[libx264 @ 0x78b9c3532c40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 15% 30% 19%  4%  3%  3%  9%  4% 12%
+[libx264 @ 0x78b9c3532c40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 21% 26%  9%  5%  7%  5% 14%  4%  8%
+[libx264 @ 0x78b9c3532c40] i8c dc,h,v,p: 57% 24% 15%  5%
+[libx264 @ 0x78b9c3532c40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x78b9c3532c40] ref P L0: 96.4%  0.1%  3.1%  0.4%
+[libx264 @ 0x78b9c3532c40] kb/s:4448.87
+time="2026-10-13T19:55:41+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-e9f6e83a2816 Creating 
+ Container haven-encode-run-e9f6e83a2816 Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:01:00.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x7b2f71fa1c40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x7b2f71fa1c40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x7b2f71fa1c40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-8.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    4 fps=0.0 q=23.0 size=     256KiB time=00:00:00.33 bitrate=6292.6kbits/s speed=0.667x    frame=   24 fps= 24 q=20.0 size=     512KiB time=00:00:02.00 bitrate=2097.3kbits/s speed=   2x    frame=   48 fps= 32 q=20.0 size=    1536KiB time=00:00:04.00 bitrate=3145.8kbits/s speed=2.67x    frame=   62 fps= 31 q=23.0 size=    2560KiB time=00:00:05.16 bitrate=4059.1kbits/s speed=2.58x    frame=   84 fps= 34 q=20.0 size=    3072KiB time=00:00:07.00 bitrate=3595.2kbits/s speed= 2.8x    frame=  103 fps= 34 q=23.0 size=    3840KiB time=00:00:08.58 bitrate=3665.0kbits/s speed=2.86x    frame=  120 fps= 34 q=20.0 size=    4352KiB time=00:00:10.00 bitrate=3565.2kbits/s speed=2.86x    [mp4 @ 0x7b2f71fbbd80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x7b2f71fb8580] video:5328KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.027184%
+frame=  144 fps= 37 q=-1.0 Lsize=    5329KiB time=00:00:12.00 bitrate=3637.9kbits/s speed=3.08x    
+[libx264 @ 0x7b2f71fa1c40] frame I:12    Avg QP:10.49  size:450956
+[libx264 @ 0x7b2f71fa1c40] frame P:132   Avg QP:14.65  size:   328
+[libx264 @ 0x7b2f71fa1c40] mb I  I16..4:  4.7% 54.2% 41.0%
+[libx264 @ 0x7b2f71fa1c40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.7%  0.1%  0.1%  0.0%  0.0%    skip:99.1%
+[libx264 @ 0x7b2f71fa1c40] 8x8 transform intra:54.2% inter:66.8%
+[libx264 @ 0x7b2f71fa1c40] coded y,uvDC,uvAC intra: 85.7% 84.0% 80.8% inter: 0.0% 0.6% 0.0%
+[libx264 @ 0x7b2f71fa1c40] i16 v,h,dc,p: 29% 35% 14% 23%
+[libx264 @ 0x7b2f71fa1c40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 24% 31% 13%  5%  5%  4%  5%  5%  7%
+[libx264 @ 0x7b2f71fa1c40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 34% 28%  7%  4%  6%  5%  6%  4%  6%
+[libx264 @ 0x7b2f71fa1c40] i8c dc,h,v,p: 49% 23% 24%  4%
+[libx264 @ 0x7b2f71fa1c40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x7b2f71fa1c40] ref P L0: 97.4%  0.0%  2.4%  0.2%
+[libx264 @ 0x7b2f71fa1c40] kb/s:3636.54
+time="2026-10-13T19:55:46+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-51ba56213d0e Creating 
+ Container haven-encode-run-51ba56213d0e Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:00:48.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x72e3b0bd5c40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x72e3b0bd5c40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x72e3b0bd5c40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-9.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A    frame=   23 fps= 23 q=23.0 size=     768KiB time=00:00:01.91 bitrate=3282.7kbits/s speed=1.92x    frame=   36 fps= 24 q=20.0 size=    1280KiB time=00:00:03.00 bitrate=3495.4kbits/s speed=   2x    frame=   60 fps= 30 q=20.0 size=    2560KiB time=00:00:05.00 bitrate=4194.4kbits/s speed= 2.5x    frame=   80 fps= 32 q=23.0 size=    3584KiB time=00:00:06.66 bitrate=4404.1kbits/s speed=2.67x    frame=   98 fps= 33 q=23.0 size=    4608KiB time=00:00:08.16 bitrate=4622.3kbits/s speed=2.72x    frame=  120 fps= 34 q=20.0 size=    5120KiB time=00:00:10.00 bitrate=4194.3kbits/s speed=2.86x    [mp4 @ 0x72e3b0befd80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x72e3b0bec580] video:6406KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.023584%
+frame=  144 fps= 36 q=-1.0 Lsize=    6407KiB time=00:00:12.00 bitrate=4374.0kbits/s speed=3.01x    
+[libx264 @ 0x72e3b0bd5c40] frame I:12    Avg QP:10.66  size:542765
+[libx264 @ 0x72e3b0bd5c40] frame P:132   Avg QP:14.37  size:   345
+[libx264 @ 0x72e3b0bd5c40] mb I  I16..4:  6.2% 39.0% 54.8%
+[libx264 @ 0x72e3b0bd5c40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.8%  0.0%  0.1%  0.0%  0.0%    skip:99.1%
+[libx264 @ 0x72e3b0bd5c40] 8x8 transform intra:39.0% inter:71.9%
+[libx264 @ 0x72e3b0bd5c40] coded y,uvDC,uvAC intra: 88.4% 82.6% 77.7% inter: 0.1% 0.7% 0.0%
+[libx264 @ 0x72e3b0bd5c40] i16 v,h,dc,p: 14% 20% 41% 24%
+[libx264 @ 0x72e3b0bd5c40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 17% 22% 21%  6%  5%  4%  9%  6% 10%
+[libx264 @ 0x72e3b0bd5c40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 23% 23% 12%  7%  8%  5% 10%  5%  8%
+[libx264 @ 0x72e3b0bd5c40] i8c dc,h,v,p: 57% 22% 16%  5%
+[libx264 @ 0x72e3b0bd5c40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x72e3b0bd5c40] ref P L0: 95.2%  0.0%  4.2%  0.5%
+[libx264 @ 0x72e3b0bd5c40] kb/s:4372.52
+time="2026-10-13T19:55:51+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-e1ebabddabae Creating 
+ Container haven-encode-run-e1ebabddabae Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:00:36.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x734c10fdac40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x734c10fdac40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x734c10fdac40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-10.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    2 fps=0.0 q=23.0 size=     256KiB time=00:00:00.16 bitrate=12585.2kbits/s speed=0.333x    frame=   24 fps= 24 q=20.0 size=     768KiB time=00:00:02.00 bitrate=3145.9kbits/s speed=   2x    frame=   40 fps= 27 q=23.0 size=    2048KiB time=00:00:03.33 bitrate=5033.3kbits/s speed=2.22x    frame=   60 fps= 30 q=20.0 size=    2560KiB time=00:00:05.00 bitrate=4194.4kbits/s speed= 2.5x    frame=   74 fps= 30 q=23.0 size=    3840KiB time=00:00:06.16 bitrate=5101.2kbits/s speed=2.47x    frame=   96 fps= 32 q=20.0 size=    4352KiB time=00:00:08.00 bitrate=4456.5kbits/s speed=2.67x    frame=  108 fps= 31 q=20.0 size=    5120KiB time=00:00:09.00 bitrate=4660.4kbits/s speed=2.57x    frame=  128 fps= 32 q=23.0 size=    6400KiB time=00:00:10.66 bitrate=4915.2kbits/s speed=2.67x    [mp4 @ 0x734c10ff4d80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x734c10ff1580] video:7102KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.020831%
+frame=  144 fps= 33 q=-1.0 Lsize=    7104KiB time=00:00:12.00 bitrate=4849.6kbits/s speed=2.75x    
+[libx264 @ 0x734c10fdac40] frame I:12    Avg QP:11.05  size:601522
+[libx264 @ 0x734c10fdac40] frame P:132   Avg QP:15.07  size:   410
+[libx264 @ 0x734c10fdac40] mb I  I16..4:  5.1% 44.8% 50.1%
+[libx264 @ 0x734c10fdac40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  1.1%  0.0%  0.0%  0.0%  0.0%    skip:98.8%
+[libx264 @ 0x734c10fdac40] 8x8 transform intra:44.8% inter:65.3%
+[libx264 @ 0x734c10fdac40] coded y,uvDC,uvAC intra: 90.5% 83.7% 79.5% inter: 0.1% 0.9% 0.0%
+[libx264 @ 0x734c10fdac40] i16 v,h,dc,p: 12% 20% 38% 30%
+[libx264 @ 0x734c10fdac40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 13% 25% 20%  6%  7%  5%  8%  5% 10%
+[libx264 @ 0x734c10fdac40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 20% 26%  9%  6%  9%  6% 11%  5%  9%
+[libx264 @ 0x734c10fdac40] i8c dc,h,v,p: 56% 23% 16%  5%
+[libx264 @ 0x734c10fdac40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x734c10fdac40] ref P L0: 94.9%  0.0%  4.4%  0.7%
+[libx264 @ 0x734c10fdac40] kb/s:4848.21
+time="2026-10-13T19:55:56+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-f981d8e437d5 Creating 
+ Container haven-encode-run-f981d8e437d5 Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:00:24.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x7d641bf3ac40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x7d641bf3ac40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x7d641bf3ac40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-11.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    3 fps=0.0 q=23.0 size=     256KiB time=00:00:00.25 bitrate=8390.1kbits/s speed= 0.5x    frame=   24 fps= 24 q=20.0 size=     768KiB time=00:00:02.00 bitrate=3145.9kbits/s speed=   2x    frame=   41 fps= 27 q=23.0 size=    2048KiB time=00:00:03.41 bitrate=4910.5kbits/s speed=2.28x    frame=   60 fps= 30 q=20.0 size=    2560KiB time=00:00:05.00 bitrate=4194.4kbits/s speed= 2.5x    frame=   81 fps= 32 q=23.0 size=    3840KiB time=00:00:06.75 bitrate=4660.4kbits/s speed= 2.7x    frame=   96 fps= 32 q=20.0 size=    4608KiB time=00:00:08.00 bitrate=4718.6kbits/s speed=2.67x    frame=  115 fps= 33 q=23.0 size=    5888KiB time=00:00:09.58 bitrate=5033.2kbits/s speed=2.74x    frame=  132 fps= 33 q=20.0 size=    6400KiB time=00:00:11.00 bitrate=4766.3kbits/s speed=2.75x    [mp4 @ 0x7d641bf54d80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x7d641bf51580] video:7210KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.020519%
+frame=  144 fps= 33 q=-1.0 Lsize=    7212KiB time=00:00:12.00 bitrate=4923.2kbits/s speed=2.77x    
+[libx264 @ 0x7d641bf3ac40] frame I:12    Avg QP:10.86  size:610974
+[libx264 @ 0x7d641bf3ac40] frame P:132   Avg QP:14.22  size:   386
+[libx264 @ 0x7d641bf3ac40] mb I  I16..4:  4.7% 44.4% 50.9%
+[libx264 @ 0x7d641bf3ac40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  1.0%  0.0%  0.0%  0.0%  0.0%    skip:98.9%
+[libx264 @ 0x7d641bf3ac40] 8x8 transform intra:44.4% inter:76.4%
+[libx264 @ 0x7d641bf3ac40] coded y,uvDC,uvAC intra: 94.4% 81.9% 77.6% inter: 0.1% 0.9% 0.0%
+[libx264 @ 0x7d641bf3ac40] i16 v,h,dc,p:  7%  5% 41% 47%
+[libx264 @ 0x7d641bf3ac40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 11% 19% 17%  5%  7%  5% 20%  4% 13%
+[libx264 @ 0x7d641bf3ac40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 16% 17%  9%  4% 10%  5% 28%  3%  8%
+[libx264 @ 0x7d641bf3ac40] i8c dc,h,v,p: 61% 20% 16%  4%
+[libx264 @ 0x7d641bf3ac40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x7d641bf3ac40] ref P L0: 96.6%  0.0%  3.1%  0.3%
+[libx264 @ 0x7d641bf3ac40] kb/s:4921.77
+time="2026-10-13T19:56:01+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-gpu-1 haven-api-1 haven-processing-gpu-volume-init-1 haven-web-1 haven-ops-1 haven-worker-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-encode-run-e740e7d4ead9 Creating 
+ Container haven-encode-run-e740e7d4ead9 Created 
+ffmpeg version 7.1.1 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 13.2.1 (Alpine 13.2.1_git20240309) 20240309
+  configuration: --pkg-config-flags=--static --extra-cflags=-fopenmp --extra-ldflags='-fopenmp -Wl,--allow-multiple-definition -Wl,-z,stack-size=2097152' --toolchain=hardened --disable-debug --disable-shared --disable-ffplay --enable-static --enable-gpl --enable-version3 --enable-fontconfig --enable-gray --enable-iconv --enable-lcms2 --enable-libaom --enable-libaribb24 --enable-libass --enable-libbluray --enable-libdav1d --enable-libdavs2 --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libjxl --enable-libkvazaar --enable-libmodplug --enable-libmp3lame --enable-libmysofa --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-libopus --enable-librabbitmq --enable-librav1e --enable-librsvg --enable-librtmp --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libtheora --enable-libtwolame --enable-libuavs3d --enable-libvidstab --enable-libvmaf --enable-libvo-amrwbenc --enable-libvorbis --enable-libvpl --enable-libvpx --enable-libvvenc --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxavs2 --enable-libxevd --enable-libxeve --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-openssl
+  libavutil      59. 39.100 / 59. 39.100
+  libavcodec     61. 19.101 / 61. 19.101
+  libavformat    61.  7.100 / 61.  7.100
+  libavdevice    61.  3.100 / 61.  3.100
+  libavfilter    10.  4.100 / 10.  4.100
+  libswscale      8.  3.100 /  8.  3.100
+  libswresample   5.  3.100 /  5.  3.100
+  libpostproc    58.  3.100 / 58.  3.100
+Input #0, image2, from '/assets/frame%03d.png':
+  Duration: 00:00:12.00, start: 0.000000, bitrate: N/A
+  Stream #0:0: Video: png, rgba(pc, gbr/unknown/unknown), 1920x1440, 1 fps, 1 tbr, 1 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (png (native) -> h264 (libx264))
+Press [q] to stop, [?] for help
+[libx264 @ 0x79b7a8e1cc40] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2
+[libx264 @ 0x79b7a8e1cc40] profile High, level 5.0, 4:2:0, 8-bit
+[libx264 @ 0x79b7a8e1cc40] 264 - core 164 r3108 31e19f9 - H.264/MPEG-4 AVC codec - Copyleft 2003-2023 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=2 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=0 weightp=2 keyint=12 keyint_min=1 scenecut=40 intra_refresh=0 rc_lookahead=12 rc=crf mbtree=1 crf=20.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/assets/part-12.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, progressive), 1920x1440, q=2-31, 12 fps, 12288 tbn
+      Metadata:
+        encoder         : Lavc61.19.101 libx264
+      Side data:
+        cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+frame=    7 fps=0.0 q=23.0 size=       0KiB time=00:00:00.58 bitrate=   0.7kbits/s speed=1.17x    frame=   26 fps= 26 q=23.0 size=     768KiB time=00:00:02.16 bitrate=2903.9kbits/s speed=2.17x    frame=   49 fps= 33 q=23.0 size=    1280KiB time=00:00:04.08 bitrate=2568.0kbits/s speed=2.72x    frame=   72 fps= 36 q=20.0 size=    2048KiB time=00:00:06.00 bitrate=2796.3kbits/s speed=   3x    frame=   96 fps= 38 q=20.0 size=    2560KiB time=00:00:08.00 bitrate=2621.5kbits/s speed= 3.2x    frame=  120 fps= 40 q=20.0 size=    3328KiB time=00:00:10.00 bitrate=2726.3kbits/s speed=3.33x    [mp4 @ 0x79b7a8e36d80] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x79b7a8e33580] video:4377KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.033625%
+frame=  144 fps= 43 q=-1.0 Lsize=    4378KiB time=00:00:12.00 bitrate=2988.9kbits/s speed=3.56x    
+[libx264 @ 0x79b7a8e1cc40] frame I:12    Avg QP: 9.12  size:370544
+[libx264 @ 0x79b7a8e1cc40] frame P:132   Avg QP:13.57  size:   263
+[libx264 @ 0x79b7a8e1cc40] mb I  I16..4:  7.8% 44.3% 47.9%
+[libx264 @ 0x79b7a8e1cc40] mb P  I16..4:  0.0%  0.0%  0.0%  P16..4:  0.5%  0.0%  0.0%  0.0%  0.0%    skip:99.4%
+[libx264 @ 0x79b7a8e1cc40] 8x8 transform intra:44.3% inter:68.0%
+[libx264 @ 0x79b7a8e1cc40] coded y,uvDC,uvAC intra: 75.4% 71.3% 67.0% inter: 0.0% 0.4% 0.0%
+[libx264 @ 0x79b7a8e1cc40] i16 v,h,dc,p: 51% 15% 29%  6%
+[libx264 @ 0x79b7a8e1cc40] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 26% 24% 24%  5%  4%  3%  4%  6%  4%
+[libx264 @ 0x79b7a8e1cc40] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 33% 26%  9%  5%  7%  5%  5%  7%  4%
+[libx264 @ 0x79b7a8e1cc40] i8c dc,h,v,p: 64% 17% 16%  3%
+[libx264 @ 0x79b7a8e1cc40] Weighted P-Frames: Y:0.0% UV:0.0%
+[libx264 @ 0x79b7a8e1cc40] ref P L0: 97.6%  0.0%  2.2%  0.2%
+[libx264 @ 0x79b7a8e1cc40] kb/s:2987.46

@@ -1,0 +1,1105 @@
+ Image haven-processing-tests-cpu Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 608B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.cpu
+#2 transferring dockerfile: 3.72kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 192B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 6.79kB done
+#5 DONE 0.1s
+
+#6 [media-build  1/10] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#6 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#6 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.1s done
+#6 DONE 0.1s
+
+#7 [media-build  2/10] COPY services/property-processing/locks/media-build-apt.json /tmp/media-build-apt.json
+#7 CACHED
+
+#8 [media-build  3/10] RUN python -c "import json,subprocess; p=json.load(open('/tmp/media-build-apt.json'))['packages']; subprocess.run(['apt-get','update'],check=True); subprocess.run(['apt-get','install','-y','--no-install-recommends',*[name+'='+version for name,version in p.items()]],check=True)" && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [media-build  4/10] WORKDIR /build
+#9 CACHED
+
+#10 [media-build  5/10] COPY services/property-processing/media-build.json /build/profile.json
+#10 DONE 0.1s
+
+#11 [media-build  6/10] RUN --mount=type=bind,source=services/property-processing/.media-sources,target=/sources,readonly python -c "import hashlib,json,pathlib,tarfile; p=json.load(open('/build/profile.json')); f=pathlib.Path('/sources/ffmpeg-7.1.5.tar.xz'); assert hashlib.sha256(f.read_bytes()).hexdigest()==p['sourceSha256']; tarfile.open(f).extractall('/build',filter='data')"
+#11 DONE 4.4s
+
+#12 [media-build  7/10] WORKDIR /build/ffmpeg-7.1.5
+#12 DONE 0.2s
+
+#13 [media-build  8/10] RUN python -c "import json,subprocess; p=json.load(open('/build/profile.json')); subprocess.run(['./configure','--prefix=/opt/media',*p['flags']],check=True)" && make -j2 && make install
+#13 8.493 install prefix            /opt/media
+#13 8.493 source path               .
+#13 8.493 C compiler                gcc
+#13 8.493 C library                 glibc
+#13 8.493 ARCH                      x86 (generic)
+#13 8.493 big-endian                no
+#13 8.493 runtime cpu detection     yes
+#13 8.493 standalone assembly       no
+#13 8.493 x86 assembler             nasm
+#13 8.493 MMX enabled               yes
+#13 8.493 MMXEXT enabled            yes
+#13 8.493 3DNow! enabled            yes
+#13 8.493 3DNow! extended enabled   yes
+#13 8.493 SSE enabled               yes
+#13 8.493 SSSE3 enabled             yes
+#13 8.493 AESNI enabled             yes
+#13 8.493 AVX enabled               yes
+#13 8.493 AVX2 enabled              yes
+#13 8.493 AVX-512 enabled           yes
+#13 8.493 AVX-512ICL enabled        yes
+#13 8.493 XOP enabled               yes
+#13 8.493 FMA3 enabled              yes
+#13 8.493 FMA4 enabled              yes
+#13 8.493 i686 features enabled     yes
+#13 8.493 CMOV is fast              yes
+#13 8.493 EBX available             yes
+#13 8.493 EBP available             yes
+#13 8.493 debug symbols             no
+#13 8.493 strip symbols             yes
+#13 8.493 optimize for size         no
+#13 8.493 optimizations             yes
+#13 8.493 static                    yes
+#13 8.493 shared                    no
+#13 8.493 postprocessing support    no
+#13 8.493 network support           no
+#13 8.493 threading support         pthreads
+#13 8.493 safe bitstream reader     yes
+#13 8.493 texi2html enabled         no
+#13 8.493 perl enabled              yes
+#13 8.493 pod2man enabled           no
+#13 8.493 makeinfo enabled          no
+#13 8.493 makeinfo supports HTML    no
+#13 8.493 xmllint enabled           no
+#13 8.493 
+#13 8.493 External libraries:
+#13 8.496 iconv                   zlib
+#13 8.496 
+#13 8.496 External libraries providing hardware acceleration:
+#13 8.498 
+#13 8.498 Libraries:
+#13 8.500 avcodec                 avformat                swresample
+#13 8.500 avfilter                avutil                  swscale
+#13 8.500 
+#13 8.500 Programs:
+#13 8.502 ffmpeg                  ffprobe
+#13 8.502 
+#13 8.502 Enabled decoders:
+#13 8.508 h264                    mjpeg                   vp8
+#13 8.508 hevc                    png                     vp9
+#13 8.509 
+#13 8.509 Enabled encoders:
+#13 8.512 png
+#13 8.513 
+#13 8.513 Enabled hwaccels:
+#13 8.516 
+#13 8.516 Enabled parsers:
+#13 8.520 h264                    mjpeg                   vp8
+#13 8.520 hevc                    png                     vp9
+#13 8.520 
+#13 8.520 Enabled demuxers:
+#13 8.525 image2                  matroska                mov
+#13 8.525 
+#13 8.525 Enabled muxers:
+#13 8.528 image2
+#13 8.529 
+#13 8.529 Enabled protocols:
+#13 8.532 file                    pipe
+#13 8.532 
+#13 8.532 Enabled filters:
+#13 8.539 aformat                 hflip                   showinfo
+#13 8.539 anull                   null                    transpose
+#13 8.539 atrim                   rotate                  trim
+#13 8.539 crop                    scale                   vflip
+#13 8.539 format                  select
+#13 8.539 
+#13 8.539 Enabled bsfs:
+#13 8.542 vp9_superframe_split
+#13 8.542 
+#13 8.542 Enabled indevs:
+#13 8.545 
+#13 8.545 Enabled outdevs:
+#13 8.548 
+#13 8.548 License: LGPL version 2.1 or later
+#13 8.548 
+#13 8.548 WARNING: pkg-config not found, library detection may fail.
+#13 8.765 GEN	libavfilter/libavfilter.version
+#13 8.766 GEN	libavformat/libavformat.version
+#13 8.770 GEN	libavcodec/libavcodec.version
+#13 8.771 GEN	libswresample/libswresample.version
+#13 8.775 GEN	libswscale/libswscale.version
+#13 8.776 GEN	libavutil/libavutil.version
+#13 8.862 CC	libavfilter/af_aformat.o
+#13 8.863 CC	libavfilter/af_anull.o
+#13 8.896 CC	libavfilter/allfilters.o
+#13 8.915 CC	libavfilter/audio.o
+#13 8.941 CC	libavfilter/avfilter.o
+#13 8.977 CC	libavfilter/avfiltergraph.o
+#13 9.353 CC	libavfilter/buffersink.o
+#13 9.489 CC	libavfilter/buffersrc.o
+#13 9.561 CC	libavfilter/ccfifo.o
+#13 9.632 CC	libavfilter/colorspace.o
+#13 9.638 CC	libavfilter/drawutils.o
+#13 9.737 CC	libavfilter/f_select.o
+#13 9.878 CC	libavfilter/formats.o
+#13 10.05 CC	libavfilter/framepool.o
+#13 10.15 CC	libavfilter/framequeue.o
+#13 10.22 CC	libavfilter/framesync.o
+#13 10.35 CC	libavfilter/graphdump.o
+#13 10.38 CC	libavfilter/graphparser.o
+#13 10.45 CC	libavfilter/pthread.o
+#13 10.49 CC	libavfilter/scale_eval.o
+#13 10.57 CC	libavfilter/scene_sad.o
+#13 10.63 CC	libavfilter/trim.o
+#13 10.71 CC	libavfilter/version.o
+#13 10.75 CC	libavfilter/vf_crop.o
+#13 10.76 CC	libavfilter/vf_format.o
+#13 10.84 CC	libavfilter/vf_hflip.o
+#13 10.87 CC	libavfilter/vf_null.o
+#13 10.90 CC	libavfilter/vf_rotate.o
+#13 10.95 CC	libavfilter/vf_scale.o
+#13 11.18 CC	libavfilter/vf_showinfo.o
+#13 11.26 CC	libavfilter/vf_transpose.o
+#13 11.51 CC	libavfilter/vf_vflip.o
+#13 11.58 CC	libavfilter/video.o
+#13 11.61 CC	libavfilter/x86/scene_sad_init.o
+#13 11.63 CC	libavfilter/x86/vf_hflip_init.o
+#13 11.64 CC	libavfilter/x86/vf_transpose_init.o
+#13 11.65 GEN	libavfilter/libavfilter.pc
+#13 11.66 CC	libavformat/allformats.o
+#13 11.67 CC	libavformat/avformat.o
+#13 11.71 CC	libavformat/avio.o
+#13 11.96 CC	libavformat/aviobuf.o
+#13 12.02 CC	libavformat/demux.o
+#13 12.08 libavformat/demux.c: In function ‘read_frame_internal’:
+#13 12.08 libavformat/demux.c:1389:9: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#13 12.08  1389 |         int new_extradata = !!av_packet_side_data_get(pkt->side_data, pkt->side_data_elems,
+#13 12.08       |         ^~~
+#13 12.52 CC	libavformat/demux_utils.o
+#13 12.62 CC	libavformat/dovi_isom.o
+#13 12.70 CC	libavformat/dump.o
+#13 13.08 CC	libavformat/dv.o
+#13 13.13 CC	libavformat/file.o
+#13 13.22 CC	libavformat/flac_picture.o
+#13 13.24 CC	libavformat/format.o
+#13 13.33 CC	libavformat/iamf.o
+#13 13.39 CC	libavformat/iamf_parse.o
+#13 13.40 CC	libavformat/iamf_reader.o
+#13 13.56 CC	libavformat/id3v1.o
+#13 13.65 CC	libavformat/id3v2.o
+#13 13.87 CC	libavformat/img2.o
+#13 13.91 CC	libavformat/img2dec.o
+#13 13.97 libavformat/img2dec.c: In function ‘ff_img_read_packet’:
+#13 13.97 libavformat/img2dec.c:501:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#13 13.97   501 |     int total_size = 0;
+#13 13.97       |     ^~~
+#13 13.99 libavformat/img2dec.c: At top level:
+#13 13.99 libavformat/img2dec.c:1212:12: warning: ‘vbn_probe’ defined but not used [-Wunused-function]
+#13 13.99  1212 | static int vbn_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1192:12: warning: ‘gem_probe’ defined but not used [-Wunused-function]
+#13 13.99  1192 | static int gem_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1175:12: warning: ‘qoi_probe’ defined but not used [-Wunused-function]
+#13 13.99  1175 | static int qoi_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1164:12: warning: ‘photocd_probe’ defined but not used [-Wunused-function]
+#13 13.99  1164 | static int photocd_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1151:12: warning: ‘gif_probe’ defined but not used [-Wunused-function]
+#13 13.99  1151 | static int gif_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1121:12: warning: ‘xwd_probe’ defined but not used [-Wunused-function]
+#13 13.99  1121 | static int xwd_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1112:12: warning: ‘xpm_probe’ defined but not used [-Wunused-function]
+#13 13.99  1112 | static int xpm_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1102:12: warning: ‘xbm_probe’ defined but not used [-Wunused-function]
+#13 13.99  1102 | static int xbm_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1095:12: warning: ‘hdr_probe’ defined but not used [-Wunused-function]
+#13 13.99  1095 | static int hdr_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1090:12: warning: ‘pam_probe’ defined but not used [-Wunused-function]
+#13 13.99  1090 | static int pam_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1085:12: warning: ‘ppm_probe’ defined but not used [-Wunused-function]
+#13 13.99  1085 | static int ppm_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1077:12: warning: ‘pgx_probe’ defined but not used [-Wunused-function]
+#13 13.99  1077 | static int pgx_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1071:12: warning: ‘pgmyuv_probe’ defined but not used [-Wunused-function]
+#13 13.99  1071 | static int pgmyuv_probe(const AVProbeData *p) // custom FFmpeg format recognized by file extension
+#13 13.99       |            ^~~~~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1065:12: warning: ‘pgm_probe’ defined but not used [-Wunused-function]
+#13 13.99  1065 | static int pgm_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1054:12: warning: ‘phm_probe’ defined but not used [-Wunused-function]
+#13 13.99  1054 | static int phm_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1048:12: warning: ‘pfm_probe’ defined but not used [-Wunused-function]
+#13 13.99  1048 | static int pfm_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 13.99 libavformat/img2dec.c:1043:12: warning: ‘pbm_probe’ defined but not used [-Wunused-function]
+#13 13.99  1043 | static int pbm_probe(const AVProbeData *p)
+#13 13.99       |            ^~~~~~~~~
+#13 14.00 libavformat/img2dec.c:1015:12: warning: ‘webp_probe’ defined but not used [-Wunused-function]
+#13 14.00  1015 | static int webp_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~~
+#13 14.00 libavformat/img2dec.c:1005:12: warning: ‘tiff_probe’ defined but not used [-Wunused-function]
+#13 14.00  1005 | static int tiff_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~~
+#13 14.00 libavformat/img2dec.c:980:12: warning: ‘svg_probe’ defined but not used [-Wunused-function]
+#13 14.00   980 | static int svg_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~
+#13 14.00 libavformat/img2dec.c:971:12: warning: ‘sunrast_probe’ defined but not used [-Wunused-function]
+#13 14.00   971 | static int sunrast_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~~~~~
+#13 14.00 libavformat/img2dec.c:959:12: warning: ‘sgi_probe’ defined but not used [-Wunused-function]
+#13 14.00   959 | static int sgi_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~
+#13 14.00 libavformat/img2dec.c:931:12: warning: ‘psd_probe’ defined but not used [-Wunused-function]
+#13 14.00   931 | static int psd_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~
+#13 14.00 libavformat/img2dec.c:922:12: warning: ‘png_probe’ defined but not used [-Wunused-function]
+#13 14.00   922 | static int png_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~
+#13 14.00 libavformat/img2dec.c:913:12: warning: ‘pictor_probe’ defined but not used [-Wunused-function]
+#13 14.00   913 | static int pictor_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~~~~
+#13 14.00 libavformat/img2dec.c:897:12: warning: ‘qdraw_probe’ defined but not used [-Wunused-function]
+#13 14.00   897 | static int qdraw_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~~~
+#13 14.00 libavformat/img2dec.c:876:12: warning: ‘pcx_probe’ defined but not used [-Wunused-function]
+#13 14.00   876 | static int pcx_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~
+#13 14.00 libavformat/img2dec.c:858:12: warning: ‘jpegxl_probe’ defined but not used [-Wunused-function]
+#13 14.00   858 | static int jpegxl_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~~~~
+#13 14.00 libavformat/img2dec.c:849:12: warning: ‘jpegls_probe’ defined but not used [-Wunused-function]
+#13 14.00   849 | static int jpegls_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~~~~
+#13 14.00 libavformat/img2dec.c:768:12: warning: ‘jpeg_probe’ defined but not used [-Wunused-function]
+#13 14.00   768 | static int jpeg_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~~
+#13 14.00 libavformat/img2dec.c:758:12: warning: ‘j2k_probe’ defined but not used [-Wunused-function]
+#13 14.00   758 | static int j2k_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~
+#13 14.00 libavformat/img2dec.c:749:12: warning: ‘exr_probe’ defined but not used [-Wunused-function]
+#13 14.00   749 | static int exr_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~
+#13 14.00 libavformat/img2dec.c:731:12: warning: ‘dpx_probe’ defined but not used [-Wunused-function]
+#13 14.00   731 | static int dpx_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~
+#13 14.00 libavformat/img2dec.c:720:12: warning: ‘dds_probe’ defined but not used [-Wunused-function]
+#13 14.00   720 | static int dds_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~
+#13 14.00 libavformat/img2dec.c:709:12: warning: ‘cri_probe’ defined but not used [-Wunused-function]
+#13 14.00   709 | static int cri_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~
+#13 14.00 libavformat/img2dec.c:691:12: warning: ‘bmp_probe’ defined but not used [-Wunused-function]
+#13 14.00   691 | static int bmp_probe(const AVProbeData *p)
+#13 14.00       |            ^~~~~~~~~
+#13 14.03 CC	libavformat/img2enc.o
+#13 14.08 libavformat/img2enc.c:119:12: warning: ‘write_packet_pipe’ defined but not used [-Wunused-function]
+#13 14.08   119 | static int write_packet_pipe(AVFormatContext *s, AVPacket *pkt)
+#13 14.08       |            ^~~~~~~~~~~~~~~~~
+#13 14.12 libavformat/img2enc.c: In function ‘write_packet’:
+#13 14.12 libavformat/img2enc.c:183:55: warning: ‘.tmp’ directive output may be truncated writing 4 bytes into a region of size between 1 and 1024 [-Wformat-truncation=]
+#13 14.12   183 |         snprintf(img->tmp[i], sizeof(img->tmp[i]), "%s.tmp", filename);
+#13 14.12       |                                                       ^~~~
+#13 14.12 libavformat/img2enc.c:183:9: note: ‘snprintf’ output between 5 and 1028 bytes into a destination of size 1024
+#13 14.12   183 |         snprintf(img->tmp[i], sizeof(img->tmp[i]), "%s.tmp", filename);
+#13 14.12       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#13 14.16 CC	libavformat/isom.o
+#13 14.17 CC	libavformat/isom_tags.o
+#13 14.22 CC	libavformat/matroska.o
+#13 14.26 CC	libavformat/matroskadec.o
+#13 14.28 CC	libavformat/metadata.o
+#13 14.34 CC	libavformat/mov.o
+#13 14.76 libavformat/mov.c: In function ‘mov_read_trak’:
+#13 14.76 libavformat/mov.c:5174:11: warning: statement will never be executed [-Wswitch-unreachable]
+#13 14.76  5174 |         st->codecpar->width = 0; /* let decoder init width/height */
+#13 14.76       |         ~~^~~~~~~~~~
+#13 15.42 CC	libavformat/mov_chan.o
+#13 15.56 CC	libavformat/mov_esds.o
+#13 15.61 CC	libavformat/mux.o
+#13 16.09 CC	libavformat/mux_utils.o
+#13 16.17 CC	libavformat/oggparsevorbis.o
+#13 16.38 CC	libavformat/options.o
+#13 16.51 CC	libavformat/os_support.o
+#13 16.54 CC	libavformat/protocols.o
+#13 16.59 CC	libavformat/qtpalette.o
+#13 16.64 CC	libavformat/replaygain.o
+#13 16.72 CC	libavformat/riff.o
+#13 16.76 CC	libavformat/riffdec.o
+#13 16.91 CC	libavformat/rmsipr.o
+#13 16.94 CC	libavformat/sdp.o
+#13 17.00 CC	libavformat/seek.o
+#13 17.28 CC	libavformat/url.o
+#13 17.42 CC	libavformat/utils.o
+#13 17.65 CC	libavformat/version.o
+#13 17.70 CC	libavformat/vorbiscomment.o
+#13 17.76 libavformat/vorbiscomment.c: In function ‘ff_vorbiscomment_write’:
+#13 17.76 libavformat/vorbiscomment.c:103:63: warning: ‘%03d’ directive output may be truncated writing between 3 and 10 bytes into a region of size 4 [-Wformat-truncation=]
+#13 17.76   103 |             snprintf(chapter_number, sizeof(chapter_number), "%03d", i);
+#13 17.76       |                                                               ^~~~
+#13 17.76 libavformat/vorbiscomment.c:103:62: note: directive argument in the range [0, 2147483647]
+#13 17.76   103 |             snprintf(chapter_number, sizeof(chapter_number), "%03d", i);
+#13 17.76       |                                                              ^~~~~~
+#13 17.76 libavformat/vorbiscomment.c:103:13: note: ‘snprintf’ output between 4 and 11 bytes into a destination of size 4
+#13 17.76   103 |             snprintf(chapter_number, sizeof(chapter_number), "%03d", i);
+#13 17.76       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#13 17.76 libavformat/vorbiscomment.c:104:69: warning: ‘%02d’ directive output may be truncated writing between 2 and 3 bytes into a region of size between 1 and 7 [-Wformat-truncation=]
+#13 17.76   104 |             snprintf(chapter_time, sizeof(chapter_time), "%02d:%02d:%02d.%03d", h, m, s, ms);
+#13 17.76       |                                                                     ^~~~
+#13 17.76 libavformat/vorbiscomment.c:104:58: note: directive argument in the range [-59, 59]
+#13 17.76   104 |             snprintf(chapter_time, sizeof(chapter_time), "%02d:%02d:%02d.%03d", h, m, s, ms);
+#13 17.76       |                                                          ^~~~~~~~~~~~~~~~~~~~~
+#13 17.76 libavformat/vorbiscomment.c:104:58: note: directive argument in the range [-999, 999]
+#13 17.76 libavformat/vorbiscomment.c:104:13: note: ‘snprintf’ output between 13 and 21 bytes into a destination of size 13
+#13 17.76   104 |             snprintf(chapter_time, sizeof(chapter_time), "%02d:%02d:%02d.%03d", h, m, s, ms);
+#13 17.76       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#13 17.79 GEN	libavformat/libavformat.pc
+#13 17.80 CC	libavcodec/ac3_parser.o
+#13 17.87 CC	libavcodec/adts_parser.o
+#13 17.89 CC	libavcodec/allcodecs.o
+#13 17.97 CC	libavcodec/aom_film_grain.o
+#13 18.06 CC	libavcodec/atsc_a53.o
+#13 18.15 CC	libavcodec/avcodec.o
+#13 18.38 CC	libavcodec/avdct.o
+#13 18.44 CC	libavcodec/avfft.o
+#13 18.51 CC	libavcodec/bitstream.o
+#13 18.62 CC	libavcodec/bitstream_filters.o
+#13 18.67 CC	libavcodec/blockdsp.o
+#13 18.70 CC	libavcodec/bsf.o
+#13 18.85 CC	libavcodec/bsf/vp9_superframe_split.o
+#13 18.95 CC	libavcodec/bswapdsp.o
+#13 19.00 CC	libavcodec/cabac.o
+#13 19.03 CC	libavcodec/codec_desc.o
+#13 19.10 CC	libavcodec/codec_par.o
+#13 19.22 CC	libavcodec/container_fifo.o
+#13 19.29 CC	libavcodec/d3d11va.o
+#13 19.31 CC	libavcodec/decode.o
+#13 19.86 CC	libavcodec/dirac.o
+#13 19.89 CC	libavcodec/dovi_rpu.o
+#13 19.91 CC	libavcodec/dovi_rpudec.o
+#13 19.95 CC	libavcodec/dv_profile.o
+#13 20.01 CC	libavcodec/dynamic_hdr_vivid.o
+#13 20.16 CC	libavcodec/encode.o
+#13 20.38 CC	libavcodec/error_resilience.o
+#13 20.66 CC	libavcodec/exif.o
+#13 20.74 CC	libavcodec/faandct.o
+#13 20.83 CC	libavcodec/faanidct.o
+#13 20.98 CC	libavcodec/fdctdsp.o
+#13 21.02 CC	libavcodec/frame_thread_encoder.o
+#13 21.13 CC	libavcodec/get_buffer.o
+#13 21.23 CC	libavcodec/golomb.o
+#13 21.25 CC	libavcodec/h2645_parse.o
+#13 21.49 CC	libavcodec/h2645_sei.o
+#13 21.51 CC	libavcodec/h2645_vui.o
+#13 21.59 CC	libavcodec/h2645data.o
+#13 21.61 CC	libavcodec/h264_cabac.o
+#13 21.82 CC	libavcodec/h264_cavlc.o
+#13 23.02 CC	libavcodec/h264_direct.o
+#13 23.20 CC	libavcodec/h264_loopfilter.o
+#13 23.58 CC	libavcodec/h264_mb.o
+#13 25.10 CC	libavcodec/h264_parse.o
+#13 25.47 CC	libavcodec/h264_parser.o
+#13 25.52 libavcodec/h264_parser.c: In function ‘scan_mmco_reset’:
+#13 25.52 libavcodec/h264_parser.c:229:13: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#13 25.52   229 |             MMCOOpcode opcode = get_ue_golomb_31(gb);
+#13 25.52       |             ^~~~~~~~~~
+#13 25.77 CC	libavcodec/h264_picture.o
+#13 25.87 CC	libavcodec/h264_ps.o
+#13 26.48 CC	libavcodec/h264_refs.o
+#13 26.49 CC	libavcodec/h264_sei.o
+#13 26.69 CC	libavcodec/h264_slice.o
+#13 27.00 CC	libavcodec/h264chroma.o
+#13 27.45 CC	libavcodec/h264data.o
+#13 27.51 CC	libavcodec/h264dec.o
+#13 27.81 CC	libavcodec/h264dsp.o
+#13 27.97 CC	libavcodec/h264idct.o
+#13 29.05 CC	libavcodec/h264pred.o
+#13 30.79 CC	libavcodec/h264qpel.o
+#13 33.16 CC	libavcodec/h274.o
+#13 33.49 CC	libavcodec/hevc/cabac.o
+#13 34.18 CC	libavcodec/hevc/data.o
+#13 34.19 CC	libavcodec/hevc/dsp.o
+#13 40.05 CC	libavcodec/hevc/filter.o
+#13 40.91 CC	libavcodec/hevc/hevcdec.o
+#13 41.80 CC	libavcodec/hevc/mvs.o
+#13 42.24 CC	libavcodec/hevc/parse.o
+#13 42.25 libavcodec/hevc/hevcdec.c: In function ‘pred_weight_table’:
+#13 42.25 libavcodec/hevc/hevcdec.c:199:32: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+#13 42.25   199 |         luma_weight_l0_flag[i] = get_bits1(gb);
+#13 42.25       |         ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+#13 42.25 libavcodec/hevc/hevcdec.c:177:13: note: at offset 16 into destination object ‘luma_weight_l0_flag’ of size 16
+#13 42.25   177 |     uint8_t luma_weight_l0_flag[16];
+#13 42.25       |             ^~~~~~~~~~~~~~~~~~~
+#13 42.25 libavcodec/hevc/hevcdec.c:207:38: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+#13 42.25   207 |             chroma_weight_l0_flag[i] = get_bits1(gb);
+#13 42.25       |             ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+#13 42.25 libavcodec/hevc/hevcdec.c:178:13: note: at offset 16 into destination object ‘chroma_weight_l0_flag’ of size 16
+#13 42.25   178 |     uint8_t chroma_weight_l0_flag[16];
+#13 42.25       |             ^~~~~~~~~~~~~~~~~~~~~
+#13 42.25 libavcodec/hevc/hevcdec.c:243:36: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+#13 42.25   243 |             luma_weight_l1_flag[i] = get_bits1(gb);
+#13 42.25       |             ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+#13 42.25 libavcodec/hevc/hevcdec.c:179:13: note: at offset 16 into destination object ‘luma_weight_l1_flag’ of size 16
+#13 42.25   179 |     uint8_t luma_weight_l1_flag[16];
+#13 42.25       |             ^~~~~~~~~~~~~~~~~~~
+#13 42.25 libavcodec/hevc/hevcdec.c:251:42: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+#13 42.25   251 |                 chroma_weight_l1_flag[i] = get_bits1(gb);
+#13 42.25       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+#13 42.25 libavcodec/hevc/hevcdec.c:180:13: note: at offset 16 into destination object ‘chroma_weight_l1_flag’ of size 16
+#13 42.25   180 |     uint8_t chroma_weight_l1_flag[16];
+#13 42.25       |             ^~~~~~~~~~~~~~~~~~~~~
+#13 42.35 CC	libavcodec/hevc/parser.o
+#13 42.50 CC	libavcodec/hevc/pred.o
+#13 43.00 CC	libavcodec/hevc/ps.o
+#13 44.91 CC	libavcodec/hevc/refs.o
+#13 44.96 libavcodec/hevc/refs.c: In function ‘alloc_frame’:
+#13 44.96 libavcodec/hevc/refs.c:138:9: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#13 44.96   138 |         size_t rpl_bytes;
+#13 44.96       |         ^~~~~~
+#13 45.23 CC	libavcodec/hevc/sei.o
+#13 45.54 CC	libavcodec/hpeldsp.o
+#13 46.06 CC	libavcodec/idctdsp.o
+#13 46.22 CC	libavcodec/imgconvert.o
+#13 46.27 CC	libavcodec/jfdctfst.o
+#13 46.33 CC	libavcodec/jfdctint.o
+#13 46.46 CC	libavcodec/jni.o
+#13 46.48 CC	libavcodec/jpegtables.o
+#13 46.49 CC	libavcodec/jrevdct.o
+#13 46.52 libavcodec/jrevdct.c:215:28: warning: argument 1 of type ‘int16_t[64]’ {aka ‘short int[64]’} with mismatched bound [-Warray-parameter=]
+#13 46.52   215 | void ff_j_rev_dct(DCTBLOCK data)
+#13 46.52       |                   ~~~~~~~~~^~~~
+#13 46.52 In file included from libavcodec/jrevdct.c:70:
+#13 46.52 libavcodec/dct.h:30:28: note: previously declared as ‘int16_t *’ {aka ‘short int *’}
+#13 46.52    30 | void ff_j_rev_dct(int16_t *data);
+#13 46.52       |                   ~~~~~~~~~^~~~
+#13 46.53 libavcodec/jrevdct.c:953:29: warning: argument 1 of type ‘int16_t[64]’ {aka ‘short int[64]’} with mismatched bound [-Warray-parameter=]
+#13 46.53   953 | void ff_j_rev_dct4(DCTBLOCK data)
+#13 46.53       |                    ~~~~~~~~~^~~~
+#13 46.53 libavcodec/dct.h:31:29: note: previously declared as ‘int16_t *’ {aka ‘short int *’}
+#13 46.53    31 | void ff_j_rev_dct4(int16_t *data);
+#13 46.53       |                    ~~~~~~~~~^~~~
+#13 46.53 libavcodec/jrevdct.c:1140:29: warning: argument 1 of type ‘int16_t[64]’ {aka ‘short int[64]’} with mismatched bound [-Warray-parameter=]
+#13 46.53  1140 | void ff_j_rev_dct2(DCTBLOCK data){
+#13 46.53       |                    ~~~~~~~~~^~~~
+#13 46.53 libavcodec/dct.h:32:29: note: previously declared as ‘int16_t *’ {aka ‘short int *’}
+#13 46.53    32 | void ff_j_rev_dct2(int16_t *data);
+#13 46.53       |                    ~~~~~~~~~^~~~
+#13 46.53 libavcodec/jrevdct.c:1155:29: warning: argument 1 of type ‘int16_t[64]’ {aka ‘short int[64]’} with mismatched bound [-Warray-parameter=]
+#13 46.53  1155 | void ff_j_rev_dct1(DCTBLOCK data){
+#13 46.53       |                    ~~~~~~~~~^~~~
+#13 46.53 libavcodec/dct.h:33:29: note: previously declared as ‘int16_t *’ {aka ‘short int *’}
+#13 46.53    33 | void ff_j_rev_dct1(int16_t *data);
+#13 46.53       |                    ~~~~~~~~~^~~~
+#13 46.69 CC	libavcodec/lossless_videoencdsp.o
+#13 46.78 CC	libavcodec/mathtables.o
+#13 46.81 CC	libavcodec/me_cmp.o
+#13 47.42 CC	libavcodec/mediacodec.o
+#13 47.46 CC	libavcodec/mjpeg_parser.o
+#13 47.52 CC	libavcodec/mjpegdec.o
+#13 48.90 CC	libavcodec/mjpegdec_common.o
+#13 48.98 CC	libavcodec/mpeg12framerate.o
+#13 49.06 CC	libavcodec/mpeg4audio.o
+#13 49.18 CC	libavcodec/mpeg4audio_sample_rates.o
+#13 49.19 CC	libavcodec/options.o
+#13 49.28 CC	libavcodec/packet.o
+#13 49.51 CC	libavcodec/parser.o
+#13 49.53 CC	libavcodec/parsers.o
+#13 49.57 CC	libavcodec/png.o
+#13 49.59 CC	libavcodec/png_parser.o
+#13 49.64 CC	libavcodec/pngdec.o
+#13 49.65 CC	libavcodec/pngdsp.o
+#13 49.70 CC	libavcodec/pngenc.o
+#13 50.10 CC	libavcodec/profiles.o
+#13 50.13 CC	libavcodec/pthread.o
+#13 50.21 CC	libavcodec/pthread_frame.o
+#13 50.39 CC	libavcodec/pthread_slice.o
+#13 50.46 CC	libavcodec/qsv_api.o
+#13 50.46 CC	libavcodec/raw.o
+#13 50.48 CC	libavcodec/refstruct.o
+#13 50.51 CC	libavcodec/simple_idct.o
+#13 50.55 CC	libavcodec/startcode.o
+#13 50.59 CC	libavcodec/threadprogress.o
+#13 50.64 CC	libavcodec/tiff_common.o
+#13 50.82 CC	libavcodec/utils.o
+#13 51.13 CC	libavcodec/version.o
+#13 51.16 CC	libavcodec/videodsp.o
+#13 51.17 CC	libavcodec/vlc.o
+#13 51.28 CC	libavcodec/vorbis_parser.o
+#13 51.40 CC	libavcodec/vp8.o
+#13 51.50 In function ‘add_level’,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘vlc_multi_gen’ at libavcodec/vlc.c:508:5,
+#13 51.50     inlined from ‘ff_vlc_init_multi_from_lengths’ at libavcodec/vlc.c:564:11:
+#13 51.50 libavcodec/vlc.c:443:36: warning: array subscript 3 is above array bounds of ‘uint16_t[3]’ {aka ‘short unsigned int[3]’} [-Warray-bounds=]
+#13 51.50   443 |             if (is16bit) info.val16[curlevel] = sym;
+#13 51.50       |                          ~~~~~~~~~~^~~~~~~~~~
+#13 51.50 In file included from libavcodec/vlc.c:39:
+#13 51.50 libavcodec/vlc.h: In function ‘ff_vlc_init_multi_from_lengths’:
+#13 51.50 libavcodec/vlc.h:45:18: note: while referencing ‘val16’
+#13 51.50    45 |         uint16_t val16[VLC_MULTI_MAX_SYMBOLS / 2];
+#13 51.50       |                  ^~~~~
+#13 51.50 In function ‘add_level’,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘vlc_multi_gen’ at libavcodec/vlc.c:508:5,
+#13 51.50     inlined from ‘ff_vlc_init_multi_from_lengths’ at libavcodec/vlc.c:564:11:
+#13 51.50 libavcodec/vlc.c:443:36: warning: array subscript 4 is above array bounds of ‘uint16_t[3]’ {aka ‘short unsigned int[3]’} [-Warray-bounds=]
+#13 51.50   443 |             if (is16bit) info.val16[curlevel] = sym;
+#13 51.50       |                          ~~~~~~~~~~^~~~~~~~~~
+#13 51.50 libavcodec/vlc.h: In function ‘ff_vlc_init_multi_from_lengths’:
+#13 51.50 libavcodec/vlc.h:45:18: note: while referencing ‘val16’
+#13 51.50    45 |         uint16_t val16[VLC_MULTI_MAX_SYMBOLS / 2];
+#13 51.50       |                  ^~~~~
+#13 51.50 In function ‘add_level’,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘add_level’ at libavcodec/vlc.c:457:17,
+#13 51.50     inlined from ‘vlc_multi_gen’ at libavcodec/vlc.c:508:5,
+#13 51.50     inlined from ‘ff_vlc_init_multi_from_lengths’ at libavcodec/vlc.c:564:11:
+#13 51.50 libavcodec/vlc.c:443:36: warning: array subscript 5 is above array bounds of ‘uint16_t[3]’ {aka ‘short unsigned int[3]’} [-Warray-bounds=]
+#13 51.50   443 |             if (is16bit) info.val16[curlevel] = sym;
+#13 51.50       |                          ~~~~~~~~~~^~~~~~~~~~
+#13 51.50 libavcodec/vlc.h: In function ‘ff_vlc_init_multi_from_lengths’:
+#13 51.50 libavcodec/vlc.h:45:18: note: while referencing ‘val16’
+#13 51.50    45 |         uint16_t val16[VLC_MULTI_MAX_SYMBOLS / 2];
+#13 51.50       |                  ^~~~~
+#13 51.66 CC	libavcodec/vp8_parser.o
+#13 51.72 CC	libavcodec/vp8data.o
+#13 51.73 CC	libavcodec/vp8dsp.o
+#13 53.06 CC	libavcodec/vp9.o
+#13 54.67 CC	libavcodec/vp9_parser.o
+#13 54.74 CC	libavcodec/vp9block.o
+#13 54.85 CC	libavcodec/vp9data.o
+#13 54.94 CC	libavcodec/vp9dsp.o
+#13 54.97 CC	libavcodec/vp9dsp_10bpp.o
+#13 57.29 CC	libavcodec/vp9dsp_12bpp.o
+#13 59.30 CC	libavcodec/vp9dsp_8bpp.o
+#13 60.55 CC	libavcodec/vp9lpf.o
+#13 60.82 CC	libavcodec/vp9mvs.o
+#13 61.40 CC	libavcodec/vp9prob.o
+#13 61.90 CC	libavcodec/vp9recon.o
+#13 63.84 CC	libavcodec/vpx_rac.o
+#13 63.90 CC	libavcodec/x86/blockdsp_init.o
+#13 63.92 CC	libavcodec/x86/bswapdsp_init.o
+#13 63.94 CC	libavcodec/x86/constants.o
+#13 63.96 CC	libavcodec/x86/fdct.o
+#13 63.98 CC	libavcodec/x86/fdctdsp_init.o
+#13 64.02 CC	libavcodec/x86/h264_intrapred_init.o
+#13 64.06 CC	libavcodec/x86/h264_qpel.o
+#13 64.08 CC	libavcodec/x86/h264chroma_init.o
+#13 64.10 CC	libavcodec/x86/h264dsp_init.o
+#13 64.12 CC	libavcodec/x86/h26x/h2656dsp.o
+#13 64.14 CC	libavcodec/x86/hevcdsp_init.o
+#13 64.22 CC	libavcodec/x86/hpeldsp_init.o
+#13 64.28 CC	libavcodec/x86/idctdsp_init.o
+#13 64.33 CC	libavcodec/x86/lossless_videoencdsp_init.o
+#13 64.38 CC	libavcodec/x86/me_cmp_init.o
+#13 64.45 CC	libavcodec/x86/pngdsp_init.o
+#13 64.47 CC	libavcodec/x86/videodsp_init.o
+#13 64.50 CC	libavcodec/x86/vp8dsp_init.o
+#13 64.52 CC	libavcodec/x86/vp9dsp_init.o
+#13 64.54 CC	libavcodec/x86/vp9dsp_init_10bpp.o
+#13 64.56 CC	libavcodec/x86/vp9dsp_init_12bpp.o
+#13 64.57 CC	libavcodec/x86/vp9dsp_init_16bpp.o
+#13 64.59 CC	libavcodec/xiph.o
+#13 64.64 CC	libavcodec/zlib_wrapper.o
+#13 64.68 CC	libavcodec/ac3_channel_layout_tab.o
+#13 64.69 CC	libavcodec/mpegaudiotabs.o
+#13 64.70 CC	libavcodec/to_upper4.o
+#13 64.75 GEN	libavcodec/libavcodec.pc
+#13 64.76 CC	libswresample/audioconvert.o
+#13 65.23 CC	libswresample/dither.o
+#13 65.44 CC	libswresample/options.o
+#13 65.49 CC	libswresample/rematrix.o
+#13 65.94 CC	libswresample/resample.o
+#13 66.20 CC	libswresample/resample_dsp.o
+#13 66.43 CC	libswresample/swresample.o
+#13 66.85 CC	libswresample/swresample_frame.o
+#13 66.92 CC	libswresample/version.o
+#13 66.96 CC	libswresample/x86/audio_convert_init.o
+#13 67.01 CC	libswresample/x86/rematrix_init.o
+#13 67.05 CC	libswresample/x86/resample_init.o
+#13 67.09 GEN	libswresample/libswresample.pc
+#13 67.09 CC	libswscale/alphablend.o
+#13 67.36 CC	libswscale/gamma.o
+#13 67.43 CC	libswscale/half2float.o
+#13 67.46 CC	libswscale/hscale.o
+#13 67.60 CC	libswscale/hscale_fast_bilinear.o
+#13 67.67 CC	libswscale/input.o
+#13 69.19 CC	libswscale/options.o
+#13 69.25 CC	libswscale/output.o
+#13 71.55 CC	libswscale/rgb2rgb.o
+#13 72.06 CC	libswscale/slice.o
+#13 72.29 CC	libswscale/swscale.o
+#13 72.88 CC	libswscale/swscale_unscaled.o
+#13 75.00 CC	libswscale/utils.o
+#13 75.06 libswscale/utils.c: In function ‘sws_init_single_context’:
+#13 75.06 libswscale/utils.c:1422:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#13 75.06  1422 |     int64_t lumXInc      = (((int64_t)srcW << 16) + (dstW >> 1)) / dstW;
+#13 75.06       |     ^~~~~~~
+#13 75.06 libswscale/utils.c:1594:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#13 75.06  1594 |     int64_t chrXInc = (((int64_t)c->chrSrcW << 16) + (c->chrDstW >> 1)) / c->chrDstW;
+#13 75.06       |     ^~~~~~~
+#13 75.07 libswscale/utils.c:1916:9: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#13 75.07  1916 |         int usecascade = (ret == RETCODE_USE_CASCADE);
+#13 75.07       |         ^~~
+#13 75.88 CC	libswscale/version.o
+#13 75.92 CC	libswscale/vscale.o
+#13 76.06 CC	libswscale/x86/hscale_fast_bilinear_simd.o
+#13 76.16 CC	libswscale/x86/rgb2rgb.o
+#13 76.63 CC	libswscale/x86/swscale.o
+#13 76.67 CC	libswscale/x86/yuv2rgb.o
+#13 76.73 CC	libswscale/yuv2rgb.o
+#13 76.92 GEN	libswscale/libswscale.pc
+#13 76.93 CC	libavutil/adler32.o
+#13 76.98 CC	libavutil/aes.o
+#13 77.13 CC	libavutil/aes_ctr.o
+#13 77.18 CC	libavutil/ambient_viewing_environment.o
+#13 77.22 CC	libavutil/audio_fifo.o
+#13 77.29 CC	libavutil/avsscanf.o
+#13 77.97 CC	libavutil/avstring.o
+#13 78.15 CC	libavutil/base64.o
+#13 78.23 CC	libavutil/blowfish.o
+#13 78.35 CC	libavutil/bprint.o
+#13 78.52 CC	libavutil/buffer.o
+#13 78.62 CC	libavutil/camellia.o
+#13 78.77 CC	libavutil/cast5.o
+#13 78.96 CC	libavutil/channel_layout.o
+#13 79.37 CC	libavutil/cpu.o
+#13 79.46 CC	libavutil/crc.o
+#13 79.60 CC	libavutil/csp.o
+#13 79.73 CC	libavutil/des.o
+#13 79.84 CC	libavutil/detection_bbox.o
+#13 79.88 CC	libavutil/dict.o
+#13 79.91 CC	libavutil/display.o
+#13 79.97 CC	libavutil/dovi_meta.o
+#13 80.00 CC	libavutil/downmix_info.o
+#13 80.03 CC	libavutil/encryption_info.o
+#13 80.05 CC	libavutil/error.o
+#13 80.09 CC	libavutil/eval.o
+#13 80.13 libavutil/eval.c: In function ‘make_eval_expr’:
+#13 80.13 libavutil/eval.c:546:5: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+#13 80.13   546 |     AVExpr *e = av_mallocz(sizeof(AVExpr));
+#13 80.13       |     ^~~~~~
+#13 80.18 CC	libavutil/executor.o
+#13 80.24 CC	libavutil/fifo.o
+#13 80.37 CC	libavutil/file.o
+#13 80.42 CC	libavutil/file_open.o
+#13 80.47 CC	libavutil/film_grain_params.o
+#13 80.54 CC	libavutil/fixed_dsp.o
+#13 80.55 CC	libavutil/float_dsp.o
+#13 80.63 CC	libavutil/frame.o
+#13 80.63 CC	libavutil/hash.o
+#13 80.71 CC	libavutil/hdr_dynamic_metadata.o
+#13 80.98 CC	libavutil/hdr_dynamic_vivid_metadata.o
+#13 81.02 CC	libavutil/hmac.o
+#13 81.07 CC	libavutil/hwcontext.o
+#13 81.14 CC	libavutil/hwcontext_stub.o
+#13 81.15 CC	libavutil/iamf.o
+#13 81.21 CC	libavutil/imgutils.o
+#13 81.25 CC	libavutil/integer.o
+#13 81.39 CC	libavutil/intmath.o
+#13 81.43 CC	libavutil/lfg.o
+#13 81.48 CC	libavutil/lls.o
+#13 81.54 CC	libavutil/log.o
+#13 81.56 CC	libavutil/log2_tab.o
+#13 81.58 CC	libavutil/lzo.o
+#13 81.68 CC	libavutil/mastering_display_metadata.o
+#13 81.68 CC	libavutil/mathematics.o
+#13 81.73 CC	libavutil/md5.o
+#13 81.79 CC	libavutil/mem.o
+#13 81.85 CC	libavutil/murmur3.o
+#13 81.92 CC	libavutil/opt.o
+#13 81.94 CC	libavutil/parseutils.o
+#13 82.16 CC	libavutil/pixdesc.o
+#13 82.52 CC	libavutil/pixelutils.o
+#13 82.53 CC	libavutil/random_seed.o
+#13 82.60 CC	libavutil/rational.o
+#13 82.71 CC	libavutil/rc4.o
+#13 82.75 CC	libavutil/reverse.o
+#13 82.76 CC	libavutil/ripemd.o
+#13 82.87 CC	libavutil/samplefmt.o
+#13 82.95 CC	libavutil/sha.o
+#13 83.30 CC	libavutil/sha512.o
+#13 83.35 CC	libavutil/slicethread.o
+#13 83.44 CC	libavutil/spherical.o
+#13 83.47 CC	libavutil/stereo3d.o
+#13 83.53 CC	libavutil/tea.o
+#13 83.59 CC	libavutil/threadmessage.o
+#13 83.65 CC	libavutil/time.o
+#13 83.65 CC	libavutil/timecode.o
+#13 83.68 CC	libavutil/timestamp.o
+#13 83.73 CC	libavutil/tree.o
+#13 83.81 CC	libavutil/twofish.o
+#13 83.84 CC	libavutil/tx.o
+#13 84.08 CC	libavutil/tx_double.o
+#13 84.49 CC	libavutil/tx_float.o
+#13 86.62 CC	libavutil/tx_int32.o
+#13 86.97 CC	libavutil/utils.o
+#13 87.03 CC	libavutil/uuid.o
+#13 87.07 CC	libavutil/version.o
+#13 87.11 CC	libavutil/video_enc_params.o
+#13 87.16 CC	libavutil/video_hint.o
+#13 87.21 CC	libavutil/x86/cpu.o
+#13 87.29 CC	libavutil/x86/fixed_dsp_init.o
+#13 87.33 CC	libavutil/x86/float_dsp_init.o
+#13 87.34 CC	libavutil/x86/imgutils_init.o
+#13 87.36 CC	libavutil/x86/lls_init.o
+#13 87.38 CC	libavutil/xga_font_data.o
+#13 87.42 CC	libavutil/xtea.o
+#13 87.57 GEN	libavutil/libavutil.pc
+#13 87.57 CC	fftools/ffmpeg_dec.o
+#13 88.04 CC	fftools/ffmpeg_demux.o
+#13 88.74 CC	fftools/ffmpeg_enc.o
+#13 89.04 CC	fftools/ffmpeg_filter.o
+#13 89.51 CC	fftools/ffmpeg_hw.o
+#13 89.62 CC	fftools/ffmpeg_mux.o
+#13 89.87 CC	fftools/ffmpeg_mux_init.o
+#13 89.93 CC	fftools/ffmpeg_opt.o
+#13 90.41 CC	fftools/ffmpeg_sched.o
+#13 91.09 CC	fftools/objpool.o
+#13 91.10 CC	fftools/sync_queue.o
+#13 91.14 CC	fftools/thread_queue.o
+#13 91.21 CC	fftools/cmdutils.o
+#13 91.32 CC	fftools/opt_common.o
+#13 91.68 CC	fftools/ffmpeg.o
+#13 91.75 CC	fftools/ffprobe.o
+#13 91.99 AR	libavfilter/libavfilter.a
+#13 92.01 AR	libavformat/libavformat.a
+#13 92.03 AR	libavcodec/libavcodec.a
+#13 92.09 AR	libswresample/libswresample.a
+#13 92.10 AR	libswscale/libswscale.a
+#13 92.12 AR	libavutil/libavutil.a
+#13 92.15 LD	ffmpeg_g
+#13 92.31 STRIP	ffmpeg
+#13 93.70 LD	ffprobe_g
+#13 93.85 STRIP	ffprobe
+#13 93.97 INSTALL	install-progs-yes
+#13 93.97 INSTALL	ffmpeg
+#13 93.97 INSTALL	ffprobe
+#13 93.98 INSTALL	presets/libvpx-1080p.ffpreset
+#13 93.98 INSTALL	presets/libvpx-1080p50_60.ffpreset
+#13 93.98 INSTALL	presets/libvpx-360p.ffpreset
+#13 93.98 INSTALL	presets/libvpx-720p.ffpreset
+#13 93.98 INSTALL	presets/libvpx-720p50_60.ffpreset
+#13 93.98 INSTALL	doc/ffprobe.xsd
+#13 93.98 INSTALL	doc/examples/avio_http_serve_files.c
+#13 93.98 INSTALL	doc/examples/avio_list_dir.c
+#13 93.98 INSTALL	doc/examples/avio_read_callback.c
+#13 93.98 INSTALL	doc/examples/decode_audio.c
+#13 93.98 INSTALL	doc/examples/decode_filter_audio.c
+#13 93.98 INSTALL	doc/examples/decode_filter_video.c
+#13 93.98 INSTALL	doc/examples/decode_video.c
+#13 93.98 INSTALL	doc/examples/demux_decode.c
+#13 93.98 INSTALL	doc/examples/encode_audio.c
+#13 93.98 INSTALL	doc/examples/encode_video.c
+#13 93.98 INSTALL	doc/examples/extract_mvs.c
+#13 93.98 INSTALL	doc/examples/filter_audio.c
+#13 93.98 INSTALL	doc/examples/hw_decode.c
+#13 93.98 INSTALL	doc/examples/mux.c
+#13 93.98 INSTALL	doc/examples/qsv_decode.c
+#13 93.98 INSTALL	doc/examples/qsv_transcode.c
+#13 93.98 INSTALL	doc/examples/remux.c
+#13 93.98 INSTALL	doc/examples/resample_audio.c
+#13 93.98 INSTALL	doc/examples/scale_video.c
+#13 93.98 INSTALL	doc/examples/show_metadata.c
+#13 93.98 INSTALL	doc/examples/transcode.c
+#13 93.98 INSTALL	doc/examples/transcode_aac.c
+#13 93.98 INSTALL	doc/examples/vaapi_encode.c
+#13 93.98 INSTALL	doc/examples/vaapi_transcode.c
+#13 93.98 INSTALL	doc/examples/README
+#13 93.98 INSTALL	doc/examples/Makefile
+#13 93.98 INSTALL	doc/examples/avio_http_serve_files.c
+#13 93.98 INSTALL	doc/examples/avio_list_dir.c
+#13 93.98 INSTALL	doc/examples/avio_read_callback.c
+#13 93.98 INSTALL	doc/examples/decode_audio.c
+#13 93.98 INSTALL	doc/examples/decode_filter_audio.c
+#13 93.98 INSTALL	doc/examples/decode_filter_video.c
+#13 93.98 INSTALL	doc/examples/decode_video.c
+#13 93.98 INSTALL	doc/examples/demux_decode.c
+#13 93.98 INSTALL	doc/examples/encode_audio.c
+#13 93.98 INSTALL	doc/examples/encode_video.c
+#13 93.98 INSTALL	doc/examples/extract_mvs.c
+#13 93.98 INSTALL	doc/examples/filter_audio.c
+#13 93.98 INSTALL	doc/examples/hw_decode.c
+#13 93.98 INSTALL	doc/examples/mux.c
+#13 93.98 INSTALL	doc/examples/qsv_decode.c
+#13 93.98 INSTALL	doc/examples/qsv_transcode.c
+#13 93.98 INSTALL	doc/examples/remux.c
+#13 93.98 INSTALL	doc/examples/resample_audio.c
+#13 93.98 INSTALL	doc/examples/scale_video.c
+#13 93.98 INSTALL	doc/examples/show_metadata.c
+#13 93.98 INSTALL	doc/examples/transcode.c
+#13 93.98 INSTALL	doc/examples/transcode_aac.c
+#13 93.98 INSTALL	doc/examples/vaapi_encode.c
+#13 93.98 INSTALL	doc/examples/vaapi_transcode.c
+#13 93.98 INSTALL	doc/examples/README
+#13 93.98 INSTALL	doc/examples/Makefile
+#13 93.99 INSTALL	libavfilter/libavfilter.a
+#13 94.00 INSTALL	libavformat/libavformat.a
+#13 94.01 INSTALL	libavcodec/libavcodec.a
+#13 94.05 INSTALL	libswresample/libswresample.a
+#13 94.05 INSTALL	libswscale/libswscale.a
+#13 94.06 INSTALL	libavutil/libavutil.a
+#13 94.08 INSTALL	libavfilter/avfilter.h
+#13 94.08 INSTALL	libavfilter/buffersink.h
+#13 94.08 INSTALL	libavfilter/buffersrc.h
+#13 94.08 INSTALL	libavfilter/version.h
+#13 94.08 INSTALL	libavfilter/version_major.h
+#13 94.09 INSTALL	libavfilter/libavfilter.pc
+#13 94.09 INSTALL	libavformat/avformat.h
+#13 94.09 INSTALL	libavformat/avio.h
+#13 94.09 INSTALL	libavformat/version.h
+#13 94.09 INSTALL	libavformat/version_major.h
+#13 94.09 INSTALL	libavformat/libavformat.pc
+#13 94.10 INSTALL	libavcodec/ac3_parser.h
+#13 94.10 INSTALL	libavcodec/adts_parser.h
+#13 94.10 INSTALL	libavcodec/avcodec.h
+#13 94.10 INSTALL	libavcodec/avdct.h
+#13 94.10 INSTALL	libavcodec/avfft.h
+#13 94.10 INSTALL	libavcodec/bsf.h
+#13 94.10 INSTALL	libavcodec/codec.h
+#13 94.10 INSTALL	libavcodec/codec_desc.h
+#13 94.10 INSTALL	libavcodec/codec_id.h
+#13 94.10 INSTALL	libavcodec/codec_par.h
+#13 94.10 INSTALL	libavcodec/d3d11va.h
+#13 94.10 INSTALL	libavcodec/defs.h
+#13 94.10 INSTALL	libavcodec/dirac.h
+#13 94.10 INSTALL	libavcodec/dv_profile.h
+#13 94.10 INSTALL	libavcodec/dxva2.h
+#13 94.10 INSTALL	libavcodec/jni.h
+#13 94.10 INSTALL	libavcodec/mediacodec.h
+#13 94.10 INSTALL	libavcodec/packet.h
+#13 94.10 INSTALL	libavcodec/qsv.h
+#13 94.10 INSTALL	libavcodec/vdpau.h
+#13 94.10 INSTALL	libavcodec/version.h
+#13 94.10 INSTALL	libavcodec/version_major.h
+#13 94.10 INSTALL	libavcodec/videotoolbox.h
+#13 94.10 INSTALL	libavcodec/vorbis_parser.h
+#13 94.10 INSTALL	libavcodec/libavcodec.pc
+#13 94.10 INSTALL	libswresample/swresample.h
+#13 94.10 INSTALL	libswresample/version.h
+#13 94.10 INSTALL	libswresample/version_major.h
+#13 94.11 INSTALL	libswresample/libswresample.pc
+#13 94.11 INSTALL	libswscale/swscale.h
+#13 94.11 INSTALL	libswscale/version.h
+#13 94.11 INSTALL	libswscale/version_major.h
+#13 94.11 INSTALL	libswscale/libswscale.pc
+#13 94.12 INSTALL	libavutil/adler32.h
+#13 94.12 INSTALL	libavutil/aes.h
+#13 94.12 INSTALL	libavutil/aes_ctr.h
+#13 94.12 INSTALL	libavutil/ambient_viewing_environment.h
+#13 94.12 INSTALL	libavutil/attributes.h
+#13 94.12 INSTALL	libavutil/audio_fifo.h
+#13 94.12 INSTALL	libavutil/avassert.h
+#13 94.12 INSTALL	libavutil/avstring.h
+#13 94.12 INSTALL	libavutil/avutil.h
+#13 94.12 INSTALL	libavutil/base64.h
+#13 94.12 INSTALL	libavutil/blowfish.h
+#13 94.12 INSTALL	libavutil/bprint.h
+#13 94.12 INSTALL	libavutil/bswap.h
+#13 94.12 INSTALL	libavutil/buffer.h
+#13 94.12 INSTALL	libavutil/cast5.h
+#13 94.12 INSTALL	libavutil/camellia.h
+#13 94.12 INSTALL	libavutil/channel_layout.h
+#13 94.12 INSTALL	libavutil/common.h
+#13 94.12 INSTALL	libavutil/cpu.h
+#13 94.12 INSTALL	libavutil/crc.h
+#13 94.12 INSTALL	libavutil/csp.h
+#13 94.12 INSTALL	libavutil/des.h
+#13 94.12 INSTALL	libavutil/detection_bbox.h
+#13 94.12 INSTALL	libavutil/dict.h
+#13 94.12 INSTALL	libavutil/display.h
+#13 94.12 INSTALL	libavutil/dovi_meta.h
+#13 94.12 INSTALL	libavutil/downmix_info.h
+#13 94.12 INSTALL	libavutil/encryption_info.h
+#13 94.12 INSTALL	libavutil/error.h
+#13 94.12 INSTALL	libavutil/eval.h
+#13 94.12 INSTALL	libavutil/executor.h
+#13 94.12 INSTALL	libavutil/fifo.h
+#13 94.12 INSTALL	libavutil/file.h
+#13 94.12 INSTALL	libavutil/frame.h
+#13 94.12 INSTALL	libavutil/hash.h
+#13 94.12 INSTALL	libavutil/hdr_dynamic_metadata.h
+#13 94.12 INSTALL	libavutil/hdr_dynamic_vivid_metadata.h
+#13 94.12 INSTALL	libavutil/hmac.h
+#13 94.12 INSTALL	libavutil/hwcontext.h
+#13 94.12 INSTALL	libavutil/hwcontext_cuda.h
+#13 94.12 INSTALL	libavutil/hwcontext_d3d11va.h
+#13 94.12 INSTALL	libavutil/hwcontext_d3d12va.h
+#13 94.12 INSTALL	libavutil/hwcontext_drm.h
+#13 94.12 INSTALL	libavutil/hwcontext_dxva2.h
+#13 94.12 INSTALL	libavutil/hwcontext_qsv.h
+#13 94.12 INSTALL	libavutil/hwcontext_mediacodec.h
+#13 94.12 INSTALL	libavutil/hwcontext_opencl.h
+#13 94.12 INSTALL	libavutil/hwcontext_vaapi.h
+#13 94.12 INSTALL	libavutil/hwcontext_videotoolbox.h
+#13 94.12 INSTALL	libavutil/hwcontext_vdpau.h
+#13 94.12 INSTALL	libavutil/hwcontext_vulkan.h
+#13 94.12 INSTALL	libavutil/iamf.h
+#13 94.12 INSTALL	libavutil/imgutils.h
+#13 94.12 INSTALL	libavutil/intfloat.h
+#13 94.12 INSTALL	libavutil/intreadwrite.h
+#13 94.12 INSTALL	libavutil/lfg.h
+#13 94.12 INSTALL	libavutil/log.h
+#13 94.12 INSTALL	libavutil/lzo.h
+#13 94.12 INSTALL	libavutil/macros.h
+#13 94.12 INSTALL	libavutil/mathematics.h
+#13 94.12 INSTALL	libavutil/mastering_display_metadata.h
+#13 94.12 INSTALL	libavutil/md5.h
+#13 94.12 INSTALL	libavutil/mem.h
+#13 94.12 INSTALL	libavutil/motion_vector.h
+#13 94.12 INSTALL	libavutil/murmur3.h
+#13 94.12 INSTALL	libavutil/opt.h
+#13 94.12 INSTALL	libavutil/parseutils.h
+#13 94.12 INSTALL	libavutil/pixdesc.h
+#13 94.12 INSTALL	libavutil/pixelutils.h
+#13 94.12 INSTALL	libavutil/pixfmt.h
+#13 94.12 INSTALL	libavutil/random_seed.h
+#13 94.12 INSTALL	libavutil/rc4.h
+#13 94.12 INSTALL	libavutil/rational.h
+#13 94.12 INSTALL	libavutil/replaygain.h
+#13 94.12 INSTALL	libavutil/ripemd.h
+#13 94.12 INSTALL	libavutil/samplefmt.h
+#13 94.12 INSTALL	libavutil/sha.h
+#13 94.12 INSTALL	libavutil/sha512.h
+#13 94.12 INSTALL	libavutil/spherical.h
+#13 94.12 INSTALL	libavutil/stereo3d.h
+#13 94.12 INSTALL	libavutil/threadmessage.h
+#13 94.12 INSTALL	libavutil/time.h
+#13 94.12 INSTALL	libavutil/timecode.h
+#13 94.12 INSTALL	libavutil/timestamp.h
+#13 94.12 INSTALL	libavutil/tree.h
+#13 94.12 INSTALL	libavutil/twofish.h
+#13 94.12 INSTALL	libavutil/uuid.h
+#13 94.12 INSTALL	libavutil/version.h
+#13 94.12 INSTALL	libavutil/video_enc_params.h
+#13 94.12 INSTALL	libavutil/xtea.h
+#13 94.12 INSTALL	libavutil/tea.h
+#13 94.12 INSTALL	libavutil/tx.h
+#13 94.12 INSTALL	libavutil/film_grain_params.h
+#13 94.12 INSTALL	libavutil/video_hint.h
+#13 94.12 INSTALL	libavutil/avconfig.h
+#13 94.12 INSTALL	libavutil/ffversion.h
+#13 94.13 INSTALL	libavutil/libavutil.pc
+#13 DONE 94.2s
+
+#14 [media-build  9/10] RUN python -c "import subprocess; assert all(b'INTERP' not in subprocess.check_output(['readelf','-l','/opt/media/bin/'+name]) for name in ('ffmpeg','ffprobe'))"
+#14 DONE 0.3s
+
+#15 [media-build 10/10] RUN python -c "import hashlib,json,pathlib,subprocess; p=json.load(open('/build/profile.json')); p['binaries']={name:hashlib.sha256(pathlib.Path('/opt/media/bin/'+name).read_bytes()).hexdigest() for name in ('ffmpeg','ffprobe')}; p['buildPackages']=subprocess.check_output(['dpkg-query','-W']).decode().splitlines(); pathlib.Path('/opt/media/runtime-profile.json').write_text(json.dumps(p,sort_keys=True))"
+#15 DONE 0.4s
+
+#16 [cpu  2/14] WORKDIR /opt/processing
+#16 CACHED
+
+#17 [cpu  3/14] COPY --from=media-build /opt/media /opt/media
+#17 DONE 0.1s
+
+#18 [cpu  4/14] COPY services/property-processing/media-build.json /opt/media/build-profile.json
+#18 DONE 0.3s
+
+#19 [cpu  5/14] COPY docs/adr/licenses/ffmpeg-7.1.5 /usr/share/doc/haven-processing/ffmpeg-7.1.5
+#19 DONE 0.1s
+
+#20 [cpu  6/14] COPY docs/adr/licenses/media-glibc-2.41 /usr/share/doc/haven-processing/media-glibc-2.41
+#20 DONE 0.1s
+
+#21 [cpu  7/14] COPY docs/adr/licenses/media-zlib-1.3.1 /usr/share/doc/haven-processing/media-zlib-1.3.1
+#21 DONE 0.1s
+
+#22 [cpu  8/14] COPY docs/adr/licenses/media-libgcc-14.2.0 /usr/share/doc/haven-processing/media-libgcc-14.2.0
+#22 DONE 0.1s
+
+#23 [cpu  9/14] COPY services/property-processing/locks/cpu.lock /tmp/cpu.lock
+#23 DONE 0.1s
+
+#24 [cpu 10/14] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/cpu.lock && python -m pip check
+#24 1.629 Looking in links: /wheels
+#24 1.637 Processing /wheels/pypdf-6.1.1-py3-none-any.whl (from -r /tmp/cpu.lock (line 2))
+#24 1.648 Processing /wheels/pillow-11.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (from -r /tmp/cpu.lock (line 4))
+#24 1.693 Processing /wheels/pypdfium2-5.14.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (from -r /tmp/cpu.lock (line 6))
+#24 1.737 Installing collected packages: pypdfium2, pypdf, pillow
+#24 2.544 Successfully installed pillow-11.3.0 pypdf-6.1.1 pypdfium2-5.14.0
+#24 2.544 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#24 3.774 No broken requirements found.
+#24 DONE 3.9s
+
+#25 [cpu 11/14] COPY docs/adr/processing-dependencies.json ./dependencies.json
+#25 DONE 0.1s
+
+#26 [cpu 12/14] COPY docs/adr/licenses/pypdfium2-5.14.0 /usr/share/doc/haven-processing/pypdfium2-5.14.0
+#26 DONE 0.1s
+
+#27 [cpu 13/14] COPY services/property-processing/property_processing ./property_processing
+#27 DONE 0.1s
+
+#28 [cpu 14/14] RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+#28 DONE 0.5s
+
+#29 [cpu-tests 1/3] COPY services/property-processing/locks/test.lock /tmp/test.lock
+#29 DONE 0.1s
+
+#30 [cpu-tests 2/3] RUN --mount=type=bind,source=services/property-processing/.wheels,target=/wheels,readonly python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /tmp/test.lock && python -m pip check
+#30 1.656 Looking in links: /wheels
+#30 1.657 Requirement already satisfied: pypdf==6.1.1 in /usr/local/lib/python3.12/site-packages (from -r /tmp/test.lock (line 2)) (6.1.1)
+#30 1.658 Requirement already satisfied: pillow==11.3.0 in /usr/local/lib/python3.12/site-packages (from -r /tmp/test.lock (line 4)) (11.3.0)
+#30 1.664 Processing /wheels/pytest-8.4.2-py3-none-any.whl (from -r /tmp/test.lock (line 6))
+#30 1.674 Processing /wheels/iniconfig-2.1.0-py3-none-any.whl (from -r /tmp/test.lock (line 8))
+#30 1.677 Processing /wheels/packaging-25.0-py3-none-any.whl (from -r /tmp/test.lock (line 10))
+#30 1.679 Processing /wheels/pluggy-1.6.0-py3-none-any.whl (from -r /tmp/test.lock (line 12))
+#30 1.682 Processing /wheels/pygments-2.19.2-py3-none-any.whl (from -r /tmp/test.lock (line 14))
+#30 1.714 Installing collected packages: pygments, pluggy, packaging, iniconfig, pytest
+#30 2.944 Successfully installed iniconfig-2.1.0 packaging-25.0 pluggy-1.6.0 pygments-2.19.2 pytest-8.4.2
+#30 2.945 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#30 4.240 No broken requirements found.
+#30 DONE 4.3s
+
+#31 [cpu-tests 3/3] COPY services/property-processing/tests ./tests
+#31 DONE 0.1s
+
+#32 exporting to image
+#32 exporting layers
+#32 exporting layers 2.8s done
+#32 exporting manifest sha256:178b550a2bd44dbc04e83a36121131a0a303887c2647efb7108c8b5de0dc4e9a 0.0s done
+#32 exporting config sha256:5506b959b0ab0df058465043ff459407109684956b87fe3870732b87915704ac 0.1s done
+#32 exporting attestation manifest sha256:bd9f93a0e184b57e111674191bc1680afec335fb8be324d559780e6d2afef387 0.1s done
+#32 exporting manifest list sha256:04cf95dc8cec5c18ef22c99e70e652b04f9e4d63007cb3e3a6c44ae41d36f13c
+#32 exporting manifest list sha256:04cf95dc8cec5c18ef22c99e70e652b04f9e4d63007cb3e3a6c44ae41d36f13c 0.1s done
+#32 naming to docker.io/library/haven-processing-tests-cpu:latest done
+#32 unpacking to docker.io/library/haven-processing-tests-cpu:latest
+#32 unpacking to docker.io/library/haven-processing-tests-cpu:latest 1.2s done
+#32 DONE 4.3s
+
+#33 resolving provenance for metadata file
+#33 DONE 0.0s
+ Image haven-processing-tests-cpu Built 

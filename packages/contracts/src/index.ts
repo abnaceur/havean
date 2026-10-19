@@ -113,3 +113,44 @@ export * from './seo';
 
 export * from './digitization-inputs';
 export * from './digitization-inventory';
+
+export * from './digitization-frames';
+
+export * from './digitization-tours';
+
+export * from './digitization-tour-review';
+
+export * from './digitization-frame-privacy';
+
+export * from './digitization-fact-review';
+
+export * from './digitization-draft';
+
+export * from './digitization-processing';
+
+export * from './digitization-quality';
+export * from './digitization-registration';
+export * from './digitization-registration-review';
+export * from './digitization-splat';
+export * from './digitization-publication';
+
+export * from './digitization-scene-privacy';
+export * from './digitization-model-review';
+
+export * from './digitization-model-publication';
+
+export * from './digitization-tenant-deletion';
+
+export * from './digitization-model-source-consent';
+export * from './digitization-camera';
+
+export * from './digitization-training';
+export * from './digitization-construction';
+
+export * from './digitization-scene-evidence';
+
+// Paused by product request: private, owner, internal and published engine access.
+// Manual property media uploads and viewers remain available.
+export const digitizationEngineEnabled = false;
+
+export * from './property-authoring';

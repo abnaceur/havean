@@ -1,3 +1,4 @@
+import {assertNoSelectedFactConflicts} from './fact-conflicts.js';
 import {createHash} from 'node:crypto';
 import type pg from 'pg';
 import type {Actor} from '@haven/database';
@@ -31,11 +32,19 @@ export function mapConfirmedUnitFacts(candidates:readonly DigitizationFactCandid
 /** Read-only preparation for the reviewed application port. No public unit,
  * listing, money, geography, asset or approval is changed here. */
 export async function prepareConfirmedUnitChange(c:pg.PoolClient,a:Actor,engine:string,x:{workspaceVersion:number;inputRevision:number;listingVersion:number;decisionIds:string[]}){
- await requireDigitizationAgency(c,a);const workspace=await checkedWorkspace(c,engine);
+ const {workspace,unitPatch}=await prepareConfirmedUnitFacts(c,a,engine,x);
  if(workspace.target.type!=='listing')fail(422,'Attach the intake through reviewed inventory mapping first.','UNIT_TARGET_REQUIRED');
  const listing=await digitizationListingAccess(c,a,workspace.target.id);
- if(workspace.version!==x.workspaceVersion||workspace.inputRevision!==x.inputRevision||listing.version!==x.listingVersion)fail(409,'Workspace, source inputs or listing changed.','VERSION_CONFLICT');
+ if(listing.version!==x.listingVersion)fail(409,'The listing changed.','VERSION_CONFLICT');
  if(listing.status!=='published')fail(409,'Use the draft application workflow for this listing.','WORKFLOW_CONFLICT');
+ const unit=(await c.query('SELECT id,community_id,area::text,beds,living_rooms,baths,orientation,floor,elevator FROM units WHERE id=$1',[listing.unit_id])).rows[0];if(!unit)fail(404,'Physical unit not found');
+ return {listingId:listing.id,unitId:unit.id,listingVersion:listing.version,inputRevision:x.inputRevision,decisionIds:x.decisionIds,unitBefore:unit,unitFingerprint:createHash('sha256').update(JSON.stringify(unit)).digest('hex'),unitPatch};
+}
+/** Current private confirmations shared by draft creation and reviewed proposals. */
+export async function prepareConfirmedUnitFacts(c:pg.PoolClient,a:Actor,engine:string,x:{workspaceVersion:number;inputRevision:number;decisionIds:string[]}){
+ await requireDigitizationAgency(c,a);const workspace=await checkedWorkspace(c,engine);
+ if(workspace.state!=='active')fail(409,'This workspace no longer accepts fact application.','WORKFLOW_CONFLICT');
+ if(workspace.version!==x.workspaceVersion||workspace.inputRevision!==x.inputRevision)fail(409,'Workspace or source inputs changed.','VERSION_CONFLICT');
  if(!x.decisionIds.length||x.decisionIds.length>20||new Set(x.decisionIds).size!==x.decisionIds.length)fail(422,'Select distinct current fact decisions.','UNIT_FACT_SELECTION_REQUIRED');
  const rows=(await c.query(`SELECT d.id AS decision_id,d.candidate_version,d.decision,d.value,d.created_by AS reviewer,d.created_at AS reviewed_at,f.id,f.version,f.field,f.candidate,f.input_revision,
  (SELECT latest.id FROM fact_decisions latest WHERE latest.digitization_id=f.digitization_id AND latest.candidate_id=f.id ORDER BY latest.created_at DESC,latest.id DESC LIMIT 1) AS latest_decision,
@@ -47,10 +56,10 @@ export async function prepareConfirmedUnitChange(c:pg.PoolClient,a:Actor,engine:
  const sources=new Set(snapshot.source_set.filter((s:any)=>s.purpose==='document').map((s:any)=>s.assetId));
  const candidates=rows.map(row=>{
   if(row.latest_count!==1||row.latest_decision!==row.decision_id||row.candidate_version!==row.version||row.input_revision!==x.inputRevision||!['accepted','corrected'].includes(row.decision))fail(409,'A selected fact confirmation changed or is ambiguous.','UNIT_FACT_CONFIRMATION_CHANGED');
-  const candidate=digitizationFactCandidate.parse({...row.candidate,...(row.decision==='corrected'?{normalizedValue:row.value}:{}),review:{status:row.decision,actorId:row.reviewer,reviewedAt:row.reviewed_at.toISOString()}});
-  if(candidate.id!==row.id||candidate.version!==row.version||candidate.field!==row.field||candidate.inputRevision!==x.inputRevision||candidate.organizationId!==workspace.organizationId||candidate.target.type!=='listing'||candidate.target.id!==listing.id||candidate.target.unitId!==listing.unit_id||candidate.evidence.some(e=>!sources.has(e.assetId)))fail(422,'Every mapped fact must retain its exact unit/document lineage.','UNIT_FACT_LINEAGE_INVALID');
+  const candidate=digitizationFactCandidate.parse({...row.candidate,normalizedValue:row.decision==='accepted'&&row.value===null?row.candidate.normalizedValue:row.value,review:{status:row.decision,actorId:row.reviewer,reviewedAt:row.reviewed_at.toISOString()}});
+  if(candidate.id!==row.id||candidate.version!==row.version||candidate.field!==row.field||candidate.inputRevision!==x.inputRevision||candidate.organizationId!==workspace.organizationId||candidate.target.type!==workspace.target.type||candidate.target.id!==workspace.target.id||candidate.target.type==='listing'&&candidate.target.unitId!==workspace.target.unitId||candidate.evidence.some(e=>!sources.has(e.assetId)))fail(422,'Every mapped fact must retain its exact unit/document lineage.','UNIT_FACT_LINEAGE_INVALID');
   return candidate;
  });
- const unit=(await c.query('SELECT id,community_id,area::text,beds,living_rooms,baths,orientation,floor,elevator FROM units WHERE id=$1',[listing.unit_id])).rows[0];if(!unit)fail(404,'Physical unit not found');
- return {listingId:listing.id,unitId:unit.id,listingVersion:listing.version,inputRevision:x.inputRevision,decisionIds:x.decisionIds,unitBefore:unit,unitFingerprint:createHash('sha256').update(JSON.stringify(unit)).digest('hex'),unitPatch:mapConfirmedUnitFacts(candidates)};
+ await assertNoSelectedFactConflicts(c,engine,x.inputRevision,candidates);
+ return {workspace,candidates,unitPatch:mapConfirmedUnitFacts(candidates)};
 }

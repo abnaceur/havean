@@ -1,0 +1,37 @@
+# Test-only local investigation image. No deployment or model admission.
+services:
+  ocr:
+    image: haven-ocr-worker:3.3.3-clean-cpu-no-gui-investigation-v2
+    container_name: ${OCR_PROTOCOL_CONTAINER_NAME:?}
+    init: true
+    read_only: true
+    user: '10001:10001'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 4g
+    cpus: 1
+    pids_limit: 64
+    tmpfs:
+      - /jobs:size=67108864,uid=10001,gid=10001,mode=0700
+      - /tmp:size=67108864,mode=1777
+    volumes:
+      - ./services/property-processing/property_processing:/opt/processing/property_processing:ro
+      - type: bind
+        source: ${OCR_PROTOCOL_KEY_FILE:?}
+        target: /run/runner-test-key
+        read_only: true
+        bind:
+          create_host_path: false
+    environment:
+      PROCESSING_DEPLOYMENT: test
+      PROCESSING_ENABLE_OCR_INVESTIGATION: 'true'
+      PROCESSING_ADAPTER: unavailable
+      PROCESSING_ENABLE_SIMULATOR: 'false'
+      PROCESSING_EXECUTION_ROOT: /jobs
+      PROCESSING_SIGNING_KEY_FILE: /run/runner-test-key
+    command: [python, -m, property_processing.server]
+    networks: [processing]
+networks:
+  processing:
+    external: true
+    name: haven_processing

@@ -1,0 +1,39 @@
+# Exact-byte CPU runtime investigation. No production or GPU admission.
+name: haven-reconstruction-runtime-tests
+services:
+  colmap-runtime-export:
+    profiles: [runtime-build]
+    image: haven-colmap-source:3.10-cpu-exclusions-investigation-v1
+    network_mode: none
+    read_only: true
+    user: '1000:1000'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+    cpus: 1
+    pids_limit: 32
+    volumes:
+      - ./services/property-processing/export_colmap_runtime.py:/export-runtime.py:ro
+      - ./services/property-processing/.colmap-runtime:/export
+    entrypoint: [python3, /export-runtime.py, /export]
+  colmap-runtime:
+    image: haven-colmap-runtime:3.10-source-cpu-v1
+    build:
+      context: .
+      dockerfile: services/property-processing/Dockerfile.colmap-runtime
+      target: cpu
+    init: true
+    network_mode: none
+    read_only: true
+    user: '10001:10001'
+    group_add: ['1000']
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 8g
+    cpus: 2
+    pids_limit: 128
+    tmpfs: ['/tmp:size=67108864,mode=1777']
+    volumes:
+      - ./infra/generated/reconstruction/tum-xyz-input:/input:ro
+      - ./infra/generated/reconstruction/results:/results
+    command: [python, -m, property_processing.colmap_cli, --input, /input, --output, /results/tum-xyz-minimal-runtime-v1, --max-seconds, '240']

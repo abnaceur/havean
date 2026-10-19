@@ -1,0 +1,30 @@
+time="2026-10-10T00:59:25+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-web-1 haven-ops-1 haven-worker-1 haven-api-1 haven-processing-volume-init-1 haven-proxy-1 haven-identity-1 haven-migrate-1 haven-install-1 haven-mail-1 haven-scanner-1 haven-storage-1 haven-db-1 haven-search-1 haven-cache-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-ocr-confined-investigation-run-8d465998c4f8 Creating 
+ Container haven-ocr-confined-investigation-run-8d465998c4f8 Created 
+Traceback (most recent call last):
+  File "/opt/processing/property_processing/pdf_raster.py", line 24, in verified_pdfium
+    manifest = json.loads((Path(__file__).resolve().parent.parent / 'dependencies.json').read_text())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/opt/processing/dependencies.json'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/processing/ocr_worker_smoke.py", line 56, in <module>
+    main()
+  File "/opt/processing/ocr_worker_smoke.py", line 22, in main
+    assert capabilities()['ocrAvailable'] is False
+           ^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/server.py", line 18, in capabilities
+    verified_pdfium()  # Fail closed for a substituted/script-enabled native decoder.
+    ^^^^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/pdf_raster.py", line 44, in verified_pdfium
+    raise SourceError('PDFIUM_BUILD_UNAVAILABLE') from exc
+property_processing.sources.SourceError: PDFIUM_BUILD_UNAVAILABLE
+

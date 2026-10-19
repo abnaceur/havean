@@ -1,0 +1,131 @@
+ Container haven-processing-tests-cpu-run-f9a2e3a05e39 Creating 
+ Container haven-processing-tests-cpu-run-f9a2e3a05e39 Created 
+Exported 27 authored Gaussian splats; not GPU training evidence.
+{"fixture":"authored_gaussians_not_gpu_training","realPrivateStorage":true,"splatCount":27}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-registration-review.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 4254[2mms[22m[39m
+   [33m[2m✓[22m[39m independent exact registration approval on desktop fences author/admin, foreign scope, replay, stale dependencies and public access[33m 2208[2mms[22m[39m
+   [33m[2m✓[22m[39m independent exact registration approval on mobile fences author/admin, foreign scope, replay, stale dependencies and public access[33m 2043[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m   Start at [22m 19:48:16
+[2m   Duration [22m 6.18s[2m (tests 70%, import 18%, transform 12%)[22m
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [32m✓[39m tests/integration/digitization-model-review.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1872[2mms[22m[39m
+   [33m[2m✓[22m[39m actual structural review requires assigned independent authority and exact private candidate, without publishing[33m 887[2mms[22m[39m
+   [33m[2m✓[22m[39m actual splat review requires assigned independent authority and exact private candidate, without publishing[33m 982[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-lifecycle-events.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 684[2mms[22m[39m
+   [33m[2m✓[22m[39m current review/capture/privacy/publication notifications acknowledge once without running or publishing; unknown versions remain pending[33m 681[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 19:48:23
+[2m   Duration [22m 5.31s[2m (tests 50%, import 38%, transform 12%)[22m
+
+ Container haven-integration-tests-run-ba0592fdccd0 Creating 
+ Container haven-integration-tests-run-ba0592fdccd0 Created 
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-model-review.spec.ts:5:1 › author shares both model candidates and assigned staff reviews exact private bytes (37.5s)
+  ✘  2 [mobile] › tests/e2e/digitization-model-review.spec.ts:5:1 › author shares both model candidates and assigned staff reviews exact private bytes (34.0s)
+
+
+  1) [desktop] › tests/e2e/digitization-model-review.spec.ts:5:1 › author shares both model candidates and assigned staff reviews exact private bytes 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('[data-model-review-id="ae1d4944-3b51-4c03-8dea-580ecce6e78e"]').getByRole('status')
+    Expected substring: "Structural model loaded"
+    Received string:    ""
+    Timeout: 30000ms
+
+    Call log:
+      - Expect "toContainText" locator('[data-model-review-id="ae1d4944-3b51-4c03-8dea-580ecce6e78e"]').getByRole('status') with timeout 30000ms
+      - waiting for locator('[data-model-review-id="ae1d4944-3b51-4c03-8dea-580ecce6e78e"]').getByRole('status')
+        62 × locator resolved to <p role="status"></p>
+           - unexpected value ""
+
+
+      20 |    await article.getByRole('button',{name:'Inspect model candidate',exact:true}).click();
+      21 |    await article.getByRole('button',{name:modelType==='structural'?'Open 3D preview':'Open scene preview',exact:true}).click();
+    > 22 |    await expect(article.getByRole('status')).toContainText(modelType==='structural'?'Structural model loaded':'Scene loaded:',{timeout:30000});
+         |                                              ^
+      23 |    await article.getByRole('checkbox',{name:'I inspected this exact candidate and confirmed it is suitable for a public property visualization.',exact:true}).check();
+      24 |    await article.getByRole('checkbox',{name:'I confirmed the estimated or unscaled visualization limitations and unavailable metric measurements.',exact:true}).check();
+      25 |    await article.getByRole('textbox',{name:'Model review reason',exact:true}).fill('Synthetic automated browser privacy review; no human parity, real property measurement or publication acceptance.');
+        at /workspace/tests/e2e/digitization-model-review.spec.ts:22:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-review--df78c-reviews-exact-private-bytes-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-review--df78c-reviews-exact-private-bytes-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-model-review--df78c-reviews-exact-private-bytes-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-model-review--df78c-reviews-exact-private-bytes-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-model-review--df78c-reviews-exact-private-bytes-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-model-review.spec.ts:5:1 › author shares both model candidates and assigned staff reviews exact private bytes 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('[data-model-review-id="7ae024eb-6a30-4f73-8bac-8ace6d12bbaf"]').getByRole('status')
+    Expected substring: "Structural model loaded"
+    Received string:    ""
+    Timeout: 30000ms
+
+    Call log:
+      - Expect "toContainText" locator('[data-model-review-id="7ae024eb-6a30-4f73-8bac-8ace6d12bbaf"]').getByRole('status') with timeout 30000ms
+      - waiting for locator('[data-model-review-id="7ae024eb-6a30-4f73-8bac-8ace6d12bbaf"]').getByRole('status')
+        3 × locator resolved to <p role="status">Loading private structural model…</p>
+          - unexpected value "Loading private structural model…"
+        59 × locator resolved to <p role="status"></p>
+           - unexpected value ""
+
+
+      20 |    await article.getByRole('button',{name:'Inspect model candidate',exact:true}).click();
+      21 |    await article.getByRole('button',{name:modelType==='structural'?'Open 3D preview':'Open scene preview',exact:true}).click();
+    > 22 |    await expect(article.getByRole('status')).toContainText(modelType==='structural'?'Structural model loaded':'Scene loaded:',{timeout:30000});
+         |                                              ^
+      23 |    await article.getByRole('checkbox',{name:'I inspected this exact candidate and confirmed it is suitable for a public property visualization.',exact:true}).check();
+      24 |    await article.getByRole('checkbox',{name:'I confirmed the estimated or unscaled visualization limitations and unavailable metric measurements.',exact:true}).check();
+      25 |    await article.getByRole('textbox',{name:'Model review reason',exact:true}).fill('Synthetic automated browser privacy review; no human parity, real property measurement or publication acceptance.');
+        at /workspace/tests/e2e/digitization-model-review.spec.ts:22:46
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-review--df78c-reviews-exact-private-bytes-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-model-review--df78c-reviews-exact-private-bytes-mobile/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-model-review--df78c-reviews-exact-private-bytes-mobile/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-model-review--df78c-reviews-exact-private-bytes-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-model-review--df78c-reviews-exact-private-bytes-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-model-review.spec.ts:5:1 › author shares both model candidates and assigned staff reviews exact private bytes 
+    [mobile] › tests/e2e/digitization-model-review.spec.ts:5:1 › author shares both model candidates and assigned staff reviews exact private bytes 
+

@@ -1,0 +1,58 @@
+# Build/functional validation only. Production deployments select the resulting
+# immutable registry digest through compose.ocr-production.yaml.
+name: haven-ocr-release-build
+services:
+  ocr-release:
+    image: haven-processing-ocr:3.3.3-offline-cpu-v1
+    build:
+      context: .
+      dockerfile: services/property-processing/Dockerfile.ocr-investigation
+      target: ocr-release
+    init: true
+    network_mode: none
+    read_only: true
+    user: '10001:10001'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 4g
+    cpus: 1
+    pids_limit: 64
+    tmpfs:
+      - /tmp:size=67108864,mode=1777
+      - /job:size=67108864,uid=10001,gid=10001,mode=0700
+    command: [python, /opt/processing/verify_ocr_release.py]
+  ocr-source-download:
+    profiles: [bootstrap]
+    image: python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+    init: true
+    network_mode: bridge
+    read_only: true
+    user: '${PROCESSING_BUILD_UID:-1000}:${PROCESSING_BUILD_GID:-1000}'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+    pids_limit: 16
+    volumes:
+      - ./services/property-processing/download_ocr_release_sources.py:/download.py:ro
+      - ./services/property-processing/ocr-production-release.json:/release.json:ro
+      - ./services/property-processing/.ocr-sources:/sources
+    command: [python, /download.py, --manifest, /release.json, --directory, /sources]
+  ocr-input-download:
+    profiles: [bootstrap]
+    image: python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+    init: true
+    network_mode: bridge
+    read_only: true
+    user: '${PROCESSING_BUILD_UID:-1000}:${PROCESSING_BUILD_GID:-1000}'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 768m
+    pids_limit: 16
+    environment:
+      PYTHONDONTWRITEBYTECODE: '1'
+    volumes:
+      - ./services/property-processing:/inputs:ro
+      - ./services/property-processing/.ocr-wheels:/inputs/.ocr-wheels
+      - ./services/property-processing/.media-sources:/inputs/.media-sources
+      - ./docs/adr/ocr-production-native-linkage.json:/native-linkage.json:ro
+    command: [sh, -c, 'python /inputs/download_ocr_release_inputs.py && python /inputs/download_media_source.py --profile /inputs/media-build.json --directory /inputs/.media-sources']

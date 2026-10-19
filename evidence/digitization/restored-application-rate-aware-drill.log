@@ -1,0 +1,132 @@
+{"label":"P","status":"fixture-objects-copied-and-verified","objects":1073,"bytes":16963686,"digest":"32e054e8764905a8f0904a34f9ee989f484215e4f9d7cf4082004000e0ca67e8","sourceMutated":false,"physicalPropertyEvidence":false}
+{"status":"failed","code":"RESTORED_DIGITIZATION_RECONCILIATION_FAILED"}
+{"label":"P","status":"application-configuration-created","project":"haven-recovery-5da1ebbb-app","bind":"127.0.0.2","databaseContainer":"haven-recovery-408d3e9f-db","applicationVerified":false}
+{"label":"P","queueCounts":{"active":0,"completed":343,"delayed":0,"failed":52,"prioritized":0,"waiting":6984,"waiting-children":0},"failureCodes":{"RUN_NOT_EXECUTABLE":40,"ENGINE_EVENT_UNSUPPORTED":9,"SOURCE_SELECTION_AMBIGUOUS":3}}
+node:internal/errors:984
+  const err = new Error(message);
+              ^
+
+Error: Command failed: docker compose -f /tmp/haven-recovery-5da1ebbb-F6F0Pc/application/application.json --profile tests run --rm --no-deps tests pnpm exec playwright test tests/e2e/digitization-operator-processing.spec.ts tests/e2e/digitization-unit-application.spec.ts --project=desktop --output=/workspace/test-results/run --max-failures=1
+ Container haven-recovery-5da1ebbb-app-tests-run-8f4279fc4375 Creating 
+ Container haven-recovery-5da1ebbb-app-tests-run-8f4279fc4375 Created 
+
+
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execFileSync (node:child_process:927:15)
+    at docker (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:16:41)
+    at compose (file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:50:22)
+    at verifyRestoredApplication (file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:59:15)
+    at async file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:102:98 {
+  status: 1,
+  signal: null,
+  output: [
+    null,
+    '\n' +
+      'Running 2 tests using 1 worker\n' +
+      '\n' +
+      '  ✘  1 [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts (4.1m)\n' +
+      'Testing stopped early after 1 maximum allowed failures.\n' +
+      '\n' +
+      '\n' +
+      '  1) [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts \n' +
+      '\n' +
+      '    Error: expect(locator).toBeVisible() failed\n' +
+      '\n' +
+      "    Locator: getByRole('region', { name: 'Private source processing' }).getByText(/Run 1 · revision 1 · awaiting_review/)\n" +
+      '    Expected: visible\n' +
+      '    Timeout: 240000ms\n' +
+      '    Error: element(s) not found\n' +
+      '\n' +
+      '    Call log:\n' +
+      `      - Expect "toBeVisible" getByRole('region', { name: 'Private source processing' }).getByText(/Run 1 · revision 1 · awaiting_review/) with timeout 240000ms\n` +
+      "      - waiting for getByRole('region', { name: 'Private source processing' }).getByText(/Run 1 · revision 1 · awaiting_review/)\n" +
+      '\n' +
+      '\n' +
+      "      16 |  await panel.getByRole('button',{name:'Upload private source',exact:true}).click();await expect(panel.getByRole('status')).toHaveText('Source saved privately. Select a processing action below.');\n" +
+      "      17 |  await panel.getByRole('button',{name:'Extract available facts',exact:true}).click();await expect(panel.getByRole('status')).toContainText('Processing queued.');\n" +
+      "    > 18 |  await expect(panel.getByText(/Run 1 · revision 1 · awaiting_review/)).toBeVisible({timeout:process.env.HAVEN_RECOVERY_REHEARSAL==='true'?240000:45000});\n" +
+      '         |                                                                        ^\n' +
+      "      19 |  const summary=page.getByRole('region',{name:'Private property quality summary'});await summary.getByRole('button',{name:'Reload quality summary',exact:true}).click();await expect(summary.getByText('4 source facts · 4 awaiting review · 0 pages still requiring text review')).toBeVisible();\n" +
+      "      20 |  const review=page.getByRole('region',{name:'Private document fact review'});await review.getByRole('button',{name:'Reload document facts',exact:true}).click();\n" +
+      "      21 |  const response=await page.request.get(origin+'/api/v1/ops/digitizations/'+engineId+'/facts');expect(response.status()).toBe(200);const facts=(await response.json()).data.candidates;\n" +
+      '        at /workspace/tests/e2e/digitization-operator-processing.spec.ts:18:72\n' +
+      '\n' +
+      '    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n' +
+      '    test-results/run/digitization-operator-proc-4b52e--source-linked-review-facts-desktop/test-failed-1.png\n' +
+      '    ────────────────────────────────────────────────────────────────────────────────────────────────\n' +
+      '\n' +
+      '    Error Context: test-results/run/digitization-operator-proc-4b52e--source-linked-review-facts-desktop/error-context.md\n' +
+      '\n' +
+      '    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n' +
+      '    test-results/run/digitization-operator-proc-4b52e--source-linked-review-facts-desktop/trace.zip\n' +
+      '    Usage:\n' +
+      '\n' +
+      '        pnpm exec playwright show-trace test-results/run/digitization-operator-proc-4b52e--source-linked-review-facts-desktop/trace.zip\n' +
+      '\n' +
+      '    ────────────────────────────────────────────────────────────────────────────────────────────────\n' +
+      '\n' +
+      '  1 failed\n' +
+      '    [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts \n' +
+      '  1 did not run\n' +
+      '  1 error was not a part of any test, see above for details\n',
+    ' Container haven-recovery-5da1ebbb-app-tests-run-8f4279fc4375 Creating \n' +
+      ' Container haven-recovery-5da1ebbb-app-tests-run-8f4279fc4375 Created \n' +
+      '\n'
+  ],
+  pid: 1358413,
+  stdout: '\n' +
+    'Running 2 tests using 1 worker\n' +
+    '\n' +
+    '  ✘  1 [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts (4.1m)\n' +
+    'Testing stopped early after 1 maximum allowed failures.\n' +
+    '\n' +
+    '\n' +
+    '  1) [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts \n' +
+    '\n' +
+    '    Error: expect(locator).toBeVisible() failed\n' +
+    '\n' +
+    "    Locator: getByRole('region', { name: 'Private source processing' }).getByText(/Run 1 · revision 1 · awaiting_review/)\n" +
+    '    Expected: visible\n' +
+    '    Timeout: 240000ms\n' +
+    '    Error: element(s) not found\n' +
+    '\n' +
+    '    Call log:\n' +
+    `      - Expect "toBeVisible" getByRole('region', { name: 'Private source processing' }).getByText(/Run 1 · revision 1 · awaiting_review/) with timeout 240000ms\n` +
+    "      - waiting for getByRole('region', { name: 'Private source processing' }).getByText(/Run 1 · revision 1 · awaiting_review/)\n" +
+    '\n' +
+    '\n' +
+    "      16 |  await panel.getByRole('button',{name:'Upload private source',exact:true}).click();await expect(panel.getByRole('status')).toHaveText('Source saved privately. Select a processing action below.');\n" +
+    "      17 |  await panel.getByRole('button',{name:'Extract available facts',exact:true}).click();await expect(panel.getByRole('status')).toContainText('Processing queued.');\n" +
+    "    > 18 |  await expect(panel.getByText(/Run 1 · revision 1 · awaiting_review/)).toBeVisible({timeout:process.env.HAVEN_RECOVERY_REHEARSAL==='true'?240000:45000});\n" +
+    '         |                                                                        ^\n' +
+    "      19 |  const summary=page.getByRole('region',{name:'Private property quality summary'});await summary.getByRole('button',{name:'Reload quality summary',exact:true}).click();await expect(summary.getByText('4 source facts · 4 awaiting review · 0 pages still requiring text review')).toBeVisible();\n" +
+    "      20 |  const review=page.getByRole('region',{name:'Private document fact review'});await review.getByRole('button',{name:'Reload document facts',exact:true}).click();\n" +
+    "      21 |  const response=await page.request.get(origin+'/api/v1/ops/digitizations/'+engineId+'/facts');expect(response.status()).toBe(200);const facts=(await response.json()).data.candidates;\n" +
+    '        at /workspace/tests/e2e/digitization-operator-processing.spec.ts:18:72\n' +
+    '\n' +
+    '    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n' +
+    '    test-results/run/digitization-operator-proc-4b52e--source-linked-review-facts-desktop/test-failed-1.png\n' +
+    '    ────────────────────────────────────────────────────────────────────────────────────────────────\n' +
+    '\n' +
+    '    Error Context: test-results/run/digitization-operator-proc-4b52e--source-linked-review-facts-desktop/error-context.md\n' +
+    '\n' +
+    '    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n' +
+    '    test-results/run/digitization-operator-proc-4b52e--source-linked-review-facts-desktop/trace.zip\n' +
+    '    Usage:\n' +
+    '\n' +
+    '        pnpm exec playwright show-trace test-results/run/digitization-operator-proc-4b52e--source-linked-review-facts-desktop/trace.zip\n' +
+    '\n' +
+    '    ────────────────────────────────────────────────────────────────────────────────────────────────\n' +
+    '\n' +
+    '  1 failed\n' +
+    '    [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts \n' +
+    '  1 did not run\n' +
+    '  1 error was not a part of any test, see above for details\n',
+  stderr: ' Container haven-recovery-5da1ebbb-app-tests-run-8f4279fc4375 Creating \n' +
+    ' Container haven-recovery-5da1ebbb-app-tests-run-8f4279fc4375 Created \n' +
+    '\n'
+}
+
+Node.js v20.20.0

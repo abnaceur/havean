@@ -1,0 +1,64 @@
+ Image haven-processing-camera:3.10-local-cpu-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 625B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.camera-development
+#2 transferring dockerfile: 472B done
+#2 DONE 0.1s
+
+#3 [internal] load metadata for docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1
+#3 ...
+
+#4 [internal] load metadata for docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1
+#4 DONE 0.3s
+
+#3 [internal] load metadata for docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1
+#3 DONE 0.3s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 192B done
+#5 DONE 0.1s
+
+#6 [internal] load build context
+#6 transferring context: 21.54kB done
+#6 DONE 0.1s
+
+#7 [camera 1/1] FROM docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1@sha256:65fdb4bfbd3551802274c38f7fa407323e8478b8ba222969608fcf1fbadf0dd3
+#7 resolve docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1@sha256:65fdb4bfbd3551802274c38f7fa407323e8478b8ba222969608fcf1fbadf0dd3
+#7 resolve docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1@sha256:65fdb4bfbd3551802274c38f7fa407323e8478b8ba222969608fcf1fbadf0dd3 0.4s done
+#7 DONE 0.4s
+
+#8 [stage-1 1/4] FROM docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1@sha256:4c1e1daba3b7d5997bc14abc0b3f0e594e351170a65f50163c21c6e77a141cd1
+#8 resolve docker.io/library/haven-processing-ocr:3.3.3-local-cpu-v1@sha256:4c1e1daba3b7d5997bc14abc0b3f0e594e351170a65f50163c21c6e77a141cd1 0.4s done
+#8 DONE 0.4s
+
+#9 [stage-1 2/4] COPY --from=camera /usr/bin/colmap /usr/bin/colmap
+#9 CACHED
+
+#10 [stage-1 3/4] COPY --from=camera /opt/colmap /opt/colmap
+#10 CACHED
+
+#11 [stage-1 4/4] COPY services/property-processing/property_processing /opt/processing/property_processing
+#11 DONE 0.3s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 0.7s done
+#12 exporting manifest sha256:d77792236ceff8fc97892189f1afa35d19d3df6ae4f1de2b79e8fe70a1c6ca85
+#12 exporting manifest sha256:d77792236ceff8fc97892189f1afa35d19d3df6ae4f1de2b79e8fe70a1c6ca85 0.1s done
+#12 exporting config sha256:6e7d54e6287b2e7361a1cbc058f392aa1aa65f9f372c653a9d7ba55e6595915e
+#12 exporting config sha256:6e7d54e6287b2e7361a1cbc058f392aa1aa65f9f372c653a9d7ba55e6595915e 0.2s done
+#12 exporting attestation manifest sha256:11c72751a5047b504367ce35d76d8b4dc3d7faf377f620834a62d0dca9243bff
+#12 exporting attestation manifest sha256:11c72751a5047b504367ce35d76d8b4dc3d7faf377f620834a62d0dca9243bff 0.3s done
+#12 exporting manifest list sha256:17e221a7d22dd17f8117e13750526227759bef25a9e081e4dc96c19ee3f507f8
+#12 exporting manifest list sha256:17e221a7d22dd17f8117e13750526227759bef25a9e081e4dc96c19ee3f507f8 0.2s done
+#12 naming to docker.io/library/haven-processing-camera:3.10-local-cpu-v1
+#12 naming to docker.io/library/haven-processing-camera:3.10-local-cpu-v1 0.0s done
+#12 unpacking to docker.io/library/haven-processing-camera:3.10-local-cpu-v1
+#12 unpacking to docker.io/library/haven-processing-camera:3.10-local-cpu-v1 0.2s done
+#12 DONE 2.5s
+
+#13 resolving provenance for metadata file
+#13 DONE 0.0s
+ Image haven-processing-camera:3.10-local-cpu-v1 Built 

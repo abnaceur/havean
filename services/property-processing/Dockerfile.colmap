@@ -1,0 +1,20 @@
+FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS resolve
+# Development dependency discovery only. The runtime target will consume exact
+# versions and package hashes captured from the signed Debian package index.
+RUN apt-get update && apt-get install -y --no-install-recommends colmap && mkdir /profile && dpkg-query -W -f='${Package}\t${Version}\n' > /profile/packages.tsv
+RUN colmap -h > /profile/colmap-help.txt 2>&1
+CMD ["python", "-c", "import pathlib;print(pathlib.Path('/profile/packages.tsv').read_text())"]
+
+FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea AS cpu
+COPY services/property-processing/locks/colmap-apt.json /tmp/colmap-apt.json
+COPY services/property-processing/install-colmap.py /tmp/install-colmap.py
+RUN python /tmp/install-colmap.py && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/install-colmap.py
+WORKDIR /opt/processing
+COPY services/property-processing/property_processing/__init__.py ./property_processing/__init__.py
+COPY services/property-processing/property_processing/colmap_cli.py ./property_processing/colmap_cli.py
+COPY services/property-processing/property_processing/reconstruction_quality.py ./property_processing/reconstruction_quality.py
+COPY services/property-processing/property_processing/reconstruction_pairs.py ./property_processing/reconstruction_pairs.py
+COPY services/property-processing/property_processing/training_data.py services/property-processing/property_processing/colmap_runtime.py services/property-processing/property_processing/errors.py services/property-processing/property_processing/decoder_isolation.py services/property-processing/property_processing/colmap_process.py ./property_processing/
+RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+USER 10001:10001
+CMD ["colmap", "-h"]

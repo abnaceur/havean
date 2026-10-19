@@ -12,7 +12,7 @@ export const digitizationLeaseRecord=z.strictObject({id:z.uuid(),run_id:z.uuid()
 export const digitizationLeaseRenewal=digitizationLeaseRecord.pick({version:true,lease_until:true,fencing_token:true,execution_id:true});
 
 export const digitizationExecutionAcknowledgement=z.strictObject({executionId:z.uuid(),state:z.enum(['awaiting_source','pending','running','succeeded','failed_retryable','failed_terminal','cancelled'])});
-export const digitizationRenderReceipt=z.strictObject({executionId:z.uuid(),state:z.literal('succeeded'),artifactIds:z.array(z.uuid()).min(1).max(50)});
+export const digitizationRenderReceipt=z.strictObject({executionId:z.uuid(),state:z.literal('succeeded'),artifactIds:z.array(z.uuid()).min(1).max(600)});
 export const digitizationOutboxDelivery=z.strictObject({eventId:z.uuid()});
 export const digitizationExecutionHandoff=digitizationStagePreparation.extend({stageId:z.uuid()});
 export type DigitizationExecutionHandoff=z.infer<typeof digitizationExecutionHandoff>;

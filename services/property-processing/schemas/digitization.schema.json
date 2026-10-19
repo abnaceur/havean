@@ -90,7 +90,11 @@
                 "enum": [
                   "application/pdf",
                   "image/jpeg",
-                  "image/png"
+                  "image/png",
+                  "video/mp4",
+                  "video/quicktime",
+                  "video/webm",
+                  "application/x-tar"
                 ]
               }
             },
@@ -1525,6 +1529,68 @@
                   }
                 ]
               },
+              "verticalSource": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "asset"
+                      },
+                      "assetId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "page": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 50
+                      },
+                      "originalToModel": {
+                        "minItems": 9,
+                        "maxItems": 9,
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "assetId",
+                      "originalToModel"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "manual"
+                      },
+                      "actorId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "note": {
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 500
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "actorId",
+                      "note"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
               "confirmed": {
                 "type": "boolean"
               }
@@ -1628,6 +1694,143 @@
               "id",
               "fromFloorId",
               "toFloorId",
+              "source"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "furnishings": {
+          "maxItems": 200,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9_-]{1,80}$"
+              },
+              "roomId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9_-]{1,80}$"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "sofa",
+                  "armchair",
+                  "bed",
+                  "table",
+                  "chair",
+                  "coffee_table",
+                  "cabinet",
+                  "counter",
+                  "fridge",
+                  "sink",
+                  "toilet",
+                  "bathtub",
+                  "shower",
+                  "wardrobe",
+                  "rug",
+                  "plant",
+                  "lamp",
+                  "picture",
+                  "curtain",
+                  "tv"
+                ]
+              },
+              "position": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "minimum": -1000000,
+                    "maximum": 1000000
+                  },
+                  "y": {
+                    "type": "number",
+                    "minimum": -1000000,
+                    "maximum": 1000000
+                  }
+                },
+                "required": [
+                  "x",
+                  "y"
+                ],
+                "additionalProperties": false
+              },
+              "bottom": {
+                "default": "0",
+                "type": "string",
+                "pattern": "^-?(?:0|[1-9]\\d{0,8})(?:\\.\\d{1,8})?$"
+              },
+              "rotationDegrees": {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              },
+              "width": {
+                "type": "string",
+                "pattern": "^-?(?:0|[1-9]\\d{0,8})(?:\\.\\d{1,8})?$"
+              },
+              "depth": {
+                "type": "string",
+                "pattern": "^-?(?:0|[1-9]\\d{0,8})(?:\\.\\d{1,8})?$"
+              },
+              "height": {
+                "type": "string",
+                "pattern": "^-?(?:0|[1-9]\\d{0,8})(?:\\.\\d{1,8})?$"
+              },
+              "color": {
+                "type": "string",
+                "pattern": "^#[0-9a-fA-F]{6}$"
+              },
+              "basis": {
+                "type": "string",
+                "const": "supplied_unverified"
+              },
+              "source": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "manual"
+                  },
+                  "actorId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "note": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "kind",
+                  "actorId",
+                  "note"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "id",
+              "roomId",
+              "label",
+              "kind",
+              "position",
+              "rotationDegrees",
+              "width",
+              "depth",
+              "height",
+              "color",
+              "basis",
               "source"
             ],
             "additionalProperties": false

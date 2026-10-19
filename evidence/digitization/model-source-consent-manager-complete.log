@@ -1,0 +1,25 @@
+ Container haven-processing-tests-cpu-run-6ff62d306781 Creating 
+ Container haven-processing-tests-cpu-run-6ff62d306781 Created 
+Exported 27 authored Gaussian splats; not GPU training evidence.
+/workspace/apps/api/src/platform/core.ts:10
+export function fail(status:number,message:string,code='INVALID_REQUEST'):never{throw new HttpException({code,message},status);}
+                                                                                      ^
+
+HttpException: Authorized digitization property not found
+    at fail (/workspace/apps/api/src/platform/core.ts:10:87)
+    at digitizationListingAccess (/workspace/apps/api/src/inventory/property-access.ts:32:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async createListingDigitization (/workspace/apps/api/src/inventory/digitization/intakes.ts:23:2)
+    at async transaction (/workspace/packages/database/src/index.ts:7:1053)
+    at async <anonymous> (/workspace/tests/support/digitization-scene-fixture.ts:38:19) {
+  response: {
+    code: 'INVALID_REQUEST',
+    message: 'Authorized digitization property not found'
+  },
+  status: 404,
+  options: undefined,
+  cause: undefined,
+  errorCode: undefined
+}
+
+Node.js v24.21.0

@@ -15,6 +15,10 @@ it('HE-E10 real GLB validates, preserves concave/hole slab volume and actual doo
  const {GLTFLoader}=await import(requireWeb.resolve('three/addons/loaders/GLTFLoader.js'));
  const actual=await new GLTFLoader().parseAsync(new Uint8Array(artifact.body).buffer,'');
  const loadedRooms:any[]=[];actual.scene.traverse((node:any)=>{if(node.userData.roomId)loadedRooms.push(node);});expect(loadedRooms.map(node=>node.userData.roomId)).toEqual(['room']);expect(loadedRooms[0].geometry.getAttribute('position').count).toBeGreaterThan(0);
+ const {Raycaster,Vector3}=await import(requireWeb.resolve('three'));actual.scene.updateMatrixWorld(true);
+ const hits=(x:number,height:number)=>new Raycaster(new Vector3(x,height,2),new Vector3(0,0,-1),0,4).intersectObjects(actual.scene.children,true);
+ expect(hits(2.5,3)).toHaveLength(0);expect(hits(4,3).length).toBeGreaterThan(0);
+ expect(hits(6,3.5)).toHaveLength(0);expect(hits(6,2.5).length).toBeGreaterThan(0);
  const loaded=meshes(artifact.body),room=loaded.meshes.find((m:any)=>m.node.extras.roomId==='room'),wall=loaded.meshes.find((m:any)=>m.node.extras.wallId==='wall');
  expect(volume(room.points)).toBeCloseTo(52*.1,5);expect(volume(wall.points)).toBeCloseTo((10*3-1*2-2*1)*.2,5);
  expect(Math.max(...room.points.map((p:number[])=>p[1]))).toBe(2);expect(Math.min(...room.points.map((p:number[])=>p[2]))).toBe(-8);

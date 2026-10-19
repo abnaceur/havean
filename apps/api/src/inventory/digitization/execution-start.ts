@@ -2,12 +2,24 @@ import {readFile} from 'node:fs/promises';
 import type {Actor} from '@haven/database';
 import {fail,transaction,env} from '../../platform/core.js';
 import {prepareCpuExecution} from './execution-scope.js';
-import {renewStageLease} from './leases.js';
+import {renewStageLease,withStageLeaseHeartbeat} from './leases.js';
 import {verifySmallDigitizationSource} from './source-validation.js';
 import {CpuRunnerClient} from './runner-client.js';
 import {tryReuseCpuRenders} from './render-reuse.js';
 import {completedCpuRenderReceipt} from './execution-results.js';
+import {cameraProfile,currentCameraInput} from './camera-input.js';
+import {preparePrivateTrainingFrames} from './frame-privacy.js';
+import {createHash} from 'node:crypto';
 
+import {gsplatExportProfile,isGsplatTrainingProfile,configuredGpuRunner} from './training-configuration.js';
+import {currentTrainingInput} from './training-input.js';
+import {readTrainingBytes} from './training-storage.js';
+import {acquireTrainingGpu,renewTrainingGpu} from './training-gpu.js';
+
+export async function configuredStageRunner(a:Actor,engine:string,stageId:string){
+ const profile=await transaction(a,async c=>(await c.query('SELECT s.profile_id FROM processing_stages s JOIN processing_runs r ON r.id=s.run_id WHERE s.id=$1 AND s.digitization_id=$2 AND r.created_by=$3',[stageId,engine,a.id])).rows[0]?.profile_id);
+ if(!profile)fail(404,'Processing stage not found.');return isGsplatTrainingProfile(profile)?configuredGpuRunner():configuredCpuRunner();
+}
 export async function configuredCpuRunner(){
  const origin=process.env.DIGITIZATION_CPU_RUNNER_ORIGIN,keyFile=process.env.DIGITIZATION_CPU_SIGNING_KEY_FILE;
  if(!origin||!keyFile)fail(503,'CPU processing is unavailable.','CPU_RUNNER_UNAVAILABLE');
@@ -21,6 +33,24 @@ async function startCurrentCpuExecution(a:Actor,engine:string,stageId:string,exe
  const completed=await completedCpuRenderReceipt(a,engine,stageId,executionId,fencingToken,assetId);
  if(completed)return {executionId,state:completed.state};
  const request=await transaction(a,c=>prepareCpuExecution(c,a,engine,stageId,executionId,fencingToken,assetId));
+ if(request.profileId===gsplatExportProfile){await transaction(a,c=>renewStageLease(c,a,engine,stageId,executionId,fencingToken));return {executionId,state:'running' as const};}
+ if(isGsplatTrainingProfile(request.profileId))return withStageLeaseHeartbeat(a,engine,stageId,executionId,fencingToken,async()=>{
+  const input=await transaction(a,async c=>{const x=await currentTrainingInput(c,a,engine,{id:stageId,input_revision:request.inputRevision,input_fingerprint:request.inputFingerprint},assetId);await acquireTrainingGpu(c,a,engine,stageId,executionId,fencingToken);return x;});
+  const body=await readTrainingBytes(input.archive,engine);
+  await transaction(a,c=>prepareCpuExecution(c,a,engine,stageId,executionId,fencingToken,assetId));
+  const receipt=await client.submit(request,body);
+  try{await transaction(a,async c=>{await renewStageLease(c,a,engine,stageId,executionId,fencingToken);await renewTrainingGpu(c,a,engine,stageId,executionId,fencingToken);});}catch(e){await client.cancel(request).catch(()=>undefined);throw e;}
+  return {executionId:receipt.executionId,state:receipt.state};
+ });
+ if(request.profileId===cameraProfile)return withStageLeaseHeartbeat(a,engine,stageId,executionId,fencingToken,async()=>{
+  const input=await transaction(a,c=>currentCameraInput(c,a,engine,{id:stageId,input_revision:request.inputRevision,input_fingerprint:request.inputFingerprint},assetId));
+  const body=await preparePrivateTrainingFrames(a,engine,input.recipe_id,input.workspace_version,input.input_revision);
+  if(createHash('sha256').update(body).digest('hex')!==request.artifacts[0].checksum||String(body.length)!==request.artifacts[0].byteSize)fail(409,'The prepared camera frames changed.','SOURCE_CONTENT_CHANGED');
+  await transaction(a,c=>prepareCpuExecution(c,a,engine,stageId,executionId,fencingToken,assetId));
+  let state;try{state=await client.submit(request,body);}catch{fail(503,'Camera execution transfer failed; retry this execution.','CPU_RUNNER_TRANSFER_FAILED');}
+  try{await transaction(a,c=>renewStageLease(c,a,engine,stageId,executionId,fencingToken));}catch(error){await client.cancel(request).catch(()=>undefined);throw error;}
+  return {executionId:state.executionId,state:state.state};
+ });
  const binding=await transaction(a,async c=>{
   await prepareCpuExecution(c,a,engine,stageId,executionId,fencingToken,assetId);
   return (await c.query('SELECT asset_version,purpose FROM digitization_asset_bindings WHERE digitization_id=$1 AND input_revision=$2 AND asset_id=$3',[engine,request.inputRevision,assetId])).rows[0];

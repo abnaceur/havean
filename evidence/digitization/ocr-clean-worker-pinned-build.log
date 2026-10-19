@@ -1,0 +1,153 @@
+ Image haven-ocr-worker:3.3.3-clean-cpu-investigation-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 726B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.worker-investigation
+#2 transferring dockerfile: 1.84kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 ...
+
+#4 [auth] library/python:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 2.2s
+
+#5 [internal] load .dockerignore
+#5 transferring context:
+#5 transferring context: 192B done
+#5 DONE 0.4s
+
+#6 [install 1/6] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#6 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#6 CACHED
+
+#7 [internal] load build context
+#7 transferring context: 578.19MB 3.5s done
+#7 DONE 3.5s
+
+#8 [install 2/6] COPY services/property-processing/.ocr-wheels/verify-worker-downloads.py /tmp/verify-worker-downloads.py
+#8 DONE 0.2s
+
+#9 [install 3/6] RUN --mount=type=bind,source=services/property-processing/.ocr-wheels,target=/wheels,readonly python /tmp/verify-worker-downloads.py && python -m pip install --no-index --find-links=/wheels --no-cache-dir --only-binary=:all: --require-hashes -r /wheels/ocr-probe.lock && python -m pip check && mkdir /native-debs && dpkg-deb -x /wheels/libgomp1_14.2.0-19_amd64.deb /native-debs && dpkg-deb -x /wheels/libglib2.0-0t64_2.84.4-3~deb13u5_amd64.deb /native-debs
+#9 2.748 Looking in links: /wheels
+#9 2.759 Processing /wheels/aistudio_sdk-0.3.9-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 1))
+#9 2.764 Processing /wheels/annotated_types-0.8.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 2))
+#9 2.767 Processing /wheels/anyio-4.15.1-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 3))
+#9 2.770 Processing /wheels/bce_python_sdk-0.9.79-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 4))
+#9 2.777 Processing /wheels/certifi-2026.7.22-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 5))
+#9 2.780 Processing /wheels/cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (from -r /wheels/ocr-probe.lock (line 6))
+#9 2.783 Processing /wheels/chardet-7.6.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (from -r /wheels/ocr-probe.lock (line 7))
+#9 2.794 Processing /wheels/charset_normalizer-3.5.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (from -r /wheels/ocr-probe.lock (line 8))
+#9 2.800 Processing /wheels/click-8.5.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 9))
+#9 2.802 Processing /wheels/colorlog-6.12.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 10))
+#9 2.806 Processing /wheels/crc32c-2.9.post0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (from -r /wheels/ocr-probe.lock (line 11))
+#9 2.809 Processing /wheels/cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (from -r /wheels/ocr-probe.lock (line 12))
+#9 2.836 Processing /wheels/filelock-4.0.12-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 13))
+#9 2.839 Processing /wheels/fsspec-2026.9.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 14))
+#9 2.870 Processing /wheels/future-1.0.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 15))
+#9 2.878 Processing /wheels/h11-0.16.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 16))
+#9 2.881 Processing /wheels/hf_xet-1.7.0-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (from -r /wheels/ocr-probe.lock (line 17))
+#9 2.907 Processing /wheels/httpcore-1.0.9-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 18))
+#9 2.911 Processing /wheels/httpcore2-2.13.1-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 19))
+#9 2.917 Processing /wheels/httpx-0.28.1-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 20))
+#9 2.922 Processing /wheels/httpx2-2.13.1-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 21))
+#9 2.928 Processing /wheels/huggingface_hub-2.2.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 22))
+#9 2.956 Processing /wheels/idna-3.20-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 23))
+#9 2.960 Processing /wheels/imagesize-2.0.1-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 24))
+#9 2.962 Processing /wheels/modelscope-1.40.2-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 25))
+#9 3.164 Processing /wheels/modelscope_hub-0.4.6-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 26))
+#9 3.172 Processing /wheels/networkx-3.7-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 27))
+#9 3.200 Processing /wheels/numpy-1.26.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (from -r /wheels/ocr-probe.lock (line 28))
+#9 3.313 Processing /wheels/opencv_contrib_python-4.10.0.84-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (from -r /wheels/ocr-probe.lock (line 29))
+#9 3.645 Processing /wheels/opt_einsum-3.3.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 30))
+#9 3.649 Processing /wheels/packaging-25.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 31))
+#9 3.651 Processing /wheels/paddleocr-3.3.3-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 32))
+#9 3.657 Processing /wheels/paddlepaddle-3.2.2-cp312-cp312-manylinux1_x86_64.whl (from -r /wheels/ocr-probe.lock (line 33))
+#9 4.630 Processing /wheels/paddlex-3.3.13-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 34))
+#9 4.673 Processing /wheels/pandas-3.0.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (from -r /wheels/ocr-probe.lock (line 35))
+#9 4.768 Processing /wheels/pillow-11.3.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (from -r /wheels/ocr-probe.lock (line 36))
+#9 4.808 Processing /wheels/prettytable-3.18.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 37))
+#9 4.812 Processing /wheels/protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl (from -r /wheels/ocr-probe.lock (line 38))
+#9 4.816 Processing /wheels/psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (from -r /wheels/ocr-probe.lock (line 39))
+#9 4.823 Processing /wheels/py_cpuinfo-9.0.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 40))
+#9 4.826 Processing /wheels/pyclipper-1.4.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (from -r /wheels/ocr-probe.lock (line 41))
+#9 4.833 Processing /wheels/pycparser-3.1-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 42))
+#9 4.836 Processing /wheels/pycryptodome-3.24.0-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (from -r /wheels/ocr-probe.lock (line 43))
+#9 4.851 Processing /wheels/pydantic-2.14.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 44))
+#9 4.860 Processing /wheels/pydantic_core-2.50.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (from -r /wheels/ocr-probe.lock (line 45))
+#9 4.874 Processing /wheels/pypdf-6.1.1-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 46))
+#9 4.880 Processing /wheels/pypdfium2-5.14.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (from -r /wheels/ocr-probe.lock (line 47))
+#9 4.905 Processing /wheels/python_bidi-0.6.11-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (from -r /wheels/ocr-probe.lock (line 48))
+#9 4.909 Processing /wheels/python_dateutil-2.9.0.post0-py2.py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 49))
+#9 4.913 Processing /wheels/PyYAML-6.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (from -r /wheels/ocr-probe.lock (line 50))
+#9 4.918 Processing /wheels/requests-2.34.2-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 51))
+#9 4.922 Processing /wheels/ruamel_yaml-0.19.1-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 52))
+#9 4.926 Processing /wheels/safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (from -r /wheels/ocr-probe.lock (line 53))
+#9 4.937 Processing /wheels/setuptools-84.0.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 54))
+#9 4.957 Processing /wheels/shapely-2.2.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (from -r /wheels/ocr-probe.lock (line 55))
+#9 4.979 Processing /wheels/six-1.17.0-py2.py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 56))
+#9 4.982 Processing /wheels/tqdm-4.70.1-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 57))
+#9 4.991 Processing /wheels/truststore-0.10.4-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 58))
+#9 4.994 Processing /wheels/typing_extensions-4.16.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 59))
+#9 4.996 Processing /wheels/typing_inspection-0.4.4-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 60))
+#9 4.999 Processing /wheels/ujson-6.0.0-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (from -r /wheels/ocr-probe.lock (line 61))
+#9 5.002 Processing /wheels/urllib3-2.8.0-py3-none-any.whl (from -r /wheels/ocr-probe.lock (line 62))
+#9 5.007 Processing /wheels/wcwidth-0.9.2-cp310-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (from -r /wheels/ocr-probe.lock (line 63))
+#9 5.390 Installing collected packages: py-cpuinfo, wcwidth, urllib3, ujson, typing-extensions, truststore, tqdm, six, setuptools, safetensors, ruamel-yaml, pyyaml, python-bidi, pypdfium2, pypdf, pycryptodome, pycparser, pyclipper, psutil, protobuf, pillow, packaging, numpy, networkx, imagesize, idna, hf-xet, h11, future, fsspec, filelock, crc32c, colorlog, click, charset-normalizer, chardet, certifi, annotated-types, typing-inspection, shapely, requests, python-dateutil, pydantic-core, prettytable, opt-einsum, opencv-contrib-python, httpcore2, httpcore, cffi, bce-python-sdk, anyio, pydantic, pandas, httpx2, httpx, cryptography, aistudio-sdk, paddlepaddle, modelscope-hub, huggingface-hub, modelscope, paddlex, paddleocr
+#9 33.27 Successfully installed aistudio-sdk-0.3.9 annotated-types-0.8.0 anyio-4.15.1 bce-python-sdk-0.9.79 certifi-2026.7.22 cffi-2.1.1 chardet-7.6.0 charset-normalizer-3.5.2 click-8.5.0 colorlog-6.12.0 crc32c-2.9.post0 cryptography-50.0.2 filelock-4.0.12 fsspec-2026.9.0 future-1.0.0 h11-0.16.0 hf-xet-1.7.0 httpcore-1.0.9 httpcore2-2.13.1 httpx-0.28.1 httpx2-2.13.1 huggingface-hub-2.2.0 idna-3.20 imagesize-2.0.1 modelscope-1.40.2 modelscope-hub-0.4.6 networkx-3.7 numpy-1.26.4 opencv-contrib-python-4.10.0.84 opt-einsum-3.3.0 packaging-25.0 paddleocr-3.3.3 paddlepaddle-3.2.2 paddlex-3.3.13 pandas-3.0.6 pillow-11.3.0 prettytable-3.18.0 protobuf-7.36.2 psutil-7.2.2 py-cpuinfo-9.0.0 pyclipper-1.4.0 pycparser-3.1 pycryptodome-3.24.0 pydantic-2.14.0 pydantic-core-2.50.0 pypdf-6.1.1 pypdfium2-5.14.0 python-bidi-0.6.11 python-dateutil-2.9.0.post0 pyyaml-6.0.2 requests-2.34.2 ruamel-yaml-0.19.1 safetensors-0.8.0 setuptools-84.0.0 shapely-2.2.0 six-1.17.0 tqdm-4.70.1 truststore-0.10.4 typing-extensions-4.16.0 typing-inspection-0.4.4 ujson-6.0.0 urllib3-2.8.0 wcwidth-0.9.2
+#9 33.27 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#9 33.80 No broken requirements found.
+#9 DONE 34.6s
+
+#10 [install 4/6] COPY services/property-processing/.ocr-wheels/models /opt/ocr-models
+#10 DONE 0.4s
+
+#11 [install 5/6] COPY services/property-processing/.ocr-wheels/worker-cleanup.py /tmp/worker-cleanup.py
+#11 DONE 0.1s
+
+#12 [install 6/6] RUN python /tmp/worker-cleanup.py
+#12 DONE 1.3s
+
+#13 [worker-investigation 2/9] COPY --from=install /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+#13 DONE 3.2s
+
+#14 [worker-investigation 3/9] COPY --from=install /native-debs /
+#14 DONE 0.3s
+
+#15 [worker-investigation 4/9] COPY --from=install /opt/ocr-models /opt/ocr-models
+#15 DONE 0.3s
+
+#16 [worker-investigation 5/9] COPY docs/adr/licenses /usr/share/doc/haven-processing/source-notices
+#16 DONE 0.2s
+
+#17 [worker-investigation 6/9] COPY docs/adr/processing-dependencies.json /opt/processing/dependencies.json
+#17 DONE 0.1s
+
+#18 [worker-investigation 7/9] COPY services/property-processing/property_processing /opt/processing/property_processing
+#18 DONE 0.1s
+
+#19 [worker-investigation 8/9] COPY services/property-processing/tests/ocr_worker_smoke.py /opt/processing/ocr_worker_smoke.py
+#19 DONE 0.1s
+
+#20 [worker-investigation 9/9] WORKDIR /opt/processing
+#20 DONE 0.1s
+
+#21 exporting to image
+#21 exporting layers
+#21 exporting layers 52.1s done
+#21 exporting manifest sha256:f96a872104badc6ff2bd29d23f9022f3cfa641e5bc30012f63e1f7abddd534b6 0.1s done
+#21 exporting config sha256:db39f4bc44e12eab2a0b09ea5fd9122230131386d2f457a5b2c78e52252067a7 0.1s done
+#21 exporting attestation manifest sha256:9e7368f0301cdbfcd3fc46f2cc797029e4083d0aa2e4673eebf64150600b295e 0.1s done
+#21 exporting manifest list sha256:8a9f663a6e48992bc7fe0ff4d2a39b21ba957a58560aeeb74060c0dfeb1bbfe0 0.1s done
+#21 naming to docker.io/library/haven-ocr-worker:3.3.3-clean-cpu-investigation-v1 done
+#21 unpacking to docker.io/library/haven-ocr-worker:3.3.3-clean-cpu-investigation-v1
+#21 unpacking to docker.io/library/haven-ocr-worker:3.3.3-clean-cpu-investigation-v1 10.0s done
+#21 DONE 62.4s
+
+#22 resolving provenance for metadata file
+#22 DONE 0.0s
+ Image haven-ocr-worker:3.3.3-clean-cpu-investigation-v1 Built 

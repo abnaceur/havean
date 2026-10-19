@@ -1,0 +1,27 @@
+node:internal/errors:984
+  const err = new Error(message);
+              ^
+
+Error: Command failed: docker exec -i 045f6c247d8a7d99e977a7dbf316027bdeb5766414facad1d29240b5403af633 psql -v ON_ERROR_STOP=1 -U postgres -d postgres
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  the database system is shutting down
+
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execFileSync (node:child_process:927:15)
+    at docker (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:16:41)
+    at prepareDatabase (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:30:332)
+    at async file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:55:35 {
+  status: 2,
+  signal: null,
+  output: [
+    null,
+    '',
+    'psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  the database system is shutting down\n'
+  ],
+  pid: 3130367,
+  stdout: '',
+  stderr: 'psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  the database system is shutting down\n'
+}
+
+Node.js v20.20.0

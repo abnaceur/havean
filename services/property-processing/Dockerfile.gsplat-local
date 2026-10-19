@@ -1,0 +1,27 @@
+# Local investigation only. The pre-existing source-build toolchain is recorded
+# by immutable image ID in the build evidence; no production admission implied.
+FROM haven-popsift:0.9-cuda12.6.3-investigation-v1 AS compile
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends python3-venv && rm -rf /var/lib/apt/lists/*
+RUN python3 -m venv /opt/venv
+ENV PATH=/opt/venv/bin:/usr/local/cuda/bin:/usr/bin:/bin CUDA_HOME=/usr/local/cuda TORCH_CUDA_ARCH_LIST=7.5 MAX_JOBS=2 CXX=/usr/bin/g++-13 CC=/usr/bin/gcc-13
+RUN mkdir /runtime-evidence && python -m pip install --no-cache-dir --report /runtime-evidence/torch.json torch==2.7.1 --index-url https://download.pytorch.org/whl/cu126
+RUN python -m pip install --no-cache-dir --report /runtime-evidence/python.json Pillow==11.3.0 numpy==2.2.6 ninja==1.11.1.4 jaxtyping==0.3.2 rich==14.1.0 setuptools==80.9.0 wheel==0.45.1
+COPY .gsplat-build/gsplat.tar.gz .gsplat-build/glm.tar.gz /source-archives/
+RUN echo '8fb7dd5f85ec70a74f3842b831dfc30f742d1148e6ce64074e8933e6782cd0e2  /source-archives/gsplat.tar.gz' | sha256sum -c - && echo 'fa761b941987933884b0d21d5b86930789061f026ba163d47cebbc5b00be277b  /source-archives/glm.tar.gz' | sha256sum -c - && mkdir /gsplat-source /glm-source && tar -xzf /source-archives/gsplat.tar.gz -C /gsplat-source --strip-components=1 && tar -xzf /source-archives/glm.tar.gz -C /glm-source --strip-components=1 && cp -a /glm-source/. /gsplat-source/gsplat/cuda/csrc/third_party/glm/
+RUN apt-get update && apt-get install -y --no-install-recommends python3-dev && rm -rf /var/lib/apt/lists/*
+RUN --mount=type=cache,id=haven-gsplat153-sm75-build,target=/gsplat-source/build MAX_JOBS=4 python -m pip install --no-build-isolation --no-deps --no-cache-dir /gsplat-source && python -m pip freeze > /runtime-evidence/requirements.txt && dpkg-query -W > /runtime-evidence/build-packages.txt
+RUN python -m pip install --no-cache-dir --report /runtime-evidence/packaging.json packaging==25.0 && python -m pip freeze > /runtime-evidence/requirements.txt
+
+FROM python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PROCESSING_RUNNER_KIND=gpu PROCESSING_DEPLOYMENT=development PROCESSING_ENABLE_GSPLAT_INVESTIGATION=false NVIDIA_DRIVER_CAPABILITIES=compute,utility
+COPY --from=compile /opt/venv/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=compile /runtime-evidence /opt/gsplat-runtime
+COPY --from=compile /gsplat-source/LICENSE /usr/share/doc/gsplat/LICENSE
+COPY --from=compile /glm-source/copying.txt /usr/share/doc/glm/copying.txt
+WORKDIR /opt/processing
+COPY property_processing ./property_processing
+COPY gsplat-investigation-profile.json ./gsplat-investigation-profile.json
+RUN python -c "import importlib.metadata as m; import torch,gsplat.csrc; from gsplat.cuda._backend import _C; assert _C is not None; assert m.version('torch')=='2.7.1+cu126'; assert m.version('gsplat')=='1.5.3'; assert m.version('Pillow')=='11.3.0'; assert m.version('packaging')=='25.0'"
+USER 10001:10001
+CMD ["python", "-m", "property_processing.server"]

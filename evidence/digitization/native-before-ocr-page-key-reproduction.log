@@ -1,0 +1,31 @@
+sha256:435ac3fe75be4f5c7309ac8d76f178176c98d58327a82569a149a2e052423ead
+ Container haven-ocr-protocol-485008 Creating 
+ Container haven-ocr-protocol-485008 Created 
+ Container haven-ocr-protocol-485008 Starting 
+ Container haven-ocr-protocol-485008 Started 
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-document-ocr.test.ts [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 38118[2mms[22m[39m
+[31m   [31m×[31m real confined en raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[39m[33m 13528[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined fr raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 12322[2mms[22m[39m
+   [33m[2m✓[22m[39m real confined ar raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately[33m 12266[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-document-ocr.test.ts[2m > [22mreal confined en raster-PDF OCR persists source pages, raw tokens, crops and pending candidates privately
+[31m[1merror[22m: duplicate key value violates unique constraint "document_pages_binding_id_page_key"[39m
+[90m [2m❯[22m node_modules/.pnpm/pg@8.23.1/node_modules/pg/lib/client.js:[2m694:17[22m[39m
+[36m [2m❯[22m apps/api/src/inventory/digitization/native-fact-results.ts:[2m91:929[22m[39m
+
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m tests/integration/digitization-document-ocr.test.ts:[2m86:29[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 00:38:36
+[2m   Duration [22m 39.87s[2m (tests 96%, import 2%, transform 2%)[22m
+

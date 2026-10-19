@@ -1,0 +1,44 @@
+time="2026-10-12T13:06:21+04:00" level=warning msg="Found orphan containers ([haven-processing-cpu-1 haven-processing-volume-init-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container haven-tests-run-83b097f818dd Creating 
+ Container haven-tests-run-83b097f818dd Created 
+
+Running 1 test using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-complete-demo.spec.ts:6:1 › publish and exercise a complete synthetic property example (4.4s)
+
+
+  1) [desktop] › tests/e2e/digitization-complete-demo.spec.ts:6:1 › publish and exercise a complete synthetic property example 
+
+    Error: GET /ops/listings/5f1498f4-9226-4b9a-b8bb-ac7f424bb562: 404 {"error":{"code":"NOT_FOUND","message":"Request rejected. Check the request and try again.","requestId":"ba850003-8116-40db-b7b7-6f14802c1fc0"}}
+
+      14 |  async function api(actor:Page,path:string,body?:unknown,method=body===undefined?'GET':'POST'){
+      15 |   const response=await actor.request.fetch(ops+'/api/v1'+path,{method,headers:{Origin:ops,'idempotency-key':crypto.randomUUID()},...(body===undefined?{}:{data:body})});
+    > 16 |   if(!response.ok())throw Error(`${method} ${path}: ${response.status()} ${await response.text()}`);
+         |                           ^
+      17 |   return (await response.json()).data;
+      18 |  }
+      19 |  await login(page,'agent',ops,'/ops');
+        at api (/workspace/tests/e2e/digitization-complete-demo.spec.ts:16:27)
+        at /workspace/tests/e2e/digitization-complete-demo.spec.ts:50:44
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-complete-demo-0ebc1--synthetic-property-example-desktop/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-complete-demo-0ebc1--synthetic-property-example-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-complete-demo-0ebc1--synthetic-property-example-desktop/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-complete-demo-0ebc1--synthetic-property-example-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-complete-demo-0ebc1--synthetic-property-example-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [desktop] › tests/e2e/digitization-complete-demo.spec.ts:6:1 › publish and exercise a complete synthetic property example 
+

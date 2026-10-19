@@ -1,0 +1,7 @@
+import type {DigitizationGeometryRevision} from '@haven/contracts';
+import {fail} from '../../platform/core.js';
+type Point={x:number;y:number};
+function inside(point:Point,ring:readonly Point[]){let odd=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j],cross=(b.x-a.x)*(point.y-a.y)-(b.y-a.y)*(point.x-a.x);if(Math.abs(cross)<1e-9&&point.x>=Math.min(a.x,b.x)&&point.x<=Math.max(a.x,b.x)&&point.y>=Math.min(a.y,b.y)&&point.y<=Math.max(a.y,b.y))return false;if((a.y>point.y)!==(b.y>point.y)&&point.x<(b.x-a.x)*(point.y-a.y)/(b.y-a.y)+a.x)odd=!odd;}return odd;}
+export function requireTourPosition(geometry:DigitizationGeometryRevision,roomId:string|null,position:{floorId:string;x:number;y:number;confirmed:true}|null|undefined){
+ if(!position)return;const room=geometry.rooms.find(room=>room.id===roomId);if(!room||room.floorId!==position.floorId||!inside(position,room.polygon)||room.holes.some(hole=>inside(position,hole)||hole.some((point,index)=>{const next=hole[(index+1)%hole.length],cross=(next.x-point.x)*(position.y-point.y)-(next.y-point.y)*(position.x-point.x);return Math.abs(cross)<1e-9&&position.x>=Math.min(point.x,next.x)&&position.x<=Math.max(point.x,next.x)&&position.y>=Math.min(point.y,next.y)&&position.y<=Math.max(point.y,next.y);})))fail(422,'Confirm a panorama position strictly inside its linked room on the current floor.','TOUR_POSITION_INVALID');
+}

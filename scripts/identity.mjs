@@ -32,7 +32,7 @@ for(const flow of flowsToConfigure){
   if(item.authenticatorConfig){const config=mfaConfigs.find(c=>c.alias===item.authenticatorConfig);if(execution.authenticationConfig)await admin('/authentication/config/'+execution.authenticationConfig,'PUT',config);else await admin('/authentication/executions/'+execution.id+'/config','POST',config);}
  }
 }
-await admin('','PUT',{browserFlow:browserFlowFor(process.env.NODE_ENV),loginTheme:process.env.NODE_ENV==='development'&&process.env.DEV_PASSWORD?'haven-development':'',...(process.env.NODE_ENV==='development'?{resetPasswordAllowed:true,smtpServer:{host:'mail',port:'1025',from:'accounts@example.test',fromDisplayName:'Haven accounts',auth:'false',ssl:'false',starttls:'false'}}:{})});
+await admin('','PUT',{browserFlow:browserFlowFor(process.env.NODE_ENV),loginTheme:process.env.NODE_ENV==='development'&&process.env.DEV_PASSWORD?'haven-development':'haven',...(process.env.NODE_ENV==='development'?{resetPasswordAllowed:true,smtpServer:{host:'mail',port:'1025',from:'accounts@example.test',fromDisplayName:'Haven accounts',auth:'false',ssl:'false',starttls:'false'}}:{})});
 if(process.env.NODE_ENV==='development'&&process.env.DEV_PASSWORD){
  // Imported local personas need their own account-console permissions.
  // Explicit realm roles on import do not inherit the provider's default roles.

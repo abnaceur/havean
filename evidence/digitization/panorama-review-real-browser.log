@@ -1,0 +1,96 @@
+{"project":"panorama-desktop","privatePageCommitted":true}
+{"project":"panorama-mobile","privatePageCommitted":true}
+ Container haven-integration-tests-run-d673556f17b5 Creating 
+ Container haven-integration-tests-run-d673556f17b5 Created 
+
+Running 8 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/digitization-panorama.spec.ts:4:1 › HE-G03 real private candidate review preserves empty fields, keyboard, retry and cleanup (20.8s)
+  ✓  2 [desktop] › tests/e2e/rich-media.spec.ts:4:1 › Q04 / D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation (1.2m)
+  ✓  3 [desktop] › tests/e2e/rich-media.spec.ts:115:1 › Q04 / F12 scan rejection, spoofed video MIME and oversized upload intents (4.9s)
+  ✓  4 [desktop] › tests/e2e/rich-media.spec.ts:125:1 › Q04 / development floor-plan drawings are uploaded, reviewed and displayed with plan inventory (31.6s)
+  ✘  5 [mobile] › tests/e2e/digitization-panorama.spec.ts:4:1 › HE-G03 real private candidate review preserves empty fields, keyboard, retry and cleanup (20.0s)
+  ✓  6 [mobile] › tests/e2e/rich-media.spec.ts:4:1 › Q04 / D08/D09/F12 short video, floor-plan viewer and linked 360 scenes publish through moderation (34.9s)
+  ✓  7 [mobile] › tests/e2e/rich-media.spec.ts:115:1 › Q04 / F12 scan rejection, spoofed video MIME and oversized upload intents (2.0s)
+  ✓  8 [mobile] › tests/e2e/rich-media.spec.ts:125:1 › Q04 / development floor-plan drawings are uploaded, reviewed and displayed with plan inventory (10.5s)
+
+
+  1) [desktop] › tests/e2e/digitization-panorama.spec.ts:4:1 › HE-G03 real private candidate review preserves empty fields, keyboard, retry and cleanup 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Private panorama capture review' }).getByText(/View 15°/)
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'Private panorama capture review' }).getByText(/View 15°/) with timeout 15000ms
+      - waiting for getByRole('region', { name: 'Private panorama capture review' }).getByText(/View 15°/)
+
+
+       9 |  await expect(review.getByLabel('Capture name',{exact:true})).toHaveValue('');await expect(review.getByLabel('Supplied heading (degrees)',{exact:true})).toHaveValue('');
+      10 |  const canvas=review.getByRole('img',{name:'360 degree view: Private capture preview',exact:true});await expect(canvas).toHaveAttribute('data-panorama-ready','true');
+    > 11 |  await canvas.focus();await canvas.press('ArrowRight');await expect(review.getByText(/View 10°/)).toBeVisible();
+         |                                                                                                   ^
+      12 |  await review.getByLabel('Capture name',{exact:true}).fill('Synthetic private capture');await review.getByRole('button',{name:'Save private tour',exact:true}).click();await expect(review.getByRole('status').filter({hasText:'Private tour saved.'})).toBeVisible();
+      13 |  const saved=(await (await page.request.get(origin+'/api/v1/ops/digitizations/'+fixture.engineId+'/tour-revisions/latest')).json()).data;expect(saved).toMatchObject({reviewRequired:true,genuinePanoramaConfirmed:false});expect(saved.graph.nodes[0]).toMatchObject({headingDegrees:null,roomId:null,captureDeclaration:null});
+      14 |  await review.getByRole('button',{name:'Close capture previews',exact:true}).click();await expect(review.locator('canvas')).toHaveCount(0);await expect(review.getByRole('button',{name:'Review private captures',exact:true})).toBeFocused();
+        at /workspace/tests/e2e/digitization-panorama.spec.ts:11:99
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-panorama-HE-G-d5b1b--keyboard-retry-and-cleanup-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-panorama-HE-G-d5b1b--keyboard-retry-and-cleanup-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-panorama-HE-G-d5b1b--keyboard-retry-and-cleanup-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-panorama-HE-G-d5b1b--keyboard-retry-and-cleanup-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/digitization-panorama.spec.ts:4:1 › HE-G03 real private candidate review preserves empty fields, keyboard, retry and cleanup 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('region', { name: 'Private panorama capture review' }).getByText(/View 15°/)
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('region', { name: 'Private panorama capture review' }).getByText(/View 15°/) with timeout 15000ms
+      - waiting for getByRole('region', { name: 'Private panorama capture review' }).getByText(/View 15°/)
+
+
+       9 |  await expect(review.getByLabel('Capture name',{exact:true})).toHaveValue('');await expect(review.getByLabel('Supplied heading (degrees)',{exact:true})).toHaveValue('');
+      10 |  const canvas=review.getByRole('img',{name:'360 degree view: Private capture preview',exact:true});await expect(canvas).toHaveAttribute('data-panorama-ready','true');
+    > 11 |  await canvas.focus();await canvas.press('ArrowRight');await expect(review.getByText(/View 10°/)).toBeVisible();
+         |                                                                                                   ^
+      12 |  if(info.project.name==='mobile'){
+      13 |   await canvas.scrollIntoViewIfNeeded();const box=(await canvas.boundingBox())!,cdp=await page.context().newCDPSession(page);try{await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:box.x+100,y:box.y+100,id:1}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:box.x+140,y:box.y+100,id:1}]});await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}finally{await cdp.detach();}await expect(review.getByText(/View 0°/)).toBeVisible();
+      14 |  }
+        at /workspace/tests/e2e/digitization-panorama.spec.ts:11:99
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/digitization-panorama-HE-G-d5b1b--keyboard-retry-and-cleanup-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/digitization-panorama-HE-G-d5b1b--keyboard-retry-and-cleanup-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/digitization-panorama-HE-G-d5b1b--keyboard-retry-and-cleanup-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/digitization-panorama-HE-G-d5b1b--keyboard-retry-and-cleanup-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/digitization-panorama.spec.ts:4:1 › HE-G03 real private candidate review preserves empty fields, keyboard, retry and cleanup 
+    [mobile] › tests/e2e/digitization-panorama.spec.ts:4:1 › HE-G03 real private candidate review preserves empty fields, keyboard, retry and cleanup 
+  6 passed (3.3m)
+

@@ -1,0 +1,50 @@
+/workspace/apps/api/src/platform/core.ts:10
+export function fail(status:number,message:string,code='INVALID_REQUEST'):never{throw new HttpException({code,message},status);}
+                                                                                      ^
+
+HttpException: Process termination is not yet confirmed.
+    at fail (/workspace/apps/api/src/platform/core.ts:10:87)
+    at completeRunCancellation (/workspace/apps/api/src/inventory/digitization/cancellation.ts:48:194)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async <anonymous> (/workspace/infra/generated/cancel-photo-preparation.mts:5:418) {
+  response: {
+    code: 'CPU_CANCELLATION_UNCONFIRMED',
+    message: 'Process termination is not yet confirmed.'
+  },
+  status: 503,
+  options: undefined,
+  cause: undefined,
+  errorCode: undefined
+}
+
+Node.js v24.21.0
+/workspace/apps/api/src/platform/core.ts:10
+export function fail(status:number,message:string,code='INVALID_REQUEST'):never{throw new HttpException({code,message},status);}
+                                                                                      ^
+
+HttpException: Process termination is not yet confirmed.
+    at fail (/workspace/apps/api/src/platform/core.ts:10:87)
+    at completeRunCancellation (/workspace/apps/api/src/inventory/digitization/cancellation.ts:48:194)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async <anonymous> (/workspace/infra/generated/cancel-photo-preparation.mts:5:475) {
+  response: {
+    code: 'CPU_CANCELLATION_UNCONFIRMED',
+    message: 'Process termination is not yet confirmed.'
+  },
+  status: 503,
+  options: undefined,
+  cause: undefined,
+  errorCode: undefined
+}
+
+Node.js v24.21.0
+{
+  id: '7acae323-5868-4488-9161-b8cd75531502',
+  state: 'cancelled',
+  version: 5
+}
+{
+  id: '5b3c910e-a2b9-498f-b7b3-d4d25548f45a',
+  state: 'cancelled',
+  version: 5
+}

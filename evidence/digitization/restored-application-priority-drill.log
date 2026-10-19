@@ -1,0 +1,78 @@
+{"label":"P","status":"fixture-objects-copied-and-verified","objects":1074,"bytes":16963781,"digest":"94b7d4951f125cbf2ca247e1d11baa59b5014d675f60272aa12e7a33391d210f","sourceMutated":false,"physicalPropertyEvidence":false}
+{"status":"failed","code":"RESTORED_DIGITIZATION_RECONCILIATION_FAILED"}
+{"label":"P","status":"application-configuration-created","project":"haven-recovery-e63839ea-app","bind":"127.0.0.2","databaseContainer":"haven-recovery-f2f07e16-db","applicationVerified":false}
+{"label":"P","queueCounts":{"active":0,"completed":256,"delayed":0,"failed":136,"prioritized":7420,"waiting":0,"waiting-children":0},"failureCodes":{"RUN_NOT_EXECUTABLE":11,"ENGINE_EVENT_UNSUPPORTED":89,"SOURCE_SELECTION_AMBIGUOUS":1}}
+node:internal/errors:984
+  const err = new Error(message);
+              ^
+
+Error: Command failed: docker compose -f /tmp/haven-recovery-e63839ea-fWXgk4/application/application.json --profile tests run --rm --no-deps tests pnpm exec playwright test tests/e2e/digitization-operator-processing.spec.ts tests/e2e/digitization-unit-application.spec.ts --project=desktop --output=/workspace/test-results/run --max-failures=1
+ Container haven-recovery-e63839ea-app-tests-run-0b7a892204e4 Creating 
+ Container haven-recovery-e63839ea-app-tests-run-0b7a892204e4 Created 
+
+
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execFileSync (node:child_process:927:15)
+    at docker (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:16:41)
+    at compose (file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:50:22)
+    at verifyRestoredApplication (file:///home/abn/project/real-estate-solution/scripts/recovery/verify-application.mjs:59:15)
+    at async file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:102:98 {
+  status: 1,
+  signal: null,
+  output: [
+    null,
+    '\n' +
+      'Running 2 tests using 1 worker\n' +
+      '\n' +
+      '  ✘  1 [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts (3.5m)\n' +
+      'Testing stopped early after 1 maximum allowed failures.\n' +
+      '\n' +
+      '\n' +
+      '  1) [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts \n' +
+      '\n' +
+      "    Error: browserContext.close: ENOENT: no such file or directory, open '/workspace/test-results/run/.playwright-artifacts-0/traces/9e25ec68b7ba5da6f5a9-4a0e590e57380060c656-recording1.trace'\n" +
+      '\n' +
+      "    Error: browserContext._wrapApiCall: ENOENT: no such file or directory, open '/workspace/test-results/run/.playwright-artifacts-0/traces/9e25ec68b7ba5da6f5a9-4a0e590e57380060c656.network'\n" +
+      '\n' +
+      "    Error: ENOENT: no such file or directory, open '/workspace/test-results/run/.playwright-artifacts-0/2a4776bd8d847248dd9613c8341975aa.zip'\n" +
+      '\n' +
+      '  1 failed\n' +
+      '    [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts \n' +
+      '  1 did not run\n' +
+      '  1 error was not a part of any test, see above for details\n' +
+      "Error: ENOENT: no such file or directory, mkdir '/workspace/playwright-report/run'\n" +
+      "Error: ENOENT: no such file or directory, mkdir '/workspace/test-results/run'\n",
+    ' Container haven-recovery-e63839ea-app-tests-run-0b7a892204e4 Creating \n' +
+      ' Container haven-recovery-e63839ea-app-tests-run-0b7a892204e4 Created \n' +
+      '\n'
+  ],
+  pid: 1449196,
+  stdout: '\n' +
+    'Running 2 tests using 1 worker\n' +
+    '\n' +
+    '  ✘  1 [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts (3.5m)\n' +
+    'Testing stopped early after 1 maximum allowed failures.\n' +
+    '\n' +
+    '\n' +
+    '  1) [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts \n' +
+    '\n' +
+    "    Error: browserContext.close: ENOENT: no such file or directory, open '/workspace/test-results/run/.playwright-artifacts-0/traces/9e25ec68b7ba5da6f5a9-4a0e590e57380060c656-recording1.trace'\n" +
+    '\n' +
+    "    Error: browserContext._wrapApiCall: ENOENT: no such file or directory, open '/workspace/test-results/run/.playwright-artifacts-0/traces/9e25ec68b7ba5da6f5a9-4a0e590e57380060c656.network'\n" +
+    '\n' +
+    "    Error: ENOENT: no such file or directory, open '/workspace/test-results/run/.playwright-artifacts-0/2a4776bd8d847248dd9613c8341975aa.zip'\n" +
+    '\n' +
+    '  1 failed\n' +
+    '    [desktop] › tests/e2e/digitization-operator-processing.spec.ts:9:1 › operator uploads arbitrary-layout PDF and actual queue/CPU processing produces private source-linked review facts \n' +
+    '  1 did not run\n' +
+    '  1 error was not a part of any test, see above for details\n' +
+    "Error: ENOENT: no such file or directory, mkdir '/workspace/playwright-report/run'\n" +
+    "Error: ENOENT: no such file or directory, mkdir '/workspace/test-results/run'\n",
+  stderr: ' Container haven-recovery-e63839ea-app-tests-run-0b7a892204e4 Creating \n' +
+    ' Container haven-recovery-e63839ea-app-tests-run-0b7a892204e4 Created \n' +
+    '\n'
+}
+
+Node.js v20.20.0

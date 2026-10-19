@@ -1,0 +1,38 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-inventory-application.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 2113[2mms[22m[39m
+   [33m[2m✓[22m[39m confirmed unit proposals stay private and pending; independent approval changes the shared unit without copying evidence[33m 418[2mms[22m[39m
+   [32m✓[39m unit version changes invalidate a pending proposal before public facts can be overwritten[32m 263[2mms[22m[39m
+   [33m[2m✓[22m[39m evidence version is checked again at independent approval[33m 361[2mms[22m[39m
+   [32m✓[39m revoked author membership prevents the independent reviewer from applying facts[32m 225[2mms[22m[39m
+   [32m✓[39m private source preflight context requires a persisted independent reviewer, not cached roles[32m 201[2mms[22m[39m
+   [32m✓[39m ordinary revision review preflight does not require engine evidence[32m 2[2mms[22m[39m
+   [32m✓[39m a later conflicting confirmation invalidates the selected fact decision[32m 215[2mms[22m[39m
+[31m   [31m×[31m accepting a corrected decimal preserves the confirmed value through independent approval[39m[32m 213[2mms[22m[39m
+   [32m✓[39m an unselected competing current document blocks independent approval and a new selective submission[32m 211[2mms[22m[39m
+ [32m✓[39m tests/unit/digitization-fact-conflicts.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-inventory-application.test.ts[2m > [22maccepting a corrected decimal preserves the confirmed value through independent approval
+[31m[1mTypeError[22m: Cannot read properties of undefined (reading 'amount')[39m
+[36m [2m❯[22m tests/integration/digitization-inventory-application.test.ts:[2m77:139[22m[39m
+    [90m 75|[39m  await scope(c,reviewer);await decideListingRevision(c,reviewer,f.prop…
+    [90m 76|[39m  expect((await c.query('SELECT area::text FROM units WHERE id=$1',[f.u…
+    [90m 77|[39m  expect((await c.query("SELECT candidate->'normalizedValue'->>'amount'…
+    [90m   |[39m                                                                                                                                           [31m^[39m
+    [90m 78|[39m },'97.75'));
+    [90m 79|[39m it('an unselected competing current document blocks independent approv…
+[90m [2m❯[22m tests/integration/digitization-inventory-application.test.ts:[2m28:2[22m[39m
+[90m [2m❯[22m transaction packages/database/src/index.ts:[2m7:1053[22m[39m
+[90m [2m❯[22m fixture tests/integration/digitization-inventory-application.test.ts:[2m14:156[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m10 passed[39m[22m[90m (11)[39m
+[2m   Start at [22m 03:52:52
+[2m   Duration [22m 5.13s[2m (tests 44%, import 42%, transform 14%)[22m
+

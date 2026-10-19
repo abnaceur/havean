@@ -1,0 +1,37 @@
+node:internal/child_process:1123
+    result.error = new ErrnoException(result.error, 'spawnSync ' + options.file);
+                   ^
+
+<ref *1> Error: spawnSync docker EPIPE
+    at Object.spawnSync (node:internal/child_process:1123:20)
+    at spawnSync (node:child_process:877:24)
+    at execFileSync (node:child_process:920:15)
+    at docker (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:16:41)
+    at prepareDatabase (file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:31:51)
+    at async file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:55:35 {
+  errno: -32,
+  code: 'EPIPE',
+  syscall: 'spawnSync docker',
+  path: 'docker',
+  spawnargs: [
+    'exec',
+    '-i',
+    '2c1cfdbcfd7a98606af9c74ac88f6ec628d98b6af69c839c2777afe98281535e',
+    'psql',
+    '-v',
+    'ON_ERROR_STOP=1',
+    '-U',
+    'postgres',
+    '-d',
+    'postgres'
+  ],
+  error: [Circular *1],
+  status: 3,
+  signal: null,
+  output: [ null, null, 'ERROR:  role "haven_migrate" does not exist\n' ],
+  pid: 3114734,
+  stdout: null,
+  stderr: 'ERROR:  role "haven_migrate" does not exist\n'
+}
+
+Node.js v20.20.0

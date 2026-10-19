@@ -1,3 +1,5 @@
+> Current implementation (12 October 2026): the separately pinned PaddleOCR3.3.3/PaddlePaddle3.2.2 CPU release is documented in [OCR-PRODUCTION-REVIEW.md](OCR-PRODUCTION-REVIEW.md) and [the release runbook](../runbooks/ocr-release.md). The investigation below concerns an earlier3.3.1 candidate and is retained as historical evidence.
+
 # OCR dependency review — 6 October 2026
 
 This is an adoption review, not an enabled OCR implementation or benchmark.

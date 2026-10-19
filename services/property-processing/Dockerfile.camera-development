@@ -1,0 +1,7 @@
+# Local CPU investigation; each native runtime verifies its exact file hashes.
+FROM haven-colmap-runtime:3.10-source-cpu-v1 AS camera
+FROM haven-processing-ocr:3.3.3-local-cpu-v1
+COPY --from=camera /usr/bin/colmap /usr/bin/colmap
+COPY --from=camera /opt/colmap /opt/colmap
+COPY services/property-processing/property_processing /opt/processing/property_processing
+CMD ["python", "-m", "property_processing.server"]

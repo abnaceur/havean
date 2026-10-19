@@ -1,0 +1,87 @@
+
+Running 2 tests using 1 worker
+
+  ✘  1 [desktop] › tests/e2e/viewing-calendar-controls.spec.ts:5:1 › calendar recovers invalid URL filters and supports keyboard month navigation and date ranges (20.8s)
+  ✘  2 [mobile] › tests/e2e/viewing-calendar-controls.spec.ts:5:1 › calendar recovers invalid URL filters and supports keyboard month navigation and date ranges (6.5s)
+
+
+  1) [desktop] › tests/e2e/viewing-calendar-controls.spec.ts:5:1 › calendar recovers invalid URL filters and supports keyboard month navigation and date ranges 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('alert')
+    Expected: 0
+    Received: 1
+    Timeout:  15000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('alert') with timeout 15000ms
+      - waiting for getByRole('alert')
+        34 × locator resolved to 1 element
+           - unexpected value "1"
+
+
+       6 |  test.setTimeout(120000);await login(page,'buyer','http://localhost:8088','/account/viewings?from=not-a-date');
+       7 |  await expect(page.getByRole('alert')).toBeVisible();const calendar=page.getByRole('group',{name:'Viewing dates',exact:true});await expect(calendar).toBeVisible();
+    >  8 |  await page.getByRole('button',{name:'From property-local date',exact:true}).click();await page.getByRole('button',{name:'Clear date',exact:true}).click();await page.getByRole('button',{name:'Apply calendar filters',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);
+         |                                                                                                                                                                                                                                                                                    ^
+       9 |  const first=calendar.locator('[data-date]').first(),initial=(await first.getAttribute('data-date'))!;const next=new Date(initial+'T12:00:00Z');next.setUTCMonth(next.getUTCMonth()+1);const date=next.toISOString().slice(0,10);
+      10 |  await first.focus();await first.press('PageDown');await expect(calendar.locator('[data-date="'+date+'"]')).toBeFocused();await expect(page).toHaveURL(new RegExp('from='+date));
+      11 |  await pickDateField(page,'From property-local date',date);await pickDateField(page,'Through property-local date',date.slice(0,8)+'03');await page.getByRole('button',{name:'Apply calendar filters',exact:true}).click();await expect(page).toHaveURL(new RegExp('from='+date+'&to='+date.slice(0,8)+'03'));
+        at /workspace/tests/e2e/viewing-calendar-controls.spec.ts:8:276
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/viewing-controls-final/viewing-calendar-controls--c57ae--navigation-and-date-ranges-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/viewing-controls-final/viewing-calendar-controls--c57ae--navigation-and-date-ranges-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/viewing-controls-final/viewing-calendar-controls--c57ae--navigation-and-date-ranges-desktop/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/viewing-controls-final/viewing-calendar-controls--c57ae--navigation-and-date-ranges-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile] › tests/e2e/viewing-calendar-controls.spec.ts:5:1 › calendar recovers invalid URL filters and supports keyboard month navigation and date ranges 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('alert')
+    Expected: visible
+    Error: strict mode violation: getByRole('alert') resolved to 2 elements:
+        1) <div role="alert" class="error-box">[↵  {↵    "origin": "string",↵    "code": "invali…</div> aka getByText('[ { "origin": "string", "code')
+        2) <div role="alert" aria-live="assertive" id="__next-route-announcer__"></div> aka locator('[id="__next-route-announcer__"]')
+
+    Call log:
+      - Expect "toBeVisible" getByRole('alert') with timeout 15000ms
+      - waiting for getByRole('alert')
+
+
+       5 | test('calendar recovers invalid URL filters and supports keyboard month navigation and date ranges',async({page},info)=>{
+       6 |  test.setTimeout(120000);await login(page,'buyer','http://localhost:8088','/account/viewings?from=not-a-date');
+    >  7 |  await expect(page.getByRole('alert')).toBeVisible();const calendar=page.getByRole('group',{name:'Viewing dates',exact:true});await expect(calendar).toBeVisible();
+         |                                        ^
+       8 |  await page.getByRole('button',{name:'From property-local date',exact:true}).click();await page.getByRole('button',{name:'Clear date',exact:true}).click();await page.getByRole('button',{name:'Apply calendar filters',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);
+       9 |  const first=calendar.locator('[data-date]').first(),initial=(await first.getAttribute('data-date'))!;const next=new Date(initial+'T12:00:00Z');next.setUTCMonth(next.getUTCMonth()+1);const date=next.toISOString().slice(0,10);
+      10 |  await first.focus();await first.press('PageDown');await expect(calendar.locator('[data-date="'+date+'"]')).toBeFocused();await expect(page).toHaveURL(new RegExp('from='+date));
+        at /workspace/tests/e2e/viewing-calendar-controls.spec.ts:7:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/viewing-controls-final/viewing-calendar-controls--c57ae--navigation-and-date-ranges-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/viewing-controls-final/viewing-calendar-controls--c57ae--navigation-and-date-ranges-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/viewing-controls-final/viewing-calendar-controls--c57ae--navigation-and-date-ranges-mobile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/viewing-controls-final/viewing-calendar-controls--c57ae--navigation-and-date-ranges-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop] › tests/e2e/viewing-calendar-controls.spec.ts:5:1 › calendar recovers invalid URL filters and supports keyboard month navigation and date ranges 
+    [mobile] › tests/e2e/viewing-calendar-controls.spec.ts:5:1 › calendar recovers invalid URL filters and supports keyboard month navigation and date ranges 

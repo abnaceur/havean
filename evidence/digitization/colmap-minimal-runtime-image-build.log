@@ -1,0 +1,85 @@
+ Image haven-colmap-runtime:3.10-source-cpu-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 642B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.colmap-runtime
+#2 transferring dockerfile: 1.52kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 ...
+
+#4 [auth] library/python:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 2.5s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 192B done
+#5 DONE 0.1s
+
+#6 [internal] load build context
+#6 DONE 0.0s
+
+#7 [verify 1/5] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#7 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#7 DONE 0.1s
+
+#7 [verify 1/5] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#7 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 50.80MB 0.3s done
+#6 DONE 0.3s
+
+#8 [verify 2/5] COPY services/property-processing/.colmap-runtime/ /export/
+#8 DONE 0.2s
+
+#9 [verify 3/5] COPY services/property-processing/colmap-source-runtime.json /expected.json
+#9 DONE 0.1s
+
+#10 [verify 4/5] COPY services/property-processing/property_processing/colmap_runtime.py /verify_runtime.py
+#10 DONE 0.2s
+
+#11 [verify 5/5] RUN python -c "import json;from verify_runtime import verify_runtime;verify_runtime('/export',json.load(open('/expected.json')))"
+#11 DONE 0.7s
+
+#12 [cpu 2/8] COPY --from=verify /export/bin/colmap /usr/bin/colmap
+#12 DONE 0.1s
+
+#13 [cpu 3/8] COPY --from=verify /export/lib/ /opt/colmap/lib/
+#13 DONE 0.2s
+
+#14 [cpu 4/8] COPY --from=verify /export/notices/ /opt/colmap/notices/
+#14 DONE 0.1s
+
+#15 [cpu 5/8] COPY --from=verify /export/runtime-profile.json /opt/colmap/runtime-profile.json
+#15 DONE 0.1s
+
+#16 [cpu 6/8] WORKDIR /opt/processing
+#16 DONE 0.1s
+
+#17 [cpu 7/8] COPY services/property-processing/property_processing/__init__.py services/property-processing/property_processing/colmap_cli.py services/property-processing/property_processing/colmap_runtime.py services/property-processing/property_processing/reconstruction_quality.py services/property-processing/property_processing/reconstruction_pairs.py services/property-processing/property_processing/training_data.py ./property_processing/
+#17 DONE 0.2s
+
+#18 [cpu 8/8] RUN groupadd --gid 10001 processing && useradd --uid 10001 --gid 10001 --no-create-home processing
+#18 DONE 0.8s
+
+#19 exporting to image
+#19 exporting layers
+#19 exporting layers 2.2s done
+#19 exporting manifest sha256:aec66029fe54502cc5458a0e912abcbe39b6685bfb022a28fc479b34ccff3ede 0.1s done
+#19 exporting config sha256:4949a14602f4eb8b5dbba9d8b146d55ef948e298ccac39bdcd4e24d13832adfe 0.1s done
+#19 exporting attestation manifest sha256:39792e06185295e0eb6dbf73af914d2c98c07dab27b492efa4d8b734d4d96f09 0.1s done
+#19 exporting manifest list sha256:360bd14dbfb7a4ec791a442b80823f969a9c98db6d16ca0e6cdc92da6d4ca8de
+#19 exporting manifest list sha256:360bd14dbfb7a4ec791a442b80823f969a9c98db6d16ca0e6cdc92da6d4ca8de 0.1s done
+#19 naming to docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1 done
+#19 unpacking to docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1
+#19 unpacking to docker.io/library/haven-colmap-runtime:3.10-source-cpu-v1 0.6s done
+#19 DONE 3.1s
+
+#20 resolving provenance for metadata file
+#20 DONE 0.0s
+ Image haven-colmap-runtime:3.10-source-cpu-v1 Built 

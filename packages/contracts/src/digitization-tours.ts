@@ -1,0 +1,15 @@
+import {z} from 'zod';
+const node=z.strictObject({id:z.uuid(),label:z.string().trim().min(2).max(80),tierArtifactIds:z.array(z.uuid()).min(1).max(3),captureDeclaration:z.literal('genuine_360_capture').nullable(),roomId:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/).nullable(),headingDegrees:z.number().finite().min(-180).max(180).nullable(),planPosition:z.strictObject({floorId:z.string().regex(/^[a-zA-Z0-9_-]{1,80}$/),x:z.number().finite().min(-1e6).max(1e6),y:z.number().finite().min(-1e6).max(1e6),confirmed:z.literal(true)}).nullable().optional(),hotspots:z.array(z.strictObject({targetNodeId:z.uuid(),label:z.string().trim().min(2).max(80),yaw:z.number().finite().min(-180).max(180),pitch:z.number().finite().min(-80).max(80)})).max(20)});
+export const digitizationTourGraph=z.strictObject({schemaVersion:z.literal(1),geometryRevisionId:z.uuid().nullable(),entryNodeId:z.uuid(),nodes:z.array(node).min(1).max(100)}).superRefine((graph,ctx)=>{
+ const ids=new Set(graph.nodes.map(node=>node.id));
+ if(ids.size!==graph.nodes.length||!ids.has(graph.entryNodeId))ctx.addIssue({code:'custom',path:['nodes'],message:'Unique nodes and an existing entry node are required'});
+ const artifacts=graph.nodes.flatMap(node=>node.tierArtifactIds);if(new Set(artifacts).size!==artifacts.length)ctx.addIssue({code:'custom',path:['nodes'],message:'Each panorama tier belongs to one tour node'});
+ for(const [index,node] of graph.nodes.entries()){
+  if(node.planPosition&&(node.roomId===null||graph.geometryRevisionId===null))ctx.addIssue({code:'custom',path:['nodes',index,'planPosition'],message:'Plan positions require an explicit room and current geometry'});
+  if(node.roomId!==null&&graph.geometryRevisionId===null)ctx.addIssue({code:'custom',path:['nodes',index,'roomId'],message:'A room link requires an explicit geometry revision'});
+  for(const [hotspotIndex,hotspot] of node.hotspots.entries())if(!ids.has(hotspot.targetNodeId)||hotspot.targetNodeId===node.id)ctx.addIssue({code:'custom',path:['nodes',index,'hotspots',hotspotIndex,'targetNodeId'],message:'Hotspots must target another node in this tour'});
+ }
+});
+export const digitizationTourCreate=z.strictObject({workspaceVersion:z.number().int().positive(),inputRevision:z.number().int().positive(),baseTourRevision:z.number().int().min(0),graph:digitizationTourGraph});
+export const digitizationTourRecord=z.strictObject({id:z.uuid(),version:z.literal(1),revision:z.number().int().positive(),inputRevision:z.number().int().positive(),workspaceVersion:z.number().int().positive(),graph:digitizationTourGraph,reviewRequired:z.literal(true),genuinePanoramaConfirmed:z.literal(false)});
+export const digitizationPanoramaCandidates=z.array(z.strictObject({captureId:z.uuid(),inputRevision:z.number().int().positive(),tiers:z.array(z.strictObject({artifactId:z.uuid(),artifactVersion:z.number().int().positive(),width:z.union([z.literal(1024),z.literal(2048),z.literal(4096)]),height:z.number().int().positive().max(2048)})).min(1).max(3),reviewRequired:z.literal(true),genuinePanoramaConfirmed:z.literal(false)})).max(100);

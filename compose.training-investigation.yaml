@@ -1,0 +1,23 @@
+# Private CPU preparation only. This existing source-build investigation image
+# is not admitted for production distribution or GPU processing.
+name: haven-training-investigation
+services:
+  processing-training-input:
+    profiles: [training-input-investigation]
+    image: haven-colmap-source:3.10-cpu-exclusions-investigation-v1
+    init: true
+    network_mode: none
+    read_only: true
+    user: '10001:10001'
+    group_add: ['1000']
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 8g
+    cpus: 2
+    pids_limit: 128
+    tmpfs: ['/tmp:size=67108864,mode=1777']
+    volumes:
+      - ./services/property-processing/property_processing:/opt/processing/property_processing:ro
+      - ${TRAINING_SOURCE_DIRECTORY:-./infra/generated/reconstruction/tum-xyz-input}:/input:ro
+      - ./infra/generated/reconstruction/results:/results
+    command: [python3, -m, property_processing.colmap_cli, --input, /input, --output, /results/tum-xyz-training-prepared-v1, --max-seconds, '240', --prepare-training]

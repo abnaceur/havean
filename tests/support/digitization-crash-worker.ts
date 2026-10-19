@@ -1,0 +1,14 @@
+import './env';
+import {createRequire} from 'node:module';
+import {createDigitizationProcessor} from '../../apps/worker/src/digitization/coordinator';
+const {Worker}=createRequire(new URL('../../apps/worker/package.json',import.meta.url))('bullmq');
+const queueName=process.env.DIGITIZATION_CRASH_QUEUE,origin=process.env.DIGITIZATION_CRASH_API,key=process.env.DIGITIZATION_CRASH_KEY;
+if(process.env.HAVEN_CONTAINER_TESTS!=='true'||!queueName?.startsWith('crash-rehearsal-')||origin!=='http://127.0.0.1:9942'||key!=='4'.repeat(64)||!process.send)throw Error('ISOLATED_CRASH_REHEARSAL_REQUIRED');
+const redis=new URL(process.env.REDIS_URL!),connection={host:redis.hostname,port:Number(redis.port)||6379,maxRetriesPerRequest:null};
+const worker=new Worker(queueName,createDigitizationProcessor(origin,key,process.env.DIGITIZATION_CRASH_PAUSE==='true'?{afterStart:async handoff=>{process.send!({event:'submitted',handoff});await new Promise(()=>{});}}:{}),{connection,concurrency:1,lockDuration:1000,stalledInterval:1000,maxStalledCount:1});
+worker.on('stalled',()=>process.send!({event:'stalled'}));
+worker.on('completed',()=>process.send!({event:'completed'}));
+worker.on('failed',(_job:any,error:Error)=>process.send!({event:'failed',code:error.message}));
+worker.on('error',()=>process.send!({event:'error'}));
+await worker.waitUntilReady();process.send({event:'ready'});
+process.on('SIGTERM',()=>{void worker.close().then(()=>process.exit(0));});

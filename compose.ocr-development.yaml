@@ -1,0 +1,17 @@
+# Local private OCR opt-in. Never include this override in staging/production.
+# Keeps the existing execution volume, keys, media profiles and cleanup ports.
+services:
+  api:
+    environment:
+      PROCESSING_DEPLOYMENT: development
+      PROCESSING_ENABLE_OCR_INVESTIGATION: 'true'
+  processing-cpu:
+    image: haven-processing-ocr:3.3.3-local-cpu-v1
+    build:
+      context: .
+      dockerfile: services/property-processing/Dockerfile.ocr-development
+      target: ''
+    environment:
+      PROCESSING_DEPLOYMENT: development
+      PROCESSING_ENABLE_OCR_INVESTIGATION: 'true'
+    mem_limit: 4g

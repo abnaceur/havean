@@ -1,0 +1,46 @@
+import '../support/env';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {afterAll,it,expect} from 'vitest';
+import type {FastifyRequest} from 'fastify';
+import {pool,transaction,type Actor} from '../../packages/database/src/index';
+import {Identity} from '../../apps/api/src/platform/core';
+import {DigitizationModelReviewController} from '../../apps/api/src/inventory/digitization/model-review-controller';
+import {readModelReviewPreview} from '../../apps/api/src/inventory/digitization/model-review';
+import {checkedWorkspace} from '../../apps/api/src/inventory/digitization/intakes';
+const author:Actor={id:'00000000-0000-4000-8000-000000000003',orgId:'10000000-0000-4000-8000-000000000001',roles:['agent']};
+const reviewer:Actor={id:'00000000-0000-4000-8000-000000000008',orgId:null,roles:['moderator']};
+const admin:Actor={id:'00000000-0000-4000-8000-000000000010',orgId:null,roles:['admin']};
+const controller=(a:Actor)=>new DigitizationModelReviewController({actor:async()=>a} as unknown as Identity);
+const request=(url:string)=>({method:'POST',url,headers:{'idempotency-key':crypto.randomUUID()}} as unknown as FastifyRequest);
+afterAll(()=>pool.end());
+it.each(['structural','splat'] as const)('actual %s review requires assigned independent authority and exact private candidate, without publishing',async modelType=>{
+ const f=JSON.parse(readFileSync('infra/generated/integration/registration-review-desktop.json','utf8'));
+ const w=await transaction(author,c=>checkedWorkspace(c,f.engineId)),api=controller(author),review=controller(reviewer);
+ const input={workspaceVersion:w.version,inputRevision:w.inputRevision,reviewerId:reviewer.id,previewDelegationConfirmed:true as const,...(modelType==='structural'?{modelType,geometryRevisionId:f.geometryRevisionId}:{modelType,sceneArtifactId:f.artifactId})};
+ const req=request(`/api/v1/ops/digitizations/${f.engineId}/model-review-requests`);
+ await expect(api.submit(req,f.engineId,{...input,reviewerId:author.id})).rejects.toMatchObject({status:422});
+ await expect(api.submit(req,f.engineId,{...input,workspaceVersion:w.version+1})).rejects.toMatchObject({status:409});
+ const [first,second]=await Promise.all([api.submit(req,f.engineId,input),api.submit(req,f.engineId,input)]),shared=first.data;expect(second.data).toEqual(shared);
+ expect(shared).toMatchObject({modelType,current:true,approval:null,metricMeasurementsAvailable:false,publiclyServed:false});
+ expect(JSON.stringify(shared)).not.toContain('geometry_snapshot');expect(JSON.stringify(shared)).not.toContain('object_key');
+ await expect(readModelReviewPreview(admin,shared.id)).rejects.toMatchObject({code:'42501'});
+ const candidate=await readModelReviewPreview(reviewer,shared.id);expect(createHash('sha256').update(candidate.body).digest('hex')).toBe(shared.candidateChecksum);
+ if(modelType==='structural'){
+  expect(candidate.format).toBe('model/gltf-binary');const json=JSON.parse(candidate.body.subarray(20,20+candidate.body.readUInt32LE(12)).toString());
+  expect(json.asset.extras).toMatchObject({metricMeasurementsAvailable:false,scaleStatus:'estimated'});
+  expect(JSON.stringify(json)).not.toContain(f.sourceAssetId);expect(JSON.stringify(json)).not.toContain(f.geometryRevisionId);
+ }else{expect(candidate.body.byteLength).toBe(f.byteSize);expect(candidate.format).toBe('application/octet-stream');}
+ expect((await review.queue({} as FastifyRequest)).data.some(row=>row.id===shared.id)).toBe(true);
+ const decision={requestVersion:1 as const,workspaceVersion:shared.workspaceVersion,decision:'approved' as const,privacyConfirmed:true,limitationsConfirmed:true,reason:'Synthetic independent private model review; estimated or unscaled visualization, no metric or publication approval.'};
+ const decisionReq=request(`/api/v1/ops/digitization-model-reviews/${shared.id}/review`);
+ await expect(review.review(decisionReq,shared.id,{...decision,privacyConfirmed:false})).rejects.toBeDefined();
+ await expect(controller(admin).review(decisionReq,shared.id,decision)).rejects.toMatchObject({code:'42501'});
+ await expect(transaction(author,async c=>{await c.query('UPDATE property_digitizations SET version=version+1 WHERE id=$1',[f.engineId]);await c.query('SELECT digitization_model_review_context($1)',[shared.id]);})).rejects.toMatchObject({code:'40001'});
+ await expect(transaction(author,async c=>{await c.query("UPDATE media_assets SET status='rejected' WHERE id=$1",[f.sourceAssetId]);await c.query('SELECT digitization_model_review_context($1)',[shared.id]);})).rejects.toMatchObject({code:'42501'});
+ const approval=(await review.review(decisionReq,shared.id,decision)).data;expect(approval).toMatchObject({decision:'approved',requestId:shared.id,candidateChecksum:shared.candidateChecksum,metricMeasurementsAvailable:false,publiclyServed:false});
+ expect((await review.review(decisionReq,shared.id,decision)).data).toEqual(approval);
+ await expect(review.review(decisionReq,shared.id,{...decision,reason:'Changed immutable replay reason.'})).rejects.toMatchObject({status:409});
+ await expect(review.review(request(decisionReq.url),shared.id,decision)).rejects.toMatchObject({code:'40001'});
+ await transaction(author,async c=>{expect((await c.query('SELECT count(*)::int n FROM published_packages WHERE digitization_id=$1',[f.engineId])).rows[0].n).toBe(0);expect((await c.query('SELECT count(*)::int n FROM digitization_model_publication_proposals WHERE digitization_id=$1',[f.engineId])).rows[0].n).toBe(0);});
+});

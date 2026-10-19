@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "tag": "v0.9",
+  "sourceCommit": "c8a669bce33db2525f6873a89c6d7c7434f93537",
+  "source": "https://codeload.github.com/alicevision/popsift/tar.gz/c8a669bce33db2525f6873a89c6d7c7434f93537",
+  "sourceSha256": "dffccd79e079f679eed2b11595dc6f2698c44b4f592580a0555d092e64e589c2",
+  "notices": [
+    {
+      "path": "docs/adr/licenses/popsift-v0.9/COPYING.md",
+      "sha256": "4d51155b35e4c804365b4c8a133aed634ab520296c9e559bd0c91128980ccb1d"
+    }
+  ],
+  "enabled": false,
+  "reason": "Compile investigation only; adapter compatibility, exact runtime distribution and actual GPU checks pending",
+  "modification": {
+    "path": "docs/adr/licenses/popsift-v0.9/cuda126-compatibility.patch",
+    "sha256": "f46a5f01e12b56c0b51f57f95e50c90b971fdefa8fb8d6a0996b43d7000a99c6",
+    "reason": "Remove unused cuBLAS dependency (no cuBLAS calls found in pinned source) and explicitly include Thrust host_vector/constant_iterator for CUDA12.6 compatibility; preserve MPL-2.0 source notice."
+  }
+}

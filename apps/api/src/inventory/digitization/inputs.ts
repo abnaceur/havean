@@ -26,7 +26,7 @@ export async function appendInputRevision(c:pg.PoolClient,a:Actor,id:string,expe
  if(sources.length>100||new Set(sources.map(s=>`${s.assetId}:${s.purpose}`)).size!==sources.length)fail(422,'Select distinct supported sources.','INVALID_SOURCE_SET');
  const revision=workspace.inputRevision+1;
  for(const source of sources){
-  if(source.inputRevision!==revision||!['requires_isolated_pdf_decoder','requires_isolated_image_decoder'].includes(source.decoderState)||!/^[a-f0-9]{64}$/.test(source.sha256))fail(422,'Source validation does not match this revision.','INVALID_SOURCE_VALIDATION');
+  if(source.inputRevision!==revision||!['requires_isolated_pdf_decoder','requires_isolated_image_decoder','requires_isolated_media_decoder'].includes(source.decoderState)||!/^[a-f0-9]{64}$/.test(source.sha256))fail(422,'Source validation does not match this revision.','INVALID_SOURCE_VALIDATION');
   const asset=(await c.query('SELECT * FROM digitization_source_descriptor($1,$2,$3,$4)',[id,source.assetId,source.assetVersion,revision])).rows[0];
   if(!asset||asset.mime!==source.detectedMime||Number(asset.size)!==source.bytes||!(await c.query("SELECT digitization_asset_access($1,$2,$3,$4,'document_processing') AS allowed",[id,source.assetId,source.assetVersion,revision])).rows[0].allowed)fail(403,'Source authority or version changed. Validate the current upload.','SOURCE_ACCESS_CHANGED');
  }
@@ -35,7 +35,7 @@ export async function appendInputRevision(c:pg.PoolClient,a:Actor,id:string,expe
  await c.query(`INSERT INTO property_input_revisions(digitization_id,organization_id,created_by,revision,source_set) VALUES($1,$2,$3,$4,$5)`,[id,a.orgId,a.id,revision,JSON.stringify(snapshot)]);
  const bindings=[];
  for(const source of sources){
-  const sensitivity=source.purpose==='document'||source.purpose==='plan'?'private_evidence':'gallery';
+  const sensitivity=source.purpose==='document'||source.purpose==='plan'?'private_evidence':source.purpose==='video'?'private_capture':'gallery';
   bindings.push((await c.query(`INSERT INTO digitization_asset_bindings(digitization_id,organization_id,created_by,input_revision,asset_id,asset_version,purpose,sensitivity,source_lineage) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`,[id,a.orgId,a.id,revision,source.assetId,source.assetVersion,source.purpose,sensitivity,{sha256:source.sha256,bytes:String(source.bytes),detectedMime:source.detectedMime,decoderState:source.decoderState}])).rows[0].id);
  }
  await c.query('UPDATE property_digitizations SET current_input_revision=$2,version=version+1 WHERE id=$1',[id,revision]);

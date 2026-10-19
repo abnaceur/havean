@@ -1,17 +1,15 @@
 """Bounded real source inspection. Raster OCR remains an explicit later stage."""
 from io import BytesIO
+import math
 import warnings
 from pypdf import PdfReader
 from PIL import Image, ImageOps
+from .errors import SourceError
 
 MAX_BYTES = 20 * 1024 * 1024
 MAX_PAGES = 50
 MAX_PIXELS = 30_000_000
 Image.MAX_IMAGE_PIXELS = MAX_PIXELS
-
-
-class SourceError(ValueError):
-    """Sanitized actionable input failure, without private source text or paths."""
 
 
 def inspect_pdf(content: bytes, dpi: int = 150) -> list[dict]:
@@ -57,7 +55,11 @@ ORIENTATION_TRANSFORMS = {
 }
 
 
-def upright_image(content: bytes) -> tuple[bytes, dict]:
+def upright_image(content: bytes, *, max_output_pixels=None, max_output_edge=None) -> tuple[bytes, dict]:
+    if max_output_pixels is not None and (type(max_output_pixels) is not int or not 1 <= max_output_pixels <= MAX_PIXELS):
+        raise SourceError('INVALID_IMAGE_PROFILE')
+    if max_output_edge is not None and (type(max_output_edge) is not int or not 1 <= max_output_edge <= 16000):
+        raise SourceError('INVALID_IMAGE_PROFILE')
     if len(content) > 10 * 1024 * 1024:
         raise SourceError("IMAGE_BYTE_BUDGET_EXCEEDED")
     try:
@@ -73,6 +75,11 @@ def upright_image(content: bytes) -> tuple[bytes, dict]:
                 if orientation not in ORIENTATION_TRANSFORMS:
                     raise SourceError("INVALID_ORIENTATION")
                 image = ImageOps.exif_transpose(source).convert("RGB")
+                if max_output_pixels is not None and image.width * image.height > max_output_pixels:
+                    factor = math.sqrt(max_output_pixels / (image.width * image.height))
+                    image.thumbnail((max(1, int(image.width * factor)), max(1, int(image.height * factor))), Image.Resampling.LANCZOS)
+                if max_output_edge is not None:
+                    image.thumbnail((max_output_edge, max_output_edge), Image.Resampling.LANCZOS)
                 # Do not carry identity/GPS/EXIF to the upright derived preview.
                 image.info.clear()
                 output = BytesIO()

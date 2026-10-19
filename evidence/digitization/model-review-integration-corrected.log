@@ -1,0 +1,36 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/workspace[39m
+
+ [31m❯[39m tests/integration/digitization-model-review.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 1365[2mms[22m[39m
+[31m   [31m×[31m actual structural review requires assigned independent authority and exact private candidate, without publishing[39m[33m 678[2mms[22m[39m
+[31m   [31m×[31m actual splat review requires assigned independent authority and exact private candidate, without publishing[39m[33m 683[2mms[22m[39m
+ [32m✓[39m tests/integration/digitization-lifecycle-events.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 969[2mms[22m[39m
+   [33m[2m✓[22m[39m current review/capture/privacy/publication notifications acknowledge once without running or publishing; unknown versions remain pending[33m 965[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/integration/digitization-model-review.test.ts[2m > [22mactual structural review requires assigned independent authority and exact private candidate, without publishing
+[41m[1m FAIL [22m[49m tests/integration/digitization-model-review.test.ts[2m > [22mactual splat review requires assigned independent authority and exact private candidate, without publishing
+[31m[1mAssertionError[22m: expected error: Assigned model review required { …(15) } to match object { code: '40001' }
+(17 matching properties omitted from actual)[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- {[39m
+[32m-   "code": "40001",[39m
+[31m+ DatabaseError {[39m
+[31m+   "code": "42501",[39m
+[2m  }[22m
+
+[36m [2m❯[22m tests/integration/digitization-model-review.test.ts:[2m40:210[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 19:43:12
+[2m   Duration [22m 6.18s[2m (import 45%, tests 40%, transform 15%)[22m
+

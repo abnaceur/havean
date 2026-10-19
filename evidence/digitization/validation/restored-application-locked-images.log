@@ -1,0 +1,29 @@
+node:internal/errors:984
+  const err = new Error(message);
+              ^
+
+Error: Command failed: docker cp haven-integration-api-1:/workspace/packages/config/node_modules /tmp/haven-recovery-images-w3VXrI/dependencies-0
+invalid symlink "/tmp/haven-recovery-images-w3VXrI/dependencies-0/zod" -> "../../../node_modules/.pnpm/zod@4.6.5/node_modules/zod"
+
+    at genericNodeError (node:internal/errors:984:15)
+    at wrappedFn (node:internal/errors:538:14)
+    at checkExecSyncError (node:child_process:891:11)
+    at execFileSync (node:child_process:927:15)
+    at docker (file:///home/abn/project/real-estate-solution/scripts/recovery/build-fixture-images.mjs:7:20)
+    at file:///home/abn/project/real-estate-solution/scripts/recovery/build-fixture-images.mjs:15:41
+    at ModuleJob.run (node:internal/modules/esm/module_job:325:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:606:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+  status: 1,
+  signal: null,
+  output: [
+    null,
+    '',
+    'invalid symlink "/tmp/haven-recovery-images-w3VXrI/dependencies-0/zod" -> "../../../node_modules/.pnpm/zod@4.6.5/node_modules/zod"\n'
+  ],
+  pid: 1100695,
+  stdout: '',
+  stderr: 'invalid symlink "/tmp/haven-recovery-images-w3VXrI/dependencies-0/zod" -> "../../../node_modules/.pnpm/zod@4.6.5/node_modules/zod"\n'
+}
+
+Node.js v20.20.0

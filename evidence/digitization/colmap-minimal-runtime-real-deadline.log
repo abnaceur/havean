@@ -1,0 +1,20 @@
+ Container haven-reconstruction-runtime-tests-colmap-runtime-run-6939dc288c43 Creating 
+ Container haven-reconstruction-runtime-tests-colmap-runtime-run-6939dc288c43 Created 
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/processing/property_processing/colmap_cli.py", line 218, in <module>
+    print(json.dumps(solve(args.input, args.output, args.max_seconds, args.prepare_training), sort_keys=True))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/processing/property_processing/colmap_cli.py", line 145, in solve
+    run(['feature_extractor', '--database_path', str(database), '--image_path', str(root / 'frames'),
+  File "/opt/processing/property_processing/colmap_cli.py", line 132, in run
+    code = process.wait(timeout=remaining)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/subprocess.py", line 2045, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/usr/bin/colmap', 'feature_extractor', '--database_path', '/results/tum-xyz-minimal-runtime-deadline-v1/database.db', '--image_path', '/input/frames', '--image_list_path', '/results/tum-xyz-minimal-runtime-deadline-v1/camera-group-0.txt', '--ImageReader.single_camera', '1', '--SiftExtraction.use_gpu', '0', '--SiftExtraction.num_threads', '2', '--SiftExtraction.max_image_size', '640', '--SiftExtraction.max_num_features', '4096']' timed out after 0.9998037280020071 seconds
+

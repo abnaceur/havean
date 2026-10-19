@@ -1,0 +1,10 @@
+'use client';
+import {useEffect,useState} from 'react';
+import {sdk} from '@haven/contracts';
+import {ErrorBox} from '@haven/ui';
+type Evidence=Awaited<ReturnType<typeof sdk.DigitizationController_sceneEvidence>>['data'];
+export function DigitizationSceneEvidence({workspaceId,artifactId}:{workspaceId:string;artifactId:string}){
+ const [evidence,setEvidence]=useState<Evidence>(null),[error,setError]=useState(''),[loading,setLoading]=useState(true);
+ useEffect(()=>{let active=true;setEvidence(null);setError('');setLoading(true);void sdk.DigitizationController_sceneEvidence({params:{id:workspaceId,artifactId}}).then(r=>{if(active)setEvidence(r.data);}).catch(e=>{if(active)setError(e instanceof Error?e.message:'Training evidence unavailable.');}).finally(()=>{if(active)setLoading(false);});return()=>{active=false;};},[workspaceId,artifactId]);
+ return <section aria-label="Captured scene evidence"><h3>Capture quality and coverage</h3><p>Room coverage and physical scale are not established. This scene shows captured surfaces; it does not supply an editable floor plan or recover separate furniture objects.</p>{error&&<ErrorBox message={error}/>}<p>{loading?'Loading training evidence…':evidence?`${evidence.splatCount.toLocaleString()} splats · ${evidence.iterations} training steps · ${evidence.elapsedSeconds.toFixed(1)} seconds · ${evidence.fallbacks} memory fallbacks`:'No linked training evidence is available for this tier.'}</p>{evidence&&<><p>Held-out views were excluded from training. Inspect missing surfaces and blur before requesting independent review; these metrics do not establish complete property coverage.</p><div className="construction-evidence-images">{evidence.renders.map((r,index)=><figure key={r.id}><img src={`/api/v1/ops/digitizations/${encodeURIComponent(workspaceId)}/scene-tiers/${encodeURIComponent(artifactId)}/evidence/${encodeURIComponent(r.id)}/content`} width={r.width} height={r.height} alt={`Held-out reconstructed view ${index+1}`}/><figcaption>Held-out view {index+1}{r.psnrDb!==null?` · PSNR ${r.psnrDb.toFixed(2)} dB`:''}</figcaption></figure>)}</div></>}</section>;
+}

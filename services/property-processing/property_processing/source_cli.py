@@ -46,7 +46,7 @@ def main():
             content = handle.read(20 * 1024 * 1024 + 1)
         if kind == "pdf":
             result = {"pages": inspect_pdf(content), "ocrAvailable": False}
-        elif kind in ("pdf_raster", "native_facts_en", "native_facts_fr", "native_facts_ar"):
+        elif kind in ("pdf_raster", "pdf_ocr_pages", "native_facts_en", "native_facts_fr", "native_facts_ar", "native_facts_v3_en", "native_facts_v3_fr", "native_facts_v3_ar"):
             from .pdf_raster import rasterize_pdf
             pages = []
             for page in rasterize_pdf(content):
@@ -55,21 +55,38 @@ def main():
                 save_preview(directory, body, filename)
                 pages.append({**page, 'previewFilename': filename})
             result = {'pages': pages, 'ocrAvailable': False}
-            if kind != 'pdf_raster':
+            if kind == 'pdf_ocr_pages':
+                result['sourceSha256'] = hashlib.sha256(content).hexdigest()
+            elif kind != 'pdf_raster':
                 from .facts import generic_candidates
-                candidates = generic_candidates([line for page in pages for line in page['nativeLines']], kind[-2:])
+                modern = kind.startswith('native_facts_v3_')
+                candidates = generic_candidates([line for page in pages for line in page['nativeLines']], kind[-2:], include_counts=modern, include_text=modern)
                 for candidate in candidates:
                     for evidence in candidate['evidence']:
                         evidence['assetId'] = name
                 result.update({'candidates': candidates, 'requiresOcrPages': [page['page'] for page in pages if page['requiresOcr']],
-                               'extractionMethod': 'generic-native-glyphs-v1', 'reviewRequired': True,
-                               'countryProfile': None})
-        elif kind == "image":
-            body, metadata = upright_image(content)
+                               'extractionMethod': 'generic-native-glyphs-v3' if modern else 'generic-native-glyphs-v1', 'reviewRequired': True,
+                               'countryProfile': None, 'sourceSha256': hashlib.sha256(content).hexdigest(),
+                               'locale': kind[-2:]})
+        elif kind == "panorama":
+            from .panorama import panorama_tiers
+            result = panorama_tiers(content)
+            result['ocrAvailable'] = False
+            for tier in result['tiers']:
+                save_preview(directory, tier.pop('body'), tier['filename'])
+        elif kind in ("image", "photo_frame", "image_ocr_page"):
+            body, metadata = upright_image(content, max_output_pixels=4000000 if kind == 'image_ocr_page' else None,
+                                           max_output_edge=1600 if kind == 'image_ocr_page' else 1600 if kind == 'photo_frame' else None)
+            if kind == 'image_ocr_page' and metadata['width'] * metadata['height'] > 4000000:
+                raise SourceError('SOURCE_OCR_PAGE_BUDGET_EXCEEDED')
             checksum = hashlib.sha256(body).hexdigest()
             filename = f"page-001-{checksum}.png"
             save_preview(directory, body, filename)
             result = {"image": {**metadata, 'sha256': checksum, 'previewFilename': filename}, "ocrAvailable": False}
+            if kind == 'image_ocr_page':
+                result = {'sourceSha256': hashlib.sha256(content).hexdigest(),
+                          'detectedMime': metadata['detectedMime'],
+                          'pages': [{**result['image'], 'page': 1, 'nativeLines': [], 'requiresOcr': True}]}
         else:
             raise SourceError("SOURCE_KIND_INVALID")
         result["isolation"] = isolation

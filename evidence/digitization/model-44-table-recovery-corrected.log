@@ -1,0 +1,11 @@
+{"label":"P","status":"synthetic-source-snapshot-locked","sourceMutated":false}
+{"status":"failed","code":"RESTORED_DIGITIZATION_RECONCILIATION_FAILED"}
+file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:106
+ if(databaseDrill){const reportFile=databaseReportFile;nodeCommand('scripts/recovery/restore.mjs',{RECOVERY_ENCRYPTED_INPUT:path.join(root,'encrypted'),RECOVERY_PRIVATE_KEY:path.join(root,'recovery.key'),RECOVERY_SIGNING_PUBLIC_KEY:path.join(root,'signing.pub'),RECOVERY_REPORT_FILE:reportFile});databaseReport=JSON.parse(fs.readFileSync(reportFile,'utf8'));processing=databaseReport.retained.processing;if(databaseReport.status!=='database-restored'||databaseReport.digitizationReconciled?.schemaVersion!==2||JSON.stringify(databaseReport.digitizationReconciled.tables.map(table=>table.table))!==JSON.stringify(digitizationRecoveryTables))throw Error('RECOVERY_TEST_DATABASE_RECONCILIATION_FAILED');
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+
+Error: RECOVERY_TEST_DATABASE_RECONCILIATION_FAILED
+    at file:///home/abn/project/real-estate-solution/scripts/recovery/test-processing.mjs:106:647
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+Node.js v20.20.0

@@ -1,0 +1,70 @@
+# Supplemental to the production application Compose configuration. No source
+# mounts, investigation flags, model downloads or new published host ports.
+services:
+  api:
+    environment:
+      PROCESSING_DEPLOYMENT: production
+      PROCESSING_ENABLE_OCR: 'true'
+      PROCESSING_ENABLE_OCR_INVESTIGATION: 'false'
+      PROCESSING_OCR_RELEASE_SHA256: ${PROCESSING_OCR_RELEASE_SHA256:?Select the packaged OCR release checksum}
+      DIGITIZATION_CPU_RUNNER_ORIGIN: http://processing-cpu:8020
+      DIGITIZATION_CPU_SIGNING_KEY_FILE: /run/digitization-runner.key
+      DIGITIZATION_COORDINATOR_KEY: ${DIGITIZATION_COORDINATOR_KEY:?Provide an independent protected coordinator key}
+    volumes:
+      - ${DIGITIZATION_RUNNER_KEY_FILE:?Provide the protected runner key file}:/run/digitization-runner.key:ro
+    networks: [private, processing]
+  worker:
+    environment:
+      DIGITIZATION_COORDINATOR_KEY: ${DIGITIZATION_COORDINATOR_KEY:?Provide an independent protected coordinator key}
+  processing-volume-init:
+    image: node:24.21.0-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6
+    restart: 'no'
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN, FOWNER, DAC_OVERRIDE]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+    pids_limit: 32
+    volumes: [processing-executions:/jobs]
+    command: [node, -e, "require('fs').chownSync('/jobs',10001,10001);require('fs').chmodSync('/jobs',0o700)"]
+  processing-cpu:
+    image: '${PROCESSING_OCR_IMAGE_REPOSITORY:?Provide the OCR image repository}@sha256:${PROCESSING_OCR_IMAGE_SHA256:?Provide its immutable registry manifest digest}'
+    init: true
+    restart: unless-stopped
+    read_only: true
+    user: '10001:10001'
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      PROCESSING_DEPLOYMENT: production
+      PROCESSING_ENABLE_OCR: 'true'
+      PROCESSING_OCR_RELEASE_SHA256: ${PROCESSING_OCR_RELEASE_SHA256:?Select the packaged OCR release checksum}
+      PROCESSING_ENABLE_OCR_INVESTIGATION: 'false'
+      PROCESSING_ENABLE_CAMERA_INVESTIGATION: 'false'
+      PROCESSING_ADAPTER: unavailable
+      PROCESSING_ENABLE_SIMULATOR: 'false'
+      PROCESSING_ENABLE_MEDIA_PROBE: 'true'
+      PROCESSING_EXECUTION_ROOT: /jobs
+      PROCESSING_SIGNING_KEY_FILE: /run/digitization-runner.key
+    volumes:
+      - processing-executions:/jobs
+      - ${DIGITIZATION_RUNNER_KEY_FILE:?Provide the protected runner key file}:/run/digitization-runner.key:ro
+    depends_on:
+      processing-volume-init: {condition: service_completed_successfully}
+    mem_limit: 4g
+    cpus: 1
+    pids_limit: 64
+    tmpfs: ['/tmp:size=67108864,mode=1777']
+    networks: [processing]
+    healthcheck:
+      test: [CMD, python, -c, 'import urllib.request; urllib.request.urlopen("http://127.0.0.1:8020/health/ready",timeout=2).close()']
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 60s
+networks:
+  processing:
+    internal: true
+volumes:
+  processing-executions:

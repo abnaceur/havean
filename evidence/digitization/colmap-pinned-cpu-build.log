@@ -1,0 +1,319 @@
+ Image haven-processing-colmap:3.10-2-cpu-v1 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 659B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.colmap
+#2 transferring dockerfile: 1.36kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#3 DONE 0.1s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 192B done
+#4 DONE 0.0s
+
+#5 [cpu 1/8] FROM docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+#5 resolve docker.io/library/python:3.12.14-slim-trixie@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea 0.0s done
+#5 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 53.56kB done
+#6 DONE 0.0s
+
+#7 [cpu 2/8] COPY services/property-processing/locks/colmap-apt.json /tmp/colmap-apt.json
+#7 DONE 0.1s
+
+#8 [cpu 3/8] COPY services/property-processing/install-colmap.py /tmp/install-colmap.py
+#8 DONE 0.1s
+
+#9 [cpu 4/8] RUN python /tmp/install-colmap.py && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/install-colmap.py
+#9 1.154 Get:1 http://deb.debian.org/debian trixie InRelease [140 kB]
+#9 1.784 Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+#9 2.038 Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+#9 2.235 Get:4 http://deb.debian.org/debian trixie/main amd64 Packages [9678 kB]
+#9 4.336 Get:5 http://deb.debian.org/debian trixie-updates/main amd64 Packages [4412 B]
+#9 4.519 Get:6 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [265 kB]
+#9 5.362 Fetched 10.2 MB in 5s (2075 kB/s)
+#9 5.362 Reading package lists...
+#9 5.999 Reading package lists...
+#9 6.699 Building dependency tree...
+#9 6.855 Reading state information...
+#9 7.073 adduser is already the newest version (3.152).
+#9 7.073 apt is already the newest version (3.0.3).
+#9 7.073 base-passwd is already the newest version (3.6.7).
+#9 7.073 bsdutils is already the newest version (1:2.41.5-0+deb13u1).
+#9 7.073 ca-certificates is already the newest version (20250419).
+#9 7.073 coreutils is already the newest version (9.7-3).
+#9 7.073 dash is already the newest version (0.5.12-12).
+#9 7.073 debconf is already the newest version (1.5.91).
+#9 7.073 debian-archive-keyring is already the newest version (2025.1).
+#9 7.073 debianutils is already the newest version (5.23.2).
+#9 7.073 diffutils is already the newest version (1:3.10-4).
+#9 7.073 dpkg is already the newest version (1.22.22).
+#9 7.073 findutils is already the newest version (4.10.0-3).
+#9 7.073 gcc-14-base is already the newest version (14.2.0-19).
+#9 7.073 grep is already the newest version (3.11-4).
+#9 7.073 hostname is already the newest version (3.25).
+#9 7.073 init-system-helpers is already the newest version (1.69~deb13u1).
+#9 7.073 libacl1 is already the newest version (2.3.2-2+b1).
+#9 7.073 libapt-pkg7.0 is already the newest version (3.0.3).
+#9 7.073 libattr1 is already the newest version (1:2.5.2-3).
+#9 7.073 libblkid1 is already the newest version (2.41.5-0+deb13u1).
+#9 7.073 libbsd0 is already the newest version (0.12.2-2).
+#9 7.073 libbz2-1.0 is already the newest version (1.0.8-6).
+#9 7.073 libcap-ng0 is already the newest version (0.8.5-4+b1).
+#9 7.073 libcrypt1 is already the newest version (1:4.4.38-1).
+#9 7.073 libdb5.3t64 is already the newest version (5.3.28+dfsg2-9).
+#9 7.073 libdebconfclient0 is already the newest version (0.280).
+#9 7.073 libffi8 is already the newest version (3.4.8-2).
+#9 7.073 libgcc-s1 is already the newest version (14.2.0-19).
+#9 7.073 libgdbm6t64 is already the newest version (1.24-2).
+#9 7.073 libgmp10 is already the newest version (2:6.3.0+dfsg-3).
+#9 7.073 libhogweed6t64 is already the newest version (3.10.1-1).
+#9 7.073 liblastlog2-2 is already the newest version (2.41.5-0+deb13u1).
+#9 7.073 liblz4-1 is already the newest version (1.10.0-4).
+#9 7.073 libmd0 is already the newest version (1.1.0-2+b1).
+#9 7.073 libmount1 is already the newest version (2.41.5-0+deb13u1).
+#9 7.073 libncursesw6 is already the newest version (6.5+20250216-2).
+#9 7.073 libnettle8t64 is already the newest version (3.10.1-1).
+#9 7.073 libpam-modules is already the newest version (1.7.0-5).
+#9 7.073 libpam-modules-bin is already the newest version (1.7.0-5).
+#9 7.073 libpam-runtime is already the newest version (1.7.0-5).
+#9 7.073 libpam0g is already the newest version (1.7.0-5).
+#9 7.073 libreadline8t64 is already the newest version (8.2-6).
+#9 7.073 libseccomp2 is already the newest version (2.6.0-2).
+#9 7.073 libselinux1 is already the newest version (3.8.1-1).
+#9 7.073 libsemanage-common is already the newest version (3.8.1-1).
+#9 7.073 libsemanage2 is already the newest version (3.8.1-1).
+#9 7.073 libsepol2 is already the newest version (3.8.1-1).
+#9 7.073 libsmartcols1 is already the newest version (2.41.5-0+deb13u1).
+#9 7.073 libstdc++6 is already the newest version (14.2.0-19).
+#9 7.073 libsystemd0 is already the newest version (257.13-1~deb13u1).
+#9 7.073 libtinfo6 is already the newest version (6.5+20250216-2).
+#9 7.073 libudev1 is already the newest version (257.13-1~deb13u1).
+#9 7.073 libuuid1 is already the newest version (2.41.5-0+deb13u1).
+#9 7.073 libxxhash0 is already the newest version (0.8.3-2).
+#9 7.073 libzstd1 is already the newest version (1.5.7+dfsg-1).
+#9 7.073 login is already the newest version (1:4.16.0-2+really2.41.5-0+deb13u1).
+#9 7.073 login.defs is already the newest version (1:4.17.4-2).
+#9 7.073 mawk is already the newest version (1.3.4.20250131-1).
+#9 7.073 mount is already the newest version (2.41.5-0+deb13u1).
+#9 7.073 ncurses-base is already the newest version (6.5+20250216-2).
+#9 7.073 ncurses-bin is already the newest version (6.5+20250216-2).
+#9 7.073 netbase is already the newest version (6.5).
+#9 7.073 passwd is already the newest version (1:4.17.4-2).
+#9 7.073 readline-common is already the newest version (8.2-6).
+#9 7.073 sed is already the newest version (4.9-2+deb13u1).
+#9 7.073 sqv is already the newest version (1.3.0-3+b2).
+#9 7.073 sysvinit-utils is already the newest version (3.14-4).
+#9 7.073 tar is already the newest version (1.35+dfsg-3.1).
+#9 7.073 util-linux is already the newest version (2.41.5-0+deb13u1).
+#9 7.073 zlib1g is already the newest version (1:1.3.dfsg+really1.3.1-1+b1).
+#9 7.073 Suggested packages:
+#9 7.073   glew-utils low-memory-monitor krb5-doc krb5-user liblcms2-utils pciutils
+#9 7.073   libthai0 qgnomeplatform-qt5 qt5-image-formats-plugins lm-sensors
+#9 7.073   libwacom-bin
+#9 7.073 Recommended packages:
+#9 7.073   dbus libglib2.0-data xdg-user-dirs krb5-locales qttranslations5-l10n
+#9 7.073   libqt5svg5 qt5-gtk-platformtheme qtwayland5 mesa-vulkan-drivers | vulkan-icd
+#9 7.803 The following NEW packages will be installed:
+#9 7.803   colmap fontconfig fontconfig-config fonts-dejavu-core fonts-dejavu-mono
+#9 7.803   libamd3 libatomic1 libblas3 libboost-filesystem1.83.0
+#9 7.803   libboost-program-options1.83.0 libbrotli1 libcamd3 libccolamd3 libceres4t64
+#9 7.803   libcholmod5 libcolamd3 libcom-err2 libdbus-1-3 libdeflate0
+#9 7.803   libdouble-conversion3 libdrm-amdgpu1 libdrm-common libdrm-intel1 libdrm2
+#9 7.803   libedit2 libegl-mesa0 libegl1 libelf1t64 libevdev2 libexpat1 libfontconfig1
+#9 7.803   libfreeimage3 libfreetype6 libgbm1 libgflags2.2 libgfortran5 libgl1
+#9 7.803   libgl1-mesa-dri libglew2.2 libglib2.0-0t64 libglvnd0 libglx-mesa0 libglx0
+#9 7.803   libgomp1 libgoogle-glog0v6t64 libgraphite2-3 libgssapi-krb5-2 libgudev-1.0-0
+#9 7.803   libharfbuzz0b libice6 libicu76 libimath-3-1-29t64 libinput-bin libinput10
+#9 7.804   libjbig0 libjpeg62-turbo libjxr0t64 libk5crypto3 libkeyutils1 libkrb5-3
+#9 7.804   libkrb5support0 liblapack3 liblcms2-2 liblerc4 libllvm19 libmd4c0 libmetis5
+#9 7.804   libmtdev1t64 libopenexr-3-1-30 libopengl0 libopenjp2-7 libpciaccess0
+#9 7.804   libpcre2-16-0 libpng16-16t64 libqt5core5t64 libqt5dbus5t64 libqt5gui5t64
+#9 7.804   libqt5network5t64 libqt5widgets5t64 libraw23t64 libsensors-config
+#9 7.804   libsensors5 libsharpyuv0 libsm6 libspqr4 libsuitesparseconfig7 libtiff6
+#9 7.804   libunwind8 libvulkan1 libwacom-common libwacom9 libwayland-client0
+#9 7.804   libwayland-server0 libwebp7 libwebpmux3 libx11-6 libx11-data libx11-xcb1
+#9 7.804   libxau6 libxcb-dri3-0 libxcb-glx0 libxcb-icccm4 libxcb-image0
+#9 7.804   libxcb-keysyms1 libxcb-present0 libxcb-randr0 libxcb-render-util0
+#9 7.804   libxcb-render0 libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-util1
+#9 7.804   libxcb-xfixes0 libxcb-xinerama0 libxcb-xinput0 libxcb-xkb1 libxcb1 libxdmcp6
+#9 7.804   libxext6 libxkbcommon-x11-0 libxkbcommon0 libxml2 libxrender1 libxshmfence1
+#9 7.805   libxxf86vm1 libz3-4 mesa-libgallium shared-mime-info x11-common xkb-data
+#9 7.805 The following packages will be upgraded:
+#9 7.806   libpcre2-8-0
+#9 8.581 1 upgraded, 130 newly installed, 0 to remove and 15 not upgraded.
+#9 8.581 Need to get 90.1 MB of archives.
+#9 8.581 After this operation, 370 MB of additional disk space will be used.
+#9 8.581 Get:1 http://deb.debian.org/debian trixie/main amd64 libexpat1 amd64 2.8.3-1~deb13u1 [123 kB]
+#9 9.261 Get:2 http://deb.debian.org/debian-security trixie-security/main amd64 libpcre2-8-0 amd64 10.46-1~deb13u3 [299 kB]
+#9 9.608 Get:3 http://deb.debian.org/debian trixie/main amd64 libboost-filesystem1.83.0 amd64 1.83.0-4.2 [282 kB]
+#9 9.789 Get:4 http://deb.debian.org/debian trixie/main amd64 libboost-program-options1.83.0 amd64 1.83.0-4.2 [347 kB]
+#9 9.894 Get:5 http://deb.debian.org/debian trixie/main amd64 libgomp1 amd64 14.2.0-19 [137 kB]
+#9 10.17 Get:6 http://deb.debian.org/debian trixie/main amd64 libsuitesparseconfig7 amd64 1:7.10.1+dfsg-1 [32.3 kB]
+#9 10.17 Get:7 http://deb.debian.org/debian trixie/main amd64 libamd3 amd64 1:7.10.1+dfsg-1 [49.2 kB]
+#9 10.17 Get:8 http://deb.debian.org/debian trixie/main amd64 libblas3 amd64 3.12.1-6 [160 kB]
+#9 10.17 Get:9 http://deb.debian.org/debian trixie/main amd64 libcamd3 amd64 1:7.10.1+dfsg-1 [45.9 kB]
+#9 10.17 Get:10 http://deb.debian.org/debian trixie/main amd64 libccolamd3 amd64 1:7.10.1+dfsg-1 [47.7 kB]
+#9 10.17 Get:11 http://deb.debian.org/debian trixie/main amd64 libcolamd3 amd64 1:7.10.1+dfsg-1 [41.0 kB]
+#9 10.17 Get:12 http://deb.debian.org/debian trixie/main amd64 libgfortran5 amd64 14.2.0-19 [836 kB]
+#9 10.18 Get:13 http://deb.debian.org/debian trixie/main amd64 liblapack3 amd64 3.12.1-6 [2447 kB]
+#9 10.72 Get:14 http://deb.debian.org/debian trixie/main amd64 libcholmod5 amd64 1:7.10.1+dfsg-1 [648 kB]
+#9 10.72 Get:15 http://deb.debian.org/debian trixie/main amd64 libgflags2.2 amd64 2.2.2-2 [83.5 kB]
+#9 10.73 Get:16 http://deb.debian.org/debian trixie/main amd64 libunwind8 amd64 1.8.1-0.1 [56.3 kB]
+#9 10.78 Get:17 http://deb.debian.org/debian trixie/main amd64 libgoogle-glog0v6t64 amd64 0.6.0-2.1 [66.1 kB]
+#9 10.78 Get:18 http://deb.debian.org/debian trixie/main amd64 libspqr4 amd64 1:7.10.1+dfsg-1 [155 kB]
+#9 10.79 Get:19 http://deb.debian.org/debian trixie/main amd64 libceres4t64 amd64 2.2.0+dfsg-4.1+b2 [1006 kB]
+#9 10.90 Get:20 http://deb.debian.org/debian trixie/main amd64 libimath-3-1-29t64 amd64 3.1.12-1+b3 [45.5 kB]
+#9 10.91 Get:21 http://deb.debian.org/debian trixie/main amd64 libjpeg62-turbo amd64 1:2.1.5-4 [168 kB]
+#9 10.96 Get:22 http://deb.debian.org/debian trixie/main amd64 libjxr0t64 amd64 1.2~git20170615.f752187-5.3 [171 kB]
+#9 10.98 Get:23 http://deb.debian.org/debian trixie/main amd64 libopenexr-3-1-30 amd64 3.1.13-2 [945 kB]
+#9 11.28 Get:24 http://deb.debian.org/debian trixie/main amd64 libopenjp2-7 amd64 2.5.3-2.1~deb13u2 [205 kB]
+#9 11.28 Get:25 http://deb.debian.org/debian-security trixie-security/main amd64 libpng16-16t64 amd64 1.6.48-1+deb13u6 [283 kB]
+#9 11.43 Get:26 http://deb.debian.org/debian trixie/main amd64 liblcms2-2 amd64 2.16-2+deb13u2 [160 kB]
+#9 11.43 Get:27 http://deb.debian.org/debian trixie/main amd64 libraw23t64 amd64 0.21.4-2+deb13u1 [391 kB]
+#9 11.44 Get:28 http://deb.debian.org/debian trixie/main amd64 libdeflate0 amd64 1.23-2 [47.3 kB]
+#9 11.44 Get:29 http://deb.debian.org/debian trixie/main amd64 libjbig0 amd64 2.1-6.1+b2 [32.1 kB]
+#9 11.44 Get:30 http://deb.debian.org/debian trixie/main amd64 liblerc4 amd64 4.0.0+ds-5 [183 kB]
+#9 11.44 Get:31 http://deb.debian.org/debian trixie/main amd64 libsharpyuv0 amd64 1.5.0-0.1 [116 kB]
+#9 11.44 Get:32 http://deb.debian.org/debian trixie/main amd64 libwebp7 amd64 1.5.0-0.1 [318 kB]
+#9 11.59 Get:33 http://deb.debian.org/debian trixie/main amd64 libtiff6 amd64 4.7.0-3+deb13u3 [345 kB]
+#9 11.62 Get:34 http://deb.debian.org/debian trixie/main amd64 libwebpmux3 amd64 1.5.0-0.1 [126 kB]
+#9 11.78 Get:35 http://deb.debian.org/debian trixie/main amd64 libfreeimage3 amd64 3.18.0+ds2-11 [310 kB]
+#9 11.81 Get:36 http://deb.debian.org/debian trixie/main amd64 libglvnd0 amd64 1.7.0-1+b2 [52.0 kB]
+#9 11.85 Get:37 http://deb.debian.org/debian trixie/main amd64 libxau6 amd64 1:1.0.11-1 [20.4 kB]
+#9 11.86 Get:38 http://deb.debian.org/debian trixie/main amd64 libxdmcp6 amd64 1:1.1.5-1 [27.8 kB]
+#9 11.86 Get:39 http://deb.debian.org/debian trixie/main amd64 libxcb1 amd64 1.17.0-2+b1 [144 kB]
+#9 11.87 Get:40 http://deb.debian.org/debian trixie/main amd64 libx11-data all 2:1.8.12-1 [343 kB]
+#9 11.90 Get:41 http://deb.debian.org/debian trixie/main amd64 libx11-6 amd64 2:1.8.12-1 [815 kB]
+#9 12.04 Get:42 http://deb.debian.org/debian trixie/main amd64 libdrm-common all 2.4.124-2 [8288 B]
+#9 12.04 Get:43 http://deb.debian.org/debian trixie/main amd64 libdrm2 amd64 2.4.124-2 [39.0 kB]
+#9 12.05 Get:44 http://deb.debian.org/debian trixie/main amd64 libx11-xcb1 amd64 2:1.8.12-1 [247 kB]
+#9 12.23 Get:45 http://deb.debian.org/debian trixie/main amd64 libxcb-dri3-0 amd64 1.17.0-2+b1 [107 kB]
+#9 12.24 Get:46 http://deb.debian.org/debian trixie/main amd64 libxcb-glx0 amd64 1.17.0-2+b1 [122 kB]
+#9 12.25 Get:47 http://deb.debian.org/debian trixie/main amd64 libxcb-present0 amd64 1.17.0-2+b1 [106 kB]
+#9 12.26 Get:48 http://deb.debian.org/debian trixie/main amd64 libxcb-shm0 amd64 1.17.0-2+b1 [105 kB]
+#9 12.31 Get:49 http://deb.debian.org/debian trixie/main amd64 libxcb-xfixes0 amd64 1.17.0-2+b1 [109 kB]
+#9 12.31 Get:50 http://deb.debian.org/debian trixie/main amd64 libxext6 amd64 2:1.3.4-1+b3 [50.4 kB]
+#9 12.43 Get:51 http://deb.debian.org/debian trixie/main amd64 libxxf86vm1 amd64 1:1.1.4-1+b4 [19.3 kB]
+#9 12.43 Get:52 http://deb.debian.org/debian trixie/main amd64 libdrm-amdgpu1 amd64 2.4.124-2 [22.6 kB]
+#9 12.43 Get:53 http://deb.debian.org/debian trixie/main amd64 libpciaccess0 amd64 0.17-3+b3 [51.9 kB]
+#9 12.44 Get:54 http://deb.debian.org/debian trixie/main amd64 libdrm-intel1 amd64 2.4.124-2 [64.1 kB]
+#9 12.62 Get:55 http://deb.debian.org/debian trixie/main amd64 libelf1t64 amd64 0.192-4 [189 kB]
+#9 12.67 Get:56 http://deb.debian.org/debian trixie/main amd64 libedit2 amd64 3.1-20250104-1 [93.8 kB]
+#9 12.69 Get:57 http://deb.debian.org/debian trixie/main amd64 libxml2 amd64 2.12.7+dfsg+really2.9.14-2.1+deb13u3 [700 kB]
+#9 12.77 Get:58 http://deb.debian.org/debian trixie/main amd64 libz3-4 amd64 4.13.3-1 [8560 kB]
+#9 13.95 Get:59 http://deb.debian.org/debian trixie/main amd64 libllvm19 amd64 1:19.1.7-3+b1 [26.0 MB]
+#9 18.36 Get:60 http://deb.debian.org/debian trixie/main amd64 libsensors-config all 1:3.6.2-2 [16.2 kB]
+#9 18.36 Get:61 http://deb.debian.org/debian trixie/main amd64 libsensors5 amd64 1:3.6.2-2 [37.5 kB]
+#9 18.36 Get:62 http://deb.debian.org/debian trixie/main amd64 libxcb-randr0 amd64 1.17.0-2+b1 [117 kB]
+#9 18.36 Get:63 http://deb.debian.org/debian trixie/main amd64 libxcb-sync1 amd64 1.17.0-2+b1 [109 kB]
+#9 18.36 Get:64 http://deb.debian.org/debian trixie/main amd64 libxshmfence1 amd64 1.3.3-1 [10.9 kB]
+#9 18.36 Get:65 http://deb.debian.org/debian trixie/main amd64 mesa-libgallium amd64 25.0.7-2+deb13u1 [9630 kB]
+#9 19.20 Get:66 http://deb.debian.org/debian trixie/main amd64 libwayland-server0 amd64 1.23.1-3 [34.4 kB]
+#9 19.20 Get:67 http://deb.debian.org/debian trixie/main amd64 libgbm1 amd64 25.0.7-2+deb13u1 [44.6 kB]
+#9 19.20 Get:68 http://deb.debian.org/debian trixie/main amd64 libvulkan1 amd64 1.4.309.0-1 [130 kB]
+#9 19.20 Get:69 http://deb.debian.org/debian trixie/main amd64 libgl1-mesa-dri amd64 25.0.7-2+deb13u1 [46.2 kB]
+#9 19.20 Get:70 http://deb.debian.org/debian trixie/main amd64 libglx-mesa0 amd64 25.0.7-2+deb13u1 [143 kB]
+#9 19.20 Get:71 http://deb.debian.org/debian trixie/main amd64 libglx0 amd64 1.7.0-1+b2 [34.9 kB]
+#9 19.20 Get:72 http://deb.debian.org/debian trixie/main amd64 libgl1 amd64 1.7.0-1+b2 [89.5 kB]
+#9 19.21 Get:73 http://deb.debian.org/debian trixie/main amd64 libglew2.2 amd64 2.2.0-4+b2 [168 kB]
+#9 19.21 Get:74 http://deb.debian.org/debian trixie/main amd64 libmetis5 amd64 5.1.0.dfsg-7+b2 [176 kB]
+#9 19.37 Get:75 http://deb.debian.org/debian trixie/main amd64 libopengl0 amd64 1.7.0-1+b2 [30.9 kB]
+#9 19.37 Get:76 http://deb.debian.org/debian trixie/main amd64 libatomic1 amd64 14.2.0-19 [9308 B]
+#9 19.37 Get:77 http://deb.debian.org/debian trixie/main amd64 libglib2.0-0t64 amd64 2.84.4-3~deb13u5 [1521 kB]
+#9 20.35 Get:78 http://deb.debian.org/debian trixie/main amd64 shared-mime-info amd64 2.4-5+b2 [760 kB]
+#9 20.36 Get:79 http://deb.debian.org/debian trixie/main amd64 libdouble-conversion3 amd64 3.3.1-1 [41.8 kB]
+#9 20.36 Get:80 http://deb.debian.org/debian trixie/main amd64 libicu76 amd64 76.1-4 [9722 kB]
+#9 21.55 Get:81 http://deb.debian.org/debian-security trixie-security/main amd64 libpcre2-16-0 amd64 10.46-1~deb13u3 [282 kB]
+#9 21.55 Get:82 http://deb.debian.org/debian trixie/main amd64 libqt5core5t64 amd64 5.15.15+dfsg-6+deb13u1 [1872 kB]
+#9 21.56 Get:83 http://deb.debian.org/debian trixie/main amd64 libbrotli1 amd64 1.1.0-2+b7 [307 kB]
+#9 21.57 Get:84 http://deb.debian.org/debian trixie/main amd64 libfreetype6 amd64 2.13.3+dfsg-1+deb13u1 [452 kB]
+#9 21.57 Get:85 http://deb.debian.org/debian trixie/main amd64 fonts-dejavu-mono all 2.37-8 [489 kB]
+#9 21.57 Get:86 http://deb.debian.org/debian trixie/main amd64 fonts-dejavu-core all 2.37-8 [840 kB]
+#9 21.57 Get:87 http://deb.debian.org/debian trixie/main amd64 fontconfig-config amd64 2.15.0-2.3 [318 kB]
+#9 21.61 Get:88 http://deb.debian.org/debian trixie/main amd64 libfontconfig1 amd64 2.15.0-2.3 [392 kB]
+#9 21.68 Get:89 http://deb.debian.org/debian trixie/main amd64 fontconfig amd64 2.15.0-2.3 [463 kB]
+#9 21.76 Get:90 http://deb.debian.org/debian trixie/main amd64 libwayland-client0 amd64 1.23.1-3 [26.8 kB]
+#9 21.94 Get:91 http://deb.debian.org/debian trixie/main amd64 libegl-mesa0 amd64 25.0.7-2+deb13u1 [128 kB]
+#9 21.95 Get:92 http://deb.debian.org/debian trixie/main amd64 libegl1 amd64 1.7.0-1+b2 [34.6 kB]
+#9 21.95 Get:93 http://deb.debian.org/debian trixie/main amd64 libgraphite2-3 amd64 1.3.14-2+deb13u1 [75.2 kB]
+#9 21.96 Get:94 http://deb.debian.org/debian trixie/main amd64 libharfbuzz0b amd64 10.2.0-1+deb13u1 [479 kB]
+#9 22.00 Get:95 http://deb.debian.org/debian trixie/main amd64 x11-common all 1:7.7+24+deb13u1 [217 kB]
+#9 22.05 Get:96 http://deb.debian.org/debian trixie/main amd64 libice6 amd64 2:1.1.1-1 [65.4 kB]
+#9 22.05 Get:97 http://deb.debian.org/debian trixie/main amd64 libevdev2 amd64 1.13.4+dfsg-1 [32.4 kB]
+#9 22.06 Get:98 http://deb.debian.org/debian trixie/main amd64 libmtdev1t64 amd64 1.1.7-1 [22.6 kB]
+#9 22.06 Get:99 http://deb.debian.org/debian trixie/main amd64 libgudev-1.0-0 amd64 238-6 [14.5 kB]
+#9 22.13 Get:100 http://deb.debian.org/debian trixie/main amd64 libwacom-common all 2.14.0-1 [103 kB]
+#9 22.31 Get:101 http://deb.debian.org/debian trixie/main amd64 libwacom9 amd64 2.14.0-1 [25.3 kB]
+#9 22.31 Get:102 http://deb.debian.org/debian trixie/main amd64 libinput-bin amd64 1.28.1-1+deb13u1 [26.8 kB]
+#9 22.32 Get:103 http://deb.debian.org/debian trixie/main amd64 libinput10 amd64 1.28.1-1+deb13u1 [144 kB]
+#9 22.33 Get:104 http://deb.debian.org/debian trixie/main amd64 libmd4c0 amd64 0.5.2-2+b1 [49.0 kB]
+#9 22.33 Get:105 http://deb.debian.org/debian trixie/main amd64 libdbus-1-3 amd64 1.16.2-2 [178 kB]
+#9 22.35 Get:106 http://deb.debian.org/debian trixie/main amd64 libqt5dbus5t64 amd64 5.15.15+dfsg-6+deb13u1 [218 kB]
+#9 22.40 Get:107 http://deb.debian.org/debian trixie/main amd64 libkrb5support0 amd64 1.21.3-5+deb13u1 [33.1 kB]
+#9 22.40 Get:108 http://deb.debian.org/debian trixie/main amd64 libcom-err2 amd64 1.47.2-3+b12 [25.0 kB]
+#9 22.40 Get:109 http://deb.debian.org/debian trixie/main amd64 libk5crypto3 amd64 1.21.3-5+deb13u1 [81.2 kB]
+#9 22.49 Get:110 http://deb.debian.org/debian trixie/main amd64 libkeyutils1 amd64 1.6.3-6 [9456 B]
+#9 22.67 Get:111 http://deb.debian.org/debian trixie/main amd64 libkrb5-3 amd64 1.21.3-5+deb13u1 [326 kB]
+#9 22.69 Get:112 http://deb.debian.org/debian trixie/main amd64 libgssapi-krb5-2 amd64 1.21.3-5+deb13u1 [138 kB]
+#9 22.70 Get:113 http://deb.debian.org/debian trixie/main amd64 libqt5network5t64 amd64 5.15.15+dfsg-6+deb13u1 [682 kB]
+#9 22.79 Get:114 http://deb.debian.org/debian trixie/main amd64 libsm6 amd64 2:1.2.6-1 [37.3 kB]
+#9 22.79 Get:115 http://deb.debian.org/debian trixie/main amd64 libxcb-icccm4 amd64 0.4.2-1 [27.5 kB]
+#9 22.79 Get:116 http://deb.debian.org/debian trixie/main amd64 libxcb-util1 amd64 0.4.1-1 [23.5 kB]
+#9 22.79 Get:117 http://deb.debian.org/debian trixie/main amd64 libxcb-image0 amd64 0.4.0-2+b2 [22.2 kB]
+#9 22.79 Get:118 http://deb.debian.org/debian trixie/main amd64 libxcb-keysyms1 amd64 0.4.1-1 [16.7 kB]
+#9 22.80 Get:119 http://deb.debian.org/debian trixie/main amd64 libxcb-render0 amd64 1.17.0-2+b1 [115 kB]
+#9 22.84 Get:120 http://deb.debian.org/debian trixie/main amd64 libxcb-render-util0 amd64 0.3.10-1 [18.4 kB]
+#9 23.02 Get:121 http://deb.debian.org/debian trixie/main amd64 libxcb-shape0 amd64 1.17.0-2+b1 [106 kB]
+#9 23.04 Get:122 http://deb.debian.org/debian trixie/main amd64 libxcb-xinerama0 amd64 1.17.0-2+b1 [105 kB]
+#9 23.05 Get:123 http://deb.debian.org/debian trixie/main amd64 libxcb-xinput0 amd64 1.17.0-2+b1 [130 kB]
+#9 23.12 Get:124 http://deb.debian.org/debian trixie/main amd64 libxcb-xkb1 amd64 1.17.0-2+b1 [130 kB]
+#9 23.15 Get:125 http://deb.debian.org/debian trixie/main amd64 xkb-data all 2.42-1 [790 kB]
+#9 23.25 Get:126 http://deb.debian.org/debian trixie/main amd64 libxkbcommon0 amd64 1.7.0-2 [113 kB]
+#9 24.13 Get:127 http://deb.debian.org/debian trixie/main amd64 libxkbcommon-x11-0 amd64 1.7.0-2 [16.2 kB]
+#9 24.13 Get:128 http://deb.debian.org/debian trixie/main amd64 libxrender1 amd64 1:0.9.12-1 [27.9 kB]
+#9 24.13 Get:129 http://deb.debian.org/debian trixie/main amd64 libqt5gui5t64 amd64 5.15.15+dfsg-6+deb13u1 [3500 kB]
+#9 24.16 Get:130 http://deb.debian.org/debian trixie/main amd64 libqt5widgets5t64 amd64 5.15.15+dfsg-6+deb13u1 [2396 kB]
+#9 24.42 Get:131 http://deb.debian.org/debian trixie/main amd64 colmap amd64 3.10-2 [2446 kB]
+#9 24.50 Fetched 90.1 MB in 17s (5405 kB/s)
+#9 24.50 Download complete and in download only mode
+#9 24.58 Traceback (most recent call last):
+#9 24.58   File "/tmp/install-colmap.py", line 15, in <module>
+#9 24.58     raise ValueError('Unpinned or mismatched COLMAP dependency: ' + archive.name)
+#9 24.58 ValueError: Unpinned or mismatched COLMAP dependency: libamd3_1%3a7.10.1+dfsg-1_amd64.deb
+#9 ERROR: process "/bin/sh -c python /tmp/install-colmap.py && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/install-colmap.py" did not complete successfully: exit code: 1
+------
+ > [cpu 4/8] RUN python /tmp/install-colmap.py && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/install-colmap.py:
+24.13 Get:128 http://deb.debian.org/debian trixie/main amd64 libxrender1 amd64 1:0.9.12-1 [27.9 kB]
+24.13 Get:129 http://deb.debian.org/debian trixie/main amd64 libqt5gui5t64 amd64 5.15.15+dfsg-6+deb13u1 [3500 kB]
+24.16 Get:130 http://deb.debian.org/debian trixie/main amd64 libqt5widgets5t64 amd64 5.15.15+dfsg-6+deb13u1 [2396 kB]
+24.42 Get:131 http://deb.debian.org/debian trixie/main amd64 colmap amd64 3.10-2 [2446 kB]
+24.50 Fetched 90.1 MB in 17s (5405 kB/s)
+24.50 Download complete and in download only mode
+24.58 Traceback (most recent call last):
+24.58   File "/tmp/install-colmap.py", line 15, in <module>
+24.58     raise ValueError('Unpinned or mismatched COLMAP dependency: ' + archive.name)
+24.58 ValueError: Unpinned or mismatched COLMAP dependency: libamd3_1%3a7.10.1+dfsg-1_amd64.deb
+------
+Dockerfile.colmap:11
+
+--------------------
+
+   9 |     COPY services/property-processing/locks/colmap-apt.json /tmp/colmap-apt.json
+
+  10 |     COPY services/property-processing/install-colmap.py /tmp/install-colmap.py
+
+  11 | >>> RUN python /tmp/install-colmap.py && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/install-colmap.py
+
+  12 |     WORKDIR /opt/processing
+
+  13 |     COPY services/property-processing/property_processing/__init__.py ./property_processing/__init__.py
+
+--------------------
+
+failed to solve: process "/bin/sh -c python /tmp/install-colmap.py && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* /tmp/install-colmap.py" did not complete successfully: exit code: 1
+
